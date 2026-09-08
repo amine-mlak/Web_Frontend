@@ -1,4 +1,4 @@
-import type { SbBlokData } from "@storyblok/react/rsc";
+import type { SbBlokData, StoryblokRichTextInput } from "@storyblok/react/rsc";
 
 export function asBloks(value: unknown): SbBlokData[] {
   return Array.isArray(value) ? (value as SbBlokData[]) : [];
@@ -42,6 +42,11 @@ export function storyblokHref(link: unknown): string {
   return `/storyblok/${raw.replace(/^\/+/, "")}`;
 }
 
-export function isRichText(value: unknown): value is { type: string } {
-  return Boolean(value && typeof value === "object" && "type" in value);
+export function isRichText(value: unknown): value is StoryblokRichTextInput {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      "type" in value &&
+      typeof (value as { type?: unknown }).type === "string",
+  );
 }
