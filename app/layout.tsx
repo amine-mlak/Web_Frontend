@@ -25,11 +25,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="de" className={`${figtree.variable} ${cormorant.variable}`}>
+    <html
+      lang="de"
+      className={`${figtree.variable} ${cormorant.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="describedby" href="/llms.txt" />
       </head>
-      <body className={`${figtree.className} antialiased`}>
+      <body
+        className={`${figtree.className} antialiased`}
+        suppressHydrationWarning
+      >
         <SmoothScroll />
         {children}
       </body>

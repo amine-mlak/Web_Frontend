@@ -23,6 +23,22 @@ const nextConfig: NextConfig = {
         hostname: strapiHost,
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "a.storyblok.com",
+      },
+      {
+        protocol: "https",
+        hostname: "a-us.storyblok.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img2.storyblok.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
   async headers() {
@@ -60,6 +76,26 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Type",
             value: "text/markdown; charset=utf-8",
+          },
+        ],
+      },
+      {
+        source: "/storyblok",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://app.storyblok.com https://*.storyblok.com",
+          },
+        ],
+      },
+      {
+        source: "/storyblok/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://app.storyblok.com https://*.storyblok.com",
           },
         ],
       },

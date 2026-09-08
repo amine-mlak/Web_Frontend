@@ -14,7 +14,7 @@ export default function NotFound() {
           <p className="type-eyebrow">404</p>
           <h1 className="type-h1 mt-4 text-ink">Seite nicht gefunden</h1>
           <p className="type-body mt-4">
-            Diese Demo hat die Startseite und die Version unter /v2.
+            Diese Demo hat die Startseite (Strapi), /v2 und /storyblok.
           </p>
           <div className="mt-10 flex justify-center gap-3">
             <Link href="/" className="pill pill-primary">
@@ -22,6 +22,9 @@ export default function NotFound() {
             </Link>
             <Link href="/v2" className="pill pill-secondary">
               Version 2
+            </Link>
+            <Link href="/storyblok" className="pill pill-secondary">
+              Storyblok
             </Link>
           </div>
         </section>
