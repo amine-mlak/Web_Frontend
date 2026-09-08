@@ -24,7 +24,7 @@ import Cta from "@/components/storyblok/Cta";
 import Feature from "@/components/storyblok/Feature";
 import FeatureGrid from "@/components/storyblok/FeatureGrid";
 import Grid from "@/components/storyblok/Grid";
-import Hero from "@/components/storyblok/Hero";
+import LandingPage, { NestedBlok } from "@/components/storyblok/LandingPage";
 import Page from "@/components/storyblok/Page";
 import Quote from "@/components/storyblok/Quote";
 import Teaser from "@/components/storyblok/Teaser";
@@ -32,8 +32,19 @@ import { fallbackStoryblokStory } from "@/lib/storyblok-fallback";
 
 const components = {
   page: Page,
+  landing: LandingPage,
   "default-page": DefaultPage,
-  hero: Hero,
+  hero: NestedBlok,
+  hero_slide: NestedBlok,
+  kacheln: NestedBlok,
+  kachel: NestedBlok,
+  ablauf: NestedBlok,
+  ablauf_step: NestedBlok,
+  entdecken: NestedBlok,
+  entdecken_panel: NestedBlok,
+  faq: NestedBlok,
+  faq_item: NestedBlok,
+  beratung: NestedBlok,
   feature_grid: FeatureGrid,
   feature: Feature,
   quote: Quote,

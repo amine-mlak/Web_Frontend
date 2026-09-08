@@ -1,6 +1,6 @@
 import { StoryblokStory } from "@storyblok/react/rsc";
 import DemoChrome from "@/components/storyblok/DemoChrome";
-import Page from "@/components/storyblok/Page";
+import LandingPage from "@/components/storyblok/LandingPage";
 import { fetchStoryblokDemoStory } from "@/lib/storyblok";
 
 export const revalidate = 60;
@@ -20,7 +20,7 @@ export default async function StoryblokDemoPage({
       {source === "storyblok" ? (
         <StoryblokStory story={story} />
       ) : (
-        <Page blok={story.content} />
+        <LandingPage blok={story.content} />
       )}
     </>
   );
