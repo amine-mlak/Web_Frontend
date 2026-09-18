@@ -9,6 +9,19 @@ const strapiHost = new URL(strapiUrl).hostname;
 
 const allowIndexing = process.env.ALLOW_INDEXING === "true";
 
+function frameAncestorsCsp() {
+  const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
+  if (!umamiUrl) {
+    return "frame-ancestors 'self'";
+  }
+
+  try {
+    return `frame-ancestors 'self' ${new URL(umamiUrl).origin}`;
+  } catch {
+    return "frame-ancestors 'self'";
+  }
+}
+
 const robotsHeaders = allowIndexing
   ? []
   : [
@@ -83,7 +96,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'self'",
+            value: frameAncestorsCsp(),
           },
           ...robotsHeaders,
         ],
@@ -93,7 +106,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'self'",
+            value: frameAncestorsCsp(),
           },
           ...robotsHeaders,
         ],
