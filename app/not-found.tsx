@@ -14,17 +14,12 @@ export default function NotFound() {
           <p className="type-eyebrow">404</p>
           <h1 className="type-h1 mt-4 text-ink">Seite nicht gefunden</h1>
           <p className="type-body mt-4">
-            Diese Demo hat die Startseite (Strapi), /v2 und /storyblok.
+            Diese Seite gibt es nicht. Zurück zur Startseite von BEER
+            Küchenmanufaktur.
           </p>
-          <div className="mt-10 flex justify-center gap-3">
+          <div className="mt-10 flex justify-center">
             <Link href="/" className="pill pill-primary">
               Zur Startseite
-            </Link>
-            <Link href="/v2" className="pill pill-secondary">
-              Version 2
-            </Link>
-            <Link href="/storyblok" className="pill pill-secondary">
-              Storyblok
             </Link>
           </div>
         </section>

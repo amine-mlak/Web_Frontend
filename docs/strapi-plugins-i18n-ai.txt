@@ -1,0 +1,360 @@
+BEER KUECHENMANUFAKTUR
+Strapi playbook  ·  DE/EN  ·  components  ·  AI
+================================================
+Companion to docs/sitemap-clusters.txt
+Audience: Christian's team in the CMS + us on Next.js
+
+HOSTING RULE
+------------
+Self-hosted Community Strapi on Christian's VPS (Coolify).
+No Strapi Cloud. No Growth. No Enterprise. No license keys.
+No credit-based Strapi AI. No paid marketplace plugins.
+
+Everything below is in the open-source product or already
+in this repo (Cursor). If a feature needs a Strapi plan,
+we do not use it.
+
+
+THE ONE EXAMPLE TO COPY
+-----------------------
+Official Strapi 5 company-site model (not WordPress, not plugins):
+
+  https://strapi.io/blog/building-a-page-builder-via-content-modeling-best-practices-in-strapi5
+  https://docs.strapi.io/cms/features/internationalization
+
+That example uses five building blocks. We keep the same five:
+
+  Collection   many entries of one kind     Projekt, Marke, Artikel
+  Single       exists once                  Header, Global
+  Component    a labeled form reused        SEO, Link, Hero-Slide
+  Relation     same thing, many places      Projekt -> Marke, Region
+  Dynamic zone editor picks section order   later, for new pages only
+
+Rule of thumb from that guide (use this in every workshop):
+
+  Query it? filter it? reuse it?     -> Collection + Relation
+  Unique to this page/section?       -> Component
+  Editors must reorder sections?     -> Dynamic zone (small list)
+  Exists exactly once on the site?   -> Single type
+
+Do NOT make "everything a component".
+Do NOT make "everything a collection".
+Do NOT dump 30 blocks into one dynamic zone.
+
+
+0. Two different "German/English" settings
+------------------------------------------
+A. Admin UI language  (how the CMS looks)
+   File: src/admin/app.ts  ->  config.locales: ['de']
+   Rebuild admin. Each user picks "Deutsch" in Profile.
+   This is for Christian's team. English stays as fallback.
+   Free. Ships with Strapi.
+
+B. Content locales  (the website languages)
+   Settings > Global Settings > Internationalization
+   Add:
+     de    Deutsch     DEFAULT   (source of truth)
+     en    English
+   Env on Coolify:
+     STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE=de
+
+BEER is a German manufactory. German is written by humans.
+English is the translation, not the original.
+
+Do NOT install @strapi/plugin-i18n. In Strapi 5, i18n is core
+and free.
+
+
+1. Plugin plan  (install nothing paid)
+--------------------------------------
+USE  (already in Community, just configure)
+
+  Internationalization     DE default, EN second
+  Draft & Publish          on every public type
+  Media Library            one photo library, shared across locales
+  Users & Permissions      public find for published content only
+  Content-Type Builder     schema, by hand (see section 8)
+  MCP server               Strapi 5.47+  free on self-hosted
+                           config/server.ts  mcp: { enabled: true }
+                           This is how Cursor talks to the CMS.
+
+OPTIONAL later (still free)
+
+  Admin German rebuild     src/admin/app.ts locales: ['de']
+  Next.js preview          draft fetch on our own routes
+                           not Strapi Cloud Live Preview
+
+DO NOT USE
+
+  Strapi Growth / Cloud / Enterprise
+  Strapi AI (CTB chat, AI Translations, Media AI)
+  Official Live Preview    (paid plan)
+  @strapi/plugin-i18n      already in core
+  AI writer marketplace apps
+  SEO plugins              we already use shared.seo
+  page-builder plugins     our sections are named components
+  Lokalise / paid TMS
+  anything that wants a license key or monthly credits
+
+Check version on Christian's Strapi:
+  MCP needs 5.47+ (GA 5.49). Coolify one-click is often older.
+  Upgrade the image if we want Cursor connected. i18n works
+  without that upgrade.
+
+
+2. How locales work for editors
+-------------------------------
+Top-right of every entry: locale switch  [Deutsch | English].
+
+Workflow (Community, no auto-translate):
+
+  1. Editor writes and publishes DEUTSCH.
+  2. Switch to English. Click "Fill in from another locale"
+     and pick Deutsch. All fields copy over, including relations.
+  3. Translate the copied text. Leave photos, phone, brands.
+  4. Publish English separately.
+     Publish is per locale. DE live does not publish EN.
+
+Frontend fetch:
+  GET /api/landings?filters[slug][$eq]=home&locale=de&status=published
+  GET /api/landings?filters[slug][$eq]=home&locale=en&status=published
+
+Missing EN: Next.js falls back to DE, never to empty page.
+
+
+3. What to localize  vs  what to share
+--------------------------------------
+LOCALIZE  (tick "Enable localization for this field")
+
+  title, eyebrow, intro, question, answer
+  buttonLabel, caption, alt
+  slug            (de: kueche-mit-insel  /  en: kitchen-with-island)
+  seo.metaTitle, seo.metaDescription
+  rich text bodies
+
+DO NOT LOCALIZE  (one value for both languages)
+
+  images / gallery          same kitchen photo
+  color hex, icon enum
+  phone, email, street, maps
+  relations to Brand, Appliance kind, Region code
+  year, sortOrder, published flags that are not copy
+  CTA URL if it is a hash (#beratung) or a mailto
+
+WHY: editors should not re-upload the Insel photo for English.
+     "Fill in from another locale" then only needs text edits.
+
+SLUG RULE (from the live Mohamed CMS):
+  slug = unique Short text, lowercase, hyphens
+  NOT a UID field (UID blocked extra landings before)
+  Localized, so DE and EN can differ.
+
+
+4. Naming so the team understands the CMS
+-----------------------------------------
+Two names on every type / component / field:
+
+  displayName   German, human     "Kuecheninsel"  "Ablauf-Schritt"
+  API name      English, stable   kitchen-island  process-step
+
+MCP and Next.js always see the English API name.
+Editors only see German displayName + description.
+
+Always fill Description, e.g.:
+  "Ein Schritt im Ablauf 'So entsteht Ihre Kueche'.
+   Vier Stueck auf der Startseite."
+
+Icon: pick one per component (picture, layer, puzzle).
+Later: component preview image so the dynamic-zone picker
+looks like the real section.
+
+Categories (the folders editors see):
+
+  shared     atoms used everywhere     seo, media, link, rich-text
+  landing    homepage / campaign       hero, kacheln, ablauf, faq
+  header     navigation                menu, group, link, teaser
+  project    Referenzkueche            spec, gallery-item
+  geraete    appliance copy            (later)
+
+Keep the starter components that already exist:
+  shared.seo   shared.media   shared.quote
+  shared.rich-text   shared.slider
+
+
+5. Component model for BEER  (team-readable)
+--------------------------------------------
+Homepage stays NAMED SECTIONS, not a free page builder.
+The team already knows Hero, Kacheln, Ablauf, Entdecken, FAQ,
+Beratung. Do not hide those inside a dynamic zone.
+
+SINGLE  Header
+  logo (media, not localized)
+  logoAlt (localized)
+  ctaLabel, ctaUrl (label localized, url usually not)
+  menus[]  -> header.menu
+
+  header.menu
+    label, title, href, intro, variant
+    groups[] -> header.group
+    teasers[] -> header.teaser
+
+  header.group
+    title
+    links[] -> header.link     (label localized, href shared)
+
+  header.teaser
+    caption, alt (localized)
+    image (shared)
+    href
+
+COLLECTION  Landing
+  title, slug (localized)
+  seo -> shared.seo
+  hero -> landing.hero
+  kacheln -> landing.kacheln
+  ablauf -> landing.ablauf
+  entdecken -> landing.entdecken
+  faq -> landing.faq
+  beratung -> landing.beratung
+
+  landing.hero
+    slides[] -> hero.slide     image shared, alt localized
+
+  landing.kacheln
+    eyebrow, intro (localized)
+    colors[] -> kacheln.color-tile
+      title, href, alt, color, image
+
+  landing.ablauf
+    eyebrow, title, buttonLabel, buttonHref
+    steps[] -> landing.process-step
+      step, title, description, icon (enum, not localized)
+
+  entdecken.panel
+    title, subtitle, buttonLabel, href, alt, image
+
+  landing.faq-item
+    question, answer
+
+  landing.beratung
+    copy localized; address / phone / email shared
+
+Nesting max TWO levels (Landing -> kacheln -> color-tile).
+Deeper than that and editors + MCP both get lost.
+
+
+6. Collections from the sitemap  (queryable, not nested)
+--------------------------------------------------------
+These are Collections + Relations, because they are filters
+on /projekte and real URLs later.
+
+  project           Referenzkueche
+  kitchen-style     Moderne, Landhaus, ...
+  kitchen-shape     L-Form, Insel, Zeile, ...
+  kitchen-color     Schwarz, Weiss, Salbei, ...
+  kitchen-island    Kochinsel, Arbeitsinsel, ...
+  material / worktop / front-system
+  appliance         Backofen, Kochfeld, Dunstabzug, ...
+  brand             Bora, Miele, Gaggenau, Quooker
+  furniture
+  region
+  faq-item          global FAQ, not only homepage
+  article, author, category   KEEP starter blog
+
+Project relations (this is the engine of the site):
+  project  many-to-many  style, shape, color, island,
+                         material, appliance, brand, region
+
+A leaf URL like /kuechen/stile/landhaus is then:
+  short intro from kitchen-style
+  + filtered projects
+not a duplicate landing for every style.
+
+
+7. Dynamic zone  (later, small, curated)
+----------------------------------------
+Only when we add pages that are not the homepage and not a
+cluster filter. Allowed blocks, nothing else:
+
+  blocks.hero
+  blocks.rich-text
+  blocks.faq-list          relation to faq-item[]
+  blocks.project-grid      relation to project[]
+  blocks.cta
+  blocks.media
+
+Official warning we follow: a dynamic zone is not a dumping
+ground. Deep nesting inside those blocks kills performance
+and confuses the team.
+
+Homepage does NOT use this zone.
+
+
+8. Where AI actually lives  (free, self-hosted)
+-----------------------------------------------
+Not inside a paid Strapi feature. Two free pieces:
+
+  A. Content-Type Builder in the admin
+     We (or Christian) click the schema from this playbook.
+     German displayName, English API name, descriptions.
+
+  B. Cursor + Strapi MCP  (self-hosted, Community, 5.47+)
+     Enable mcp in server config.
+     Admin token: draft create/update only. NO publish.
+     Locale in every prompt: "in German (locale de)".
+     MCP cannot upload files; photos stay in Media Library.
+     MCP is weak on deep dynamic zones — another reason our
+     homepage uses named components.
+
+What Cursor can help with, still as drafts:
+
+  Schema prompts we already wrote in this file
+  German -> English copy after "Fill in from another locale"
+  Alt-text suggestions the editor pastes into Media Library
+
+Do not let any agent publish. Draft only. Human publishes.
+
+Brand names that must never be "translated":
+  BEER, Bora, Miele, Gaggenau, Quooker, Fenix, Taj Mahal
+
+
+9. Roles for Christian's team
+-----------------------------
+  Super admin     Mohamed / Christian   schema + users
+  Redakteur DE    write/publish de      read en
+  Redakteur EN    update/publish en     cannot change de
+  Nur Lesen       intern / praktikant
+
+When i18n locale permissions exist, lock EN write to the
+English reviewer so DE and EN stay separate on purpose.
+
+
+10. Next.js contract  (when we wire routes)
+-------------------------------------------
+  Default locale de, prefix-less:   beer.de/kuechen/...
+  English:                          beer.de/en/kuechen/...
+  Fetch with ?locale=
+  Populate nested components explicitly (Strapi 5 has no
+  shared populate=* for components).
+  hreflang de + en + x-default=de
+  Fallback: if EN missing, render DE and noindex the EN URL.
+
+
+11. First build order  (aligned with sitemap)
+---------------------------------------------
+  1. Set locales de (default) + en. Admin UI de.
+  2. Recreate Header + Landing like Mohamed's live CMS.
+     Named components, German displayNames, English APIs.
+  3. Field-level i18n ticks (section 3).
+  4. Check Strapi version. Upgrade only if we want MCP (5.47+).
+  5. Then Project + Brand + style/shape/color tags.
+
+
+Quick editor card  (print this)
+-------------------------------
+  Sprache der Website schreiben = Deutsch zuerst.
+  Oben rechts auf Deutsch stellen.
+  Bilder einmal hochladen, Alt-Text auf Deutsch.
+  Englisch: "Fill in from another locale" -> Text anpassen.
+  Veroeffentlichen gilt nur fuer die Sprache, die offen ist.
+  Markennamen nie uebersetzen: BEER, Bora, Miele, Gaggenau, Quooker.

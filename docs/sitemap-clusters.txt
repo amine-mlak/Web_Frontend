@@ -1,0 +1,458 @@
+BEER KUECHENMANUFAKTUR
+Modeled site map  ·  clusters, pillars, collections
+====================================================
+Status: keep everything the current site already names,
+        plus the clusters BEER used on beer.de / in the
+        manufactory offer (islands, ovens, worktops, …).
+Audience: Strapi on Christian's server + Next.js routes.
+
+How to read
+-----------
+PILLAR     = top nav / SEO hub (few, stable)
+CLUSTER    = topic group under a pillar (one collection or a folder of pages)
+LEAF       = a page or filter term (one entry, or a tag on a project)
+
+KEEP       = already on the live header/footer — must not disappear
+ADD        = collection we still need in Strapi
+LATER      = nice to have after the first CMS cut
+
+Current live site only has "/" plus hashes. This file is the
+target map so those hashes become real URLs later.
+
+
+0. Site chassis (always)
+------------------------
+  /                         Startseite          Landing slug=home
+  /beratung                 Beratung & Termin   Landing or form page
+  /kueche-planen            Ablauf / so entsteht Ihre Kueche
+  /katalog                  Katalog bestellen
+  /faq                      FAQ
+  /impressum  /datenschutz  /agb  /cookies
+
+
+1. PILLAR: Kuechen                         KEEP + expand
+--------------------------------------------------------
+Hub: /kuechen
+
+1.1 CLUSTER  Kuechenformen                 KEEP (header: Kuechenformen)
+    /kuechen/formen
+    - zeile                 Kuechenzeile
+    - l-form                L-Form
+    - u-form                U-Form
+    - g-form                G-Form / mit Tresen
+    - parallel              Zweizeilig / Parallel
+    - offen                 Offene Kueche
+    - geschlossen           Getrennte Kueche
+    - insel                 Kueche mit Insel          KEEP
+    - halbinsel             Halbinsel / Theke
+    - klein                 Kleine Kuechen            KEEP
+    - raumhoch              Raumhohe Kuechen          KEEP
+    - einbau                Einbaukueche              KEEP
+
+1.2 CLUSTER  Kuechenstile                  KEEP (header: Kuechenstile)
+    /kuechen/stile
+    - modern                Moderne Kuechen           KEEP
+    - landhaus              Landhauskuechen           KEEP
+    - design                Designkuechen             KEEP
+    - holz                  Holzkuechen               KEEP
+    - purist                Puristisch / grifflos     KEEP
+    - vintage               Vintage Love              ADD (beer.de worlds)
+    - elegant               Simple Elegance           ADD
+    - natur                 Nature's Harmony          ADD
+    - urban                 Smart Rebellion / urban   ADD
+    - luxus                 Luxuskueche               KEEP
+
+1.3 CLUSTER  Kuechenfarben                 KEEP (header + kacheln)
+    /kuechen/farben
+    - weiss                 Weisse Kuechen            KEEP
+    - schwarz               Schwarze Kuechen          KEEP
+    - salbei                Salbeigruene Kuechen      KEEP
+    - grau                  Grau / Kaschmir
+    - anthrazit
+    - navy                  Dunkelblau
+    - holz-natur            Naturholz
+    - bicolor               Zweifarbig / Kontrast
+
+1.4 CLUSTER  Inseln                        KEEP + ADD (beer.de core)
+    /kuechen/inseln
+    - kochinsel             Kochinsel mit Geraeten
+    - arbeitsinsel          Reine Arbeitsinsel
+    - essinsel              Insel mit Sitzplatz / Bar
+    - schwebend             Schwebende Insel
+    - mobil                 Mobile Insel auf Rollen
+    - teppanyaki            Insel mit Tepan / Grill
+
+1.5 CLUSTER  Besondere Kuechen             KEEP
+    /kuechen/besondere
+    - grifflos              Grifflose Kuechen         KEEP
+    - nach-mass             Kueche nach Mass          KEEP
+    - luxus                 Luxuskueche               KEEP
+    - barrierearm           Ergonomie / hoehenverstellbar
+    - ferienhaus
+    - penthouse
+    - altbau
+    - neubau-mitplanen      Kueche vor dem Rohbau
+
+1.6 CLUSTER  Projekte                      KEEP (Alle Projekte)
+    /projekte
+    Filter by: stil, form, farbe, insel, marke, region, jahr
+    Each project is a reference with photos + specs
+    (worktop, fronts, cooktop, oven, tap).
+
+
+2. PILLAR: Material & Ausstattung          KEEP
+--------------------------------------------------------
+Hub: /material-ausstattung
+
+2.1 CLUSTER  Fronten
+    /fronten
+    - lack-matt / lack-hochglanz
+    - furnier               Eiche, Nuss, etc.
+    - mdf-durchgefaerbt
+    - glas / organic-glas
+    - fenix / arpa
+    - linoleum
+    - griff-systeme         Griffnut, C-Profil, Mambo, Push-to-open, TIP-ON
+
+2.2 CLUSTER  Arbeitsplatten                KEEP (Entdecken)
+    /arbeitsplatten
+    - naturstein            Nero Assoluto, Taj Mahal, Marmor, Granit
+    - edelstahl             Massiv, warmgewalzt, eingeschweisstes Becken
+    - keramik / dekton / neolith
+    - holz-massiv
+    - fenix
+    - hoehe                 Standard 910 / zweistufig / Hubtisch   ADD
+
+2.3 CLUSTER  Innenleben                    KEEP (Entdecken)
+    /innenleben
+    - auszuege / vollauszug
+    - eckloesungen
+    - apothekerschrank
+    - besteckeinsatz
+    - vorrat
+    - abfalltrennung
+    - tablar / thermomix-auszug
+    - sockelstaubsauger
+    - beleuchtung-innen
+
+2.4 CLUSTER  Spuele & Armatur
+    /spuele-armatur
+    - edelstahl-unterbau
+    - keramik               Villeroy & Boch etc.
+    - quooker               kochend / sprudelnd / gekuehlt     KEEP brand
+    - fenster-armatur
+    - spuelstein
+
+
+3. PILLAR: Geraete  (ovens → cooktops → more)     ADD
+--------------------------------------------------------
+Hub: /geraete
+Keep as real pages, not only blog posts. beer.de already
+has this cluster under "Einbaugeraete & Technik".
+
+3.1 CLUSTER  Kochen
+    /geraete/kochen
+    - kochfeld              Induktion, Gas, Kombi, unsichtbar
+    - tepan / wok
+    - kochfeldabzug         Muldenluefter, Umluft, Abluft
+    - dunstabzug            Haube klassisch (wenn noch relevant)
+
+3.2 CLUSTER  Backen & Daempfen             ADD (Backofen / Herd)
+    /geraete/backen
+    - backofen              vs. Herd erklaeren
+    - dampfbackofen
+    - dampfgarer
+    - mikrowelle
+    - waermeschublade
+    - tellerwaermer
+    - geraetehochschrank    ergonomisch hochgebaut
+
+3.3 CLUSTER  Kaelte
+    /geraete/kaelte
+    - kuehlschrank
+    - gefriergeraet
+    - weinkuehler
+    - getraenkekuehlung
+
+3.4 CLUSTER  Spuelen
+    /geraete/spuelen
+    - geschirrspueler       vollintegriert, Knock2open, AutoDos
+
+3.5 CLUSTER  Extra
+    /geraete/extra
+    - kaffeevollautomat
+    - vakuumierschublade
+    - brotschneidemaschine
+    - sous-vide
+
+3.6 CLUSTER  Marken                        KEEP
+    /marken
+    - bora                  KEEP
+    - miele                 KEEP
+    - gaggenau              KEEP
+    - quooker               KEEP
+    - siemens               ADD (beer.de partner)
+    - villeroy-boch         ADD (Spuelstein)
+    - weitere               nur wenn wirklich geplant
+
+
+4. PILLAR: Moebel nach Mass                KEEP
+--------------------------------------------------------
+Hub: /moebel
+    - einbauschraenke
+    - ankleide / begehbarer kleiderschrank
+    - tische-baenke
+    - wohnmoebel
+    - sideboard / regal
+    - badmoebel             LATER
+    - homeoffice            LATER
+
+
+5. PILLAR: Kueche planen                   KEEP
+--------------------------------------------------------
+Hub: /kueche-planen
+    - so-entsteht-ihre-kueche     Ablauf 4 Schritte
+    - ausstellung-freising        Werkstudio / 800 qm
+    - kuechenplaner               Quiz / welche Kueche passt
+    - beratung-termin
+    - katalog
+    - checkliste
+    - aufmass
+    - neubau-mitplanen
+    - virtuelle-beratung          Teams
+    - merkliste                   LATER (phase 2)
+
+
+6. PILLAR: Wissen / Ratgeber               KEEP
+--------------------------------------------------------
+Hub: /ratgeber
+Reuse starter Article + Category + Author.
+
+Categories to keep / add:
+    - kuechenplanung-ergonomie
+    - einbaugeraete-technik
+    - material-pflege
+    - kosten                  Was kostet eine Kueche?
+    - manufaktur-einblicke
+    - top-artikel
+    - checklisten
+
+Leaves already used on the live site:
+    - was-kostet-eine-kueche
+    - top-artikel
+    - alle-artikel
+    - blog
+
+
+7. PILLAR: Ueber BEER                      KEEP
+--------------------------------------------------------
+Hub: /ueber
+    - werte-philosophie
+    - team
+    - manufaktur / werkstatt
+    - nachhaltigkeit          200 km Radius, regional
+    - empfehlungen / stimmen
+    - aktuelles-presse
+    - karriere
+    - projekte  (alias of /projekte)
+
+
+8. PILLAR: Regionen                        KEEP
+--------------------------------------------------------
+Hub: /regionen
+Each region is a thin landing (same sections, local intro).
+    muenchen, freising, erding, dachau, pfaffenhofen,
+    augsburg, ingolstadt, landshut, regensburg,
+    mainburg, nuernberg
+    PLUS delivery: ~200 km um Muenchen (beer.de)
+
+
+9. PILLAR: Kontakt & Recht                 KEEP
+--------------------------------------------------------
+    /kontakt
+    /faq
+    /oeffnungszeiten
+    /impressum  /datenschutz  /agb  /cookies
+    Social: Facebook, Instagram, Pinterest, YouTube, Houzz
+
+
+====================================================
+STRAPI COLLECTIONS TO ADD
+====================================================
+Legend:
+  S = single type     C = collection     T = shared tags
+  NOW = build in first CMS cut
+  NEXT = after homepage + header work
+
+NOW
+---
+S  header                 logo, CTA, menus[] (groups, links, teasers)
+C  landing                title, slug, hero, kacheln, ablauf,
+                          entdecken, faq, beratung
+                          used for: home, campaign, region skins
+S  global                 KEEP starter: siteName, favicon, SEO
+
+NEXT (content clusters — one collection each, not one type per leaf)
+----
+C  project                Referenzkueche
+                          fields: title, slug, place, year, designer,
+                          gallery, intro, specs (worktop, fronts,
+                          cooktop, oven, fridge, dishwasher, tap),
+                          relations: styles, shapes, colors, island,
+                          materials, appliances, brands, regions
+
+C  kitchen-style          Moderne, Landhaus, Design, Holz, …
+C  kitchen-shape          L, U, Zeile, Insel, Offen, Klein, …
+C  kitchen-color          Weiss, Schwarz, Salbei, …
+C  kitchen-island         Kochinsel, Arbeitsinsel, schwebend, mobil
+C  material               Front / Platte / Holz / Stein / Stahl
+C  worktop                Naturstein, Edelstahl, Keramik, Fenix, Holz
+C  front-system           Griffnut, C-Profil, Push-to-open, …
+C  appliance              Backofen, Kochfeld, Dunstabzug, Spuelmaschine,
+                          Kuehlung, Kaffee, Dampfgarer, …
+                          fields: kind (enum), brand, title, slug, body, image
+C  brand                  Bora, Miele, Gaggenau, Quooker, Siemens
+C  furniture              Einbauschrank, Ankleide, Tisch, Wohnmoebel
+C  region                 Muenchen … Nuernberg
+C  faq-item               question, answer, category
+                          (global FAQ, not only homepage nested)
+
+KEEP starter blog
+-----------------
+C  article
+C  author
+C  category
+S  about                  optional; or merge into /ueber landing
+
+LATER
+-----
+C  team-member
+C  job
+C  press-item
+C  catalogue-request      form dumps
+C  booking / exhibition-slot
+C  wishlist               phase 2
+
+
+Shared components (reuse everywhere)
+------------------------------------
+  shared.seo              metaTitle, metaDescription, shareImage
+  shared.media            file
+  shared.rich-text        body
+  hero.slide              image, alt
+  kacheln.color-tile      title, href, alt, color, image
+  landing.process-step    step, title, description, icon
+  entdecken.panel         title, subtitle, buttonLabel, href, alt, image
+  landing.faq-item        question, answer
+  landing.beratung        contact block
+  header.menu / group / link / teaser
+  project.spec            label, value   (Arbeitsplatte: Nero Assoluto)
+
+
+URL recipe
+----------
+  /kuechen/{cluster}                      hub
+  /kuechen/{cluster}/{slug}               leaf page
+  /geraete/{cluster}/{slug}               oven, cooktop, …
+  /marken/{slug}
+  /projekte                               index + filters
+  /projekte/{slug}
+  /ratgeber/{category}/{slug}
+  /regionen/{slug}
+  /moebel/{slug}
+
+A leaf can be:
+  - its own landing (if it has unique copy + photos), OR
+  - a filtered view of /projekte?style=landhaus
+Start with filtered projects + a short intro. Promote to a
+full landing when editorial content exists.
+
+
+Header mega-menu target
+-----------------------
+Kuechen
+  Formen | Stile | Farben | Inseln | Besondere | Material | Marken | Projekte
+Moebel nach Mass
+  Einbauschränke | Ankleide | Tische & Baenke | Wohnmoebel
+Kueche planen
+  Ablauf | Ausstellung | Kuechenplaner | Beratung | Katalog | Checkliste
+  Wissen: Blog | Kosten | Checkliste
+Ueber BEER
+  Werte | Team | Manufaktur | Nachhaltigkeit | Presse | Karriere
+
+
+First build order
+-----------------
+1. Header + Landing (home) on Christian Strapi
+2. Project + Brand + Style/Shape/Color tags  (unlocks real /kuechen URLs)
+3. Appliance collection  (ovens, cooktops, extractors, cold, wash)
+4. Worktop + Front + Island
+5. Furniture + Region
+6. Blog categories aligned to the pillars above
+7. Team / Karriere / Presse
+
+
+Do not delete  — KEEP inventory (1:1 from live nav + footer)
+-----------------------------------------------------------
+Every label below must survive as a leaf page or a project filter.
+
+HEADER  Kuechen
+  Kuechenformen | Kuechenstile | Kuechenfarben | Besondere Kuechen
+  Material & Ausstattung | Marken | Alle Projekte
+  teasers: Designkueche | Salbeigruene Kueche | Moderne Kueche
+
+HEADER  Moebel nach Mass
+  Einbauschraenke | Begehbare Kleiderschraenke | Tische & Baenke | Wohnmoebel
+
+HEADER  Kueche planen
+  So entsteht Ihre Kueche | Ausstellung Freising
+  Kuechenplaner – Welche Kueche passt zu Ihnen?
+  Beratung & Termin
+  Wissen: Blog | Katalog bestellen | Checkliste
+
+HEADER  Ueber BEER
+  Ueber uns – Werte & Philosophie | Team | Aktuelles & Presse
+  Nachhaltigkeit | Empfehlungen | Karriere
+
+FOOTER  Kuechenwelten
+  Moderne Kuechen | Landhauskuechen | Designkuechen | Holzkuechen
+  Kueche mit Insel | Offene Kueche | L-Form | U-Form | Kuechenzeile
+  Kleine Kuechen | Schwarze Kuechen | Weisse Kuechen | Salbeigruene Kuechen
+  Einbaukueche | Luxuskueche | Raumhohe Kuechen | Grifflose Kuechen
+  Kueche nach Mass | Material & Ausstattung
+
+FOOTER  Marken
+  Bora | Miele | Gaggenau | Quooker
+
+FOOTER  Regionen
+  Muenchen | Freising | Erding | Dachau | Pfaffenhofen
+  Augsburg | Ingolstadt | Landshut | Regensburg | Mainburg | Nuernberg
+
+FOOTER  Ratgeber
+  Was kostet eine Kueche? | Top-Artikel | Alle Artikel
+
+FOOTER  Unternehmen
+  Ueber BEER | Team | Alle Projekte | Nachhaltigkeit | Karriere | Presse
+
+FOOTER  Kontakt
+  FAQ | BEER GmbH | Badendorf 6 | 85395 Wolfersdorf | Oeffnungszeiten
+
+LEGAL
+  Impressum | Datenschutz | AGB | Cookie-Einstellungen
+
+SOCIAL
+  Facebook | Instagram | Pinterest | YouTube | Houzz
+
+
+ADD from beer.de / manufactory (not yet on live nav)
+----------------------------------------------------
+Worlds: Vintage Love | Simple Elegance | Nature's Harmony | Smart Rebellion
+Inseln: Kochinsel | Arbeitsinsel | Essinsel | schwebend | mobil | Tepan
+Geraete: Kochfeld | Kochfeldabzug | Dunstabzug | Backofen | Dampfbackofen
+         Dampfgarer | Mikrowelle | Waermeschublade | Tellerwaermer
+         Kuehlschrank | Gefriergeraet | Weinkuehler | Geschirrspueler
+         Kaffeevollautomat | Vakuumierschublade | Brotschneidemaschine
+Platten: Naturstein | Edelstahl massiv | Keramik | Fenix | Holz | Hubtisch
+Partner extras: Siemens | Villeroy & Boch
+Delivery note: 200 km um Muenchen, Werkstudio ~800 qm
+

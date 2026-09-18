@@ -15,6 +15,7 @@ export default async function LandingSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
   if (slug === "home") {
     redirect("/");
   }
