@@ -1,8 +1,9 @@
 import UmamiClient from "@/components/UmamiClient";
-import { umamiScriptSrc } from "@/lib/umami";
+import { umamiRecorderSrc, umamiScriptSrc } from "@/lib/umami";
 
 export default function Umami() {
   const src = umamiScriptSrc();
+  const recorderSrc = umamiRecorderSrc();
   const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
   const domains = process.env.NEXT_PUBLIC_UMAMI_DOMAINS;
 
@@ -25,7 +26,20 @@ export default function Umami() {
         data-website-id={websiteId}
         {...(domains ? { "data-domains": domains } : {})}
       />
-      <UmamiClient src={src} websiteId={websiteId} domains={domains} />
+      {recorderSrc ? (
+        <script
+          defer
+          src={recorderSrc}
+          data-website-id={websiteId}
+          {...(domains ? { "data-domains": domains } : {})}
+        />
+      ) : null}
+      <UmamiClient
+        src={src}
+        recorderSrc={recorderSrc ?? undefined}
+        websiteId={websiteId}
+        domains={domains}
+      />
     </>
   );
 }

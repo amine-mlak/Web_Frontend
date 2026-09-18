@@ -6,6 +6,7 @@ interface UmamiTracker {
       | ((props: Record<string, unknown>) => Record<string, unknown>),
     data?: Record<string, unknown>,
   ): void;
+  getSession?: () => { cache?: string } | undefined;
 }
 
 interface Window {

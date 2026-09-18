@@ -8,9 +8,18 @@ export function allowSearchIndexing() {
   return process.env.ALLOW_INDEXING === "true";
 }
 
+function umamiBaseUrl() {
+  return process.env.NEXT_PUBLIC_UMAMI_URL?.replace(/\/$/, "") || null;
+}
+
 export function umamiScriptSrc() {
-  const base = process.env.NEXT_PUBLIC_UMAMI_URL?.replace(/\/$/, "");
+  const base = umamiBaseUrl();
   return base ? `${base}/script.js` : null;
+}
+
+export function umamiRecorderSrc() {
+  const base = umamiBaseUrl();
+  return base ? `${base}/recorder.js` : null;
 }
 
 export function trackEvent(
