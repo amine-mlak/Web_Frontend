@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import Pill from "@/components/Pill";
 import TextLink from "@/components/TextLink";
 import type { BeratungContent } from "@/lib/strapi";
+import { trackEvent } from "@/lib/umami";
 
 const fallback: BeratungContent = {
   eyebrow: "Persönliche Beratung",
@@ -28,6 +29,8 @@ export default function LeadCta({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+
+    trackEvent("form_submit", { location: "beratung" });
 
     // TODO: replace with real form submission
     console.log({
@@ -57,12 +60,22 @@ export default function LeadCta({
             <p className="mt-3">{data.street}</p>
             <p>{data.city}</p>
             <p className="mt-4">
-              <TextLink href={data.phoneHref} tone="dark">
+              <TextLink
+                href={data.phoneHref}
+                tone="dark"
+                data-umami-event="tel_click"
+                data-umami-event-location="beratung"
+              >
                 {data.phoneLabel}
               </TextLink>
             </p>
             <p className="mt-2">
-              <TextLink href={`mailto:${data.email}`} tone="dark">
+              <TextLink
+                href={`mailto:${data.email}`}
+                tone="dark"
+                data-umami-event="mailto_click"
+                data-umami-event-location="beratung"
+              >
                 {data.email}
               </TextLink>
             </p>

@@ -9,6 +9,8 @@ type PillProps = {
   href?: string;
   type?: "button" | "submit";
   className?: string;
+  event?: string;
+  eventLocation?: string;
 };
 
 const variantClass: Record<PillVariant, string> = {
@@ -23,19 +25,29 @@ export default function Pill({
   href,
   type = "button",
   className = "",
+  event,
+  eventLocation,
 }: PillProps) {
   const classes = `${variantClass[variant]} ${className}`.trim();
+  const tracking = event
+    ? {
+        "data-umami-event": event,
+        ...(eventLocation
+          ? { "data-umami-event-location": eventLocation }
+          : {}),
+      }
+    : {};
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} {...tracking}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type={type} className={classes}>
+    <button type={type} className={classes} {...tracking}>
       {children}
     </button>
   );

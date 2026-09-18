@@ -15,6 +15,7 @@ import {
   NavigationMenuViewport,
   NavigationMenuIndicator,
 } from "@/components/ui/navigation-menu";
+import { trackEvent } from "@/lib/umami";
 import { cn } from "@/lib/utils";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
@@ -105,6 +106,7 @@ export default function MegaMenu({
     setMenuValue(next);
     setDropdownOpen(true);
     setMenuOpen(true);
+    trackEvent("menu_open", { panel: next, placement: "desktop" });
   }, []);
 
   useEffect(() => {
@@ -123,6 +125,7 @@ export default function MegaMenu({
     window.clearTimeout(closeMobileTimer.current);
     setMobileOpen(true);
     setMobileVisible(true);
+    trackEvent("menu_open", { placement: "mobile" });
   }, []);
 
   const closeMobile = useCallback(() => {
@@ -238,7 +241,13 @@ export default function MegaMenu({
                   variant="ghost"
                   className="cta-invert type-nav h-auto rounded-full px-3.5 py-1.5 !text-[16px] font-normal tracking-[0.06em] xl:!text-[17px] hover:bg-ink"
                 >
-                  <Link href={ctaUrl}>{ctaLabel}</Link>
+                  <Link
+                    href={ctaUrl}
+                    data-umami-event="cta_beratung"
+                    data-umami-event-placement="header"
+                  >
+                    {ctaLabel}
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -339,7 +348,12 @@ export default function MegaMenu({
                     variant="ghost"
                     className="cta-invert type-nav h-auto w-full rounded-full py-3 hover:bg-ink"
                   >
-                    <Link href={ctaUrl} onClick={closeMobile}>
+                    <Link
+                      href={ctaUrl}
+                      onClick={closeMobile}
+                      data-umami-event="cta_beratung"
+                      data-umami-event-placement="header-mobile"
+                    >
                       {ctaLabel}
                     </Link>
                   </Button>

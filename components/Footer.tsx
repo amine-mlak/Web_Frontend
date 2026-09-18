@@ -57,6 +57,8 @@ export default function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     className="type-nav text-white/45 transition-colors hover:text-white"
+                    data-umami-event="social_click"
+                    data-umami-event-network={link.label}
                   >
                     {link.label}
                   </a>
@@ -87,7 +89,7 @@ function FooterList({ links }: { links: FooterLink[] }) {
   );
 }
 
-function FooterFlow({ links }: { links: FooterLink[] }) {
+function FooterFlow({ links }: { links: FooterLink[] }) {   
   return (
     <p className="type-nav mt-3 leading-6 text-white/55">
       {links.map((link, index) => (

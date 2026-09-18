@@ -1,6 +1,4 @@
-import Script from "next/script";
-import { Suspense } from "react";
-import UmamiPageviews from "@/components/UmamiPageviews";
+import UmamiClient from "@/components/UmamiClient";
 import { umamiScriptSrc } from "@/lib/umami";
 
 export default function Umami() {
@@ -21,18 +19,13 @@ export default function Umami() {
 
   return (
     <>
-      <Script
-        id="umami"
+      <script
+        defer
         src={src}
         data-website-id={websiteId}
-        data-auto-track="false"
-        data-do-not-track="true"
         {...(domains ? { "data-domains": domains } : {})}
-        strategy="afterInteractive"
       />
-      <Suspense fallback={null}>
-        <UmamiPageviews />
-      </Suspense>
+      <UmamiClient src={src} websiteId={websiteId} domains={domains} />
     </>
   );
 }
