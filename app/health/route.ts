@@ -7,6 +7,7 @@ export function GET() {
     headers: {
       "cache-control": "no-store",
       "content-type": "text/plain; charset=utf-8",
+      "x-robots-tag": "noindex, nofollow",
     },
   });
 }

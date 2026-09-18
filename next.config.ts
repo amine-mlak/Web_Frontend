@@ -7,6 +7,17 @@ const strapiUrl =
 
 const strapiHost = new URL(strapiUrl).hostname;
 
+const allowIndexing = process.env.ALLOW_INDEXING === "true";
+
+const robotsHeaders = allowIndexing
+  ? []
+  : [
+      {
+        key: "X-Robots-Tag",
+        value: "noindex, nofollow, noarchive, nosnippet",
+      },
+    ];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
@@ -34,6 +45,7 @@ const nextConfig: NextConfig = {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
           },
+          ...robotsHeaders,
         ],
       },
       {
@@ -43,6 +55,7 @@ const nextConfig: NextConfig = {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
           },
+          ...robotsHeaders,
         ],
       },
       {
@@ -52,6 +65,7 @@ const nextConfig: NextConfig = {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
           },
+          ...robotsHeaders,
         ],
       },
       {
@@ -61,6 +75,7 @@ const nextConfig: NextConfig = {
             key: "Content-Type",
             value: "text/markdown; charset=utf-8",
           },
+          ...robotsHeaders,
         ],
       },
       {
@@ -70,6 +85,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: "frame-ancestors 'self'",
           },
+          ...robotsHeaders,
         ],
       },
       {
@@ -79,6 +95,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: "frame-ancestors 'self'",
           },
+          ...robotsHeaders,
         ],
       },
     ];

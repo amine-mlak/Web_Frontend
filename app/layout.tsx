@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Figtree } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
+import Umami from "@/components/Umami";
+import { allowSearchIndexing } from "@/lib/umami";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -17,10 +19,26 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
+const indexingOn = allowSearchIndexing();
+
 export const metadata: Metadata = {
   title: "BEER Küchenmanufaktur | Wolfersdorf bei Freising",
   description:
     "Individuelle Manufakturküchen aus Wolfersdorf bei Freising. Beratung, Planung, Fertigung und Montage aus einer Hand.",
+  robots: indexingOn
+    ? { index: true, follow: true }
+    : {
+        index: false,
+        follow: false,
+        nocache: true,
+        googleBot: {
+          index: false,
+          follow: false,
+          noimageindex: true,
+          noarchive: true,
+          nosnippet: true,
+        },
+      },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -38,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         suppressHydrationWarning
       >
         <SmoothScroll />
+        <Umami />
         {children}
       </body>
     </html>
