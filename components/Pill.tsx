@@ -11,6 +11,7 @@ type PillProps = {
   className?: string;
   event?: string;
   eventLocation?: string;
+  disabled?: boolean;
 };
 
 const variantClass: Record<PillVariant, string> = {
@@ -27,6 +28,7 @@ export default function Pill({
   className = "",
   event,
   eventLocation,
+  disabled = false,
 }: PillProps) {
   const classes = `${variantClass[variant]} ${className}`.trim();
   const tracking = event
@@ -47,7 +49,7 @@ export default function Pill({
   }
 
   return (
-    <button type={type} className={classes} {...tracking}>
+    <button type={type} className={classes} disabled={disabled} {...tracking}>
       {children}
     </button>
   );

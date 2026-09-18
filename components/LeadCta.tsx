@@ -1,8 +1,9 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Pill from "@/components/Pill";
 import TextLink from "@/components/TextLink";
+import { conversionContext } from "@/lib/conversion";
 import type { BeratungContent } from "@/lib/strapi";
 import { trackEvent } from "@/lib/umami";
 
@@ -19,26 +20,121 @@ const fallback: BeratungContent = {
   email: "beratung@beer-kuechenmanufaktur.de",
 };
 
+type FormStatus = "idle" | "sending" | "success" | "error";
+
+async function fetchChallenge() {
+  const response = await fetch("/api/lead/challenge", {
+    method: "GET",
+    credentials: "same-origin",
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    return "";
+  }
+  const data: unknown = await response.json();
+  if (
+    data &&
+    typeof data === "object" &&
+    "challenge" in data &&
+    typeof data.challenge === "string"
+  ) {
+    return data.challenge;
+  }
+  return "";
+}
+
 export default function LeadCta({
   content,
 }: {
   content: BeratungContent | null;
 }) {
   const data = content ?? fallback;
+  const [challenge, setChallenge] = useState("");
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const mountedAt = useRef(Date.now());
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      const token = await fetchChallenge().catch(() => "");
+      if (!cancelled) {
+        setChallenge(token);
+      }
+    };
+    void load();
+    const timer = window.setInterval(() => {
+      void load();
+    }, 8 * 60 * 1000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    if (status === "sending") {
+      return;
+    }
 
-    trackEvent("form_submit", { location: "beratung" });
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    setStatus("sending");
 
-    // TODO: replace with real form submission
-    console.log({
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      message: formData.get("message"),
-    });
+    try {
+      let token = challenge;
+      if (!token) {
+        token = await fetchChallenge();
+        setChallenge(token);
+        await new Promise((resolve) => window.setTimeout(resolve, 1600));
+      } else {
+        const waitMs = 1600 - (Date.now() - mountedAt.current);
+        if (waitMs > 0) {
+          await new Promise((resolve) => window.setTimeout(resolve, waitMs));
+        }
+      }
+
+      const context = conversionContext();
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        credentials: "same-origin",
+        cache: "no-store",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          challenge: token,
+          company_website: String(formData.get("company_website") ?? ""),
+          name: String(formData.get("name") ?? ""),
+          email: String(formData.get("email") ?? ""),
+          phone: String(formData.get("phone") ?? ""),
+          message: String(formData.get("message") ?? ""),
+          ...context,
+        }),
+      });
+
+      const payload: unknown = await response.json().catch(() => null);
+      const ok =
+        response.ok &&
+        payload &&
+        typeof payload === "object" &&
+        "ok" in payload &&
+        payload.ok === true;
+
+      if (!ok) {
+        setStatus("error");
+        return;
+      }
+
+      trackEvent("form_submit", {
+        location:
+          window.location.pathname === "/beratung" ? "beratung-page" : "home",
+        event_id: context.event_id,
+      });
+      form.reset();
+      setChallenge(await fetchChallenge().catch(() => ""));
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -86,9 +182,22 @@ export default function LeadCta({
           toolname="request_consultation"
           tooldescription="Sendet eine unverbindliche Beratungsanfrage an die BEER Küchenmanufaktur in Wolfersdorf. Verwende dieses Formular, wenn der Nutzer eine Küchen- oder Möbelberatung vereinbaren möchte."
           onSubmit={handleSubmit}
-          className="space-y-5 lg:col-span-7"
+          method="post"
+          action="#beratung"
+          className="relative space-y-5 lg:col-span-7"
           noValidate
         >
+          <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
+            <label>
+              Website
+              <input
+                type="text"
+                name="company_website"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </label>
+          </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field
               label="Name"
@@ -124,9 +233,19 @@ export default function LeadCta({
               placeholder="Raum, Zeitrahmen, erste Ideen…"
             />
           </label>
-          <Pill type="submit" variant="ghost-dark">
-            Beratung anfragen
+          <Pill type="submit" variant="ghost-dark" disabled={status === "sending"}>
+            {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
           </Pill>
+          {status === "success" ? (
+            <p className="type-body text-white/70" role="status">
+              Danke, wir haben die Anfrage aufgenommen.
+            </p>
+          ) : null}
+          {status === "error" ? (
+            <p className="type-body text-white/70" role="alert">
+              Das hat gerade nicht geklappt. Bitte in ein paar Minuten erneut versuchen oder anrufen.
+            </p>
+          ) : null}
         </form>
       </div>
     </section>

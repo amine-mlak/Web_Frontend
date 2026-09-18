@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Figtree } from "next/font/google";
+import ClickIds from "@/components/ClickIds";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
 import { allowSearchIndexing } from "@/lib/umami";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         suppressHydrationWarning
       >
         <SmoothScroll />
+        <ClickIds />
         <Umami />
         {children}
       </body>
