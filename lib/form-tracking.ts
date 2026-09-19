@@ -1,16 +1,15 @@
-import {
-  LEAD_FIELD_STEPS,
-  LEAD_FORM,
-  leadFormSource,
-  type LeadFieldName,
-} from "@/lib/lead-fields";
+import { LEAD_FORM, leadFormSource } from "@/lib/lead-fields";
 import { trackEvent } from "@/lib/umami";
+import type { BeratungWizardStep } from "@/lib/beratung-wizard";
 
 type FormErrorReason =
   | "invalid_name"
   | "invalid_email"
   | "invalid_phone"
   | "invalid_message"
+  | "invalid_intent"
+  | "invalid_place"
+  | "invalid_plz"
   | "rate_limited"
   | "rejected"
   | "forbidden"
@@ -18,13 +17,14 @@ type FormErrorReason =
   | "network"
   | "spam";
 
-function meta() {
+function meta(extra?: Record<string, string | number | boolean>) {
   return {
     form: LEAD_FORM,
     source:
       typeof window === "undefined"
         ? "home"
         : leadFormSource(window.location.pathname),
+    ...extra,
   };
 }
 
@@ -32,31 +32,27 @@ export function trackFormView() {
   trackEvent("form_view", meta());
 }
 
-export function trackFormStart(field: LeadFieldName) {
-  trackEvent("form_start", { ...meta(), field });
+export function trackFormStart(step: BeratungWizardStep) {
+  trackEvent("form_start", meta({ step }));
 }
 
-export function trackFormStep(field: LeadFieldName) {
-  trackEvent("form_step", {
-    ...meta(),
-    field,
-    step: String(LEAD_FIELD_STEPS.indexOf(field) + 1),
-  });
+export function trackFormWizardStep(step: BeratungWizardStep) {
+  trackEvent("form_step", meta({ step }));
+  trackEvent(`form_step_${step}`, meta());
 }
 
-export function trackFormAttempt() {
-  trackEvent("form_attempt", meta());
+export function trackFormAttempt(step: BeratungWizardStep = "nachricht") {
+  trackEvent("form_attempt", meta({ step }));
 }
 
-export function trackFormError(reason: FormErrorReason, field?: LeadFieldName) {
-  trackEvent(
-    "form_error",
-    field ? { ...meta(), reason, field } : { ...meta(), reason },
-  );
+export function trackFormError(reason: FormErrorReason, step?: string) {
+  const data = step ? meta({ reason, step }) : meta({ reason });
+  trackEvent("form_error", data);
+  trackEvent(`form_error_${reason}`, data);
 }
 
 export function trackFormSubmit() {
-  trackEvent("form_submit", meta());
+  trackEvent("form_submit", meta({ step: "complete" }));
 }
 
 export function apiErrorReason(status: number): FormErrorReason {

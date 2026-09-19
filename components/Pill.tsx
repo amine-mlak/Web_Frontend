@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 type PillVariant = "primary" | "secondary" | "ghost-dark";
 
@@ -12,6 +12,7 @@ type PillProps = {
   event?: string;
   eventLocation?: string;
   disabled?: boolean;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 const variantClass: Record<PillVariant, string> = {
@@ -29,8 +30,10 @@ export default function Pill({
   event,
   eventLocation,
   disabled = false,
+  onClick,
 }: PillProps) {
-  const classes = `${variantClass[variant]} ${className}`.trim();
+  const classes =
+    `${variantClass[variant]} ${className} ${disabled ? "opacity-50" : ""}`.trim();
   const tracking = event
     ? {
         "data-umami-event": event,
@@ -49,7 +52,13 @@ export default function Pill({
   }
 
   return (
-    <button type={type} className={classes} disabled={disabled} {...tracking}>
+    <button
+      type={type}
+      className={classes}
+      disabled={disabled}
+      onClick={onClick}
+      {...tracking}
+    >
       {children}
     </button>
   );

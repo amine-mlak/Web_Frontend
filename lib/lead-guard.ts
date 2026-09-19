@@ -1,5 +1,11 @@
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
 import { trimLead, validateLeadFields } from "@/lib/lead-fields";
+import {
+  composeLeadMessage,
+  isBeratungIntent,
+  isBeratungPlace,
+  isBeratungSalutation,
+} from "@/lib/beratung-wizard";
 
 const CHALLENGE_TTL_MS = 20 * 60 * 1000;
 const MIN_SOLVE_MS = 1500;
@@ -35,6 +41,10 @@ export type LeadBody = {
   email?: string;
   phone?: string;
   message?: string;
+  intent?: string;
+  place?: string;
+  salutation?: string;
+  plz?: string;
   event_id?: string;
   event_source_url?: string;
   landing_url?: string;
@@ -139,6 +149,8 @@ export function extraAllowedOrigins() {
   extras.add("http://localhost:3000");
   extras.add("https://localhost:3000");
   extras.add("http://127.0.0.1:3000");
+  extras.add("http://localhost:3001");
+  extras.add("http://127.0.0.1:3001");
   return extras;
 }
 
@@ -232,11 +244,41 @@ export function validateLead(body: LeadBody) {
     return { ok: false as const };
   }
 
+  const intent = trim(body.intent, 40);
+  const place = trim(body.place, 40);
+  const salutation = trim(body.salutation, 20);
+  const plz = trim(body.plz, 8).replace(/\D/g, "").slice(0, 5);
+
+  if (!isBeratungIntent(intent)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungPlace(place)) {
+    return { ok: false as const };
+  }
+  if (salutation && !isBeratungSalutation(salutation)) {
+    return { ok: false as const };
+  }
+  if (place === "vor_ort" && !/^\d{5}$/.test(plz)) {
+    return { ok: false as const };
+  }
+
   const eventId = trim(body.event_id, 80);
   const eventSourceUrl = trim(body.event_source_url, 500);
   const landingUrl = trim(body.landing_url, 500);
   const clickIds = sanitizeClickIds(body.click_ids);
   const utm = sanitizeUtm(body.utm);
+  const details = {
+    ...(intent ? { intent } : {}),
+    ...(place ? { place } : {}),
+    ...(salutation ? { salutation } : {}),
+    ...(plz ? { plz } : {}),
+  };
+  const message = composeLeadMessage({
+    intent,
+    place,
+    plz,
+    message: fields.message,
+  });
 
   return {
     ok: true as const,
@@ -244,7 +286,8 @@ export function validateLead(body: LeadBody) {
       name: fields.name,
       email: fields.email,
       phone: fields.phone,
-      message: fields.message,
+      message,
+      details,
       eventId: eventId || undefined,
       eventSourceUrl: eventSourceUrl || undefined,
       landingUrl: landingUrl || undefined,

@@ -3,21 +3,28 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Pill from "@/components/Pill";
 import TextLink from "@/components/TextLink";
+import {
+  BERATUNG_INTENTS,
+  BERATUNG_PLACES,
+  BERATUNG_SALUTATIONS,
+  BERATUNG_WIZARD_STEPS,
+  WIZARD_STEP_COPY,
+  type BeratungIntent,
+  type BeratungPlace,
+  type BeratungSalutation,
+  type BeratungWizardStep,
+} from "@/lib/beratung-wizard";
 import { conversionContext } from "@/lib/conversion";
 import {
   apiErrorReason,
   trackFormAttempt,
   trackFormError,
   trackFormStart,
-  trackFormStep,
   trackFormSubmit,
   trackFormView,
+  trackFormWizardStep,
 } from "@/lib/form-tracking";
-import {
-  fieldHasValue,
-  validateLeadFields,
-  type LeadFieldName,
-} from "@/lib/lead-fields";
+import { isGermanPlz, normalizePlz, validateLeadFields } from "@/lib/lead-fields";
 import type { BeratungContent } from "@/lib/strapi";
 
 const fallback: BeratungContent = {
@@ -34,13 +41,6 @@ const fallback: BeratungContent = {
 };
 
 type FormStatus = "idle" | "sending" | "success" | "error";
-
-const fieldErrorCopy: Record<LeadFieldName, string> = {
-  name: "Bitte einen Namen angeben.",
-  email: "Bitte eine gültige E-Mail angeben.",
-  phone: "Bitte eine Telefonnummer angeben.",
-  message: "Bitte die Nachricht kürzen.",
-};
 
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", {
@@ -71,12 +71,24 @@ export default function LeadCta({
   const data = content ?? fallback;
   const [challenge, setChallenge] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [fieldError, setFieldError] = useState<LeadFieldName | null>(null);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [intent, setIntent] = useState<BeratungIntent | "">("");
+  const [place, setPlace] = useState<BeratungPlace | "">("");
+  const [plz, setPlz] = useState("");
+  const [salutation, setSalutation] = useState<BeratungSalutation | "">("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [stepError, setStepError] = useState("");
   const mountedAt = useRef(Date.now());
   const formRef = useRef<HTMLFormElement>(null);
   const seen = useRef(false);
   const started = useRef(false);
-  const completedFields = useRef(new Set<LeadFieldName>());
+  const trackedSteps = useRef(new Set<BeratungWizardStep>());
+
+  const step = BERATUNG_WIZARD_STEPS[stepIndex] ?? "anliegen";
+  const copy = WIZARD_STEP_COPY[step];
 
   useEffect(() => {
     let cancelled = false;
@@ -111,22 +123,90 @@ export default function LeadCta({
         trackFormView();
         observer.disconnect();
       },
-      { threshold: 0.4 },
+      { threshold: 0.35 },
     );
 
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
 
-  function markField(field: LeadFieldName, value: string) {
-    if (!started.current) {
-      started.current = true;
-      trackFormStart(field);
+  function markStart() {
+    if (started.current) {
+      return;
     }
-    if (fieldHasValue(field, value) && !completedFields.current.has(field)) {
-      completedFields.current.add(field);
-      trackFormStep(field);
+    started.current = true;
+    trackFormStart(step);
+  }
+
+  function completeStep(current: BeratungWizardStep) {
+    if (trackedSteps.current.has(current)) {
+      return;
     }
+    trackedSteps.current.add(current);
+    trackFormWizardStep(current);
+  }
+
+  function stepIsValid(): boolean {
+    if (step === "anliegen") {
+      if (!intent) {
+        setStepError("Bitte wählen Sie ein Anliegen.");
+        trackFormError("invalid_intent", step);
+        return false;
+      }
+    }
+    if (step === "ort") {
+      if (!place) {
+        setStepError("Bitte wählen Sie, wo wir uns treffen.");
+        trackFormError("invalid_place", step);
+        return false;
+      }
+      if (place === "vor_ort" && !isGermanPlz(normalizePlz(plz))) {
+        setStepError("Bitte eine fünfstellige Postleitzahl angeben.");
+        trackFormError("invalid_plz", step);
+        return false;
+      }
+    }
+    if (step === "kontakt") {
+      const fields = validateLeadFields({ name, email, phone, message: "" });
+      if (!fields.ok) {
+        const copyMap = {
+          invalid_name: "Bitte einen Namen angeben.",
+          invalid_email: "Bitte eine gültige E-Mail angeben.",
+          invalid_phone: "Bitte eine Telefonnummer angeben.",
+          invalid_message: "Bitte die Nachricht kürzen.",
+        };
+        setStepError(copyMap[fields.reason]);
+        trackFormError(fields.reason, step);
+        return false;
+      }
+    }
+    if (step === "nachricht") {
+      const fields = validateLeadFields({ name, email, phone, message });
+      if (!fields.ok && fields.reason === "invalid_message") {
+        setStepError("Bitte die Nachricht kürzen.");
+        trackFormError(fields.reason, step);
+        return false;
+      }
+    }
+    setStepError("");
+    return true;
+  }
+
+  function goNext() {
+    markStart();
+    if (!stepIsValid()) {
+      return;
+    }
+    completeStep(step);
+    setStepIndex((current) =>
+      Math.min(current + 1, BERATUNG_WIZARD_STEPS.length - 1),
+    );
+  }
+
+  function goBack() {
+    setStepError("");
+    setStatus("idle");
+    setStepIndex((current) => Math.max(current - 1, 0));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -134,28 +214,30 @@ export default function LeadCta({
     if (status === "sending") {
       return;
     }
+    if (step !== "nachricht") {
+      goNext();
+      return;
+    }
+
+    markStart();
+    if (!stepIsValid()) {
+      return;
+    }
 
     const form = event.currentTarget;
-    const formData = new FormData(form);
-    const honeypot = String(formData.get("company_website") ?? "");
-    setFieldError(null);
-    trackFormAttempt();
+    const honeypot = String(new FormData(form).get("company_website") ?? "");
+    trackFormAttempt("nachricht");
 
     if (honeypot) {
-      trackFormError("spam");
+      trackFormError("spam", step);
     }
 
     const fields = honeypot
       ? { ok: true as const, name: "", email: "", phone: "", message: "" }
-      : validateLeadFields({
-          name: formData.get("name"),
-          email: formData.get("email"),
-          phone: formData.get("phone"),
-          message: formData.get("message"),
-        });
+      : validateLeadFields({ name, email, phone, message });
     if (!fields.ok) {
-      trackFormError(fields.reason, fields.field);
-      setFieldError(fields.field);
+      trackFormError(fields.reason, step);
+      setStepError("Bitte Name, E-Mail und Telefon prüfen.");
       setStatus("error");
       return;
     }
@@ -188,6 +270,10 @@ export default function LeadCta({
           email: fields.email,
           phone: fields.phone,
           message: fields.message,
+          intent,
+          place,
+          salutation,
+          plz: place === "vor_ort" ? normalizePlz(plz) : "",
           ...context,
         }),
       });
@@ -201,24 +287,22 @@ export default function LeadCta({
         payload.ok === true;
 
       if (honeypot) {
-        form.reset();
         setStatus("success");
         return;
       }
 
       if (!ok) {
-        trackFormError(apiErrorReason(response.status));
+        trackFormError(apiErrorReason(response.status), step);
         setStatus("error");
         return;
       }
 
+      completeStep("nachricht");
       trackFormSubmit();
-      form.reset();
-      completedFields.current.clear();
       setChallenge(await fetchChallenge().catch(() => ""));
       setStatus("success");
     } catch {
-      trackFormError("network");
+      trackFormError("network", step);
       setStatus("error");
     }
   }
@@ -266,15 +350,16 @@ export default function LeadCta({
 
         <form
           ref={formRef}
-          toolname="request_consultation"
-          tooldescription="Sendet eine unverbindliche Beratungsanfrage an die BEER Küchenmanufaktur in Wolfersdorf. Verwende dieses Formular, wenn der Nutzer eine Küchen- oder Möbelberatung vereinbaren möchte."
           onSubmit={handleSubmit}
           method="post"
           action="#beratung"
-          className="relative space-y-5 lg:col-span-7"
+          className="relative space-y-6 lg:col-span-7"
           noValidate
         >
-          <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
+          <div
+            className="absolute -left-[9999px] h-0 w-0 overflow-hidden opacity-0"
+            aria-hidden="true"
+          >
             <label>
               Website
               <input
@@ -285,106 +370,226 @@ export default function LeadCta({
               />
             </label>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <Field
-              label="Name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              invalid={fieldError === "name"}
-              toolparamdescription="Vollständiger Name der anfragenden Person"
-              onInteract={markField}
-            />
-            <Field
-              label="E-Mail"
-              name="email"
-              type="email"
-              autoComplete="email"
-              invalid={fieldError === "email"}
-              toolparamdescription="E-Mail-Adresse für die Rückmeldung zur Beratung"
-              onInteract={markField}
-            />
-          </div>
-          <Field
-            label="Telefon"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            invalid={fieldError === "phone"}
-            toolparamdescription="Telefonnummer für die Terminabstimmung"
-            onInteract={markField}
-          />
-          <label className="block">
-            <span className="type-eyebrow mb-2 block text-white/55">
-              Nachricht
-            </span>
-            <textarea
-              name="message"
-              rows={5}
-              aria-invalid={fieldError === "message"}
-              toolparamdescription="Raum, Zeitrahmen, Küchenstil und erste Wünsche"
-              onFocus={(event) => markField("message", event.currentTarget.value)}
-              onChange={(event) => markField("message", event.currentTarget.value)}
-              onBlur={(event) => markField("message", event.currentTarget.value)}
-              className="type-body w-full resize-y border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
-              placeholder="Raum, Zeitrahmen, erste Ideen…"
-            />
-          </label>
-          <Pill type="submit" variant="ghost-dark" disabled={status === "sending"}>
-            {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
-          </Pill>
-          {fieldError ? (
-            <p className="type-body text-white/70" role="alert">
-              {fieldErrorCopy[fieldError]}
-            </p>
-          ) : null}
+
           {status === "success" ? (
-            <p className="type-body text-white/70" role="status">
-              Danke, wir haben die Anfrage aufgenommen.
-            </p>
-          ) : null}
-          {status === "error" && !fieldError ? (
-            <p className="type-body text-white/70" role="alert">
-              Das hat gerade nicht geklappt. Bitte in ein paar Minuten erneut versuchen oder anrufen.
-            </p>
-          ) : null}
+            <div role="status">
+              <p className="type-eyebrow mb-3 text-white/55">Anfrage angekommen</p>
+              <p className="type-h2 text-paper">
+                Danke, wir haben die Anfrage aufgenommen.
+              </p>
+              <p className="type-body mt-6 max-w-md text-white/70">
+                Wir melden uns persönlich, um den Termin in der Ausstellung oder
+                bei Ihnen vor Ort abzustimmen.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div>
+                <p className="type-eyebrow text-white/55">
+                  Schritt {stepIndex + 1} von {BERATUNG_WIZARD_STEPS.length}
+                </p>
+                <div className="mt-3 h-px bg-white/15" aria-hidden="true">
+                  <div
+                    className="h-px bg-white transition-[width] duration-300"
+                    style={{
+                      width: `${((stepIndex + 1) / BERATUNG_WIZARD_STEPS.length) * 100}%`,
+                    }}
+                  />
+                </div>
+                <p className="type-h3 mt-6 text-paper">{copy.title}</p>
+                <p className="type-body mt-3 text-white/65">{copy.hint}</p>
+              </div>
+
+              {step === "anliegen" ? (
+                <ChoiceList
+                  legend="Grund Ihrer Anfrage"
+                  value={intent}
+                  options={BERATUNG_INTENTS}
+                  onChange={(value) => {
+                    markStart();
+                    setIntent(value);
+                    setStepError("");
+                  }}
+                />
+              ) : null}
+
+              {step === "ort" ? (
+                <div className="space-y-5">
+                  <ChoiceList
+                    legend="Ort der Beratung"
+                    value={place}
+                    options={BERATUNG_PLACES}
+                    onChange={(value) => {
+                      markStart();
+                      setPlace(value);
+                      setStepError("");
+                    }}
+                  />
+                  {place === "vor_ort" ? (
+                    <label className="block">
+                      <span className="type-eyebrow mb-2 block text-white/55">
+                        Postleitzahl
+                      </span>
+                      <input
+                        name="plz"
+                        inputMode="numeric"
+                        autoComplete="postal-code"
+                        value={plz}
+                        onChange={(event) => setPlz(event.currentTarget.value)}
+                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
+                        placeholder="85395"
+                      />
+                    </label>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {step === "kontakt" ? (
+                <div className="space-y-5">
+                  <ChoiceList
+                    legend="Anrede"
+                    value={salutation}
+                    options={BERATUNG_SALUTATIONS}
+                    onChange={(value) => {
+                      markStart();
+                      setSalutation(value);
+                    }}
+                  />
+                  <label className="block">
+                    <span className="type-eyebrow mb-2 block text-white/55">Name</span>
+                    <input
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      value={name}
+                      onChange={(event) => setName(event.currentTarget.value)}
+                      className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                    />
+                  </label>
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <label className="block">
+                      <span className="type-eyebrow mb-2 block text-white/55">
+                        E-Mail
+                      </span>
+                      <input
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.currentTarget.value)}
+                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="type-eyebrow mb-2 block text-white/55">
+                        Telefon
+                      </span>
+                      <input
+                        name="phone"
+                        type="tel"
+                        autoComplete="tel"
+                        value={phone}
+                        onChange={(event) => setPhone(event.currentTarget.value)}
+                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                      />
+                    </label>
+                  </div>
+                </div>
+              ) : null}
+
+              {step === "nachricht" ? (
+                <label className="block">
+                  <span className="type-eyebrow mb-2 block text-white/55">
+                    Nachricht
+                  </span>
+                  <textarea
+                    name="message"
+                    rows={5}
+                    value={message}
+                    onChange={(event) => setMessage(event.currentTarget.value)}
+                    className="type-body w-full resize-y border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
+                    placeholder="Raum, Zeitrahmen, erste Ideen…"
+                  />
+                </label>
+              ) : null}
+
+              {stepError ? (
+                <p className="type-body text-white/70" role="alert">
+                  {stepError}
+                </p>
+              ) : null}
+              {status === "error" && !stepError ? (
+                <p className="type-body text-white/70" role="alert">
+                  Das hat gerade nicht geklappt. Bitte in ein paar Minuten erneut
+                  versuchen oder anrufen.
+                </p>
+              ) : null}
+
+              <div className="flex flex-wrap items-center gap-4">
+                {stepIndex > 0 ? (
+                  <button
+                    type="button"
+                    onClick={goBack}
+                    className="type-eyebrow text-white/55 underline-offset-4 hover:text-white hover:underline"
+                  >
+                    Zurück
+                  </button>
+                ) : null}
+                {step === "nachricht" ? (
+                  <Pill
+                    type="submit"
+                    variant="ghost-dark"
+                    disabled={status === "sending"}
+                  >
+                    {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
+                  </Pill>
+                ) : (
+                  <Pill type="button" variant="ghost-dark" onClick={goNext}>
+                    Weiter
+                  </Pill>
+                )}
+              </div>
+            </>
+          )}
         </form>
       </div>
     </section>
   );
 }
 
-function Field({
-  label,
-  name,
-  type,
-  autoComplete,
-  invalid = false,
-  toolparamdescription,
-  onInteract,
+function ChoiceList<T extends string>({
+  legend,
+  value,
+  options,
+  onChange,
 }: {
-  label: string;
-  name: LeadFieldName;
-  type: "text" | "email" | "tel";
-  autoComplete: string;
-  invalid?: boolean;
-  toolparamdescription: string;
-  onInteract: (field: LeadFieldName, value: string) => void;
+  legend: string;
+  value: T | "";
+  options: readonly { id: T; label: string }[];
+  onChange: (value: T) => void;
 }) {
   return (
-    <label className="block">
-      <span className="type-eyebrow mb-2 block text-white/55">{label}</span>
-      <input
-        name={name}
-        type={type}
-        autoComplete={autoComplete}
-        aria-invalid={invalid}
-        toolparamdescription={toolparamdescription}
-        onFocus={(event) => onInteract(name, event.currentTarget.value)}
-        onChange={(event) => onInteract(name, event.currentTarget.value)}
-        onBlur={(event) => onInteract(name, event.currentTarget.value)}
-        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
-      />
-    </label>
+    <fieldset className="space-y-3" role="radiogroup" aria-label={legend}>
+      <legend className="sr-only">{legend}</legend>
+      {options.map((option) => {
+        const selected = value === option.id;
+        return (
+          <button
+            key={option.id}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => onChange(option.id)}
+            className={`type-body w-full border px-4 py-3 text-left outline-none transition-colors ${
+              selected
+                ? "border-white bg-white text-nacht"
+                : "border-white/20 text-white hover:border-white"
+            }`}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </fieldset>
   );
 }

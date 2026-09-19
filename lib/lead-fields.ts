@@ -63,3 +63,11 @@ export function validateLeadFields(input: {
 
   return { ok: true, name, email, phone, message };
 }
+
+export function normalizePlz(value: unknown) {
+  return trimLead(value, 8).replace(/\D/g, "").slice(0, 5);
+}
+
+export function isGermanPlz(value: string) {
+  return /^\d{5}$/.test(value);
+}

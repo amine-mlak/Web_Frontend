@@ -105,6 +105,7 @@ export async function POST(request: Request) {
       client_ip: ip === "unknown" ? undefined : ip,
       user_agent: request.headers.get("user-agent") ?? undefined,
     },
+    details: valid.lead.details,
   };
 
   try {
