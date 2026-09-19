@@ -8,6 +8,7 @@ type FormErrorReason =
   | "invalid_phone"
   | "invalid_message"
   | "invalid_intent"
+  | "invalid_choice"
   | "invalid_place"
   | "invalid_plz"
   | "rate_limited"

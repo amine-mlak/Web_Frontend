@@ -2,9 +2,23 @@ import { createHmac, randomBytes, timingSafeEqual } from "crypto";
 import { trimLead, validateLeadFields } from "@/lib/lead-fields";
 import {
   composeLeadMessage,
+  isBeratungAppliance,
+  isBeratungBudget,
+  isBeratungColour,
+  isBeratungCooking,
+  isBeratungFloorplan,
+  isBeratungHandle,
   isBeratungIntent,
+  isBeratungOccasion,
   isBeratungPlace,
+  isBeratungPreparation,
+  isBeratungRoom,
   isBeratungSalutation,
+  isBeratungShape,
+  isBeratungStyle,
+  isBeratungTiming,
+  isBeratungWorktop,
+  parseIdList,
 } from "@/lib/beratung-wizard";
 
 const CHALLENGE_TTL_MS = 20 * 60 * 1000;
@@ -13,7 +27,7 @@ const LEAD_WINDOW_MS = 10 * 60 * 1000;
 const LEAD_MAX_PER_IP = 5;
 const LEAD_MAX_PER_EMAIL = 2;
 const CHALLENGE_MAX_PER_IP = 30;
-const MAX_JSON_BYTES = 8 * 1024;
+const MAX_JSON_BYTES = 12 * 1024;
 
 const BOT_UA =
   /(?:curl|wget|python-requests|python-httpx|scrapy|httpie|go-http-client|java\/|libwww-perl|aiohttp|fasthttp|okhttp|powershell|postmanruntime|nmap|masscan|sqlmap)/i;
@@ -42,6 +56,18 @@ export type LeadBody = {
   phone?: string;
   message?: string;
   intent?: string;
+  shape?: string;
+  room?: string;
+  style?: string;
+  handle?: string;
+  colour?: string;
+  worktop?: string;
+  appliances?: unknown;
+  cooking?: string;
+  preparations?: unknown;
+  timing?: string;
+  budget?: string;
+  floorplan?: string;
   place?: string;
   salutation?: string;
   plz?: string;
@@ -244,12 +270,57 @@ export function validateLead(body: LeadBody) {
     return { ok: false as const };
   }
 
+  const shape = trim(body.shape, 40);
+  const room = trim(body.room, 40);
+  const style = trim(body.style, 40);
+  const handle = trim(body.handle, 40);
+  const colour = trim(body.colour, 40);
+  const worktop = trim(body.worktop, 40);
+  const cooking = trim(body.cooking, 40);
   const intent = trim(body.intent, 40);
+  const timing = trim(body.timing, 40);
+  const budget = trim(body.budget, 40);
+  const floorplan = trim(body.floorplan, 40);
   const place = trim(body.place, 40);
   const salutation = trim(body.salutation, 20);
   const plz = trim(body.plz, 8).replace(/\D/g, "").slice(0, 5);
+  const appliances = parseIdList(body.appliances, isBeratungAppliance);
+  const preparations = parseIdList(body.preparations, isBeratungPreparation);
 
-  if (!isBeratungIntent(intent)) {
+  if (!isBeratungShape(shape)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungRoom(room)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungStyle(style)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungHandle(handle)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungColour(colour)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungWorktop(worktop)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungCooking(cooking)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungIntent(intent) || !isBeratungOccasion(intent)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungTiming(timing)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungBudget(budget)) {
+    return { ok: false as const };
+  }
+  if (!isBeratungFloorplan(floorplan)) {
+    return { ok: false as const };
+  }
+  if (appliances.length === 0 || preparations.length === 0) {
     return { ok: false as const };
   }
   if (!isBeratungPlace(place)) {
@@ -268,15 +339,25 @@ export function validateLead(body: LeadBody) {
   const clickIds = sanitizeClickIds(body.click_ids);
   const utm = sanitizeUtm(body.utm);
   const details = {
-    ...(intent ? { intent } : {}),
-    ...(place ? { place } : {}),
+    shape,
+    room,
+    style,
+    handle,
+    colour,
+    worktop,
+    appliances,
+    cooking,
+    intent,
+    preparations,
+    timing,
+    budget,
+    floorplan,
+    place,
     ...(salutation ? { salutation } : {}),
     ...(plz ? { plz } : {}),
   };
   const message = composeLeadMessage({
-    intent,
-    place,
-    plz,
+    ...details,
     message: fields.message,
   });
 

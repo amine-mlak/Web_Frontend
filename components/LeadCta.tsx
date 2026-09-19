@@ -1,18 +1,43 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { BeratungIcon } from "@/components/BeratungIcon";
 import Pill from "@/components/Pill";
 import TextLink from "@/components/TextLink";
 import {
-  BERATUNG_INTENTS,
+  BERATUNG_APPLIANCES,
+  BERATUNG_BUDGETS,
+  BERATUNG_COLOURS,
+  BERATUNG_COOKING,
+  BERATUNG_FLOORPLANS,
+  BERATUNG_HANDLES,
+  BERATUNG_OCCASIONS,
   BERATUNG_PLACES,
+  BERATUNG_PREPARATIONS,
+  BERATUNG_ROOMS,
   BERATUNG_SALUTATIONS,
+  BERATUNG_SHAPES,
+  BERATUNG_STYLES,
+  BERATUNG_TIMINGS,
   BERATUNG_WIZARD_STEPS,
+  BERATUNG_WORKTOPS,
+  PICTURE_STEPS,
   WIZARD_STEP_COPY,
-  type BeratungIntent,
+  toggleExclusiveNone,
+  type BeratungBudget,
+  type BeratungColour,
+  type BeratungCooking,
+  type BeratungFloorplan,
+  type BeratungHandle,
+  type BeratungOccasion,
   type BeratungPlace,
+  type BeratungRoom,
   type BeratungSalutation,
+  type BeratungShape,
+  type BeratungStyle,
+  type BeratungTiming,
   type BeratungWizardStep,
+  type BeratungWorktop,
 } from "@/lib/beratung-wizard";
 import { conversionContext } from "@/lib/conversion";
 import {
@@ -31,7 +56,7 @@ const fallback: BeratungContent = {
   eyebrow: "Persönliche Beratung",
   title: "Vereinbare deine persönliche Beratung",
   intro:
-    "Erzählen Sie uns von Ihrem Raum, Ihrem Alltag und Ihren Wünschen. Wir vereinbaren einen Termin in der Ausstellung oder bei Ihnen vor Ort.",
+    "Form, Stil, Alltag — in kurzen Schritten. Danach vereinbaren wir den Termin in der Ausstellung oder bei Ihnen vor Ort.",
   company: "BEER GmbH",
   street: "Badendorf 6",
   city: "85395 Wolfersdorf",
@@ -41,6 +66,8 @@ const fallback: BeratungContent = {
 };
 
 type FormStatus = "idle" | "sending" | "success" | "error";
+
+type Choice = { id: string; label: string; icon: string };
 
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", {
@@ -72,7 +99,19 @@ export default function LeadCta({
   const [challenge, setChallenge] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [stepIndex, setStepIndex] = useState(0);
-  const [intent, setIntent] = useState<BeratungIntent | "">("");
+  const [shape, setShape] = useState<BeratungShape | "">("");
+  const [room, setRoom] = useState<BeratungRoom | "">("");
+  const [style, setStyle] = useState<BeratungStyle | "">("");
+  const [handle, setHandle] = useState<BeratungHandle | "">("");
+  const [colour, setColour] = useState<BeratungColour | "">("");
+  const [worktop, setWorktop] = useState<BeratungWorktop | "">("");
+  const [appliances, setAppliances] = useState<string[]>([]);
+  const [cooking, setCooking] = useState<BeratungCooking | "">("");
+  const [occasion, setOccasion] = useState<BeratungOccasion | "">("");
+  const [preparations, setPreparations] = useState<string[]>([]);
+  const [timing, setTiming] = useState<BeratungTiming | "">("");
+  const [budget, setBudget] = useState<BeratungBudget | "">("");
+  const [floorplan, setFloorplan] = useState<BeratungFloorplan | "">("");
   const [place, setPlace] = useState<BeratungPlace | "">("");
   const [plz, setPlz] = useState("");
   const [salutation, setSalutation] = useState<BeratungSalutation | "">("");
@@ -87,8 +126,9 @@ export default function LeadCta({
   const started = useRef(false);
   const trackedSteps = useRef(new Set<BeratungWizardStep>());
 
-  const step = BERATUNG_WIZARD_STEPS[stepIndex] ?? "anliegen";
+  const step = BERATUNG_WIZARD_STEPS[stepIndex] ?? "shape";
   const copy = WIZARD_STEP_COPY[step];
+  const autoAdvance = PICTURE_STEPS.has(step) && step !== "ort";
 
   useEffect(() => {
     let cancelled = false;
@@ -146,21 +186,60 @@ export default function LeadCta({
     trackFormWizardStep(current);
   }
 
-  function stepIsValid(): boolean {
-    if (step === "anliegen") {
-      if (!intent) {
-        setStepError("Bitte wählen Sie ein Anliegen.");
-        trackFormError("invalid_intent", step);
-        return false;
-      }
+  function currentValue() {
+    switch (step) {
+      case "shape":
+        return shape;
+      case "room":
+        return room;
+      case "style":
+        return style;
+      case "handle":
+        return handle;
+      case "colour":
+        return colour;
+      case "worktop":
+        return worktop;
+      case "cooking":
+        return cooking;
+      case "occasion":
+        return occasion;
+      case "timing":
+        return timing;
+      case "budget":
+        return budget;
+      case "floorplan":
+        return floorplan;
+      case "ort":
+        return place;
+      default:
+        return "";
+    }
+  }
+
+  function stepIsValid(nextPlace = place): boolean {
+    if (PICTURE_STEPS.has(step) && step !== "ort" && !currentValue()) {
+      setStepError("Bitte eine Auswahl treffen.");
+      trackFormError("invalid_choice", step);
+      return false;
+    }
+    if (step === "appliances" && appliances.length === 0) {
+      setStepError("Bitte mindestens eine Auswahl treffen.");
+      trackFormError("invalid_choice", step);
+      return false;
+    }
+    if (step === "preparations" && preparations.length === 0) {
+      setStepError("Bitte mindestens eine Auswahl treffen.");
+      trackFormError("invalid_choice", step);
+      return false;
     }
     if (step === "ort") {
-      if (!place) {
+      if (!nextPlace) {
         setStepError("Bitte wählen Sie, wo wir uns treffen.");
         trackFormError("invalid_place", step);
         return false;
       }
-      if (place === "vor_ort" && !isGermanPlz(normalizePlz(plz))) {
+      if (nextPlace === "vor_ort" && !isGermanPlz(normalizePlz(plz))) {
         setStepError("Bitte eine fünfstellige Postleitzahl angeben.");
         trackFormError("invalid_plz", step);
         return false;
@@ -192,21 +271,71 @@ export default function LeadCta({
     return true;
   }
 
+  function advanceFrom(current: BeratungWizardStep) {
+    completeStep(current);
+    setStepIndex((index) => Math.min(index + 1, BERATUNG_WIZARD_STEPS.length - 1));
+  }
+
   function goNext() {
     markStart();
     if (!stepIsValid()) {
       return;
     }
-    completeStep(step);
-    setStepIndex((current) =>
-      Math.min(current + 1, BERATUNG_WIZARD_STEPS.length - 1),
-    );
+    advanceFrom(step);
   }
 
   function goBack() {
     setStepError("");
     setStatus("idle");
-    setStepIndex((current) => Math.max(current - 1, 0));
+    setStepIndex((index) => Math.max(index - 1, 0));
+  }
+
+  function pickSingle(id: string) {
+    markStart();
+    setStepError("");
+    switch (step) {
+      case "shape":
+        setShape(id as BeratungShape);
+        break;
+      case "room":
+        setRoom(id as BeratungRoom);
+        break;
+      case "style":
+        setStyle(id as BeratungStyle);
+        break;
+      case "handle":
+        setHandle(id as BeratungHandle);
+        break;
+      case "colour":
+        setColour(id as BeratungColour);
+        break;
+      case "worktop":
+        setWorktop(id as BeratungWorktop);
+        break;
+      case "cooking":
+        setCooking(id as BeratungCooking);
+        break;
+      case "occasion":
+        setOccasion(id as BeratungOccasion);
+        break;
+      case "timing":
+        setTiming(id as BeratungTiming);
+        break;
+      case "budget":
+        setBudget(id as BeratungBudget);
+        break;
+      case "floorplan":
+        setFloorplan(id as BeratungFloorplan);
+        break;
+      case "ort":
+        setPlace(id as BeratungPlace);
+        break;
+      default:
+        break;
+    }
+    if (autoAdvance) {
+      advanceFrom(step);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -270,7 +399,19 @@ export default function LeadCta({
           email: fields.email,
           phone: fields.phone,
           message: fields.message,
-          intent,
+          shape,
+          room,
+          style,
+          handle,
+          colour,
+          worktop,
+          appliances,
+          cooking,
+          intent: occasion,
+          preparations,
+          timing,
+          budget,
+          floorplan,
           place,
           salutation,
           plz: place === "vor_ort" ? normalizePlz(plz) : "",
@@ -306,6 +447,9 @@ export default function LeadCta({
       setStatus("error");
     }
   }
+
+  const pictureOptions = optionsForStep(step);
+  const multiOptions = multiOptionsForStep(step);
 
   return (
     <section
@@ -400,61 +544,79 @@ export default function LeadCta({
                 <p className="type-body mt-3 text-white/65">{copy.hint}</p>
               </div>
 
-              {step === "anliegen" ? (
-                <ChoiceList
-                  legend="Grund Ihrer Anfrage"
-                  value={intent}
-                  options={BERATUNG_INTENTS}
-                  onChange={(value) => {
+              {pictureOptions ? (
+                <PictureChoice
+                  legend={copy.title}
+                  value={currentValue()}
+                  options={pictureOptions}
+                  columns={step === "shape" || step === "style" || step === "occasion" ? 3 : 2}
+                  onChange={pickSingle}
+                />
+              ) : null}
+
+              {multiOptions ? (
+                <ListChoice
+                  legend={copy.title}
+                  values={step === "appliances" ? appliances : preparations}
+                  options={multiOptions}
+                  onToggle={(id) => {
                     markStart();
-                    setIntent(value);
                     setStepError("");
+                    if (step === "appliances") {
+                      setAppliances((current) => toggleExclusiveNone(current, id));
+                    } else {
+                      setPreparations((current) => toggleExclusiveNone(current, id));
+                    }
                   }}
                 />
               ) : null}
 
-              {step === "ort" ? (
-                <div className="space-y-5">
-                  <ChoiceList
-                    legend="Ort der Beratung"
-                    value={place}
-                    options={BERATUNG_PLACES}
-                    onChange={(value) => {
-                      markStart();
-                      setPlace(value);
-                      setStepError("");
-                    }}
+              {step === "ort" && place === "vor_ort" ? (
+                <label className="block">
+                  <span className="type-eyebrow mb-2 block text-white/55">
+                    Postleitzahl
+                  </span>
+                  <input
+                    name="plz"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    value={plz}
+                    onChange={(event) => setPlz(event.currentTarget.value)}
+                    className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
+                    placeholder="85395"
                   />
-                  {place === "vor_ort" ? (
-                    <label className="block">
-                      <span className="type-eyebrow mb-2 block text-white/55">
-                        Postleitzahl
-                      </span>
-                      <input
-                        name="plz"
-                        inputMode="numeric"
-                        autoComplete="postal-code"
-                        value={plz}
-                        onChange={(event) => setPlz(event.currentTarget.value)}
-                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
-                        placeholder="85395"
-                      />
-                    </label>
-                  ) : null}
-                </div>
+                </label>
               ) : null}
 
               {step === "kontakt" ? (
                 <div className="space-y-5">
-                  <ChoiceList
-                    legend="Anrede"
-                    value={salutation}
-                    options={BERATUNG_SALUTATIONS}
-                    onChange={(value) => {
-                      markStart();
-                      setSalutation(value);
-                    }}
-                  />
+                  <fieldset className="space-y-3" role="radiogroup" aria-label="Anrede">
+                    <legend className="sr-only">Anrede</legend>
+                    <div className="flex flex-wrap gap-3">
+                      {BERATUNG_SALUTATIONS.map((option) => {
+                        const selected = salutation === option.id;
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            role="radio"
+                            aria-checked={selected}
+                            onClick={() => {
+                              markStart();
+                              setSalutation(option.id);
+                            }}
+                            className={`type-body border px-4 py-3 outline-none transition-colors ${
+                              selected
+                                ? "border-white bg-white text-nacht"
+                                : "border-white/20 text-white hover:border-white"
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
                   <label className="block">
                     <span className="type-eyebrow mb-2 block text-white/55">Name</span>
                     <input
@@ -543,6 +705,8 @@ export default function LeadCta({
                   >
                     {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
                   </Pill>
+                ) : autoAdvance && !currentValue() ? (
+                  <p className="type-eyebrow text-white/40">Auswahl führt weiter</p>
                 ) : (
                   <Pill type="button" variant="ghost-dark" onClick={goNext}>
                     Weiter
@@ -557,36 +721,133 @@ export default function LeadCta({
   );
 }
 
-function ChoiceList<T extends string>({
+function optionsForStep(step: BeratungWizardStep): readonly Choice[] | null {
+  switch (step) {
+    case "shape":
+      return BERATUNG_SHAPES;
+    case "room":
+      return BERATUNG_ROOMS;
+    case "style":
+      return BERATUNG_STYLES;
+    case "handle":
+      return BERATUNG_HANDLES;
+    case "colour":
+      return BERATUNG_COLOURS;
+    case "worktop":
+      return BERATUNG_WORKTOPS;
+    case "cooking":
+      return BERATUNG_COOKING;
+    case "occasion":
+      return BERATUNG_OCCASIONS;
+    case "timing":
+      return BERATUNG_TIMINGS;
+    case "budget":
+      return BERATUNG_BUDGETS;
+    case "floorplan":
+      return BERATUNG_FLOORPLANS;
+    case "ort":
+      return BERATUNG_PLACES;
+    default:
+      return null;
+  }
+}
+
+function multiOptionsForStep(step: BeratungWizardStep): readonly Choice[] | null {
+  if (step === "appliances") {
+    return BERATUNG_APPLIANCES;
+  }
+  if (step === "preparations") {
+    return BERATUNG_PREPARATIONS;
+  }
+  return null;
+}
+
+function PictureChoice({
   legend,
   value,
   options,
+  columns,
   onChange,
 }: {
   legend: string;
-  value: T | "";
-  options: readonly { id: T; label: string }[];
-  onChange: (value: T) => void;
+  value: string;
+  options: readonly Choice[];
+  columns: 2 | 3;
+  onChange: (id: string) => void;
 }) {
   return (
-    <fieldset className="space-y-3" role="radiogroup" aria-label={legend}>
+    <fieldset>
+      <legend className="sr-only">{legend}</legend>
+      <div
+        className={`grid gap-4 ${columns === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}
+        role="radiogroup"
+        aria-label={legend}
+      >
+        {options.map((option) => {
+          const selected = value === option.id;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => onChange(option.id)}
+              className="group text-center outline-none"
+            >
+              <span
+                className={`mx-auto flex aspect-square w-full max-w-[11rem] items-center justify-center border p-4 transition-colors ${
+                  selected
+                    ? "border-white bg-white text-nacht"
+                    : "border-white/20 text-white group-hover:border-white"
+                }`}
+              >
+                <BeratungIcon name={option.icon} />
+              </span>
+              <span
+                className={`type-body mt-3 block ${selected ? "text-paper" : "text-white/75"}`}
+              >
+                {option.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function ListChoice({
+  legend,
+  values,
+  options,
+  onToggle,
+}: {
+  legend: string;
+  values: string[];
+  options: readonly Choice[];
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <fieldset className="space-y-3">
       <legend className="sr-only">{legend}</legend>
       {options.map((option) => {
-        const selected = value === option.id;
+        const selected = values.includes(option.id);
         return (
           <button
             key={option.id}
             type="button"
-            role="radio"
-            aria-checked={selected}
-            onClick={() => onChange(option.id)}
-            className={`type-body w-full border px-4 py-3 text-left outline-none transition-colors ${
+            aria-pressed={selected}
+            onClick={() => onToggle(option.id)}
+            className={`flex w-full items-center gap-4 border px-4 py-3 text-left outline-none transition-colors ${
               selected
                 ? "border-white bg-white text-nacht"
                 : "border-white/20 text-white hover:border-white"
             }`}
           >
-            {option.label}
+            <span className="h-10 w-10 shrink-0">
+              <BeratungIcon name={option.icon} />
+            </span>
+            <span className="type-body">{option.label}</span>
           </button>
         );
       })}
