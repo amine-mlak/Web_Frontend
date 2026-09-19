@@ -4,8 +4,21 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import Pill from "@/components/Pill";
 import TextLink from "@/components/TextLink";
 import { conversionContext } from "@/lib/conversion";
+import {
+  apiErrorReason,
+  trackFormAttempt,
+  trackFormError,
+  trackFormStart,
+  trackFormStep,
+  trackFormSubmit,
+  trackFormView,
+} from "@/lib/form-tracking";
+import {
+  fieldHasValue,
+  validateLeadFields,
+  type LeadFieldName,
+} from "@/lib/lead-fields";
 import type { BeratungContent } from "@/lib/strapi";
-import { trackEvent } from "@/lib/umami";
 
 const fallback: BeratungContent = {
   eyebrow: "Persönliche Beratung",
@@ -21,6 +34,13 @@ const fallback: BeratungContent = {
 };
 
 type FormStatus = "idle" | "sending" | "success" | "error";
+
+const fieldErrorCopy: Record<LeadFieldName, string> = {
+  name: "Bitte einen Namen angeben.",
+  email: "Bitte eine gültige E-Mail angeben.",
+  phone: "Bitte eine Telefonnummer angeben.",
+  message: "Bitte die Nachricht kürzen.",
+};
 
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", {
@@ -51,7 +71,12 @@ export default function LeadCta({
   const data = content ?? fallback;
   const [challenge, setChallenge] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
+  const [fieldError, setFieldError] = useState<LeadFieldName | null>(null);
   const mountedAt = useRef(Date.now());
+  const formRef = useRef<HTMLFormElement>(null);
+  const seen = useRef(false);
+  const started = useRef(false);
+  const completedFields = useRef(new Set<LeadFieldName>());
 
   useEffect(() => {
     let cancelled = false;
@@ -71,6 +96,39 @@ export default function LeadCta({
     };
   }, []);
 
+  useEffect(() => {
+    const node = formRef.current;
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (seen.current || !entries.some((entry) => entry.isIntersecting)) {
+          return;
+        }
+        seen.current = true;
+        trackFormView();
+        observer.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  function markField(field: LeadFieldName, value: string) {
+    if (!started.current) {
+      started.current = true;
+      trackFormStart(field);
+    }
+    if (fieldHasValue(field, value) && !completedFields.current.has(field)) {
+      completedFields.current.add(field);
+      trackFormStep(field);
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === "sending") {
@@ -79,6 +137,29 @@ export default function LeadCta({
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const honeypot = String(formData.get("company_website") ?? "");
+    setFieldError(null);
+    trackFormAttempt();
+
+    if (honeypot) {
+      trackFormError("spam");
+    }
+
+    const fields = honeypot
+      ? { ok: true as const, name: "", email: "", phone: "", message: "" }
+      : validateLeadFields({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          phone: formData.get("phone"),
+          message: formData.get("message"),
+        });
+    if (!fields.ok) {
+      trackFormError(fields.reason, fields.field);
+      setFieldError(fields.field);
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
 
     try {
@@ -102,11 +183,11 @@ export default function LeadCta({
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           challenge: token,
-          company_website: String(formData.get("company_website") ?? ""),
-          name: String(formData.get("name") ?? ""),
-          email: String(formData.get("email") ?? ""),
-          phone: String(formData.get("phone") ?? ""),
-          message: String(formData.get("message") ?? ""),
+          company_website: honeypot,
+          name: fields.name,
+          email: fields.email,
+          phone: fields.phone,
+          message: fields.message,
           ...context,
         }),
       });
@@ -119,20 +200,25 @@ export default function LeadCta({
         "ok" in payload &&
         payload.ok === true;
 
+      if (honeypot) {
+        form.reset();
+        setStatus("success");
+        return;
+      }
+
       if (!ok) {
+        trackFormError(apiErrorReason(response.status));
         setStatus("error");
         return;
       }
 
-      trackEvent("form_submit", {
-        location:
-          window.location.pathname === "/beratung" ? "beratung-page" : "home",
-        event_id: context.event_id,
-      });
+      trackFormSubmit();
       form.reset();
+      completedFields.current.clear();
       setChallenge(await fetchChallenge().catch(() => ""));
       setStatus("success");
     } catch {
+      trackFormError("network");
       setStatus("error");
     }
   }
@@ -179,6 +265,7 @@ export default function LeadCta({
         </div>
 
         <form
+          ref={formRef}
           toolname="request_consultation"
           tooldescription="Sendet eine unverbindliche Beratungsanfrage an die BEER Küchenmanufaktur in Wolfersdorf. Verwende dieses Formular, wenn der Nutzer eine Küchen- oder Möbelberatung vereinbaren möchte."
           onSubmit={handleSubmit}
@@ -204,14 +291,18 @@ export default function LeadCta({
               name="name"
               type="text"
               autoComplete="name"
+              invalid={fieldError === "name"}
               toolparamdescription="Vollständiger Name der anfragenden Person"
+              onInteract={markField}
             />
             <Field
               label="E-Mail"
               name="email"
               type="email"
               autoComplete="email"
+              invalid={fieldError === "email"}
               toolparamdescription="E-Mail-Adresse für die Rückmeldung zur Beratung"
+              onInteract={markField}
             />
           </div>
           <Field
@@ -219,7 +310,9 @@ export default function LeadCta({
             name="phone"
             type="tel"
             autoComplete="tel"
+            invalid={fieldError === "phone"}
             toolparamdescription="Telefonnummer für die Terminabstimmung"
+            onInteract={markField}
           />
           <label className="block">
             <span className="type-eyebrow mb-2 block text-white/55">
@@ -228,7 +321,11 @@ export default function LeadCta({
             <textarea
               name="message"
               rows={5}
+              aria-invalid={fieldError === "message"}
               toolparamdescription="Raum, Zeitrahmen, Küchenstil und erste Wünsche"
+              onFocus={(event) => markField("message", event.currentTarget.value)}
+              onChange={(event) => markField("message", event.currentTarget.value)}
+              onBlur={(event) => markField("message", event.currentTarget.value)}
               className="type-body w-full resize-y border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
               placeholder="Raum, Zeitrahmen, erste Ideen…"
             />
@@ -236,12 +333,17 @@ export default function LeadCta({
           <Pill type="submit" variant="ghost-dark" disabled={status === "sending"}>
             {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
           </Pill>
+          {fieldError ? (
+            <p className="type-body text-white/70" role="alert">
+              {fieldErrorCopy[fieldError]}
+            </p>
+          ) : null}
           {status === "success" ? (
             <p className="type-body text-white/70" role="status">
               Danke, wir haben die Anfrage aufgenommen.
             </p>
           ) : null}
-          {status === "error" ? (
+          {status === "error" && !fieldError ? (
             <p className="type-body text-white/70" role="alert">
               Das hat gerade nicht geklappt. Bitte in ein paar Minuten erneut versuchen oder anrufen.
             </p>
@@ -257,13 +359,17 @@ function Field({
   name,
   type,
   autoComplete,
+  invalid = false,
   toolparamdescription,
+  onInteract,
 }: {
   label: string;
-  name: string;
+  name: LeadFieldName;
   type: "text" | "email" | "tel";
   autoComplete: string;
+  invalid?: boolean;
   toolparamdescription: string;
+  onInteract: (field: LeadFieldName, value: string) => void;
 }) {
   return (
     <label className="block">
@@ -272,7 +378,11 @@ function Field({
         name={name}
         type={type}
         autoComplete={autoComplete}
+        aria-invalid={invalid}
         toolparamdescription={toolparamdescription}
+        onFocus={(event) => onInteract(name, event.currentTarget.value)}
+        onChange={(event) => onInteract(name, event.currentTarget.value)}
+        onBlur={(event) => onInteract(name, event.currentTarget.value)}
         className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
       />
     </label>

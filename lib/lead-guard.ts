@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
+import { trimLead, validateLeadFields } from "@/lib/lead-fields";
 
 const CHALLENGE_TTL_MS = 20 * 60 * 1000;
 const MIN_SOLVE_MS = 1500;
@@ -49,10 +50,7 @@ function challengeSecret() {
 }
 
 function trim(value: unknown, max: number) {
-  if (typeof value !== "string") {
-    return "";
-  }
-  return value.replace(/\s+/g, " ").trim().slice(0, max);
+  return trimLead(value, max);
 }
 
 function hmac(value: string) {
@@ -229,38 +227,24 @@ export function honeypotFilled(body: LeadBody) {
 }
 
 export function validateLead(body: LeadBody) {
-  const name = trim(body.name, 80);
-  const email = trim(body.email, 120).toLowerCase();
-  const phone = trim(body.phone, 40);
-  const message = trim(body.message, 2000);
+  const fields = validateLeadFields(body);
+  if (!fields.ok) {
+    return { ok: false as const };
+  }
+
   const eventId = trim(body.event_id, 80);
   const eventSourceUrl = trim(body.event_source_url, 500);
   const landingUrl = trim(body.landing_url, 500);
-
-  if (name.length < 2 || !/^[^\r\n]{2,80}$/.test(name)) {
-    return { ok: false as const };
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { ok: false as const };
-  }
-  const phoneDigits = phone.replace(/\D/g, "");
-  if (phoneDigits.length < 6 || phoneDigits.length > 16) {
-    return { ok: false as const };
-  }
-  if ((message.match(/https?:\/\//gi) ?? []).length > 2) {
-    return { ok: false as const };
-  }
-
   const clickIds = sanitizeClickIds(body.click_ids);
   const utm = sanitizeUtm(body.utm);
 
   return {
     ok: true as const,
     lead: {
-      name,
-      email,
-      phone,
-      message,
+      name: fields.name,
+      email: fields.email,
+      phone: fields.phone,
+      message: fields.message,
       eventId: eventId || undefined,
       eventSourceUrl: eventSourceUrl || undefined,
       landingUrl: landingUrl || undefined,
