@@ -454,25 +454,24 @@ export default function LeadCta({
   return (
     <section
       id="beratung"
-      className="border-t border-line bg-nacht text-white"
+      className="border-t border-line bg-paper text-ink"
       aria-labelledby="beratung-heading"
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-16 px-6 py-24 md:py-32 lg:grid-cols-12 lg:gap-20">
         <div className="lg:col-span-5">
-          <p className="type-eyebrow mb-3 text-paper">{data.eyebrow}</p>
-          <h2 id="beratung-heading" className="type-h2 text-paper">
+          <p className="type-eyebrow mb-3 text-ink">{data.eyebrow}</p>
+          <h2 id="beratung-heading" className="type-h2 text-ink">
             {data.title}
           </h2>
-          <p className="type-intro mt-6 max-w-md text-white/70">{data.intro}</p>
+          <p className="type-intro mt-6 max-w-md text-muted">{data.intro}</p>
 
-          <address className="type-body mt-12 text-white/70 not-italic">
-            <p className="type-eyebrow text-white">{data.company}</p>
+          <address className="type-body mt-12 not-italic">
+            <p className="type-eyebrow text-ink">{data.company}</p>
             <p className="mt-3">{data.street}</p>
             <p>{data.city}</p>
             <p className="mt-4">
               <TextLink
                 href={data.phoneHref}
-                tone="dark"
                 data-umami-event="tel_click"
                 data-umami-event-location="beratung"
               >
@@ -482,7 +481,6 @@ export default function LeadCta({
             <p className="mt-2">
               <TextLink
                 href={`mailto:${data.email}`}
-                tone="dark"
                 data-umami-event="mailto_click"
                 data-umami-event-location="beratung"
               >
@@ -517,11 +515,11 @@ export default function LeadCta({
 
           {status === "success" ? (
             <div role="status">
-              <p className="type-eyebrow mb-3 text-white/55">Anfrage angekommen</p>
-              <p className="type-h2 text-paper">
+              <p className="type-eyebrow mb-3 text-muted">Anfrage angekommen</p>
+              <p className="type-h2 text-ink">
                 Danke, wir haben die Anfrage aufgenommen.
               </p>
-              <p className="type-body mt-6 max-w-md text-white/70">
+              <p className="type-body mt-6 max-w-md">
                 Wir melden uns persönlich, um den Termin in der Ausstellung oder
                 bei Ihnen vor Ort abzustimmen.
               </p>
@@ -529,19 +527,19 @@ export default function LeadCta({
           ) : (
             <>
               <div>
-                <p className="type-eyebrow text-white/55">
+                <p className="type-eyebrow text-muted">
                   Schritt {stepIndex + 1} von {BERATUNG_WIZARD_STEPS.length}
                 </p>
-                <div className="mt-3 h-px bg-white/15" aria-hidden="true">
+                <div className="mt-3 h-px bg-line" aria-hidden="true">
                   <div
-                    className="h-px bg-white transition-[width] duration-300"
+                    className="h-px bg-ink transition-[width] duration-300"
                     style={{
                       width: `${((stepIndex + 1) / BERATUNG_WIZARD_STEPS.length) * 100}%`,
                     }}
                   />
                 </div>
-                <p className="type-h3 mt-6 text-paper">{copy.title}</p>
-                <p className="type-body mt-3 text-white/65">{copy.hint}</p>
+                <p className="type-h3 mt-6 text-ink">{copy.title}</p>
+                <p className="type-body mt-3">{copy.hint}</p>
               </div>
 
               {pictureOptions ? (
@@ -573,18 +571,18 @@ export default function LeadCta({
 
               {step === "ort" && place === "vor_ort" ? (
                 <label className="block">
-                  <span className="type-eyebrow mb-2 block text-white/55">
-                    Postleitzahl
-                  </span>
-                  <input
-                    name="plz"
-                    inputMode="numeric"
-                    autoComplete="postal-code"
-                    value={plz}
-                    onChange={(event) => setPlz(event.currentTarget.value)}
-                    className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
-                    placeholder="85395"
-                  />
+                      <span className="type-eyebrow mb-2 block text-muted">
+                        Postleitzahl
+                      </span>
+                      <input
+                        name="plz"
+                        inputMode="numeric"
+                        autoComplete="postal-code"
+                        value={plz}
+                        onChange={(event) => setPlz(event.currentTarget.value)}
+                        className="type-body w-full border border-line bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-muted/50 focus:border-ink"
+                        placeholder="85395"
+                      />
                 </label>
               ) : null}
 
@@ -607,8 +605,8 @@ export default function LeadCta({
                             }}
                             className={`type-body border px-4 py-3 outline-none transition-colors ${
                               selected
-                                ? "border-white bg-white text-nacht"
-                                : "border-white/20 text-white hover:border-white"
+                                ? "border-ink bg-ink text-paper"
+                                : "border-line text-ink hover:border-ink"
                             }`}
                           >
                             {option.label}
@@ -618,19 +616,19 @@ export default function LeadCta({
                     </div>
                   </fieldset>
                   <label className="block">
-                    <span className="type-eyebrow mb-2 block text-white/55">Name</span>
+                    <span className="type-eyebrow mb-2 block text-muted">Name</span>
                     <input
                       name="name"
                       type="text"
                       autoComplete="name"
                       value={name}
                       onChange={(event) => setName(event.currentTarget.value)}
-                      className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                      className="type-body w-full border border-line bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-ink"
                     />
                   </label>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <label className="block">
-                      <span className="type-eyebrow mb-2 block text-white/55">
+                      <span className="type-eyebrow mb-2 block text-muted">
                         E-Mail
                       </span>
                       <input
@@ -639,11 +637,11 @@ export default function LeadCta({
                         autoComplete="email"
                         value={email}
                         onChange={(event) => setEmail(event.currentTarget.value)}
-                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                        className="type-body w-full border border-line bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-ink"
                       />
                     </label>
                     <label className="block">
-                      <span className="type-eyebrow mb-2 block text-white/55">
+                      <span className="type-eyebrow mb-2 block text-muted">
                         Telefon
                       </span>
                       <input
@@ -652,7 +650,7 @@ export default function LeadCta({
                         autoComplete="tel"
                         value={phone}
                         onChange={(event) => setPhone(event.currentTarget.value)}
-                        className="type-body w-full border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors focus:border-white"
+                        className="type-body w-full border border-line bg-white px-4 py-3 text-ink outline-none transition-colors focus:border-ink"
                       />
                     </label>
                   </div>
@@ -661,7 +659,7 @@ export default function LeadCta({
 
               {step === "nachricht" ? (
                 <label className="block">
-                  <span className="type-eyebrow mb-2 block text-white/55">
+                  <span className="type-eyebrow mb-2 block text-muted">
                     Nachricht
                   </span>
                   <textarea
@@ -669,19 +667,19 @@ export default function LeadCta({
                     rows={5}
                     value={message}
                     onChange={(event) => setMessage(event.currentTarget.value)}
-                    className="type-body w-full resize-y border border-white/20 bg-transparent px-4 py-3 text-white outline-none transition-colors placeholder:text-white/30 focus:border-white"
+                    className="type-body w-full resize-y border border-line bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-muted/50 focus:border-ink"
                     placeholder="Raum, Zeitrahmen, erste Ideen…"
                   />
                 </label>
               ) : null}
 
               {stepError ? (
-                <p className="type-body text-white/70" role="alert">
+                <p className="type-body" role="alert">
                   {stepError}
                 </p>
               ) : null}
               {status === "error" && !stepError ? (
-                <p className="type-body text-white/70" role="alert">
+                <p className="type-body" role="alert">
                   Das hat gerade nicht geklappt. Bitte in ein paar Minuten erneut
                   versuchen oder anrufen.
                 </p>
@@ -692,7 +690,7 @@ export default function LeadCta({
                   <button
                     type="button"
                     onClick={goBack}
-                    className="type-eyebrow text-white/55 underline-offset-4 hover:text-white hover:underline"
+                    className="type-eyebrow text-muted underline-offset-4 hover:text-ink hover:underline"
                   >
                     Zurück
                   </button>
@@ -700,15 +698,15 @@ export default function LeadCta({
                 {step === "nachricht" ? (
                   <Pill
                     type="submit"
-                    variant="ghost-dark"
+                    variant="secondary"
                     disabled={status === "sending"}
                   >
                     {status === "sending" ? "Wird gesendet…" : "Beratung anfragen"}
                   </Pill>
                 ) : autoAdvance && !currentValue() ? (
-                  <p className="type-eyebrow text-white/40">Auswahl führt weiter</p>
+                  <p className="type-eyebrow text-muted">Auswahl führt weiter</p>
                 ) : (
-                  <Pill type="button" variant="ghost-dark" onClick={goNext}>
+                  <Pill type="button" variant="secondary" onClick={goNext}>
                     Weiter
                   </Pill>
                 )}
@@ -795,16 +793,16 @@ function PictureChoice({
               className="group text-center outline-none"
             >
               <span
-                className={`mx-auto flex aspect-square w-full max-w-[11rem] items-center justify-center border p-4 transition-colors ${
+                className={`mx-auto flex aspect-square w-full max-w-[11rem] items-center justify-center border bg-white p-4 transition-colors ${
                   selected
-                    ? "border-white bg-white text-nacht"
-                    : "border-white/20 text-white group-hover:border-white"
+                    ? "border-ink text-ink"
+                    : "border-line text-ink group-hover:border-ink"
                 }`}
               >
                 <BeratungIcon name={option.icon} />
               </span>
               <span
-                className={`type-body mt-3 block ${selected ? "text-paper" : "text-white/75"}`}
+                className={`type-body mt-3 block ${selected ? "text-ink" : "text-muted"}`}
               >
                 {option.label}
               </span>
@@ -840,8 +838,8 @@ function ListChoice({
             onClick={() => onToggle(option.id)}
             className={`flex w-full items-center gap-4 border px-4 py-3 text-left outline-none transition-colors ${
               selected
-                ? "border-white bg-white text-nacht"
-                : "border-white/20 text-white hover:border-white"
+                ? "border-ink bg-ink text-paper"
+                : "border-line bg-white text-ink hover:border-ink"
             }`}
           >
             <span className="h-10 w-10 shrink-0">
