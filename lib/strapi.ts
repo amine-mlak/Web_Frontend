@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import {
   FALLBACK_FAQ_ITEMS,
   FALLBACK_FAQ_THEMES,
@@ -309,20 +310,53 @@ export function strapiResponsiveImage(
   };
 }
 
-export async function strapiGet<T>(path: string, query: Record<string, string> = {}) {
+async function previewDraftEnabled() {
+  try {
+    const { isEnabled } = await draftMode();
+    return isEnabled;
+  } catch {
+    return false;
+  }
+}
+
+async function fetchStrapi(path: string, query: Record<string, string>, preview: boolean) {
   const url = new URL(path, `${STRAPI_URL}/`);
   for (const [key, value] of Object.entries(query)) {
     url.searchParams.set(key, value);
+  }
+  if (preview) {
+    url.searchParams.set("status", "draft");
+  }
+
+  const headers: Record<string, string> = {};
+  if (preview && process.env.STRAPI_API_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.STRAPI_API_TOKEN}`;
   }
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url, {
+    return await fetch(url, {
+      headers,
       signal: controller.signal,
-      next: { revalidate: REVALIDATE_SECONDS, tags: ["strapi"] },
+      ...(preview
+        ? { cache: "no-store" as const }
+        : { next: { revalidate: REVALIDATE_SECONDS, tags: ["strapi"] } }),
     });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function strapiGet<T>(path: string, query: Record<string, string> = {}) {
+  const preview = await previewDraftEnabled();
+
+  try {
+    let response = await fetchStrapi(path, query, preview);
+    if (preview && !response.ok) {
+      response = await fetchStrapi(path, query, false);
+    }
 
     if (!response.ok) {
       return null;
@@ -331,8 +365,6 @@ export async function strapiGet<T>(path: string, query: Record<string, string> =
     return (await response.json()) as T;
   } catch {
     return null;
-  } finally {
-    clearTimeout(timer);
   }
 }
 

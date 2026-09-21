@@ -10,16 +10,28 @@ const strapiHost = new URL(strapiUrl).hostname;
 const allowIndexing = process.env.ALLOW_INDEXING === "true";
 
 function frameAncestorsCsp() {
-  const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
-  if (!umamiUrl) {
-    return "frame-ancestors 'self'";
+  const origins = new Set<string>(["'self'"]);
+
+  for (const raw of [
+    process.env.NEXT_PUBLIC_UMAMI_URL,
+    process.env.STRAPI_URL,
+    process.env.NEXT_PUBLIC_STRAPI_URL,
+  ]) {
+    if (!raw) {
+      continue;
+    }
+
+    try {
+      const url = new URL(raw);
+      origins.add(url.origin);
+      const otherProtocol = url.protocol === "https:" ? "http:" : "https:";
+      origins.add(`${otherProtocol}//${url.host}`);
+    } catch {
+      // Ignore an unusable URL and keep the remaining origins.
+    }
   }
 
-  try {
-    return `frame-ancestors 'self' ${new URL(umamiUrl).origin}`;
-  } catch {
-    return "frame-ancestors 'self'";
-  }
+  return `frame-ancestors ${[...origins].join(" ")}`;
 }
 
 const robotsHeaders = allowIndexing

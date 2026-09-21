@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import KitchenTopicView from "@/components/catalog/KitchenTopicView";
 import {
   findBySlug,
   isKitchenCluster,
   KITCHEN_CLUSTERS,
   projectsForTopic,
+  topicsInCluster,
 } from "@/lib/catalog";
-import { projectCards } from "@/lib/catalog-cards";
 import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
 
 export const revalidate = 120;
@@ -54,21 +54,19 @@ export default async function KitchenTopicPage({
   if (!topic || topic.cluster !== cluster) {
     notFound();
   }
-  const related = projectsForTopic(projects, topic.slug);
-
-  const clusterName =
-    KITCHEN_CLUSTERS.find((item) => item.slug === topic.cluster)?.name ||
-    topic.cluster;
+  const clusterMeta = KITCHEN_CLUSTERS.find((item) => item.slug === topic.cluster);
+  if (!clusterMeta) {
+    notFound();
+  }
 
   return (
-    <DetailPage
-      eyebrow={clusterName}
-      title={topic.name}
-      intro={topic.intro}
-      image={topic.image}
-      relatedTitle="Referenzen zu diesem Thema"
-      related={projectCards(related)}
-      ctaLabel="Küche in diesem Thema planen"
+    <KitchenTopicView
+      cluster={clusterMeta}
+      topic={topic}
+      siblings={topicsInCluster(topics, topic.cluster).filter(
+        (item) => item.slug !== topic.slug,
+      )}
+      projects={projectsForTopic(projects, topic.slug)}
     />
   );
 }

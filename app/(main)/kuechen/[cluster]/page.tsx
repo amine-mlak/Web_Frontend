@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import HubPage from "@/components/catalog/HubPage";
+import KitchenClusterView from "@/components/catalog/KitchenClusterView";
 import {
   isKitchenCluster,
   KITCHEN_CLUSTERS,
   topicsInCluster,
 } from "@/lib/catalog";
-import { topicCards } from "@/lib/catalog-cards";
-import { fetchKitchenTopics } from "@/lib/catalog-api";
+import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -42,22 +41,21 @@ export default async function KitchenClusterPage({
   if (!meta) {
     notFound();
   }
-  const topics = topicsInCluster(await fetchKitchenTopics(), cluster);
+  const [topics, projects] = await Promise.all([
+    fetchKitchenTopics(),
+    fetchProjects(),
+  ]);
+  const inCluster = topicsInCluster(topics, cluster);
+  const slugs = new Set(inCluster.map((topic) => topic.slug));
+  const related = projects.filter((project) =>
+    project.topics.some((topic) => slugs.has(topic.slug)),
+  );
+
   return (
-    <HubPage
-      eyebrow="Küchen"
-      title={meta.name}
-      intro={meta.intro}
-      image={topics[0]?.image}
-      chips={[
-        { href: "/kuechen", label: "Alle Themen" },
-        ...KITCHEN_CLUSTERS.map((item) => ({
-          href: `/kuechen/${item.slug}`,
-          label: item.name,
-        })),
-      ]}
-      activeHref={`/kuechen/${cluster}`}
-      items={topicCards(topics)}
+    <KitchenClusterView
+      cluster={meta}
+      topics={inCluster}
+      projects={related}
     />
   );
 }
