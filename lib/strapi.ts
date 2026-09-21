@@ -621,8 +621,11 @@ export function flattenCollection(value: unknown): Record<string, unknown>[] {
 
 function mapFaqTheme(entry: unknown): FaqTheme | null {
   const row = flattenEntity(entry);
-  const slug = String(row?.slug ?? "").trim();
-  const name = String(row?.name ?? "").trim();
+  if (!row) {
+    return null;
+  }
+  const slug = String(row.slug ?? "").trim();
+  const name = String(row.name ?? "").trim();
 
   if (!slug || !name) {
     return null;
@@ -640,8 +643,11 @@ function mapFaqTheme(entry: unknown): FaqTheme | null {
 
 function mapFaqEntry(entry: unknown): FaqEntry | null {
   const row = flattenEntity(entry);
-  const question = String(row?.question ?? "").trim();
-  const answer = String(row?.answer ?? "").trim();
+  if (!row) {
+    return null;
+  }
+  const question = String(row.question ?? "").trim();
+  const answer = String(row.answer ?? "").trim();
 
   if (!question || !answer) {
     return null;
