@@ -1,0 +1,340 @@
+{
+  "clusters": [
+    {
+      "slug": "formen",
+      "name": "Küchenformen",
+      "intro": "Zeile, L, U, Insel – die Form folgt dem Raum, nicht dem Katalog.",
+      "seoTitle": "Küchenformen | BEER Küchenmanufaktur",
+      "seoDescription": "Küchenzeile, L-Form, U-Form, offene Küche und Insel: welche Form zu Ihrem Grundriss passt."
+    },
+    {
+      "slug": "stile",
+      "name": "Küchenstile",
+      "intro": "Modern, Landhaus, Design, Holz – Haltung statt Trendfarbe.",
+      "seoTitle": "Küchenstile | BEER Küchenmanufaktur",
+      "seoDescription": "Moderne Küchen, Landhausküchen, Designküchen und Holzküchen aus der Manufaktur."
+    },
+    {
+      "slug": "farben",
+      "name": "Küchenfarben",
+      "intro": "Weiß, Schwarz, Salbei, Grau – Farbe am Muster, nicht am Bildschirm.",
+      "seoTitle": "Küchenfarben | BEER Küchenmanufaktur",
+      "seoDescription": "Weiße, schwarze, salbeigrüne und graue Küchen. Farbe als Entscheidung für den Alltag."
+    },
+    {
+      "slug": "inseln",
+      "name": "Kücheninseln",
+      "intro": "Kochinsel, Arbeitsinsel, Sitzplatz – nur wenn der Raum Laufwege lässt.",
+      "seoTitle": "Kücheninseln | BEER Küchenmanufaktur",
+      "seoDescription": "Kochinsel, Arbeitsinsel und Essinsel: wann eine Kücheninsel Sinn hat."
+    },
+    {
+      "slug": "besondere",
+      "name": "Besondere Küchen",
+      "intro": "Klein, raumhoch, grifflos, nach Maß – Räume, die Standardzeilen nicht lösen.",
+      "seoTitle": "Besondere Küchen | BEER Küchenmanufaktur",
+      "seoDescription": "Kleine Küchen, grifflose Küchen, raumhohe Schränke und Küchen nach Maß."
+    }
+  ],
+  "topics": [
+    {"slug":"zeile","cluster":"formen","name":"Küchenzeile","hex":"","image":"/kitchens/stile-modern.jpg","intro":"Eine klare Linie. Für schmale Räume oft die ehrlichere Lösung als eine gedrängte U-Form.","order":10},
+    {"slug":"l-form","cluster":"formen","name":"L-Form","hex":"","image":"/kitchens/stile-insel.jpg","intro":"Zwei Schenkel, offene Laufwege. In Wohnküchen oft die ruhigere Alternative zur U-Form.","order":20},
+    {"slug":"u-form","cluster":"formen","name":"U-Form","hex":"","image":"/kitchens/stile-purist.jpg","intro":"Mehr Arbeits- und Stauraum, ein geschlossener Arbeitsplatz. Braucht Breite.","order":30},
+    {"slug":"offen","cluster":"formen","name":"Offene Küche","hex":"","image":"/kitchens/stile-holz.jpg","intro":"Küche als Möbel im Wohnraum: Blickachsen, Dunst und Stauraum gehören zusammen.","order":40},
+    {"slug":"insel","cluster":"formen","name":"Küche mit Insel","hex":"","image":"/kitchens/stile-insel.jpg","intro":"Insel als Arbeitsfläche und Treffpunkt – nur mit Wegen darum herum.","order":50},
+    {"slug":"klein","cluster":"formen","name":"Kleine Küchen","hex":"","image":"/kitchens/stile-modern.jpg","intro":"Zentimeter, Nischen, Höhe. Maßarbeit lohnt gerade dort, wo Rastermaße enden.","order":60},
+    {"slug":"modern","cluster":"stile","name":"Moderne Küchen","hex":"","image":"/kitchens/stile-modern.jpg","intro":"Ruhige Flächen, klare Fugen, wenig Dekor. Moderne heißt hier: präzise, nicht kalt.","order":10},
+    {"slug":"landhaus","cluster":"stile","name":"Landhausküchen","hex":"","image":"/kitchens/stile-landhaus.jpg","intro":"Holz, Rahmen, Wärme – ohne Kostüm. Das Haus gibt den Ton vor.","order":20},
+    {"slug":"design","cluster":"stile","name":"Designküchen","hex":"","image":"/kitchens/stile-design.jpg","intro":"Keine Showküche. Klare Fugen, passende Geräte, Materialien, die man anfassen mag.","order":30},
+    {"slug":"holz","cluster":"stile","name":"Holzküchen","hex":"","image":"/kitchens/stile-holz.jpg","intro":"Eiche, Nuss, Esche – Material, nicht Stil. Schliff und Arbeitsplatte entscheiden.","order":40},
+    {"slug":"purist","cluster":"stile","name":"Puristische Küchen","hex":"","image":"/kitchens/stile-purist.jpg","intro":"Grifflos, flächig, zurückhaltend. Alltagstauglich, wenn Öffnung und Auszüge stimmen.","order":50},
+    {"slug":"luxus","cluster":"stile","name":"Luxusküchen","hex":"","image":"/kitchens/stile-design.jpg","intro":"Luxus als Maß und Stein, nicht als Beschlag-Theater.","order":60},
+    {"slug":"weiss","cluster":"farben","name":"Weiße Küchen","hex":"#f7f5f1","image":"/kitchens/stile-holz.jpg","intro":"Hell und ruhig. Die Oberfläche entscheidet, wie der Alltag aussieht.","order":10},
+    {"slug":"schwarz","cluster":"farben","name":"Schwarze Küchen","hex":"#131311","image":"/kitchens/stile-design.jpg","intro":"Schwarz braucht Licht und ein Gegengewicht aus Holz oder Stein.","order":20},
+    {"slug":"salbei","cluster":"farben","name":"Salbeigrüne Küchen","hex":"#9eae92","image":"/kitchens/stile-landhaus.jpg","intro":"Zwischen Landhaus und Moderne. Den Ton mustern wir an der Wand.","order":30},
+    {"slug":"grau","cluster":"farben","name":"Graue Küchen","hex":"#8a8680","image":"/kitchens/stile-modern.jpg","intro":"Grau als Ruhe, nicht als Kompromiss. Warm oder kühl – je nach Stein.","order":40},
+    {"slug":"kochinsel","cluster":"inseln","name":"Kochinsel","hex":"","image":"/kitchens/stile-insel.jpg","intro":"Herd und oft Abzug in der Mitte des Raums. Technik unter der Platte mitdenken.","order":10},
+    {"slug":"arbeitsinsel","cluster":"inseln","name":"Arbeitsinsel","hex":"","image":"/kitchens/stile-purist.jpg","intro":"Reine Fläche zum Vorbereiten. Kein Kochfeld, dafür Stauraum und Sitzkante.","order":20},
+    {"slug":"essinsel","cluster":"inseln","name":"Insel mit Sitzplatz","hex":"","image":"/kitchens/stile-holz.jpg","intro":"Kochen und sitzen an einer Kante. Überstand, Beinfreiheit, Steckdosen.","order":30},
+    {"slug":"grifflos","cluster":"besondere","name":"Grifflose Küchen","hex":"","image":"/kitchens/stile-purist.jpg","intro":"Ruhige Fronten, Tipp-on oder Mulde. Zeigt Finger eher – und Ordnung besser.","order":10},
+    {"slug":"nach-mass","cluster":"besondere","name":"Küche nach Maß","hex":"","image":"/kitchens/stile-modern.jpg","intro":"Nicht Raster, sondern Raum. Nischen, Schrägen, millimetergenaue Füllungen.","order":20},
+    {"slug":"raumhoch","cluster":"besondere","name":"Raumhohe Küchen","hex":"","image":"/kitchens/stile-design.jpg","intro":"Stauraum bis zur Decke, ohne Staubkante. Obere Fächer müssen erreichbar bleiben.","order":30}
+  ],
+  "projects": [
+    {
+      "slug": "wolfersdorf-eiche-stein",
+      "title": "Wohnküche in Eiche und Stein",
+      "place": "Wolfersdorf",
+      "year": "2024",
+      "intro": "Offene Zeile mit Insel, warme Eiche gegen ruhigen Naturstein. Der Wohnraum bleibt klar.",
+      "body": "Der Grundriss gab die Insel vor, nicht der Wunsch nach einer Insel. Laufwege, Licht und die Höhe der Platte wurden am Aufmaß entschieden. Fronten seidenmatt, Auszüge in der Arbeitszone, Geräte hinter ruhigen Flächen.",
+      "image": "/kitchens/stile-holz.jpg",
+      "topics": ["offen", "holz", "insel", "weiss"],
+      "brands": ["bora", "miele"],
+      "materials": ["eiche-furnier", "naturstein"],
+      "appliances": ["kochfeldabzug", "backofen"],
+      "regions": ["freising", "muenchen"],
+      "specs": [
+        {"label": "Front", "value": "Eiche furniert, seidenmatt"},
+        {"label": "Arbeitsplatte", "value": "Naturstein, 20 mm"},
+        {"label": "Kochen", "value": "Induktion mit Kochfeldabzug"},
+        {"label": "Form", "value": "Zeile mit Insel"}
+      ]
+    },
+    {
+      "slug": "freising-salbei",
+      "title": "Salbeigrüne Küche im Altbau",
+      "place": "Freising",
+      "year": "2023",
+      "intro": "Farbe gegen hohe Fenster, Rahmenfronten ohne Kostüm. Der Stein hält die Küche ruhig.",
+      "body": "Schiefe Wände, alte Anschlüsse. Die Farbe sitzt auf Lack, nicht auf Folie. Innenleben mit Vollauszügen, Ecklösung gezeichnet bevor die Front feststand.",
+      "image": "/kitchens/stile-landhaus.jpg",
+      "topics": ["landhaus", "salbei", "l-form", "nach-mass"],
+      "brands": ["miele", "gaggenau"],
+      "materials": ["lack-matt", "naturstein"],
+      "appliances": ["backofen", "geschirrspueler"],
+      "regions": ["freising"],
+      "specs": [
+        {"label": "Front", "value": "Lack matt, Salbei"},
+        {"label": "Arbeitsplatte", "value": "Naturstein hell"},
+        {"label": "Form", "value": "L-Form"}
+      ]
+    },
+    {
+      "slug": "muenchen-schwarz-eiche",
+      "title": "Schwarze Designküche mit Eiche",
+      "place": "München",
+      "year": "2025",
+      "intro": "Schwarze Flächen, Eiche als Gegengewicht, Fischgrät im Boden. Licht von zwei Seiten.",
+      "body": "Ohne Holz wäre Schwarz hier zu schwer. Die Insel trägt das Kochfeld, der Abzug sitzt in der Platte. Grifflos mit Mulde, nicht Tipp-on – wegen der Gewichtsklassen der Auszüge.",
+      "image": "/kitchens/stile-design.jpg",
+      "topics": ["design", "schwarz", "grifflos", "kochinsel"],
+      "brands": ["bora", "gaggenau"],
+      "materials": ["lack-matt", "eiche-furnier"],
+      "appliances": ["kochfeldabzug", "kaffee"],
+      "regions": ["muenchen"],
+      "specs": [
+        {"label": "Front", "value": "Lack tiefschwarz, grifflos"},
+        {"label": "Holz", "value": "Eiche, geölt"},
+        {"label": "Kochen", "value": "Bora Kochfeldabzug"}
+      ]
+    },
+    {
+      "slug": "erding-modern-grau",
+      "title": "Graue Zeile im Neubau",
+      "place": "Erding",
+      "year": "2024",
+      "intro": "Eine Zeile, raumhoch, grau gegen weiße Wand. Keine Insel – der Raum ließ sie nicht zu.",
+      "body": "Wir haben eine Insel gezeichnet und wieder gestrichen. Die Zeile mit Höhe und Innenleben ist ehrlicher. Geräte in einer Nische, Spüle am Fenster.",
+      "image": "/kitchens/stile-modern.jpg",
+      "topics": ["modern", "grau", "zeile", "raumhoch"],
+      "brands": ["miele", "siemens"],
+      "materials": ["lack-matt", "keramik"],
+      "appliances": ["kochfeld", "backofen"],
+      "regions": ["erding", "muenchen"],
+      "specs": [
+        {"label": "Front", "value": "Lack grau, raumhoch"},
+        {"label": "Arbeitsplatte", "value": "Keramik"},
+        {"label": "Form", "value": "Zeile"}
+      ]
+    },
+    {
+      "slug": "pfaffenhofen-insel-pur",
+      "title": "Puristische Inselküche",
+      "place": "Pfaffenhofen",
+      "year": "2023",
+      "intro": "Wenig Linien, viel Fläche. Die Insel ist Arbeitsplatz, nicht Bühne.",
+      "body": "Griffmulde durchlaufend, Stein durchgefärbt, Korpusse auf dem Aufmaß. Kein dekoratives Lichtband, das nach zwei Jahren stört.",
+      "image": "/kitchens/stile-purist.jpg",
+      "topics": ["purist", "grifflos", "arbeitsinsel", "nach-mass"],
+      "brands": ["gaggenau", "quooker"],
+      "materials": ["fenix", "keramik"],
+      "appliances": ["kochfeld", "quooker-armatur"],
+      "regions": ["pfaffenhofen"],
+      "specs": [
+        {"label": "Front", "value": "Fenix, grifflos"},
+        {"label": "Platte", "value": "Keramik durchgefärbt"},
+        {"label": "Armatur", "value": "Quooker"}
+      ]
+    },
+    {
+      "slug": "landshut-kleine-zeile",
+      "title": "Kleine Küche nach Maß",
+      "place": "Landshut",
+      "year": "2022",
+      "intro": "Vier Meter, eine Nische, raumhohe Schränke. Standard hätte zwei Ecken verloren.",
+      "body": "Aufmaß vor dem Angebot. Die Zeile nimmt die Fensterbrüstung auf, der Hochschrank den Rest der Wand. Innenleben vor Front.",
+      "image": "/kitchens/stile-insel.jpg",
+      "topics": ["klein", "zeile", "nach-mass", "raumhoch"],
+      "brands": ["miele"],
+      "materials": ["lack-matt", "edelstahl"],
+      "appliances": ["geschirrspueler", "kochfeld"],
+      "regions": ["landshut"],
+      "specs": [
+        {"label": "Breite", "value": "412 cm, Nische"},
+        {"label": "Front", "value": "Lack, maßgefertigt"},
+        {"label": "Spüle", "value": "Edelstahl Unterbau"}
+      ]
+    }
+  ],
+  "brands": [
+    {"slug":"bora","name":"Bora","image":"/kitchens/stile-insel.jpg","intro":"Kochfeldabzug in der Platte. Blick frei, Technik unter dem Korpus.","body":"Bora planen wir mit Korpustiefe, Kabelführung und oft anderer Unterschrank-Aufteilung. Nicht nachträglich in eine fertige Zeile.","order":10},
+    {"slug":"miele","name":"Miele","image":"/kitchens/stile-modern.jpg","intro":"Backen, Spülen, Kälte – Geräte, die in Nischen und Hochschränken bleiben.","body":"Miele dort, wo Zuverlässigkeit und Service den Alltag tragen. Die Küche bleibt BEER, das Gerät die Aufgabe.","order":20},
+    {"slug":"gaggenau","name":"Gaggenau","image":"/kitchens/stile-design.jpg","intro":"Technik als Architektur: Klappen, Edelstahl, sichtbare Bedienung wenn sie zum Raum passt.","body":"Gaggenau setzen wir, wenn die Küche das Gerät zeigen darf – oder hinter Front, wenn der Raum ruhiger bleiben soll.","order":30},
+    {"slug":"quooker","name":"Quooker","image":"/kitchens/stile-holz.jpg","intro":"Kochendes, stilles, sprudelndes Wasser an einer Armatur.","body":"Der Tank sitzt im Unterschrank. Das zeichnen wir mit der Spüle, nicht als Nachtrag.","order":40},
+    {"slug":"siemens","name":"Siemens","image":"/kitchens/stile-purist.jpg","intro":"Solide Einbaugeräte, wenn Budget und Nische das verlangen.","body":"Keine Vertragsküche. Siemens wo es zur Aufgabe passt – neben Miele oder Bora, nicht gegen die Planung.","order":50}
+  ],
+  "appliances": [
+    {"slug":"kochfeld","kind":"kochen","name":"Kochfeld","image":"/kitchens/stile-modern.jpg","intro":"Induktion, Gas, Kombi oder unsichtbar. Die Platte und der Korpus müssen mit.","order":10},
+    {"slug":"kochfeldabzug","kind":"kochen","name":"Kochfeldabzug","image":"/kitchens/stile-insel.jpg","intro":"Muldenlüfter statt Esse. Für Inseln und offene Räume, mit ehrlicher Aussage zur Leistung.","order":20},
+    {"slug":"backofen","kind":"backen","name":"Backofen","image":"/kitchens/stile-purist.jpg","intro":"Im Hochschrank auf Griffhöhe oder unter der Platte – je nach Rücken und Raum.","order":30},
+    {"slug":"dampfgarer","kind":"backen","name":"Dampfgarer","image":"/kitchens/stile-holz.jpg","intro":"Dampf neben dem Ofen, Wasseranschluss mitgedacht.","order":40},
+    {"slug":"kuehlung","kind":"kaelte","name":"Kühlung","image":"/kitchens/stile-design.jpg","intro":"Vollintegriert oder als Schrank. Lüftung und Nische zuerst.","order":50},
+    {"slug":"geschirrspueler","kind":"spuelen","name":"Geschirrspüler","image":"/kitchens/stile-landhaus.jpg","intro":"Vollintegriert, oft neben der Spüle. Knock-to-open wenn die Front grifflos ist.","order":60},
+    {"slug":"kaffee","kind":"extra","name":"Kaffeevollautomat","image":"/kitchens/stile-holz.jpg","intro":"In der Nische auf Augenhöhe, mit Wasser und Ablauf.","order":70},
+    {"slug":"quooker-armatur","kind":"extra","name":"Quooker-Armatur","image":"/kitchens/stile-purist.jpg","intro":"Armatur und Tank als ein Detail mit der Spüle.","order":80}
+  ],
+  "furniture": [
+    {"slug":"einbauschraenke","kind":"einbau","name":"Einbauschränke","image":"/kitchens/stile-modern.jpg","intro":"Nischen, Schrägen, raumhohe Füllungen – oft im Anschluss an die Küche.","order":10},
+    {"slug":"ankleide","kind":"einbau","name":"Begehbare Kleiderschränke","image":"/kitchens/stile-purist.jpg","intro":"Ankleiden aus derselben Manufaktur. Maß vor System.","order":20},
+    {"slug":"tische-baenke","kind":"wohnen","name":"Tische & Bänke","image":"/kitchens/stile-holz.jpg","intro":"Esstisch in der Sprache der Küche: Holz, Kante, Maß.","order":30},
+    {"slug":"wohnmoebel","kind":"wohnen","name":"Wohnmöbel","image":"/kitchens/stile-design.jpg","intro":"Sideboard, Regal, Einbauten – wenn sie zum Haus gehören.","order":40}
+  ],
+  "regions": [
+    {"slug":"muenchen","name":"München","intro":"Beratung in Wolfersdorf, Aufmaß und Montage in München.","order":10},
+    {"slug":"freising","name":"Freising","intro":"Die Ausstellung liegt bei Freising. Kurzer Weg, oft der erste Termin.","order":20},
+    {"slug":"erding","name":"Erding","intro":"Einzugsgebiet östlich von München. Aufmaß vor Ort.","order":30},
+    {"slug":"dachau","name":"Dachau","intro":"Küchen im Norden Münchens, Bestand und Neubau.","order":40},
+    {"slug":"pfaffenhofen","name":"Pfaffenhofen","intro":"Manufakturküchen nördlich von München, bis ins Landkreisgebiet.","order":50},
+    {"slug":"augsburg","name":"Augsburg","intro":"Westlich im Radius. Ob der Weg passt, klären wir im Gespräch.","order":60},
+    {"slug":"ingolstadt","name":"Ingolstadt","intro":"Nördlich, im Liefergebiet um München.","order":70},
+    {"slug":"landshut","name":"Landshut","intro":"Ostbayerisches Einzugsgebiet, Montage vor Ort.","order":80},
+    {"slug":"regensburg","name":"Regensburg","intro":"Im erweiterten Radius. Erstgespräch klärt den Weg.","order":90},
+    {"slug":"mainburg","name":"Mainburg","intro":"Zwischen München und Niederbayern.","order":100},
+    {"slug":"nuernberg","name":"Nürnberg","intro":"Weiter Weg, dennoch Anfrage wert – wir sagen ehrlich, ob er passt.","order":110}
+  ],
+  "materials": [
+    {"slug":"lack-matt","kind":"front","name":"Lack matt","image":"/kitchens/stile-modern.jpg","intro":"Ruhige Farbe, sichtbare Haptik. Nicht polieren, bis sie glänzt.","order":10},
+    {"slug":"eiche-furnier","kind":"front","name":"Eiche furniert","image":"/kitchens/stile-holz.jpg","intro":"Holzsicht, geölt oder lackiert. Altert mit, nicht gegen den Raum.","order":20},
+    {"slug":"fenix","kind":"front","name":"Fenix","image":"/kitchens/stile-purist.jpg","intro":"Matte, weiche Oberfläche. Finger weniger sichtbar als auf Hochglanz.","order":30},
+    {"slug":"naturstein","kind":"worktop","name":"Naturstein","image":"/kitchens/stile-landhaus.jpg","intro":"Aderung, Haptik, Unikat. Säure und Öl gehören zur ehrlichen Pflege.","order":40},
+    {"slug":"keramik","kind":"worktop","name":"Keramik","image":"/kitchens/stile-insel.jpg","intro":"Unempfindlich, oft durchgefärbt. Kante und Spüle sauber planen.","order":50},
+    {"slug":"edelstahl","kind":"worktop","name":"Edelstahl","image":"/kitchens/stile-purist.jpg","intro":"Massiv oder als Becken eingeschweißt. Arbeitsspuren sind Teil der Platte.","order":60},
+    {"slug":"holz-massiv","kind":"worktop","name":"Holz massiv","image":"/kitchens/stile-holz.jpg","intro":"Warm, will Öl. Schnittspuren gehören dazu.","order":70},
+    {"slug":"innen-auszug","kind":"interior","name":"Vollauszüge","image":"/kitchens/stile-modern.jpg","intro":"Das Innenleben entscheidet den Alltag mehr als die Front.","order":80}
+  ],
+  "articles": [
+    {
+      "slug": "was-kostet-eine-kueche",
+      "title": "Was kostet eine Küche nach Maß?",
+      "description": "Preisrahmen, keine Katalogzahl. Wovon der Betrag wirklich abhängt.",
+      "category": "kosten",
+      "image": "/kitchens/stile-holz.jpg",
+      "body": "Der Preis hängt von Metern, Front, Platte, Innenleben und Geräten ab – und davon, wie viele Sondermaße der Raum verlangt. Im Erstgespräch nennen wir einen Rahmen, bevor gezeichnet wird."
+    },
+    {
+      "slug": "kueche-planen-ablauf",
+      "title": "So entsteht Ihre Küche",
+      "description": "Beratung, Aufmaß, Fertigung, Montage – der Weg ohne Katalogversprechen.",
+      "category": "planung",
+      "image": "/kitchens/stile-insel.jpg",
+      "body": "Zuerst das Gespräch, dann das Maß vor Ort. Visualisierungen sind Annäherung. Verbindlich wird die Planung nach Aufmaß und Freigabe. Fertigung in der Manufaktur, Montage bei Ihnen."
+    },
+    {
+      "slug": "kochfeldabzug-oder-esse",
+      "title": "Kochfeldabzug oder Esse?",
+      "description": "Wann die Haube stört und der Abzug in der Platte ehrlicher ist.",
+      "category": "geraete",
+      "image": "/kitchens/stile-design.jpg",
+      "body": "Offene Räume und Inseln vertragen oft keinen Hut über dem Herd. Der Abzug braucht Platz unter der Platte. Intensives Braten prüfen wir an beiden Varianten, ohne Verkaufsdruck."
+    }
+  ],
+  "categories": [
+    {"slug":"kosten","name":"Kosten"},
+    {"slug":"planung","name":"Küchenplanung"},
+    {"slug":"geraete","name":"Geräte & Technik"},
+    {"slug":"material","name":"Material & Pflege"}
+  ],
+  "pages": [
+    {
+      "slug": "ueber",
+      "eyebrow": "Manufaktur",
+      "title": "Über BEER",
+      "intro": "Küchen aus der Werkstatt, nicht aus dem Zentrallager. Haltung, die man anfassen kann.",
+      "body": "BEER plant, fertigt und montiert in einer Hand. Wolfersdorf bei Freising, Einzugsgebiet um München. Wir bauen wenige Küchen, dafür solche, die bleiben. Keine Filialkette, kein Markenzwang.",
+      "image": "/kitchens/stile-purist.jpg",
+      "ctaLabel": "Beratung anfragen",
+      "ctaUrl": "/beratung"
+    },
+    {
+      "slug": "kueche-planen",
+      "eyebrow": "Ablauf",
+      "title": "So entsteht Ihre Küche",
+      "intro": "Vier Schritte: Gespräch, Planung, Fertigung, Montage. Nichts davon ist ein Katalogmodul.",
+      "body": "Beratung in der Ausstellung oder bei Ihnen. Aufmaß bevor das Angebot bindet. Fertigung in der Manufaktur. Montage vor Ort mit klarem Schnitt zu Elektro und Sanitär.",
+      "image": "/kitchens/stile-insel.jpg",
+      "ctaLabel": "Zum Küchenplaner",
+      "ctaUrl": "/beratung"
+    },
+    {
+      "slug": "ausstellung",
+      "eyebrow": "Wolfersdorf",
+      "title": "Ausstellung bei Freising",
+      "intro": "Materialien, Muster, Gespräche. Keine Filiale – ein Studio.",
+      "body": "Badendorf 6, 85395 Wolfersdorf. Termine über das Formular oder telefonisch. Spontane Besuche möglich, ein ruhiges Gespräch ohne Anmeldung nicht immer.",
+      "image": "/kitchens/stile-landhaus.jpg",
+      "ctaLabel": "Termin anfragen",
+      "ctaUrl": "/beratung"
+    },
+    {
+      "slug": "kontakt",
+      "eyebrow": "Kontakt",
+      "title": "BEER GmbH",
+      "intro": "Badendorf 6, 85395 Wolfersdorf. Ausstellung und Manufaktur an einem Ort.",
+      "body": "Schreiben Sie uns über das Formular oder kommen Sie vorbei. Für ein geplantes Gespräch empfehlen wir einen Termin.",
+      "image": "/kitchens/stile-modern.jpg",
+      "ctaLabel": "Nachricht senden",
+      "ctaUrl": "/beratung"
+    },
+    {
+      "slug": "katalog",
+      "eyebrow": "Unterlagen",
+      "title": "Katalog bestellen",
+      "intro": "Kein dicker Werbeordner. Unterlagen, die zur Manufaktur passen – auf Anfrage.",
+      "body": "Sagen Sie uns, wonach Sie suchen. Wir schicken, was hilft – nicht alles, was gedruckt ist.",
+      "image": "/kitchens/stile-holz.jpg",
+      "ctaLabel": "Anfragen",
+      "ctaUrl": "/beratung"
+    },
+    {
+      "slug": "impressum",
+      "eyebrow": "Rechtliches",
+      "title": "Impressum",
+      "intro": "Angaben gemäß § 5 DDG.",
+      "body": "BEER GmbH, Badendorf 6, 85395 Wolfersdorf. Inhaltlich verantwortlich: die Geschäftsführung. Diese Seite ist ein Entwurf der neuen Website und kein Ersatz für das Impressum auf beer.de.",
+      "image": "",
+      "ctaLabel": "",
+      "ctaUrl": ""
+    },
+    {
+      "slug": "datenschutz",
+      "eyebrow": "Rechtliches",
+      "title": "Datenschutz",
+      "intro": "Welche Daten diese Demo-Website berührt – kurz und ohne Kanzleiton.",
+      "body": "Die neue Website läuft testweise mit Umami ohne Marketing-Cookies. Formulare gehen über unseren Server an n8n. Das ist kein fertiges Datenschutz-Dokument für den Livegang. Verbindlich bleibt die Erklärung auf beer.de, bis diese Seite rechtlich ersetzt wird.",
+      "image": "",
+      "ctaLabel": "",
+      "ctaUrl": ""
+    },
+    {
+      "slug": "agb",
+      "eyebrow": "Rechtliches",
+      "title": "AGB",
+      "intro": "Verkauf und Werkvertrag richten sich nach den Bedingungen der BEER GmbH.",
+      "body": "Platzhalter für die neuen Seiten. Die verbindlichen AGB gelten in der Fassung, die Sie mit dem Auftrag erhalten – nicht dieser Demo-Text.",
+      "image": "",
+      "ctaLabel": "",
+      "ctaUrl": ""
+    }
+  ]
+}

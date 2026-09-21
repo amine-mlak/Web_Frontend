@@ -1,5 +1,7 @@
 import Accordion from "@/components/Accordion";
+import FaqJsonLd from "@/components/FaqJsonLd";
 import type { FaqContent } from "@/lib/strapi";
+import Link from "next/link";
 
 const fallback: FaqContent = {
   eyebrow: "Fragen",
@@ -34,6 +36,16 @@ export default function Faq({ content }: { content: FaqContent | null }) {
 
   return (
     <section id="faq" className="bg-paper" aria-labelledby="faq-heading">
+      <FaqJsonLd
+        items={items.map((item, index) => ({
+          slug: `home-${index}`,
+          question: item.question,
+          answer: item.answer,
+          showOnHome: true,
+          order: index,
+          themes: [],
+        }))}
+      />
       <div className="mx-auto max-w-3xl px-6 py-24 md:py-32">
         <p className="type-eyebrow mb-3">{data.eyebrow}</p>
         <h2 id="faq-heading" className="type-h2 text-ink">
@@ -42,6 +54,14 @@ export default function Faq({ content }: { content: FaqContent | null }) {
         <div className="mt-12">
           <Accordion items={items} />
         </div>
+        <p className="mt-10">
+          <Link
+            href="/faq"
+            className="type-nav text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
+          >
+            Alle Fragen nach Thema
+          </Link>
+        </p>
       </div>
     </section>
   );

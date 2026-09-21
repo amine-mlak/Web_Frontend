@@ -119,6 +119,11 @@ const nextConfig: NextConfig = {
         source: "/cms-uploads/:path*",
         destination: `${strapiUrl.replace(/\/$/, "")}/uploads/:path*`,
       },
+      {
+        source: "/kitchens/:path*",
+        destination:
+          "https://mwnw2vfalrhrso250cxmnje9.89.58.45.227.sslip.io/kitchens/:path*",
+      },
     ];
   },
 };

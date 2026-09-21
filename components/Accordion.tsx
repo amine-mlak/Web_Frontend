@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 export type AccordionItem = {
+  slug?: string;
   question: string;
   answer: string;
 };
@@ -16,7 +17,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
         const open = openIndex === index;
 
         return (
-          <div key={item.question} className="border-t border-line">
+          <div key={item.slug || item.question} className="border-t border-line">
             <h3>
               <button
                 type="button"

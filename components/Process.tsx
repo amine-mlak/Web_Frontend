@@ -12,8 +12,8 @@ const icons: Record<ProcessIcon, LucideIcon> = {
 const fallback: ProcessContent = {
   eyebrow: "Der Weg zur Küche",
   title: "Von der ersten Idee bis zur Übergabe",
-  buttonLabel: "Entdecken",
-  buttonHref: "#ablauf",
+  buttonLabel: "Ablauf lesen",
+  buttonHref: "/kueche-planen",
   steps: [
     {
       step: "01",

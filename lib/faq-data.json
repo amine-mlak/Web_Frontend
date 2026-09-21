@@ -1,0 +1,638 @@
+{
+  "themes": [
+    {
+      "name": "Allgemein",
+      "slug": "allgemein",
+      "description": "Erste Fragen vor dem Gespräch: Ablauf, Termin und was Sie mitbringen.",
+      "seoTitle": "FAQ Küche – häufige Fragen an BEER",
+      "seoDescription": "Antworten vor der Küchenberatung: Ablauf, Termin, Unterlagen und was Sie von BEER erwarten dürfen.",
+      "order": 10
+    },
+    {
+      "name": "Küchenfarben",
+      "slug": "farben",
+      "description": "Weiß, Schwarz, Salbei, Grau, Holz – Farbe als Entscheidung, nicht als Trend.",
+      "seoTitle": "FAQ Küchenfarben – Weiß, Schwarz, Salbei",
+      "seoDescription": "Welche Küchenfarbe passt zu Raum und Alltag? Antworten zu weißen, schwarzen, salbeigrünen und holzfarbenen Küchen.",
+      "order": 20
+    },
+    {
+      "name": "Küchenformen",
+      "slug": "formen",
+      "description": "Zeile, L-Form, U-Form, G-Form und offene Küchen – die Grundrissfrage zuerst.",
+      "seoTitle": "FAQ Küchenformen – Zeile, L-Form, U-Form",
+      "seoDescription": "Welche Küchenform passt in Ihren Raum? Zeile, L-Form, U-Form und offene Küchen erklärt.",
+      "order": 30
+    },
+    {
+      "name": "Küchenstile",
+      "slug": "stile",
+      "description": "Modern, Landhaus, Design, puristisch – Haltung statt Katalogwelt.",
+      "seoTitle": "FAQ Küchenstile – Modern, Landhaus, Design",
+      "seoDescription": "Moderne Küchen, Landhausküchen, Designküchen und puristische Küchen: was die Stile unterscheidet.",
+      "order": 40
+    },
+    {
+      "name": "Kücheninseln",
+      "slug": "inseln",
+      "description": "Kochinsel, Arbeitsinsel, Platzbedarf und Abzug – wann eine Insel Sinn hat.",
+      "seoTitle": "FAQ Kücheninsel – Platz, Kochen, Abzug",
+      "seoDescription": "Lohnt sich eine Kücheninsel? Platzbedarf, Kochinsel und Kochfeldabzug in der Planung.",
+      "order": 50
+    },
+    {
+      "name": "Besondere Küchen",
+      "slug": "besondere",
+      "description": "Kleine Küchen, Altbau, raumhohe Schränke und offene Wohnküchen.",
+      "seoTitle": "FAQ besondere Küchen – klein, Altbau, raumhoch",
+      "seoDescription": "Kleine Küchen, Küchen im Altbau und raumhohe Schränke: wie BEER besondere Räume plant.",
+      "order": 60
+    },
+    {
+      "name": "Material & Fronten",
+      "slug": "material",
+      "description": "Lack, Furnier, Holz, grifflos – Oberflächen, die man täglich berührt.",
+      "seoTitle": "FAQ Küchenfronten – Lack, Holz, grifflos",
+      "seoDescription": "Lack, Furnier oder Holz? Grifflose Küchen und Frontmaterialien in der Manufaktur.",
+      "order": 70
+    },
+    {
+      "name": "Arbeitsplatten",
+      "slug": "arbeitsplatten",
+      "description": "Naturstein, Keramik, Holz und Laminat – die Arbeitsfläche im Alltag.",
+      "seoTitle": "FAQ Arbeitsplatten – Stein, Keramik, Holz",
+      "seoDescription": "Welche Arbeitsplatte zur Küche? Naturstein, Keramik, Holz und Pflege im Alltag.",
+      "order": 80
+    },
+    {
+      "name": "Innenleben",
+      "slug": "innenleben",
+      "description": "Schubkästen, Ecklösungen, Auszüge – Ordnung, die man nicht sieht.",
+      "seoTitle": "FAQ Küchen-Innenleben – Auszüge und Ordnung",
+      "seoDescription": "Schubkästen, Eckschränke und Innenausstattung: wie BEER das Innenleben einer Küche plant.",
+      "order": 90
+    },
+    {
+      "name": "Geräte & Technik",
+      "slug": "geraete",
+      "description": "Kochfeld, Abzug, Kühlung, Spüle – Technik, die zur Architektur passt.",
+      "seoTitle": "FAQ Küchengeräte – Kochfeld, Abzug, Kühlung",
+      "seoDescription": "Welche Geräte gehören in die Küche? Kochfeldabzug, integrierte Geräte und Spüle.",
+      "order": 100
+    },
+    {
+      "name": "Marken",
+      "slug": "marken",
+      "description": "Bora, Miele, Gaggenau, Siemens, Blanco – Marken nach Bedarf, nicht nach Zwang.",
+      "seoTitle": "FAQ Küchenmarken – Bora, Miele, Gaggenau",
+      "seoDescription": "Welche Marken verbaut BEER? Bora, Miele, Gaggenau und freie Gerätewahl.",
+      "order": 110
+    },
+    {
+      "name": "Möbel nach Maß",
+      "slug": "moebel",
+      "description": "Einbauschränke, Ankleiden, Tische – Möbel, die zur Küche und zum Haus gehören.",
+      "seoTitle": "FAQ Möbel nach Maß – Einbau, Ankleide, Tisch",
+      "seoDescription": "Einbauschränke, begehbare Kleiderschränke und Tische nach Maß aus der Manufaktur.",
+      "order": 120
+    },
+    {
+      "name": "Planung",
+      "slug": "planung",
+      "description": "Grundriss, Aufmaß, Zeitplan – vom ersten Gespräch bis zur Freigabe.",
+      "seoTitle": "FAQ Küche planen – Ablauf, Aufmaß, Zeit",
+      "seoDescription": "Wie lange dauert die Küchenplanung? Grundriss, Aufmaß und Ablauf bei BEER.",
+      "order": 130
+    },
+    {
+      "name": "Kosten",
+      "slug": "kosten",
+      "description": "Was eine Küche kostet, wovon der Preis abhängt und was das Erstgespräch kostet.",
+      "seoTitle": "Was kostet eine Küche nach Maß? FAQ Preise",
+      "seoDescription": "Was kostet eine Manufakturküche? Preisfaktoren, Budgetrahmen und kostenloses Erstgespräch.",
+      "order": 140
+    },
+    {
+      "name": "Ausstellung & Beratung",
+      "slug": "ausstellung",
+      "description": "Ausstellung in Wolfersdorf, Termin und was Sie vor Ort erleben.",
+      "seoTitle": "FAQ Ausstellung Wolfersdorf – Beratung & Termin",
+      "seoDescription": "Küchenausstellung in Wolfersdorf bei Freising: Termin, Besuch ohne Anmeldung, Öffnungszeiten.",
+      "order": 150
+    },
+    {
+      "name": "Fertigung & Montage",
+      "slug": "montage",
+      "description": "Manufaktur, Montage vor Ort, Anschlüsse – wer was übernimmt.",
+      "seoTitle": "FAQ Fertigung und Montage der Küche",
+      "seoDescription": "Wo wird die Küche gefertigt, wie läuft die Montage, wer schließt Wasser und Strom an?",
+      "order": 160
+    },
+    {
+      "name": "Regionen",
+      "slug": "regionen",
+      "description": "Freising, München, Erding, Landshut, Pfaffenhofen – das Einzugsgebiet.",
+      "seoTitle": "FAQ Küche München, Freising, Erding",
+      "seoDescription": "Plant BEER Küchen in München, Freising, Erding, Landshut und Pfaffenhofen?",
+      "order": 170
+    },
+    {
+      "name": "Pflege",
+      "slug": "pflege",
+      "description": "Fronten, Stein und Holz im Alltag – Pflege ohne Spezialritual.",
+      "seoTitle": "FAQ Küche pflegen – Fronten, Stein, Holz",
+      "seoDescription": "Wie pflegt man Lackfronten, Naturstein und Holz in der Küche?",
+      "order": 180
+    },
+    {
+      "name": "Nachhaltigkeit",
+      "slug": "nachhaltigkeit",
+      "description": "Langlebigkeit, regionale Fertigung und Materialien, die Jahre tragen.",
+      "seoTitle": "FAQ nachhaltige Küche – Manufaktur statt Austausch",
+      "seoDescription": "Wie nachhaltig ist eine Manufakturküche? Regionale Fertigung und langlebige Materialien.",
+      "order": 190
+    }
+  ],
+  "items": [
+    {
+      "slug": "wie-laeuft-die-beratung-ab",
+      "question": "Wie läuft die Beratung ab?",
+      "answer": "Zuerst ein Gespräch – in der Ausstellung oder bei Ihnen. Wir klären Raum, Alltag und Budget, bevor gezeichnet wird. Daraus entsteht ein Vorschlag mit Materialien und einem ehrlichen Preisrahmen. Vertieft wird nur, was Sie weiterführen möchten.",
+      "showOnHome": true,
+      "order": 10,
+      "themes": ["allgemein", "ausstellung", "planung"]
+    },
+    {
+      "slug": "brauche-ich-einen-termin",
+      "question": "Brauche ich einen Termin für die Ausstellung?",
+      "answer": "Sie können vorbeikommen. Für ein ruhiges Gespräch empfehlen wir einen Termin – dann ist Ihr Berater vorbereitet und die Zeit gehört Ihnen. Ohne Termin zeigen wir Ihnen gern die Ausstellung, vertiefen aber nicht jede Planung.",
+      "showOnHome": true,
+      "order": 20,
+      "themes": ["allgemein", "ausstellung"]
+    },
+    {
+      "slug": "was-kostet-eine-kueche-nach-mass",
+      "question": "Was kostet eine Küche nach Maß?",
+      "answer": "Jede Küche wird einzeln geplant. Der Preis hängt von Größe, Front, Arbeitsplatte und Geräten ab. Im Erstgespräch nennen wir einen Rahmen – bevor die Planung vertieft wird. Pauschalpreise aus dem Katalog führen hier nicht weiter.",
+      "showOnHome": true,
+      "order": 30,
+      "themes": ["kosten", "allgemein"]
+    },
+    {
+      "slug": "wie-lange-dauert-planung-und-fertigung",
+      "question": "Wie lange dauert Planung und Fertigung?",
+      "answer": "Von der ersten Beratung bis zur Montage rechnen wir in der Regel mit einigen Monaten. Aufmaß, Freigabe, Fertigung und Einbau folgen nacheinander. Den konkreten Zeitplan stimmen wir nach dem Aufmaß mit Ihnen ab – nicht vorher aus der Luft.",
+      "showOnHome": true,
+      "order": 40,
+      "themes": ["planung", "montage"]
+    },
+    {
+      "slug": "brauche-ich-einen-grundriss",
+      "question": "Brauche ich einen Grundriss zur Beratung?",
+      "answer": "Hilfreich, aber nicht Pflicht. Skizze, Fotos oder ein alter Plan reichen für das erste Gespräch. Das verbindliche Maß nehmen wir vor Ort – Wände, Nischen und Anschlüsse weichen oft vom Papier ab.",
+      "showOnHome": false,
+      "order": 50,
+      "themes": ["planung", "allgemein"]
+    },
+    {
+      "slug": "was-bringe-ich-zum-erstgespraech-mit",
+      "question": "Was bringe ich zum Erstgespräch mit?",
+      "answer": "Was Sie haben: Fotos des Raums, Wunschbilder, grobes Budget. Wenn ein Grundriss da ist, bringen Sie ihn mit. Wichtiger als Unterlagen ist, wie Sie kochen und leben – das lässt sich im Gespräch klären.",
+      "showOnHome": false,
+      "order": 60,
+      "themes": ["allgemein", "planung", "ausstellung"]
+    },
+    {
+      "slug": "arbeiten-sie-nur-an-neubauten",
+      "question": "Arbeiten Sie nur an Neubauten?",
+      "answer": "Nein. Viele Küchen entstehen im Bestand: Altbau, Anbau, bestehende Anschlüsse. Gerade dort lohnt Maßarbeit, weil Wände und Nischen selten rechtwinklig sind.",
+      "showOnHome": false,
+      "order": 70,
+      "themes": ["allgemein", "besondere", "planung"]
+    },
+    {
+      "slug": "welche-kuechenfarben-sind-moeglich",
+      "question": "Welche Küchenfarben sind möglich?",
+      "answer": "Fast jede Farbe, die zum Raum passt: Weiß, Sand, Grau, Schwarz, Salbei, Blau, lagige Holztöne. Wir arbeiten mit Lack, Folie, Furnier und massivem Holz. Die Farbe entscheiden wir am Muster – nicht am Bildschirm.",
+      "showOnHome": false,
+      "order": 80,
+      "themes": ["farben"]
+    },
+    {
+      "slug": "weisse-kueche-im-alltag",
+      "question": "Ist eine weiße Küche im Alltag unpraktisch?",
+      "answer": "Weiß bleibt hell und ruhig, zeigt aber Gebrauch. Die Pflege hängt von der Oberfläche ab: matte Lacke verzeihen anders als Hochglanz. Wir zeigen Ihnen Muster unter Tageslicht und sprechen ehrlich über Spuren.",
+      "showOnHome": false,
+      "order": 90,
+      "themes": ["farben", "pflege"]
+    },
+    {
+      "slug": "schwarze-kueche-zu-dunkel",
+      "question": "Wird eine schwarze Küche zu dunkel?",
+      "answer": "Schwarz braucht Licht, Kontrast und oft Holz oder Stein als Gegengewicht. In offenen Räumen mit Fenster kann sie ruhig und präzise wirken. In kleinen, dunklen Zimmern raten wir eher zu gebrochenen Tönen.",
+      "showOnHome": false,
+      "order": 100,
+      "themes": ["farben", "stile"]
+    },
+    {
+      "slug": "salbeigrune-kueche",
+      "question": "Passt Salbeigrün in eine moderne Küche?",
+      "answer": "Ja – wenn der Ton zum Stein, zum Boden und zum Licht passt. Salbei liegt zwischen Landhaus und zurückhaltender Moderne. Wir mustern den Farbton an der Wand, nicht nur auf dem Chip.",
+      "showOnHome": false,
+      "order": 110,
+      "themes": ["farben", "stile"]
+    },
+    {
+      "slug": "holz-und-farbfronten-kombinieren",
+      "question": "Kann ich Holz und Lackfarbe kombinieren?",
+      "answer": "Ja, oft ist das die ruhigere Lösung: farbige Unterschränke, Holz oben – oder umgekehrt. Wichtig sind Maserung, Griff und Arbeitsplatte, damit es nicht nach zwei Küchen aussieht.",
+      "showOnHome": false,
+      "order": 120,
+      "themes": ["farben", "material", "stile"]
+    },
+    {
+      "slug": "welche-kuechenform-passt",
+      "question": "Welche Küchenform passt zu meinem Raum?",
+      "answer": "Das entscheidet der Grundriss, nicht der Trend. Eine Zeile braucht Länge, die L-Form eine Ecke, die U-Form zwei. Inseln brauchen Laufwege. Wir zeichnen Varianten, bevor Sie sich festlegen.",
+      "showOnHome": false,
+      "order": 130,
+      "themes": ["formen", "planung"]
+    },
+    {
+      "slug": "l-form-oder-u-form",
+      "question": "L-Form oder U-Form – was ist besser?",
+      "answer": "Weder noch. Die L-Form hält Laufwege offen, die U-Form gibt mehr Arbeits- und Stauraum, schließt den Raum aber. In Wohnküchen ist oft die L-Form mit Insel die klarere Lösung.",
+      "showOnHome": false,
+      "order": 140,
+      "themes": ["formen"]
+    },
+    {
+      "slug": "kuechenzeile-kleine-raeume",
+      "question": "Reicht eine Küchenzeile für kleine Räume?",
+      "answer": "Oft ja – wenn Höhe, Nischen und Innenleben mitgedacht werden. Eine klare Zeile ist besser als eine gedrängte U-Form. Kleine Räume verzeihen keine überladenen Inseln.",
+      "showOnHome": false,
+      "order": 150,
+      "themes": ["formen", "besondere"]
+    },
+    {
+      "slug": "offene-kueche-planen",
+      "question": "Wie plant man eine offene Küche zum Wohnraum?",
+      "answer": "Sichtachsen, Geräusche, Dunst und Stauraum gehören zusammen. Die Küche darf Möbel sein, nicht nur Technik. Insel, Materialwechsel und eine ruhige Rückwand halten den Wohnraum klar.",
+      "showOnHome": false,
+      "order": 160,
+      "themes": ["formen", "besondere", "inseln"]
+    },
+    {
+      "slug": "moderne-oder-landhauskueche",
+      "question": "Moderne Küche oder Landhausküche?",
+      "answer": "Das Haus gibt den Ton vor, nicht der Katalog. Moderne Küchen sind ruhig und flächig, Landhaus arbeitet mit Rahmen, Holz und Wärme. Mischformen gehen – wenn Griffe, Stein und Licht zusammenpassen.",
+      "showOnHome": false,
+      "order": 170,
+      "themes": ["stile"]
+    },
+    {
+      "slug": "was-ist-eine-designkueche",
+      "question": "Was verstehen Sie unter einer Designküche?",
+      "answer": "Keine Showküche. Eine Designküche bei uns heißt: klare Fugen, passende Geräte, Materialien, die man anfassen mag. Weniger Dekor, mehr Maß – und eine Haltung, die zum Haus passt.",
+      "showOnHome": false,
+      "order": 180,
+      "themes": ["stile"]
+    },
+    {
+      "slug": "puristische-grifflose-kueche",
+      "question": "Ist eine puristische, grifflose Küche alltagstauglich?",
+      "answer": "Ja, wenn die Öffnung stimmt: Tipp-on, Griffmulde oder lange Profilgriffe. Grifflos sieht ruhig aus, braucht aber saubere Fronten und durchdachte Auszüge. Wir testen das am Muster, nicht nur in der Visualisierung.",
+      "showOnHome": false,
+      "order": 190,
+      "themes": ["stile", "material"]
+    },
+    {
+      "slug": "holzkueche-welcher-stil",
+      "question": "Ist eine Holzküche automatisch Landhaus?",
+      "answer": "Nein. Eiche, Nussbaum oder Esche können modern, warm oder zurückhaltend sein – je nach Schliff, Fuge und Arbeitsplatte. Holz ist Material, nicht Stil.",
+      "showOnHome": false,
+      "order": 200,
+      "themes": ["stile", "material", "farben"]
+    },
+    {
+      "slug": "lohnt-sich-eine-kuecheninsel",
+      "question": "Lohnt sich eine Kücheninsel?",
+      "answer": "Wenn der Raum Laufwege lässt: ja. Eine Insel ist Arbeitsfläche, Treffpunkt und oft Kochstelle. Wird sie zum Hindernis, planen wir eine Halbinsel oder eine klare Zeile – nicht um jeden Preis eine Insel.",
+      "showOnHome": false,
+      "order": 210,
+      "themes": ["inseln", "formen"]
+    },
+    {
+      "slug": "wie-viel-platz-braucht-eine-insel",
+      "question": "Wie viel Platz braucht eine Kücheninsel?",
+      "answer": "Planen Sie um die Insel herum Wege, nicht nur die Platte. Unter einem Meter Durchgang wird es eng, besonders an Spüle und Herd. Das genaue Maß ergibt das Aufmaß – und wie Sie zu zweit kochen.",
+      "showOnHome": false,
+      "order": 220,
+      "themes": ["inseln", "planung"]
+    },
+    {
+      "slug": "kochinsel-mit-abzug",
+      "question": "Geht eine Kochinsel mit Kochfeldabzug?",
+      "answer": "Ja. Kochfeldabzüge halten den Blick frei, brauchen aber Technik unter der Platte und oft mehr Korpustiefe. Eine Esse über der Insel bleibt eine Alternative, wenn der Raum sie trägt.",
+      "showOnHome": false,
+      "order": 230,
+      "themes": ["inseln", "geraete", "marken"]
+    },
+    {
+      "slug": "kleine-kueche-nach-mass",
+      "question": "Lohnt Maßarbeit in einer kleinen Küche?",
+      "answer": "Gerade dort. Zentimeter, Nischen und raumhohe Schränke entscheiden, ob der Raum atmet. Standardzeilen lassen oft Ecken und Decken ungenutzt.",
+      "showOnHome": false,
+      "order": 240,
+      "themes": ["besondere", "formen"]
+    },
+    {
+      "slug": "raumhohe-schraenke",
+      "question": "Sind raumhohe Schränke sinnvoll?",
+      "answer": "Ja, wenn die Decke mitspielt. Raumhoch nimmt Staubkanten weg und gibt Stauraum, den Unterschränke nicht ersetzen. Obere Fächer planen wir so, dass sie erreichbar bleiben – mit Tritt oder Auszug, nicht als totes Lager.",
+      "showOnHome": false,
+      "order": 250,
+      "themes": ["besondere", "material", "innenleben"]
+    },
+    {
+      "slug": "kueche-im-altbau",
+      "question": "Können Sie eine Küche im Altbau planen?",
+      "answer": "Ja. Schiefe Wände, alte Anschlüsse und niedrige Decken sind der Normalfall, nicht die Ausnahme. Deshalb messen wir vor Ort und fertigen nach dem Raum, nicht nach dem Rastermaß.",
+      "showOnHome": false,
+      "order": 260,
+      "themes": ["besondere", "planung", "montage"]
+    },
+    {
+      "slug": "welche-fronten-gibt-es",
+      "question": "Welche Fronten gibt es?",
+      "answer": "Lack, Schichtstoff, furniertes Holz, massives Holz – jeweils matt, seidenmatt oder mit sichtbarer Maserung. Die Front ist das, was Sie täglich anfassen. Deshalb mustern wir vor der Bestellung.",
+      "showOnHome": false,
+      "order": 270,
+      "themes": ["material"]
+    },
+    {
+      "slug": "lack-oder-furnier",
+      "question": "Lack oder Furnier – was hält länger?",
+      "answer": "Beides hält, wenn es zur Nutzung passt. Lack ist ruhig und farbstark, Furnier zeigt Holz und altert mit. In Haushalten mit Kindern zählen Kanten und Reinigung oft mehr als die Theorie der Härte.",
+      "showOnHome": false,
+      "order": 280,
+      "themes": ["material", "pflege"]
+    },
+    {
+      "slug": "grifflose-kueche-vor-und-nachteile",
+      "question": "Grifflose Küche: Vor- und Nachteile?",
+      "answer": "Vorteil: ruhige Flächen, weniger Beschläge. Nachteil: Fronten brauchen ein klares Öffnungssystem und zeigen Finger eher. Ob Tipp-on oder Mulde besser ist, hängt von Korpus und Gewohnheit ab.",
+      "showOnHome": false,
+      "order": 290,
+      "themes": ["material", "stile"]
+    },
+    {
+      "slug": "welche-arbeitsplatte-passt",
+      "question": "Welche Arbeitsplatte passt zur Küche?",
+      "answer": "Stein und Keramik sind unempfindlich und kühl, Holz ist warm und will Pflege, gute Schichtstoffe sind alltagstauglich. Die Platte muss zu Kochen, Backen und zur Front passen – nicht nur zum Moodboard.",
+      "showOnHome": false,
+      "order": 300,
+      "themes": ["arbeitsplatten"]
+    },
+    {
+      "slug": "naturstein-oder-keramik",
+      "question": "Naturstein oder Keramik als Arbeitsplatte?",
+      "answer": "Naturstein ist einzigartig in Aderung und Haptik, Keramik oft unempfindlicher gegen Säure und Hitze. Beide brauchen ein sauberes Detail an Spüle und Kante. Wir legen Muster unter Ihr Licht, bevor Sie wählen.",
+      "showOnHome": false,
+      "order": 310,
+      "themes": ["arbeitsplatten"]
+    },
+    {
+      "slug": "holzarbeitsplatte-pflege",
+      "question": "Ist eine Holzarbeitsplatte pflegeleicht?",
+      "answer": "Sie ist alltagstauglich, wenn Sie sie ölen und nasse Stellen nicht stehen lassen. Schnittspuren gehören dazu – Holz arbeitet mit. Wer eine völlig unberührte Fläche will, nimmt Stein oder Keramik.",
+      "showOnHome": false,
+      "order": 320,
+      "themes": ["arbeitsplatten", "pflege"]
+    },
+    {
+      "slug": "schubkaesten-oder-tueren",
+      "question": "Schubkästen oder Türen in den Unterschränken?",
+      "answer": "Auszüge zeigen den Inhalt, Türen sind ruhiger und oft günstiger. In der Arbeitszone planen wir meist Vollauszüge, in Eck- und Gerätezonen gemischt. Das Innenleben entscheidet den Alltag mehr als die Front.",
+      "showOnHome": false,
+      "order": 330,
+      "themes": ["innenleben"]
+    },
+    {
+      "slug": "eckschrank-loesungen",
+      "question": "Was tun mit dem Eckschrank?",
+      "answer": "Ecken nicht totplanen: LeMans, Auszüge oder eine klare Lücke für Geräte. Blind verlorener Raum ärgert später mehr als eine sichtbare Lösung. Wir zeichnen die Ecke, bevor die Front feststeht.",
+      "showOnHome": false,
+      "order": 340,
+      "themes": ["innenleben", "formen"]
+    },
+    {
+      "slug": "apothekerauszug-sinnvoll",
+      "question": "Ist ein Apothekerauszug sinnvoll?",
+      "answer": "Ja, wenn Vorräte an einem Ort bleiben sollen und der Korpus hoch genug ist. Schmal und durchdacht schlägt er zwei unübersichtliche Schränke. Breite, Tiefe und Beschlag müssen zum Gewicht passen.",
+      "showOnHome": false,
+      "order": 350,
+      "themes": ["innenleben"]
+    },
+    {
+      "slug": "welche-geraete-planen-sie",
+      "question": "Welche Geräte planen Sie ein?",
+      "answer": "Kochfeld, Backofen, Kühlung, Spülmaschine, Dunstabzug – so, dass Nischen und Lüftung stimmen. Die Marke wählen Sie mit uns, nicht gegen die Küche. Technik folgt dem Raum, nicht umgekehrt.",
+      "showOnHome": false,
+      "order": 360,
+      "themes": ["geraete", "marken"]
+    },
+    {
+      "slug": "kochfeldabzug-statt-esse",
+      "question": "Kochfeldabzug statt Esse – für wen?",
+      "answer": "Für Inseln und offene Räume, in denen eine Haube stört. Der Abzug braucht Platz unter der Platte und eine ehrliche Aussage zur Leistung. Wer intensiv brät, prüfen wir beides – ohne Verkaufsdruck.",
+      "showOnHome": false,
+      "order": 370,
+      "themes": ["geraete", "inseln"]
+    },
+    {
+      "slug": "integrierte-kuechengeraete",
+      "question": "Sollten Geräte hinter Fronten verschwinden?",
+      "answer": "Kühlschrank und Spülmaschine oft ja, Backofen und Kaffee eher in einer klaren Nische. Vollintegriert wirkt ruhig, braucht aber Griff und Lüftung. Wir zeigen beides in der Ausstellung.",
+      "showOnHome": false,
+      "order": 380,
+      "themes": ["geraete", "stile"]
+    },
+    {
+      "slug": "welche-marken-verbauen-sie",
+      "question": "Welche Marken verbauen Sie?",
+      "answer": "Unter anderem Bora, Miele, Gaggenau, Siemens, Neff und Blanco – je nach Küche und Budget. Wir sind keine Vertragsküche einer einzigen Marke. Entscheidend ist, was zum Raum und zu Ihrer Art zu kochen passt.",
+      "showOnHome": false,
+      "order": 390,
+      "themes": ["marken", "geraete"]
+    },
+    {
+      "slug": "bora-in-beer-kuechen",
+      "question": "Können Sie Bora in die Küche einplanen?",
+      "answer": "Ja. Kochfeldabzüge wie Bora brauchen Korpustiefe, Kabelführung und oft eine andere Unterschrank-Aufteilung. Das zeichnen wir mit, nicht nachträglich in eine fertige Zeile.",
+      "showOnHome": false,
+      "order": 400,
+      "themes": ["marken", "geraete", "inseln"]
+    },
+    {
+      "slug": "an-eine-marke-gebunden",
+      "question": "Sind Sie an eine Küchenmarke gebunden?",
+      "answer": "Nein. BEER plant und fertigt selbst. Geräte und Spülen kommen von Herstellern, die zur Aufgabe passen – nicht von einem Konzern, der die ganze Küche vorgibt.",
+      "showOnHome": false,
+      "order": 410,
+      "themes": ["marken", "allgemein"]
+    },
+    {
+      "slug": "moebel-ausserhalb-der-kueche",
+      "question": "Fertigen Sie auch Möbel außerhalb der Küche?",
+      "answer": "Ja, in kleinerem Umfang: Einbauschränke, Ankleiden, Tische und Wohnmöbel – immer dann, wenn sie zur Küche und zum Haus gehören. Kein beliebiges Möbelprogramm, sondern Anschlüsse an das, was wir ohnehin bauen.",
+      "showOnHome": true,
+      "order": 420,
+      "themes": ["moebel"]
+    },
+    {
+      "slug": "einbauschraenke-und-ankleide",
+      "question": "Machen Sie Einbauschränke und Ankleiden?",
+      "answer": "Ja. Nischen, Schrägen und raumhohe Füllungen – oft im Anschluss an die Küche oder den Flur. Das Maß nimmt dieselbe Manufaktur, die Ihre Küche baut.",
+      "showOnHome": false,
+      "order": 430,
+      "themes": ["moebel", "besondere"]
+    },
+    {
+      "slug": "tische-und-baenke-nach-mass",
+      "question": "Gibt es Tische und Bänke nach Maß?",
+      "answer": "Ja, wenn sie zum Stein, zum Holz und zur Insel passen. Ein Esstisch aus der gleichen Sprache wie die Küche hält den Raum zusammen. Maße und Kante klären wir am Muster.",
+      "showOnHome": false,
+      "order": 440,
+      "themes": ["moebel"]
+    },
+    {
+      "slug": "was-passiert-beim-aufmass",
+      "question": "Was passiert beim Aufmaß?",
+      "answer": "Wir messen Wände, Nischen, Fenster, Steckdosen, Wasser und Lüftung. Erst danach wird die Planung verbindlich. Was auf dem Papier rechtwinklig wirkt, ist es vor Ort selten.",
+      "showOnHome": false,
+      "order": 450,
+      "themes": ["planung", "montage"]
+    },
+    {
+      "slug": "wann-wird-die-planung-verbindlich",
+      "question": "Wann wird die Planung verbindlich?",
+      "answer": "Nach Aufmaß, Materialfreigabe und einem Angebot, das Sie unterschreiben. Visualisierungen sind Annäherung, keine Bauzeichnung. Änderungen danach sind möglich – sie kosten Zeit und oft Geld, das wir vorher benennen.",
+      "showOnHome": false,
+      "order": 460,
+      "themes": ["planung", "kosten"]
+    },
+    {
+      "slug": "wovon-haengt-der-preis-ab",
+      "question": "Wovon hängt der Preis einer Küche ab?",
+      "answer": "Von Metern, Front, Arbeitsplatte, Innenleben und Geräten – und davon, wie viele Sondermaße der Raum verlangt. Eine ruhige Zeile in Schichtstoff liegt anders als eine Insel in Lack und Naturstein. Deshalb der Rahmen im Gespräch, nicht im Online-Rechner.",
+      "showOnHome": false,
+      "order": 470,
+      "themes": ["kosten", "material", "geraete"]
+    },
+    {
+      "slug": "ist-das-erstgespraech-kostenlos",
+      "question": "Ist das Erstgespräch kostenlos?",
+      "answer": "Ja. Das erste Beratungsgespräch in der Ausstellung oder bei Ihnen kostet nichts. Verbindlich wird es erst mit Planung und Auftrag – nicht durch den Termin.",
+      "showOnHome": false,
+      "order": 480,
+      "themes": ["kosten", "ausstellung", "allgemein"]
+    },
+    {
+      "slug": "wo-ist-die-ausstellung",
+      "question": "Wo ist die Ausstellung?",
+      "answer": "In Wolfersdorf bei Freising, Badendorf 6. Keine Filialkette – ein Studio, in dem Materialien, Muster und Gespräche Platz haben. Anfahrt aus München, Erding und Landshut ist üblich.",
+      "showOnHome": false,
+      "order": 490,
+      "themes": ["ausstellung", "regionen"]
+    },
+    {
+      "slug": "oeffnungszeiten-wolfersdorf",
+      "question": "Wie sind die Öffnungszeiten in Wolfersdorf?",
+      "answer": "Bitte vereinbaren Sie den Termin über das Formular oder telefonisch – so ist jemand da und die Ausstellung nicht belegt. Spontane Besuche sind möglich, ein Gespräch ohne Anmeldung können wir nicht immer leisten.",
+      "showOnHome": false,
+      "order": 500,
+      "themes": ["ausstellung"]
+    },
+    {
+      "slug": "wo-werden-die-kuechen-gefertigt",
+      "question": "Wo werden die Küchen gefertigt?",
+      "answer": "In der Manufaktur, nicht als anonymes Raster aus dem Zentrallager. Das hält Wege kurz und Änderungen im Blick. Montage erfolgt bei Ihnen vor Ort.",
+      "showOnHome": false,
+      "order": 510,
+      "themes": ["montage", "nachhaltigkeit"]
+    },
+    {
+      "slug": "wie-laeuft-die-montage-ab",
+      "question": "Wie läuft die Montage ab?",
+      "answer": "Nach Fertigung kommt das Team zum Einbau: Korpusse, Arbeitsplatte, Passungen. Elektro und Sanitär müssen vorbereitet sein – das klären wir vorher mit Ihrem Handwerker oder uns. Am Ende steht eine Küche, die schließt, nicht nur steht.",
+      "showOnHome": false,
+      "order": 520,
+      "themes": ["montage", "planung"]
+    },
+    {
+      "slug": "wer-schliesst-wasser-und-strom-an",
+      "question": "Wer schließt Wasser und Strom an?",
+      "answer": "Die Anschlüsse macht das Fachhandwerk – oft Ihr Elektriker und Installateur, abgestimmt auf unseren Plan. Wir sagen, wo Steckdosen, Wasser und Abluft sitzen müssen. So bleibt die Gewährleistung klar.",
+      "showOnHome": false,
+      "order": 530,
+      "themes": ["montage"]
+    },
+    {
+      "slug": "kueche-muenchen-freising",
+      "question": "Planen Sie Küchen in München und Freising?",
+      "answer": "Ja. Wolfersdorf liegt bei Freising; München, der Norden und der Flughafen-Korridor gehören zum Alltag. Beratung in der Ausstellung, Aufmaß und Montage bei Ihnen.",
+      "showOnHome": false,
+      "order": 540,
+      "themes": ["regionen", "ausstellung"]
+    },
+    {
+      "slug": "einzugsgebiet-erding-landshut",
+      "question": "Kommen Sie auch nach Erding, Landshut und Pfaffenhofen?",
+      "answer": "Ja. Das Einzugsgebiet ist die Region nördlich und östlich von München – Erding, Landshut, Pfaffenhofen und benachbarte Orte. Ob der Weg passt, klären wir im Erstgespräch.",
+      "showOnHome": false,
+      "order": 550,
+      "themes": ["regionen"]
+    },
+    {
+      "slug": "lackfronten-pflegen",
+      "question": "Wie pflege ich Lackfronten?",
+      "answer": "Weiches Tuch, mildes Mittel, keine scheuernden Schwämme. Matte Lacke nicht polieren, bis sie glänzen. Kleine Kratzer besprechen wir – oft hilft mehr Ruhe als Nachlackieren.",
+      "showOnHome": false,
+      "order": 560,
+      "themes": ["pflege", "material"]
+    },
+    {
+      "slug": "naturstein-im-alltag",
+      "question": "Wie verhält sich Naturstein im Alltag?",
+      "answer": "Stein ist fest, nicht unverwundbar. Säure, Öl und harte Schläge hinterlassen Spuren, je nach Sorte. Impregnierung und Abwischen nach dem Kochen gehören dazu – wir sagen Ihnen, welcher Stein wie lebt.",
+      "showOnHome": false,
+      "order": 570,
+      "themes": ["pflege", "arbeitsplatten"]
+    },
+    {
+      "slug": "wie-nachhaltig-ist-eine-manufakturkueche",
+      "question": "Wie nachhaltig ist eine Manufakturküche?",
+      "answer": "Vor allem durch Dauer: eine Küche, die zwanzig Jahre bleibt, schlägt drei Austausche. Dazu regionale Fertigung, reparierbare Korpusse und Materialien, die man nacharbeiten kann – nicht jede Saison neu.",
+      "showOnHome": false,
+      "order": 580,
+      "themes": ["nachhaltigkeit"]
+    },
+    {
+      "slug": "regionale-fertigung",
+      "question": "Warum betonen Sie regionale Fertigung?",
+      "answer": "Kurze Wege, Ansprechpartner, Nacharbeit ohne Fernost-Umweg. Nachhaltigkeit hier heißt: wir bauen hier und kommen wieder, wenn etwas klemmt.",
+      "showOnHome": false,
+      "order": 590,
+      "themes": ["nachhaltigkeit", "montage"]
+    },
+    {
+      "slug": "kueche-reparieren-statt-tauschen",
+      "question": "Kann man später Fronten oder Platten tauschen?",
+      "answer": "Oft ja: Fronten, Griffe, Arbeitsplatte – wenn Korpus und Raster mitgedacht wurden. Eine Manufakturküche ist kein versiegeltes System. Was sich ändern lässt, sagen wir schon in der Planung.",
+      "showOnHome": false,
+      "order": 600,
+      "themes": ["nachhaltigkeit", "material", "planung"]
+    }
+  ]
+}

@@ -9,21 +9,21 @@ const fallback: KachelnContent = {
   colors: [
     {
       title: "Weiße Küchen",
-      href: "#kacheln",
+      href: "/kuechen/farben/weiss",
       image: "/kitchens/stile-holz.jpg",
       alt: "Weiße grifflose Küche mit Holz und Naturstein",
       color: "#f7f5f1",
     },
     {
       title: "Salbeigrüne Küchen",
-      href: "#kacheln",
+      href: "/kuechen/farben/salbei",
       image: "/kitchens/stile-landhaus.jpg",
       alt: "Salbeigrüne Landhausküche mit Marmor und schwarzen Beschlägen",
       color: "#9eae92",
     },
     {
       title: "Schwarze Küchen",
-      href: "#kacheln",
+      href: "/kuechen/farben/schwarz",
       image: "/kitchens/stile-design.jpg",
       alt: "Schwarze Küche mit Eiche und Fischgrätparkett",
       color: "#131311",

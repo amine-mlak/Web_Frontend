@@ -1,3 +1,10 @@
+import {
+  FALLBACK_FAQ_ITEMS,
+  FALLBACK_FAQ_THEMES,
+  homeFaqItems,
+  type FaqEntry,
+  type FaqTheme,
+} from "@/lib/faq";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
 const FALLBACK_STRAPI_URL =
@@ -63,6 +70,8 @@ export type FaqContent = {
   items: FaqItem[];
 };
 
+export type { FaqEntry, FaqTheme };
+
 export type ProcessIcon = "consult" | "plan" | "factory" | "handover";
 
 export type ProcessContent = {
@@ -106,7 +115,7 @@ type StrapiFormat = {
   width?: number;
 };
 
-type StrapiMedia = {
+export type StrapiMedia = {
   url?: string;
   width?: number;
   formats?: {
@@ -300,7 +309,7 @@ export function strapiResponsiveImage(
   };
 }
 
-async function strapiGet<T>(path: string, query: Record<string, string>) {
+export async function strapiGet<T>(path: string, query: Record<string, string> = {}) {
   const url = new URL(path, `${STRAPI_URL}/`);
   for (const [key, value] of Object.entries(query)) {
     url.searchParams.set(key, value);
@@ -558,19 +567,160 @@ export async function fetchLandingBySlug(slug: string) {
 }
 
 export async function fetchHomeCms(): Promise<HomeCms> {
-  const landing = await fetchLandingPage();
+  const [landing, collectionFaq] = await Promise.all([
+    fetchLandingPage(),
+    fetchHomeFaqContent(),
+  ]);
+
   if (landing) {
-    return landing;
+    return {
+      ...landing,
+      faq: landing.faq ?? collectionFaq,
+    };
   }
 
   return {
     heroSlides: [],
     kacheln: null,
     entdecken: null,
-    faq: null,
+    faq: collectionFaq,
     ablauf: null,
     beratung: null,
   };
+}
+
+export function flattenEntity(entry: unknown): Record<string, unknown> | null {
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+
+  const row = entry as Record<string, unknown> & {
+    attributes?: Record<string, unknown>;
+  };
+
+  if (row.attributes && typeof row.attributes === "object") {
+    return { ...row, ...row.attributes };
+  }
+
+  return row;
+}
+
+export function flattenCollection(value: unknown): Record<string, unknown>[] {
+  if (Array.isArray(value)) {
+    return value
+      .map(flattenEntity)
+      .filter((item): item is Record<string, unknown> => Boolean(item));
+  }
+
+  if (value && typeof value === "object" && "data" in value) {
+    return flattenCollection((value as { data: unknown }).data);
+  }
+
+  return [];
+}
+
+function mapFaqTheme(entry: unknown): FaqTheme | null {
+  const row = flattenEntity(entry);
+  const slug = String(row?.slug ?? "").trim();
+  const name = String(row?.name ?? "").trim();
+
+  if (!slug || !name) {
+    return null;
+  }
+
+  return {
+    name,
+    slug,
+    description: String(row.description ?? "").trim(),
+    seoTitle: String(row.seoTitle ?? "").trim() || name,
+    seoDescription: String(row.seoDescription ?? "").trim(),
+    order: Number(row.order ?? 0) || 0,
+  };
+}
+
+function mapFaqEntry(entry: unknown): FaqEntry | null {
+  const row = flattenEntity(entry);
+  const question = String(row?.question ?? "").trim();
+  const answer = String(row?.answer ?? "").trim();
+
+  if (!question || !answer) {
+    return null;
+  }
+
+  return {
+    slug: String(row.slug ?? "").trim() || question,
+    question,
+    answer,
+    showOnHome: Boolean(row.showOnHome),
+    order: Number(row.order ?? 0) || 0,
+    themes: flattenCollection(row.themes)
+      .map(mapFaqTheme)
+      .filter((theme): theme is FaqTheme => Boolean(theme)),
+  };
+}
+
+function toFaqContent(items: FaqEntry[]): FaqContent | null {
+  if (items.length === 0) {
+    return null;
+  }
+
+  return {
+    eyebrow: "Fragen",
+    title: "Bevor wir uns sehen",
+    items: items.map((item) => ({
+      question: item.question,
+      answer: item.answer,
+    })),
+  };
+}
+
+export async function fetchFaqHub(): Promise<{
+  themes: FaqTheme[];
+  items: FaqEntry[];
+}> {
+  const [themePayload, itemPayload] = await Promise.all([
+    strapiGet<{ data?: unknown }>("/api/faq-themes", {
+      sort: "order:asc",
+      "pagination[pageSize]": "100",
+    }),
+    strapiGet<{ data?: unknown }>("/api/faq-items", {
+      sort: "order:asc",
+      populate: "themes",
+      "pagination[pageSize]": "100",
+    }),
+  ]);
+
+  const themes = flattenCollection(themePayload?.data)
+    .map(mapFaqTheme)
+    .filter((theme): theme is FaqTheme => Boolean(theme))
+    .sort((left, right) => left.order - right.order);
+
+  const items = flattenCollection(itemPayload?.data)
+    .map(mapFaqEntry)
+    .filter((item): item is FaqEntry => Boolean(item))
+    .sort((left, right) => left.order - right.order);
+
+  return {
+    themes: themes.length > 0 ? themes : FALLBACK_FAQ_THEMES,
+    items: items.length > 0 ? items : FALLBACK_FAQ_ITEMS,
+  };
+}
+
+export async function fetchHomeFaqContent(): Promise<FaqContent | null> {
+  const payload = await strapiGet<{ data?: unknown }>("/api/faq-items", {
+    "filters[showOnHome][$eq]": "true",
+    sort: "order:asc",
+    populate: "themes",
+    "pagination[pageSize]": "20",
+  });
+
+  const items = flattenCollection(payload?.data)
+    .map(mapFaqEntry)
+    .filter((item): item is FaqEntry => Boolean(item));
+
+  return toFaqContent(
+    items.length > 0 ? items : homeFaqItems(FALLBACK_FAQ_ITEMS),
+  );
 }
 
 export type HeaderCms = {
