@@ -61,6 +61,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
 
   return (
     <section
+      data-site-hero=""
       className="relative isolate -mt-16 h-[320px] w-full overflow-hidden bg-nacht sm:h-[48vh] lg:-mt-24 lg:h-dvh"
       aria-roledescription="carousel"
       aria-label="Küchenprojekte"

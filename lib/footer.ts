@@ -3,73 +3,40 @@ export type FooterLink = {
   label: string;
 };
 
-export type FooterSection = {
+export type FooterColumn = {
   title: string;
   links: FooterLink[];
-  extraTitle?: string;
-  extraLinks?: FooterLink[];
-  note?: string;
+  more?: {
+    label: string;
+    links: FooterLink[];
+  };
 };
 
-export const kitchenWorlds: FooterLink[] = [
-  { href: "/kuechen/stile/modern", label: "Moderne Küchen" },
-  { href: "/kuechen/stile/landhaus", label: "Landhausküchen" },
-  { href: "/kuechen/stile/design", label: "Designküchen" },
-  { href: "/kuechen/stile/holz", label: "Holzküchen" },
-  { href: "/kuechen/formen/insel", label: "Küche mit Insel" },
-  { href: "/kuechen/formen/offen", label: "Offene Küche" },
-  { href: "/kuechen/formen/l-form", label: "L-Form" },
-  { href: "/kuechen/formen/u-form", label: "U-Form" },
-  { href: "/kuechen/formen/zeile", label: "Küchenzeile" },
-  { href: "/kuechen/formen/klein", label: "Kleine Küchen" },
-  { href: "/kuechen/farben/schwarz", label: "Schwarze Küchen" },
-  { href: "/kuechen/farben/weiss", label: "Weiße Küchen" },
-  { href: "/kuechen/farben/salbei", label: "Salbeigrüne Küchen" },
-  { href: "/kuechen", label: "Einbauküche" },
-  { href: "/kuechen/stile/luxus", label: "Luxusküche" },
-  { href: "/kuechen/besondere/raumhoch", label: "Raumhohe Küchen" },
-  { href: "/kuechen/besondere/grifflos", label: "Grifflose Küchen" },
-  { href: "/kuechen/besondere/nach-mass", label: "Küche nach Maß" },
-  { href: "/material", label: "Material & Ausstattung" },
-];
-
-export const footerColumns: FooterSection[] = [
+export const footerColumns: FooterColumn[] = [
   {
-    title: "Marken & Möbel",
+    title: "KÜCHEN",
     links: [
-      { href: "/marken/bora", label: "Bora" },
-      { href: "/marken/miele", label: "Miele" },
-      { href: "/marken/gaggenau", label: "Gaggenau" },
-      { href: "/marken/quooker", label: "Quooker" },
+      { href: "/kuechen/formen", label: "Küchenformen" },
+      { href: "/kuechen/stile", label: "Küchenstile" },
+      { href: "/kuechen/farben", label: "Küchenfarbe" },
+      { href: "/kuechen/besondere", label: "Besondere Küchen" },
+      { href: "/material", label: "Material & Ausstellung" },
     ],
-    extraTitle: "Möbel nach Maß",
-    extraLinks: [
+  },
+  {
+    title: "MÖBEL NACH MAß",
+    links: [
       { href: "/moebel/einbauschraenke", label: "Einbauschränke" },
-      { href: "/moebel/ankleide", label: "Begehbare Kleiderschränke" },
+      { href: "/moebel/ankleide", label: "Kleiderschränke" },
       { href: "/moebel/tische-baenke", label: "Tische & Bänke" },
       { href: "/moebel/wohnmoebel", label: "Wohnmöbel" },
     ],
   },
   {
-    title: "Regionen",
+    title: "KÜCHE PLANEN",
     links: [
-      { href: "/regionen/muenchen", label: "München" },
-      { href: "/regionen/freising", label: "Freising" },
-      { href: "/regionen/erding", label: "Erding" },
-      { href: "/regionen/dachau", label: "Dachau" },
-      { href: "/regionen/pfaffenhofen", label: "Pfaffenhofen" },
-      { href: "/regionen/augsburg", label: "Augsburg" },
-      { href: "/regionen/ingolstadt", label: "Ingolstadt" },
-      { href: "/regionen/landshut", label: "Landshut" },
-      { href: "/regionen/regensburg", label: "Regensburg" },
-      { href: "/regionen/mainburg", label: "Mainburg" },
-      { href: "/regionen/nuernberg", label: "Nürnberg" },
-    ],
-  },
-  {
-    title: "Küche planen",
-    links: [
-      { href: "/kueche-planen", label: "So entsteht Ihre Küche" },
+      { href: "/ratgeber", label: "Inspiration" },
+      { href: "/kueche-planen", label: "So läuft es ab" },
       { href: "/ausstellung", label: "Ausstellung Freising" },
       { href: "/beratung", label: "Küchenplaner" },
       { href: "/katalog", label: "Katalog bestellen" },
@@ -77,16 +44,31 @@ export const footerColumns: FooterSection[] = [
     ],
   },
   {
-    title: "Ratgeber",
+    title: "REGIONEN",
     links: [
-      { href: "/ratgeber/was-kostet-eine-kueche", label: "Was kostet eine Küche?" },
-      { href: "/ratgeber", label: "Top-Artikel" },
-      { href: "/ratgeber", label: "Alle Artikel" },
+      { href: "/regionen/muenchen", label: "Küchen München" },
+      { href: "/regionen/freising", label: "Küchen Freising" },
+      { href: "/regionen/erding", label: "Küchen Erding" },
+      { href: "/regionen/pfaffenhofen", label: "Küchen Pfaffenhofen" },
+      { href: "/regionen/augsburg", label: "Küchen Augsburg" },
     ],
+    more: {
+      label: "Weitere Regionen",
+      links: [
+        { href: "/regionen/dachau", label: "Küchen Dachau" },
+        { href: "/regionen/ingolstadt", label: "Küchen Ingolstadt" },
+        { href: "/regionen/landshut", label: "Küchen Landshut" },
+        { href: "/regionen/regensburg", label: "Küchen Regensburg" },
+        { href: "/regionen/mainburg", label: "Küchen Mainburg" },
+        { href: "/regionen/nuernberg", label: "Küchen Nürnberg" },
+        { href: "/regionen", label: "Alle Regionen" },
+      ],
+    },
   },
   {
-    title: "Unternehmen",
+    title: "UNTERNEHMEN",
     links: [
+      { href: "/", label: "Startseite" },
       { href: "/ueber", label: "Über BEER" },
       { href: "/ueber", label: "Team" },
       { href: "/projekte", label: "Alle Projekte" },
@@ -95,16 +77,21 @@ export const footerColumns: FooterSection[] = [
       { href: "/ratgeber", label: "Presse" },
     ],
   },
-  {
-    title: "Kontakt",
-    links: [
-      { href: "/faq", label: "FAQ" },
-      { href: "/kontakt", label: "BEER GmbH" },
-      { href: "/kontakt", label: "Badendorf 6" },
-      { href: "/kontakt", label: "85395 Wolfersdorf" },
-      { href: "/ausstellung", label: "Öffnungszeiten" },
-    ],
-  },
+];
+
+export const footerContact = {
+  title: "KONTAKT",
+  lines: [
+    "BEER GmbH",
+    "Badendorf 6",
+    "85395 Wolfersdorf",
+    "Mo–Fr 9–18 Uhr · Sa 9–14 Uhr",
+  ],
+};
+
+export const footerShortcuts: FooterLink[] = [
+  { href: "/faq", label: "FAQ" },
+  { href: "/ratgeber", label: "RATGEBER" },
 ];
 
 export const legalLinks: FooterLink[] = [
@@ -114,10 +101,12 @@ export const legalLinks: FooterLink[] = [
   { href: "/datenschutz", label: "Cookie-Einstellungen" },
 ];
 
-export const socialLinks: FooterLink[] = [
-  { href: "https://facebook.com", label: "Facebook" },
-  { href: "https://instagram.com", label: "Instagram" },
-  { href: "https://pinterest.com", label: "Pinterest" },
-  { href: "https://youtube.com", label: "YouTube" },
-  { href: "https://houzz.com", label: "Houzz" },
+export type SocialIcon = "instagram" | "youtube" | "facebook" | "pinterest" | "houzz";
+
+export const socialLinks: { href: string; label: string; icon: SocialIcon }[] = [
+  { href: "https://instagram.com", label: "Instagram", icon: "instagram" },
+  { href: "https://youtube.com", label: "YouTube", icon: "youtube" },
+  { href: "https://facebook.com", label: "Facebook", icon: "facebook" },
+  { href: "https://pinterest.com", label: "Pinterest", icon: "pinterest" },
+  { href: "https://houzz.com", label: "Houzz", icon: "houzz" },
 ];

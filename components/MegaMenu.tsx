@@ -172,7 +172,12 @@ export default function MegaMenu({
   }, [mobileOpen, closeMobile]);
 
   return (
-    <div className="relative w-full">
+    <div
+      className="relative w-full"
+      data-header-lock={
+        mobileOpen || dropdownOpen || menuOpen || hovered ? "true" : "false"
+      }
+    >
       <NavigationMenu
         viewport={false}
         className="relative hidden w-full max-w-none lg:flex"
