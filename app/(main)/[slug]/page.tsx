@@ -26,7 +26,9 @@ export default async function LandingSlugPage({
   if (landing) {
     return (
       <main className="bg-paper">
-        {landing.heroSlides.length > 0 ? <Hero slides={landing.heroSlides} /> : null}
+        {landing.heroSlides.length > 0 ? (
+          <Hero slides={landing.heroSlides} panel={landing.heroPanel ?? undefined} />
+        ) : null}
         {landing.kacheln ? <Kacheln content={landing.kacheln} /> : null}
         {landing.ablauf ? <Process content={landing.ablauf} /> : null}
         {landing.entdecken ? <Entdecken content={landing.entdecken} /> : null}

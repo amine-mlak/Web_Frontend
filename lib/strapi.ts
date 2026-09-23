@@ -100,10 +100,20 @@ export type BeratungContent = {
   email: string;
 };
 
+export type HeroIntroContent = {
+  eyebrow: string;
+  title: string;
+  emphasis: string;
+  text: string;
+  buttonLabel: string;
+  buttonHref: string;
+};
+
 export type HomeCms = {
   title?: string;
   slug?: string;
   heroSlides: HeroSlide[];
+  heroPanel: HeroIntroContent | null;
   kacheln: KachelnContent | null;
   entdecken: EntdeckenContent | null;
   faq: FaqContent | null;
@@ -156,7 +166,15 @@ type StrapiFaqItem = {
 type StrapiLandingEntry = {
   title?: string;
   slug?: string;
-  hero?: { slides?: StrapiHeroSlide[] };
+  hero?: {
+    eyebrow?: string;
+    title?: string;
+    emphasis?: string;
+    text?: string;
+    buttonLabel?: string;
+    buttonHref?: string;
+    slides?: StrapiHeroSlide[];
+  };
   kacheln?: {
     eyebrow?: string;
     intro?: string;
@@ -372,6 +390,25 @@ function isHexColor(value: string) {
   return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
 }
 
+function mapHeroPanel(
+  hero?: StrapiLandingEntry["hero"],
+): HeroIntroContent | null {
+  const title = hero?.title?.trim() || "";
+  const text = hero?.text?.trim() || "";
+  if (!title || !text) {
+    return null;
+  }
+
+  return {
+    eyebrow: hero?.eyebrow?.trim() || "",
+    title,
+    emphasis: hero?.emphasis?.trim() || "",
+    text,
+    buttonLabel: hero?.buttonLabel?.trim() || "Ideen ansehen",
+    buttonHref: hero?.buttonHref?.trim() || "/kuechen",
+  };
+}
+
 function mapHeroSlides(slides?: StrapiHeroSlide[]): HeroSlide[] {
   return (slides ?? [])
     .map((slide) => ({
@@ -552,6 +589,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   }
 
   const heroSlides = mapHeroSlides(entry.hero?.slides);
+  const heroPanel = mapHeroPanel(entry.hero);
   const kacheln = mapKachelnContent(entry.kacheln);
   const entdecken = mapEntdeckenContent(entry.entdecken?.panels);
   const faq = mapFaqContent(entry.faq);
@@ -560,6 +598,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
 
   if (
     !heroSlides.length &&
+    !heroPanel &&
     !kacheln &&
     !entdecken &&
     !faq &&
@@ -570,6 +609,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
       title: entry.title?.trim(),
       slug: entry.slug?.trim(),
       heroSlides: [],
+      heroPanel,
       kacheln: null,
       entdecken: null,
       faq: null,
@@ -582,6 +622,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     title: entry.title?.trim(),
     slug: entry.slug?.trim(),
     heroSlides,
+    heroPanel,
     kacheln,
     entdecken,
     faq,
@@ -609,6 +650,7 @@ export async function fetchHomeCms(): Promise<HomeCms> {
 
   return {
     heroSlides: [],
+    heroPanel: null,
     kacheln: null,
     entdecken: null,
     faq: collectionFaq,

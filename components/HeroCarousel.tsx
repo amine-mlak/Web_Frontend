@@ -19,7 +19,7 @@ const ROLL_MS = 1200;
 
 function HeroIntro({ panel }: { panel: HeroPanel }) {
   return (
-    <div className="absolute inset-0 z-10 flex items-center px-4 py-8 sm:px-8 lg:px-14">
+    <div className="absolute inset-0 z-10 flex items-end px-4 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-28">
       <div className="w-full max-w-xl bg-transparent px-7 py-9 text-paper backdrop-blur-[2px] sm:px-10 sm:py-12 lg:max-w-3xl">
         <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper/80 uppercase">
           {panel.eyebrow}
