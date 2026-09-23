@@ -374,14 +374,10 @@ function isHexColor(value: string) {
 
 function mapHeroSlides(slides?: StrapiHeroSlide[]): HeroSlide[] {
   return (slides ?? [])
-    .map((slide) => {
-      const image = strapiResponsiveImage(slide.image, { srcWidth: 2560 });
-      return {
-        src: image.src,
-        srcSet: image.srcSet,
-        alt: slide.alt?.trim() || "",
-      };
-    })
+    .map((slide) => ({
+      src: strapiMediaUrl(slide.image?.url),
+      alt: slide.alt?.trim() || "",
+    }))
     .filter((slide) => slide.src);
 }
 
