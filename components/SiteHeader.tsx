@@ -70,7 +70,7 @@ export default function SiteHeader({ children }: { children: ReactNode }) {
       >
         {children}
       </div>
-      <div className="h-16 lg:h-24" aria-hidden="true" />
+      <div className="h-14" aria-hidden="true" />
     </>
   );
 }

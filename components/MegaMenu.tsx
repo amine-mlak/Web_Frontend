@@ -200,7 +200,7 @@ export default function MegaMenu({
             )}
           >
             <div className="min-h-0 overflow-hidden">
-              <div className="h-20 md:h-24" aria-hidden />
+              <div className="h-14" aria-hidden />
               <div
                 className={cn(
                   "grid transition-[grid-template-rows] duration-500",
@@ -217,13 +217,17 @@ export default function MegaMenu({
           </div>
 
           <div
-            className="relative z-10 mx-auto grid h-20 w-full max-w-[90rem] grid-cols-[1fr_auto_1fr] items-center px-8 md:h-24 lg:px-10"
+            className="relative z-10 grid h-14 w-full grid-cols-[1fr_auto_1fr] items-center px-5 lg:px-8"
             onMouseEnter={openMenuHover}
           >
-            <NavigationMenuList className="relative h-full items-stretch justify-start space-x-0">
+            <div className="justify-self-start">
+              <BrandLogo src={logoSrc} alt={logoAlt} />
+            </div>
+
+            <NavigationMenuList className="relative h-full items-stretch justify-center space-x-0">
               {panels.map((panel) => (
                 <NavigationMenuItem key={panel.id} value={panel.id} className="flex h-full">
-                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3 !text-[16px] font-normal tracking-[0.06em] text-ink/70 xl:!text-[17px] hover:bg-transparent hover:text-ink focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-ink after:absolute after:inset-x-0 after:top-full after:z-50 after:h-20 after:content-[''] [&>svg]:hidden">
+                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3 !text-[16px] font-normal tracking-[0.06em] text-ink/70 xl:!text-[17px] hover:bg-transparent hover:text-ink focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-ink after:absolute after:inset-x-0 after:top-full after:z-50 after:h-8 after:content-[''] [&>svg]:hidden">
                     {panel.label}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-full md:w-full">
@@ -233,10 +237,6 @@ export default function MegaMenu({
               ))}
               <NavigationMenuIndicator />
             </NavigationMenuList>
-
-            <div>
-              <BrandLogo src={logoSrc} alt={logoAlt} />
-            </div>
 
             <div className="flex justify-end">
               <div>
@@ -269,7 +269,7 @@ export default function MegaMenu({
         )}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="h-16" aria-hidden />
+          <div className="h-14" aria-hidden />
           <div
             className={cn(
               "grid transition-[grid-template-rows] duration-500",
@@ -368,17 +368,13 @@ export default function MegaMenu({
         </div>
       </div>
 
-      <div className="relative z-10 h-16 w-full lg:hidden">
-        <BrandLogo
-          src={logoSrc}
-          alt={logoAlt}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        />
+      <div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:hidden">
+        <BrandLogo src={logoSrc} alt={logoAlt} />
         <Button
           size="icon"
           variant="outline"
           onClick={toggleMobile}
-          className="absolute top-1/2 right-5 -translate-y-1/2 border-line bg-transparent"
+          className="border-line bg-transparent"
           aria-expanded={mobileOpen}
           aria-controls={`${panelId}-mobile`}
           aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}

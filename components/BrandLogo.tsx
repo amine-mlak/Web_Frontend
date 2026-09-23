@@ -16,7 +16,7 @@ export default function BrandLogo({
       href="/"
       className={cn("flex items-center justify-center", className)}
     >
-      <span className="relative block h-11 w-[41px] lg:h-[88px] lg:w-[82px]">
+      <span className="relative block h-8 w-[30px]">
         <CmsImage
           src={src}
           alt={alt}
