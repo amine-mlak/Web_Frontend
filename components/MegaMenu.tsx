@@ -41,7 +41,6 @@ export default function MegaMenu({
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuValue, setMenuValue] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const scrolled = useScroll(8);
   const panelId = useId();
   const leaveTimer = useRef<number>(0);
   const closeDropdownTimer = useRef<number>(0);
@@ -49,7 +48,7 @@ export default function MegaMenu({
   const menuValueRef = useRef(menuValue);
   const sheetWasOpen = useRef(false);
   menuValueRef.current = menuValue;
-  const solid = scrolled || hovered || menuOpen || dropdownOpen || mobileOpen;
+  const solid = true;
   const sheetEase = solid
     ? "ease-[cubic-bezier(0.22,1,0.36,1)]"
     : "ease-[cubic-bezier(0.64,0,0.78,0)]";
@@ -389,20 +388,4 @@ export default function MegaMenu({
       </div>
     </div>
   );
-}
-
-function useScroll(threshold: number) {
-  const [scrolled, setScrolled] = useState(false);
-
-  const onScroll = useCallback(() => {
-    setScrolled(window.scrollY > threshold);
-  }, [threshold]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [onScroll]);
-
-  return scrolled;
 }

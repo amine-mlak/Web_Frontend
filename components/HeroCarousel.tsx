@@ -1,11 +1,45 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import CmsImage from "@/components/CmsImage";
 import type { HeroSlide } from "@/lib/strapi";
 
+export type HeroPanel = {
+  eyebrow: string;
+  title: string;
+  emphasis: string;
+  text: string;
+  buttonLabel: string;
+  buttonHref: string;
+};
+
 const DWELL_MS = 3500;
 const ROLL_MS = 1200;
+
+function HeroIntro({ panel }: { panel: HeroPanel }) {
+  return (
+    <div className="absolute inset-0 z-10 flex items-center px-4 py-8 sm:px-8 lg:px-14">
+      <div className="w-full max-w-xl bg-[linear-gradient(180deg,rgba(28,26,24,0.46)_0%,rgba(92,86,78,0.28)_52%,rgba(255,248,240,0.16)_100%)] px-7 py-9 text-paper ring-1 ring-white/20 backdrop-blur-md sm:px-10 sm:py-12 lg:max-w-3xl">
+        <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper/80 uppercase">
+          {panel.eyebrow}
+        </p>
+        <h1 className="mt-4 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:text-[44px] lg:text-[52px] lg:whitespace-nowrap">
+          {panel.title} <em className="font-medium italic">{panel.emphasis}</em>
+        </h1>
+        <p className="mt-5 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper/90 md:text-[18px]">
+          {panel.text}
+        </p>
+        <Link
+          href={panel.buttonHref}
+          className="mt-8 inline-flex items-center rounded-full bg-paper px-5 py-2.5 font-sans text-[15px] text-ink transition-colors hover:bg-white"
+        >
+          {panel.buttonLabel}
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 function shouldLoadImage(slideIndex: number, index: number, count: number) {
   if (slideIndex === 0) {
@@ -19,7 +53,13 @@ function shouldLoadImage(slideIndex: number, index: number, count: number) {
   return index === count && slideIndex <= 1;
 }
 
-export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
+export default function HeroCarousel({
+  slides,
+  panel,
+}: {
+  slides: HeroSlide[];
+  panel?: HeroPanel;
+}) {
   const [index, setIndex] = useState(0);
   const [animate, setAnimate] = useState(true);
   const track = slides.length > 0 ? [...slides, slides[0]] : [];
@@ -62,13 +102,19 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   return (
     <section
       data-site-hero=""
-      className="relative isolate -mt-16 h-[320px] w-full overflow-hidden bg-nacht sm:h-[48vh] lg:-mt-24 lg:h-dvh"
+      className={
+        panel
+          ? "relative isolate h-[36rem] w-full overflow-hidden bg-nacht sm:h-[70vh] lg:h-[78dvh]"
+          : "relative isolate h-[320px] w-full overflow-hidden bg-nacht sm:h-[48vh] lg:h-dvh"
+      }
       aria-roledescription="carousel"
       aria-label="Küchenprojekte"
     >
-      <h1 className="sr-only">
-        BEER Küchenmanufaktur – individuelle Manufakturküchen
-      </h1>
+      {panel ? null : (
+        <h1 className="sr-only">
+          BEER Küchenmanufaktur – individuelle Manufakturküchen
+        </h1>
+      )}
 
       <div
         className="flex h-full w-full"
@@ -104,6 +150,7 @@ export default function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
           );
         })}
       </div>
+      {panel ? <HeroIntro panel={panel} /> : null}
     </section>
   );
 }

@@ -14,7 +14,17 @@ export default async function Home() {
 
   return (
     <main className="bg-paper">
-      <Hero slides={heroSlides} />
+      <Hero
+        slides={heroSlides}
+        panel={{
+          eyebrow: "Küche planen · Inspiration",
+          title: "Noch keine Idee?",
+          emphasis: "Perfekt.",
+          text: "Die meisten unserer Kunden starten genau hier: mit Bildern statt Plänen. Schauen Sie sich um – der Rest ergibt sich im Gespräch.",
+          buttonLabel: "Ideen ansehen",
+          buttonHref: "/kuechen",
+        }}
+      />
       <Kacheln content={kacheln} />
       <Process content={ablauf} />
       <Entdecken content={entdecken} />

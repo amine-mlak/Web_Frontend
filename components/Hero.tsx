@@ -1,4 +1,4 @@
-import HeroCarousel from "@/components/HeroCarousel";
+import HeroCarousel, { type HeroPanel } from "@/components/HeroCarousel";
 import { type HeroSlide } from "@/lib/strapi";
 
 const fallbackSlides: HeroSlide[] = [
@@ -28,7 +28,13 @@ const fallbackSlides: HeroSlide[] = [
   },
 ];
 
-export default function Hero({ slides }: { slides: HeroSlide[] }) {
+export default function Hero({
+  slides,
+  panel,
+}: {
+  slides: HeroSlide[];
+  panel?: HeroPanel;
+}) {
   const items = slides.length > 0 ? slides : fallbackSlides;
   const first = items[0];
 
@@ -45,7 +51,7 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
           fetchPriority="high"
         />
       ) : null}
-      <HeroCarousel slides={items} />
+      <HeroCarousel slides={items} panel={panel} />
     </>
   );
 }
