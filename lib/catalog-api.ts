@@ -250,6 +250,9 @@ function mapArticle(entry: unknown): Article | null {
 
 async function mapPage(entry: unknown): Promise<SitePage | null> {
   const row = flattenEntity(entry);
+  if (!row) {
+    return null;
+  }
   const slug = text(row, "slug");
   const title = text(row, "title");
   if (!slug || !title) {
@@ -275,11 +278,17 @@ async function loadMapped<T>(
   query: Record<string, string>,
   map: (entry: unknown) => T | null | Promise<T | null>,
   fallback: T[],
-) {
+): Promise<T[]> {
   const payload = await strapiGet<{ data?: unknown }>(path, query);
-  const items = (
-    await Promise.all(flattenCollection(payload?.data).map((entry) => map(entry)))
-  ).filter((item): item is T => Boolean(item));
+  const mapped = await Promise.all(
+    flattenCollection(payload?.data).map((entry) => map(entry)),
+  );
+  const items: T[] = [];
+  for (const item of mapped) {
+    if (item) {
+      items.push(item);
+    }
+  }
   return items.length > 0 ? items : fallback;
 }
 
