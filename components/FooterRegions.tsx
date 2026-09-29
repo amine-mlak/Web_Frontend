@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import { useId, useState } from "react";
 import type { FooterLink } from "@/lib/footer";
 
@@ -36,12 +36,12 @@ export default function FooterRegions({
         <ul id={panelId} className="mt-1">
           {links.map((link) => (
             <li key={`${link.href}-${link.label}`}>
-              <Link
+              <LocaleLink
                 href={link.href}
                 className="text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white"
               >
                 {link.label}
-              </Link>
+              </LocaleLink>
             </li>
           ))}
         </ul>

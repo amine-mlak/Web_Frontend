@@ -1,14 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import FooterRegions from "@/components/FooterRegions";
-import {
-  footerColumns,
-  footerContact,
-  footerShortcuts,
-  legalLinks,
-  socialLinks,
-  type SocialIcon,
-} from "@/lib/footer";
+import { chromeCopy } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
+import { fetchFooter } from "@/lib/strapi";
+import { type SocialIcon } from "@/lib/footer";
 
 const headingClass =
   "font-sans text-[11px] font-medium tracking-[0.22em] text-[#c2a483]";
@@ -16,14 +12,18 @@ const headingClass =
 const linkClass =
   "text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
 
-export default function Footer() {
+export default async function Footer() {
   const year = new Date().getFullYear();
+  const locale = await getRequestLocale();
+  const copy = chromeCopy[locale];
+  const footer = await fetchFooter();
+  const copyright = footer.copyright.replace("{year}", String(year));
 
   return (
     <footer className="bg-nacht text-[#e4e0d8]">
       <div className="mx-auto max-w-6xl px-6 pt-16 pb-14 md:px-10 md:pt-20 md:pb-16">
         <div className="flex justify-center">
-          <Link href="/" className="inline-flex" aria-label="Startseite">
+          <LocaleLink href="/" className="inline-flex" aria-label={copy.home}>
             <Image
               src="/logo.png"
               alt=""
@@ -31,22 +31,22 @@ export default function Footer() {
               height={72}
               className="h-[4.5rem] w-auto brightness-0 invert"
             />
-          </Link>
+          </LocaleLink>
         </div>
 
         <nav
-          aria-label="Fußzeile"
+          aria-label={footer.ariaLabel}
           className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:mt-16 lg:grid-cols-5"
         >
-          {footerColumns.map((column) => (
+          {footer.columns.map((column) => (
             <section key={column.title}>
               <h2 className={headingClass}>{column.title}</h2>
               <ul className="mt-4">
                 {column.links.map((link) => (
                   <li key={`${column.title}-${link.label}`}>
-                    <Link href={link.href} className={linkClass}>
+                    <LocaleLink href={link.href} className={linkClass}>
                       {link.label}
-                    </Link>
+                    </LocaleLink>
                   </li>
                 ))}
               </ul>
@@ -63,20 +63,20 @@ export default function Footer() {
         </nav>
 
         <section className="mt-14 md:mt-16">
-          <h2 className={headingClass}>{footerContact.title}</h2>
+          <h2 className={headingClass}>{footer.contactTitle}</h2>
           <address className="mt-4 text-[15px] leading-7 text-[#e4e0d8] not-italic">
-            {footerContact.lines.map((line) => (
+            {footer.contactLines.map((line) => (
               <span key={line} className="block">
                 {line}
               </span>
             ))}
           </address>
           <ul className="mt-6 flex gap-8">
-            {footerShortcuts.map((link) => (
+            {footer.shortcuts.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className={headingClass}>
+                <LocaleLink href={link.href} className={headingClass}>
                   {link.label}
-                </Link>
+                </LocaleLink>
               </li>
             ))}
           </ul>
@@ -85,26 +85,26 @@ export default function Footer() {
 
       <div className="border-t border-white/15">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-6 md:grid md:grid-cols-3 md:items-center md:px-10">
-          <nav aria-label="Rechtliches">
+          <nav aria-label={footer.legalAria}>
             <ul className="flex flex-wrap gap-x-5 gap-y-2">
-              {legalLinks.map((link) => (
+              {footer.legal.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <LocaleLink
                     href={link.href}
                     className="text-[13px] text-[#9c9892] transition-colors hover:text-white"
                   >
                     {link.label}
-                  </Link>
+                  </LocaleLink>
                 </li>
               ))}
             </ul>
           </nav>
           <p className="text-[13px] text-[#9c9892] md:text-center">
-            © {year}, BEER Küchen
+            {copyright}
           </p>
-          <nav aria-label="Social Media" className="md:justify-self-end">
+          <nav aria-label={footer.socialAria} className="md:justify-self-end">
             <ul className="flex gap-3">
-              {socialLinks.map((link) => (
+              {footer.social.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}

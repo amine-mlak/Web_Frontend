@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import Pill from "@/components/Pill";
 import type { KitchenCluster, KitchenTopic, Project } from "@/lib/catalog";
@@ -46,12 +46,12 @@ export default function KitchenClusterView({
               <div>
                 <p className="type-eyebrow text-muted">{cluster.name}</p>
                 <h2 className="type-h2 mt-3 text-ink">
-                  <Link
+                  <LocaleLink
                     href={`/kuechen/${cluster.slug}/${topic.slug}`}
                     className="hover:underline hover:decoration-line hover:underline-offset-4"
                   >
                     {topic.name}
-                  </Link>
+                  </LocaleLink>
                 </h2>
                 {topic.hex ? (
                   <p className="mt-4 flex items-center gap-3">
@@ -75,12 +75,12 @@ export default function KitchenClusterView({
                   </dl>
                 ) : null}
                 <p className="mt-8">
-                  <Link
+                  <LocaleLink
                     href={`/kuechen/${cluster.slug}/${topic.slug}`}
                     className="type-nav text-ink underline decoration-line underline-offset-4"
                   >
                     {topic.name} im Detail
-                  </Link>
+                  </LocaleLink>
                 </p>
               </div>
             </article>
@@ -111,12 +111,12 @@ export default function KitchenClusterView({
                         {[project.place, project.year].filter(Boolean).join(" · ")}
                       </p>
                       <h3 className="type-h3 mt-2 text-ink">
-                        <Link
+                        <LocaleLink
                           href={`/projekte/${project.slug}`}
                           className="hover:underline hover:decoration-line hover:underline-offset-4"
                         >
                           {project.title}
-                        </Link>
+                        </LocaleLink>
                       </h3>
                       <p className="type-body mt-4">{project.intro}</p>
                     </div>

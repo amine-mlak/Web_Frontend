@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import type { FaqTheme } from "@/lib/faq";
 
 export default function FaqThemeFilters({
@@ -17,17 +17,17 @@ export default function FaqThemeFilters({
 
   return (
     <nav aria-label="FAQ nach Thema" className="mt-10 flex flex-wrap gap-2">
-      <Link href="/faq" className={chipClass(!activeSlug)}>
+      <LocaleLink href="/faq" className={chipClass(!activeSlug)}>
         Alle Fragen
-      </Link>
+      </LocaleLink>
       {themes.map((theme) => (
-        <Link
+        <LocaleLink
           key={theme.slug}
           href={`/faq/${theme.slug}`}
           className={chipClass(activeSlug === theme.slug)}
         >
           {theme.name}
-        </Link>
+        </LocaleLink>
       ))}
     </nav>
   );

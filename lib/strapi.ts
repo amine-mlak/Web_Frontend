@@ -6,6 +6,9 @@ import {
   type FaqEntry,
   type FaqTheme,
 } from "@/lib/faq";
+import { footerFallback, type FooterContent, type SocialIcon } from "@/lib/footer";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
 const FALLBACK_STRAPI_URL =
@@ -33,6 +36,8 @@ export type HeroSlide = {
 
 export type KachelTile = {
   title: string;
+  text?: string;
+  buttonLabel?: string;
   href: string;
   image: string;
   srcSet?: string;
@@ -69,6 +74,9 @@ export type FaqContent = {
   eyebrow: string;
   title: string;
   items: FaqItem[];
+  quote?: string;
+  quoteSource?: string;
+  quoteEyebrow?: string;
 };
 
 export type { FaqEntry, FaqTheme };
@@ -143,6 +151,8 @@ type StrapiHeroSlide = {
 
 type StrapiColorTile = {
   title?: string;
+  text?: string;
+  buttonLabel?: string;
   href?: string;
   alt?: string;
   color?: string;
@@ -161,6 +171,21 @@ type StrapiDiscoverPanel = {
 type StrapiFaqItem = {
   question?: string;
   answer?: string;
+};
+
+type StrapiFaqPick = {
+  item?: unknown;
+};
+
+type StrapiFaqBlock = {
+  eyebrow?: string;
+  title?: string;
+  quote?: string;
+  quoteSource?: string;
+  quoteEyebrow?: string;
+  items?: StrapiFaqItem[];
+  theme?: unknown;
+  questions?: StrapiFaqPick[] | unknown;
 };
 
 type StrapiLandingEntry = {
@@ -193,11 +218,7 @@ type StrapiLandingEntry = {
     }[];
   };
   entdecken?: { panels?: StrapiDiscoverPanel[] };
-  faq?: {
-    eyebrow?: string;
-    title?: string;
-    items?: StrapiFaqItem[];
-  };
+  faq?: StrapiFaqBlock;
   beratung?: {
     eyebrow?: string;
     title?: string;
@@ -360,27 +381,60 @@ async function fetchStrapi(path: string, query: Record<string, string>, preview:
       signal: controller.signal,
       ...(preview
         ? { cache: "no-store" as const }
-        : { next: { revalidate: REVALIDATE_SECONDS, tags: ["strapi"] } }),
+        : {
+            next: {
+              revalidate: REVALIDATE_SECONDS,
+              tags: ["strapi", `strapi-locale-${query.locale || DEFAULT_LOCALE}`],
+            },
+          }),
     });
   } finally {
     clearTimeout(timer);
   }
 }
 
+function isEmptyStrapiPayload(payload: unknown) {
+  if (!payload || typeof payload !== "object") {
+    return true;
+  }
+
+  const data = (payload as { data?: unknown }).data;
+  if (data == null) {
+    return true;
+  }
+
+  return Array.isArray(data) && data.length === 0;
+}
+
 export async function strapiGet<T>(path: string, query: Record<string, string> = {}) {
   const preview = await previewDraftEnabled();
-
-  try {
-    let response = await fetchStrapi(path, query, preview);
-    if (preview && !response.ok) {
-      response = await fetchStrapi(path, query, false);
+  let locale = query.locale;
+  if (!locale) {
+    try {
+      locale = await getRequestLocale();
+    } catch {
+      locale = DEFAULT_LOCALE;
     }
+  }
 
+  const load = async (nextQuery: Record<string, string>) => {
+    let response = await fetchStrapi(path, nextQuery, preview);
+    if (preview && !response.ok) {
+      response = await fetchStrapi(path, nextQuery, false);
+    }
     if (!response.ok) {
       return null;
     }
-
     return (await response.json()) as T;
+  };
+
+  try {
+    const queryWithLocale = { ...query, locale };
+    const payload = await load(queryWithLocale);
+    if (locale !== DEFAULT_LOCALE && isEmptyStrapiPayload(payload)) {
+      return load({ ...query, locale: DEFAULT_LOCALE });
+    }
+    return payload;
   } catch {
     return null;
   }
@@ -432,6 +486,8 @@ function mapKachelnContent(data?: {
       const image = strapiResponsiveImage(tile.image, { srcWidth: 1600 });
       return {
         title: tile.title?.trim() || "",
+        text: tile.text?.trim() || "",
+        buttonLabel: tile.buttonLabel?.trim() || "",
         href: tile.href?.trim() || "#kacheln",
         image: image.src,
         srcSet: image.srcSet,
@@ -475,32 +531,6 @@ function mapEntdeckenContent(
   return mapped.length > 0 ? { panels: mapped } : null;
 }
 
-function mapFaqContent(data?: {
-  eyebrow?: string;
-  title?: string;
-  items?: StrapiFaqItem[];
-} | null): FaqContent | null {
-  if (!data) {
-    return null;
-  }
-
-  const items = (data.items ?? [])
-    .map((item) => ({
-      question: item.question?.trim() || "",
-      answer: item.answer?.trim() || "",
-    }))
-    .filter((item) => item.question && item.answer);
-
-  if (items.length === 0) {
-    return null;
-  }
-
-  return {
-    eyebrow: data.eyebrow?.trim() || "Fragen",
-    title: data.title?.trim() || "Bevor wir uns sehen",
-    items,
-  };
-}
 
 const PROCESS_ICONS: ProcessIcon[] = ["consult", "plan", "factory", "handover"];
 
@@ -579,7 +609,9 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     "populate[kacheln][populate][colors][populate]": "image",
     "populate[entdecken][populate][panels][populate]": "image",
     "populate[ablauf][populate]": "steps",
-    "populate[faq][populate]": "items",
+    "populate[faq][populate][theme]": "true",
+    "populate[faq][populate][questions][populate]": "item",
+    "populate[faq][populate][items]": "true",
     "populate[beratung]": "true",
   });
   const entry = Array.isArray(payload?.data) ? payload.data[0] : payload?.data;
@@ -592,7 +624,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   const heroPanel = mapHeroPanel(entry.hero);
   const kacheln = mapKachelnContent(entry.kacheln);
   const entdecken = mapEntdeckenContent(entry.entdecken?.panels);
-  const faq = mapFaqContent(entry.faq);
+  const faq = await resolveFaqBlock(entry.faq);
   const ablauf = mapProcessContent(entry.ablauf);
   const beratung = mapBeratungContent(entry.beratung);
 
@@ -735,6 +767,79 @@ function mapFaqEntry(entry: unknown): FaqEntry | null {
   };
 }
 
+function mapFaqQuestionPairs(entries: unknown[]): FaqItem[] {
+  return entries
+    .map(mapFaqEntry)
+    .filter((item): item is FaqEntry => Boolean(item))
+    .map((item) => ({
+      question: item.question,
+      answer: item.answer,
+    }));
+}
+
+function mapPickedFaqItems(questions?: unknown): FaqItem[] {
+  return flattenCollection(questions).flatMap((pick) => {
+    const nested = pick.item ?? pick;
+    return mapFaqQuestionPairs([nested]);
+  });
+}
+
+function mapCopiedFaqItems(items?: StrapiFaqItem[]): FaqItem[] {
+  return (items ?? [])
+    .map((item) => ({
+      question: item.question?.trim() || "",
+      answer: item.answer?.trim() || "",
+    }))
+    .filter((item) => item.question && item.answer);
+}
+
+async function fetchFaqItemsByTheme(themeSlug: string): Promise<FaqItem[]> {
+  const payload = await strapiGet<{ data?: unknown }>("/api/faq-items", {
+    "filters[themes][slug][$eq]": themeSlug,
+    sort: "order:asc",
+    populate: "themes",
+    "pagination[pageSize]": "50",
+  });
+
+  return mapFaqQuestionPairs(flattenCollection(payload?.data));
+}
+
+export async function resolveFaqBlock(
+  data?: unknown,
+): Promise<FaqContent | null> {
+  const row = flattenEntity(data);
+  if (!row) {
+    return null;
+  }
+
+  const theme = mapFaqTheme(row.theme);
+  let items = mapPickedFaqItems(row.questions);
+
+  if (items.length === 0 && theme?.slug) {
+    items = await fetchFaqItemsByTheme(theme.slug);
+  }
+
+  if (items.length === 0) {
+    items = mapCopiedFaqItems(row.items as StrapiFaqItem[] | undefined);
+  }
+
+  const title = String(row.title ?? "").trim();
+  const quote = String(row.quote ?? "").trim();
+
+  if (items.length === 0 && !title && !quote && !theme) {
+    return null;
+  }
+
+  return {
+    eyebrow: String(row.eyebrow ?? "").trim() || "Fragen",
+    title: title || "Bevor wir uns sehen",
+    quote: quote || undefined,
+    quoteSource: String(row.quoteSource ?? "").trim() || undefined,
+    quoteEyebrow: String(row.quoteEyebrow ?? "").trim() || undefined,
+    items,
+  };
+}
+
 function toFaqContent(items: FaqEntry[]): FaqContent | null {
   if (items.length === 0) {
     return null;
@@ -860,11 +965,15 @@ function mapHeaderMenus(menus: StrapiHeaderMenu[]): MenuPanel[] {
   const fallbackByLabel = new Map(
     menuPanels.map((panel) => [panel.label, panel]),
   );
+  const fallbackByHref = new Map(
+    menuPanels.map((panel) => [panel.href, panel]),
+  );
 
   return menus
     .map((menu) => {
       const label = menu.label?.trim() || "";
-      const fallback = fallbackByLabel.get(label);
+      const fallback =
+        fallbackByLabel.get(label) || fallbackByHref.get(menu.url?.trim() || "");
       const teasers = (menu.teasers ?? [])
         .map((teaser) => {
           const image = strapiResponsiveImage(teaser.image, { srcWidth: 1200 });
@@ -928,5 +1037,122 @@ export async function fetchHeader(): Promise<HeaderCms | null> {
     ctaLabel: header?.ctaLabel?.trim() || "Beratung anfragen",
     ctaUrl: header?.ctaUrl?.trim() || "#beratung",
     panels: panels.length > 0 ? panels : menuPanels,
+  };
+}
+
+type StrapiFooterLink = {
+  label?: string;
+  href?: string;
+};
+
+type StrapiFooterColumn = {
+  title?: string;
+  links?: StrapiFooterLink[];
+  moreLabel?: string;
+  moreLinks?: StrapiFooterLink[];
+};
+
+type StrapiFooterSocial = {
+  label?: string;
+  href?: string;
+  icon?: string;
+};
+
+function mapFooterLinks(links?: StrapiFooterLink[]) {
+  return (links ?? [])
+    .map((link) => ({
+      label: link.label?.trim() || "",
+      href: link.href?.trim() || "#",
+    }))
+    .filter((link) => link.label);
+}
+
+export async function fetchFooter(): Promise<FooterContent> {
+  const locale = await getRequestLocale().catch(() => DEFAULT_LOCALE);
+  const fallback = footerFallback(locale);
+  const payload = await strapiGet<{
+    data?: {
+      ariaLabel?: string;
+      legalAria?: string;
+      socialAria?: string;
+      copyright?: string;
+      contactTitle?: string;
+      contactLines?: string;
+      columns?: StrapiFooterColumn[];
+      shortcuts?: StrapiFooterLink[];
+      legal?: StrapiFooterLink[];
+      social?: StrapiFooterSocial[];
+    };
+  }>("/api/footer", {
+    "populate[columns][populate][links]": "true",
+    "populate[columns][populate][moreLinks]": "true",
+    "populate[shortcuts]": "true",
+    "populate[legal]": "true",
+    "populate[social]": "true",
+  });
+
+  const entry = payload?.data;
+  if (!entry) {
+    return fallback;
+  }
+
+  const icons: SocialIcon[] = [
+    "instagram",
+    "youtube",
+    "facebook",
+    "pinterest",
+    "houzz",
+  ];
+  const columns = (entry.columns ?? [])
+    .map((column) => {
+      const links = mapFooterLinks(column.links);
+      const moreLinks = mapFooterLinks(column.moreLinks);
+      return {
+        title: column.title?.trim() || "",
+        links,
+        more:
+          column.moreLabel?.trim() && moreLinks.length > 0
+            ? { label: column.moreLabel.trim(), links: moreLinks }
+            : undefined,
+      };
+    })
+    .filter((column) => column.title && column.links.length > 0);
+
+  const social = (entry.social ?? [])
+    .map((item) => ({
+      label: item.label?.trim() || "",
+      href: item.href?.trim() || "#",
+      icon: icons.includes(item.icon as SocialIcon)
+        ? (item.icon as SocialIcon)
+        : "instagram",
+    }))
+    .filter((item) => item.label && item.href);
+
+  return {
+    ariaLabel: entry.ariaLabel?.trim() || fallback.ariaLabel,
+    legalAria: entry.legalAria?.trim() || fallback.legalAria,
+    socialAria: entry.socialAria?.trim() || fallback.socialAria,
+    copyright: entry.copyright?.trim() || fallback.copyright,
+    contactTitle: entry.contactTitle?.trim() || fallback.contactTitle,
+    contactLines:
+      (entry.contactLines || "")
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean).length > 0
+        ? (entry.contactLines || "")
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter(Boolean)
+        : fallback.contactLines,
+    columns: columns.length > 0 ? columns : fallback.columns,
+    shortcuts:
+      mapFooterLinks(entry.shortcuts).length > 0
+        ? mapFooterLinks(entry.shortcuts)
+        : fallback.shortcuts,
+    legal:
+      mapFooterLinks(entry.legal).length > 0
+        ? mapFooterLinks(entry.legal)
+        : fallback.legal,
+    social: social.length > 0 ? social : fallback.social,
   };
 }

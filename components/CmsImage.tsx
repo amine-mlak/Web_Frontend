@@ -20,8 +20,10 @@ export default function CmsImage({
   const srcString = typeof src === "string" ? src : "";
   const proxied = srcString.startsWith("/cms-uploads/");
   const kitchenOriginal = srcString.startsWith("/kitchens/");
+  const instagramOriginal = srcString.startsWith("/instagram/");
   const remote = /^https?:\/\//.test(srcString);
-  const native = Boolean(srcSet) || proxied || remote || kitchenOriginal;
+  const native =
+    Boolean(srcSet) || proxied || remote || kitchenOriginal || instagramOriginal;
 
   if (native) {
     return (

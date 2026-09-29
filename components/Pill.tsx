@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import type { MouseEventHandler, ReactNode } from "react";
 
 type PillVariant = "primary" | "secondary" | "ghost-dark";
@@ -45,9 +45,9 @@ export default function Pill({
 
   if (href) {
     return (
-      <Link href={href} className={classes} {...tracking}>
+      <LocaleLink href={href} className={classes} {...tracking}>
         {children}
-      </Link>
+      </LocaleLink>
     );
   }
 

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Figtree } from "next/font/google";
 import ClickIds from "@/components/ClickIds";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
+import { getRequestLocale } from "@/lib/locale";
 import { allowSearchIndexing } from "@/lib/umami";
 import "./globals.css";
 
@@ -42,10 +44,12 @@ export const metadata: Metadata = {
       },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getRequestLocale();
+
   return (
     <html
-      lang="de"
+      lang={locale}
       className={`${figtree.variable} ${cormorant.variable}`}
       suppressHydrationWarning
     >
@@ -56,10 +60,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${figtree.className} antialiased`}
         suppressHydrationWarning
       >
-        <SmoothScroll />
-        <ClickIds />
-        <Umami />
-        {children}
+        <LocaleProvider locale={locale}>
+          <SmoothScroll />
+          <ClickIds />
+          <Umami />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

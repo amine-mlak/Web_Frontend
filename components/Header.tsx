@@ -9,8 +9,6 @@ export default async function Header() {
     <header>
       <MegaMenu
         panels={header?.panels?.length ? header.panels : menuPanels}
-        ctaLabel={header?.ctaLabel ?? "Beratung anfragen"}
-        ctaUrl={header?.ctaUrl?.startsWith("/") ? header.ctaUrl : "/beratung"}
         logoSrc={header?.logo || "/logo.png"}
         logoAlt={header?.logoAlt ?? "BEER Küchenmanufaktur"}
       />

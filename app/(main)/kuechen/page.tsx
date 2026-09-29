@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import { KITCHEN_CLUSTERS, topicsInCluster } from "@/lib/catalog";
 import { fetchKitchenTopics } from "@/lib/catalog-api";
@@ -46,21 +46,21 @@ export default async function KuechenPage() {
               </figure>
               <div>
                 <h2 className="type-h2 text-ink">
-                  <Link
+                  <LocaleLink
                     href={`/kuechen/${cluster.slug}`}
                     className="hover:underline hover:decoration-line hover:underline-offset-4"
                   >
                     {cluster.name}
-                  </Link>
+                  </LocaleLink>
                 </h2>
                 <p className="type-body mt-4">{cluster.intro}</p>
                 <p className="mt-6">
-                  <Link
+                  <LocaleLink
                     href={`/kuechen/${cluster.slug}`}
                     className="type-nav text-ink underline decoration-line underline-offset-4"
                   >
                     {cluster.name} ansehen
-                  </Link>
+                  </LocaleLink>
                 </p>
               </div>
             </article>

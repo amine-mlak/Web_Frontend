@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 
 export default function FilterChips({
   items,
@@ -17,13 +17,13 @@ export default function FilterChips({
   return (
     <nav aria-label="Filter" className="flex flex-wrap gap-2">
       {items.map((item) => (
-        <Link
+        <LocaleLink
           key={item.href}
           href={item.href}
           className={chip(item.href === activeHref)}
         >
           {item.label}
-        </Link>
+        </LocaleLink>
       ))}
     </nav>
   );

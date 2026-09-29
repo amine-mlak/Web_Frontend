@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 
 export type CatalogCardItem = {
@@ -13,7 +13,7 @@ export type CatalogCardItem = {
 export default function EntryCard({ item }: { item: CatalogCardItem }) {
   return (
     <li>
-      <Link href={item.href} className="group block">
+      <LocaleLink href={item.href} className="group block">
         <article>
           <div className="relative aspect-[4/3] overflow-hidden bg-karte">
             {item.image ? (
@@ -41,7 +41,7 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
             ) : null}
           </div>
         </article>
-      </Link>
+      </LocaleLink>
     </li>
   );
 }

@@ -1,4 +1,5 @@
 import catalog from "@/lib/catalog-data.json";
+import type { FaqContent } from "@/lib/strapi";
 
 export type KitchenClusterSlug =
   | "formen"
@@ -118,6 +119,7 @@ export type SitePage = {
   srcSet?: string;
   ctaLabel: string;
   ctaUrl: string;
+  faq: FaqContent | null;
 };
 
 export const KITCHEN_CLUSTERS: KitchenCluster[] = catalog.clusters.map(
@@ -179,7 +181,10 @@ export const FALLBACK_ARTICLES: Article[] = catalog.articles.map((item) => ({
   category: FALLBACK_CATEGORIES.find((category) => category.slug === item.category),
 }));
 
-export const FALLBACK_PAGES: SitePage[] = catalog.pages;
+export const FALLBACK_PAGES: SitePage[] = catalog.pages.map((page) => ({
+  ...page,
+  faq: null,
+}));
 
 const brandBySlug = new Map(FALLBACK_BRANDS.map((item) => [item.slug, item]));
 const applianceBySlug = new Map(

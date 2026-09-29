@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SiteHeader from "@/components/SiteHeader";
@@ -18,9 +18,9 @@ export default function NotFound() {
             Küchenmanufaktur.
           </p>
           <div className="mt-10 flex justify-center">
-            <Link href="/" className="pill pill-primary">
+            <LocaleLink href="/" className="pill pill-primary">
               Zur Startseite
-            </Link>
+            </LocaleLink>
           </div>
         </section>
       </main>

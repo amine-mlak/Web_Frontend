@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import type { MenuLink, MenuPanel } from "@/lib/navigation";
 
@@ -12,7 +12,7 @@ function PanelLink({
   onNavigate: () => void;
 }) {
   return (
-    <Link
+    <LocaleLink
       href={link.href}
       onClick={onNavigate}
       className={`group inline-flex w-fit flex-wrap items-baseline text-ink ${
@@ -28,7 +28,7 @@ function PanelLink({
       >
         {link.label}
       </span>
-    </Link>
+    </LocaleLink>
   );
 }
 
@@ -55,7 +55,7 @@ function TeaserStrip({
     >
       {panel.teasers.map((teaser) => (
         <li key={teaser.caption}>
-          <Link href={teaser.href} onClick={onNavigate} className="group block">
+          <LocaleLink href={teaser.href} onClick={onNavigate} className="group block">
             <div className="relative aspect-[3/4] overflow-hidden bg-stone">
               <CmsImage
                 src={teaser.image}
@@ -73,7 +73,7 @@ function TeaserStrip({
               />
             </div>
             <p className="type-eyebrow mt-3">{teaser.caption}</p>
-          </Link>
+          </LocaleLink>
         </li>
       ))}
     </ul>

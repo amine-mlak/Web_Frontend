@@ -1,35 +1,108 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
+import { chromeCopy } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
 import type { KachelTile, KachelnContent } from "@/lib/strapi";
 
 const fallback: KachelnContent = {
-  eyebrow: "Die Kacheln · Geteilte Bildtafeln",
-  intro:
-    "Keine Liste – Tafeln. Zur Hälfte das Projekt, zur Hälfte Material und Farbe. So wird die Wahl der Küchenfarbe zum Erlebnis.",
+  eyebrow: "Küchenfarben",
+  intro: "",
   colors: [
     {
-      title: "Weiße Küchen",
+      title: "Wenn Kochen und Wohnen zusammenrücken",
+      text: "Eine Insel als Mittelpunkt – zum Kochen, Arbeiten, Reden. Für alle, die selten allein in der Küche stehen.",
+      buttonLabel: "Diese Idee merken",
       href: "/kuechen/farben/weiss",
       image: "/kitchens/stile-holz.jpg",
-      alt: "Weiße grifflose Küche mit Holz und Naturstein",
-      color: "#f7f5f1",
+      alt: "Helle Küche mit Insel und Wohnraum",
+      color: "#f4f1ea",
     },
     {
-      title: "Salbeigrüne Küchen",
-      href: "/kuechen/farben/salbei",
-      image: "/kitchens/stile-landhaus.jpg",
-      alt: "Salbeigrüne Landhausküche mit Marmor und schwarzen Beschlägen",
-      color: "#9eae92",
-    },
-    {
-      title: "Schwarze Küchen",
+      title: "Alles da, nichts zu sehen",
+      text: "Hinter einer ruhigen Front verschwindet die ganze Technik – und eine begehrte Speisekammer. Für Ordnungsliebende.",
+      buttonLabel: "Diese Idee merken",
       href: "/kuechen/farben/schwarz",
       image: "/kitchens/stile-design.jpg",
-      alt: "Schwarze Küche mit Eiche und Fischgrätparkett",
-      color: "#131311",
+      alt: "Dunkle Küche mit verdeckter Technik",
+      color: "#141414",
+    },
+    {
+      title: "Charakter statt Katalog",
+      text: "Altes Holz, schwarzer Stein, offene Regale: eine Küche, die nach zehn Jahren besser aussieht als am ersten Tag.",
+      buttonLabel: "Diese Idee merken",
+      href: "/kuechen/farben/salbei",
+      image: "/kitchens/stile-landhaus.jpg",
+      alt: "Küche mit Holz, Stein und offenen Regalen",
+      color: "#8d8274",
     },
   ],
 };
+
+const fallbackCopy: Record<
+  string,
+  { title: string; text: string; buttonLabel: string }
+> = {
+  weiss: {
+    title: "Wenn Kochen und Wohnen zusammenrücken",
+    text: "Eine Insel als Mittelpunkt – zum Kochen, Arbeiten, Reden. Für alle, die selten allein in der Küche stehen.",
+    buttonLabel: "Diese Idee merken",
+  },
+  schwarz: {
+    title: "Alles da, nichts zu sehen",
+    text: "Hinter einer ruhigen Front verschwindet die ganze Technik – und eine begehrte Speisekammer. Für Ordnungsliebende.",
+    buttonLabel: "Diese Idee merken",
+  },
+  salbei: {
+    title: "Charakter statt Katalog",
+    text: "Altes Holz, schwarzer Stein, offene Regale: eine Küche, die nach zehn Jahren besser aussieht als am ersten Tag.",
+    buttonLabel: "Diese Idee merken",
+  },
+};
+
+function slugFromHref(href: string) {
+  return Object.keys(fallbackCopy).find((slug) =>
+    href.toLowerCase().includes(slug),
+  );
+}
+
+const catalogTitles = new Set([
+  "Weiße Küchen",
+  "Salbeigrüne Küchen",
+  "Schwarze Küchen",
+  "White kitchens",
+  "Sage kitchens",
+  "Black kitchens",
+]);
+
+function presentTile(
+  tile: KachelTile,
+  preset?: { title: string; text: string; buttonLabel: string },
+  saveIdea?: string,
+): KachelTile {
+  const usePresetTitle = Boolean(
+    preset && (!tile.title || catalogTitles.has(tile.title)),
+  );
+
+  return {
+    ...tile,
+    title: usePresetTitle && preset ? preset.title : tile.title,
+    text: tile.text?.trim() || preset?.text || "",
+    buttonLabel:
+      tile.buttonLabel?.trim() ||
+      preset?.buttonLabel ||
+      saveIdea ||
+      "Diese Idee merken",
+  };
+}
+
+function orderColorTiles(tiles: KachelTile[]) {
+  const rank = ["weiss", "schwarz", "salbei"];
+  return [...tiles].sort((a, b) => {
+    const aRank = rank.findIndex((slug) => a.href.toLowerCase().includes(slug));
+    const bRank = rank.findIndex((slug) => b.href.toLowerCase().includes(slug));
+    return (aRank === -1 ? 99 : aRank) - (bRank === -1 ? 99 : bRank);
+  });
+}
 
 function expandHex(hex: string) {
   const value = hex.replace("#", "");
@@ -51,16 +124,22 @@ function isLightColor(hex: string) {
   return luminance > 0.55;
 }
 
-function TileCard({ tile, index }: { tile: KachelTile; index: number }) {
-  const imageRight = index % 2 === 1;
+function copyFor(tile: KachelTile) {
+  return {
+    title: tile.title,
+    text: tile.text?.trim() || "",
+    buttonLabel: tile.buttonLabel?.trim() || "Diese Idee merken",
+  };
+}
+
+function TileCard({ tile }: { tile: KachelTile }) {
   const light = isLightColor(tile.color);
+  const { title, text, buttonLabel } = copyFor(tile);
 
   return (
     <li>
-      <article className="group relative grid min-h-[32rem] grid-rows-2 overflow-hidden md:min-h-0 md:aspect-[19/6] md:grid-cols-2 md:grid-rows-1">
-        <div
-          className={`relative overflow-hidden ${imageRight ? "md:order-2" : ""}`}
-        >
+      <article className="grid overflow-hidden bg-karte md:grid-cols-2 md:min-h-[22rem] lg:min-h-[24rem]">
+        <div className="relative min-h-[16rem] overflow-hidden md:min-h-0">
           <CmsImage
             src={tile.image}
             srcSet={tile.srcSet}
@@ -68,54 +147,76 @@ function TileCard({ tile, index }: { tile: KachelTile; index: number }) {
             fill
             loading="lazy"
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            className="object-cover"
           />
         </div>
         <div
-          className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
+          className="flex flex-col items-center justify-center px-8 py-12 text-center sm:px-12 lg:px-16"
           style={{ backgroundColor: tile.color }}
         >
-          <h3 className={`type-h1 ${light ? "text-ink" : "text-paper"}`}>
-            {tile.title}
-          </h3>
-          <Link
-            href={tile.href}
-            className={
-              light
-                ? "pill pill-secondary mt-6 group-hover:bg-ink group-hover:text-paper"
-                : "pill pill-ghost-dark mt-6 group-hover:bg-paper group-hover:text-ink"
-            }
+          <h3
+            className={`max-w-md font-serif text-[28px] leading-[1.18] font-medium tracking-[-0.02em] md:text-[32px] lg:text-[34px] ${
+              light ? "text-ink" : "text-paper"
+            }`}
           >
-            Entdecken
-          </Link>
+            {title}
+          </h3>
+          {text ? (
+            <p
+              className={`mt-5 max-w-sm font-sans text-[15px] leading-relaxed font-light md:text-[16px] ${
+                light ? "text-ink/75" : "text-paper/80"
+              }`}
+            >
+              {text}
+            </p>
+          ) : null}
+          <LocaleLink
+            href={tile.href}
+            className={`mt-8 inline-flex items-center rounded-full border px-4 py-2 font-sans text-[13px] tracking-[0.04em] transition-colors ${
+              light
+                ? "border-ink text-ink hover:bg-ink hover:text-paper"
+                : "border-paper text-paper hover:bg-paper hover:text-ink"
+            }`}
+          >
+            {buttonLabel}
+          </LocaleLink>
         </div>
       </article>
     </li>
   );
 }
 
-export default function Kacheln({
+export default async function Kacheln({
   content,
 }: {
   content: KachelnContent | null;
 }) {
+  const locale = await getRequestLocale();
+  const copy = chromeCopy[locale];
   const data = content ?? fallback;
+  const colors = orderColorTiles(
+    (data.colors.length > 0 ? data.colors : fallback.colors).map((tile) => {
+      const slug = slugFromHref(tile.href);
+      return presentTile(
+        tile,
+        slug ? fallbackCopy[slug] : undefined,
+        copy.saveIdea,
+      );
+    }),
+  );
 
   return (
-    <section id="kacheln" className="bg-paper" aria-labelledby="kacheln-heading">
-      <div className="mx-auto max-w-6xl px-6 pt-20 pb-12 md:pt-28 md:pb-16">
-        <p className="type-eyebrow text-ink">{data.eyebrow}</p>
-        <div className="mt-6 max-w-2xl border-t border-ink pt-8">
-          <h2 id="kacheln-heading" className="sr-only">
-            Küchenfarben
-          </h2>
-          <p className="type-intro">{data.intro}</p>
-        </div>
-      </div>
-
-      <ul>
-        {data.colors.map((tile, index) => (
-          <TileCard key={`${tile.title}-${index}`} tile={tile} index={index} />
+    <section
+      id="kacheln"
+      className="bg-paper"
+      aria-labelledby="kacheln-heading"
+    >
+      <h2 id="kacheln-heading" className="sr-only">
+        {data.eyebrow?.trim() || copy.kitchenColours}
+      </h2>
+      <ul className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16 md:gap-7 md:px-10 md:py-24">
+        {colors.map((tile, index) => (
+          <TileCard key={`${tile.title}-${index}`} tile={tile} />
         ))}
       </ul>
     </section>

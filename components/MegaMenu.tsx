@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import BrandLogo from "@/components/BrandLogo";
+import HeaderActions from "@/components/HeaderActions";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MegaPanel from "@/components/MegaPanel";
 import { Button } from "@/components/ui/button";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
@@ -17,23 +19,22 @@ import {
 } from "@/components/ui/navigation-menu";
 import { trackEvent } from "@/lib/umami";
 import { cn } from "@/lib/utils";
+import { chromeCopy } from "@/lib/i18n";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
+import { useLocale } from "@/components/LocaleProvider";
 
 type MegaMenuProps = {
   panels?: MenuPanel[];
-  ctaLabel?: string;
-  ctaUrl?: string;
   logoSrc?: string;
   logoAlt?: string;
 };
 
 export default function MegaMenu({
   panels = menuPanels,
-  ctaLabel = "Beratung anfragen",
-  ctaUrl = "#beratung",
   logoSrc,
   logoAlt,
 }: MegaMenuProps) {
+  const copy = chromeCopy[useLocale()];
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileVisible, setMobileVisible] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
@@ -227,7 +228,7 @@ export default function MegaMenu({
             <NavigationMenuList className="relative h-full items-stretch justify-center space-x-0">
               {panels.map((panel) => (
                 <NavigationMenuItem key={panel.id} value={panel.id} className="flex h-full">
-                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3 !text-[16px] font-normal tracking-[0.06em] text-ink/70 xl:!text-[17px] hover:bg-transparent hover:text-ink focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-ink after:absolute after:inset-x-0 after:top-full after:z-50 after:h-8 after:content-[''] [&>svg]:hidden">
+                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3 !text-[16px] font-normal tracking-[0.06em] text-black xl:!text-[17px] hover:bg-transparent hover:text-black focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-black after:absolute after:inset-x-0 after:top-full after:z-50 after:h-8 after:content-[''] [&>svg]:hidden">
                     {panel.label}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-full md:w-full">
@@ -238,22 +239,9 @@ export default function MegaMenu({
               <NavigationMenuIndicator />
             </NavigationMenuList>
 
-            <div className="flex justify-end">
-              <div>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="cta-invert type-nav h-auto rounded-full px-3.5 py-1.5 !text-[16px] font-normal tracking-[0.06em] xl:!text-[17px] hover:bg-ink"
-                >
-                  <Link
-                    href={ctaUrl}
-                    data-umami-event="cta_beratung"
-                    data-umami-event-placement="header"
-                  >
-                    {ctaLabel}
-                  </Link>
-                </Button>
-              </div>
+            <div className="flex items-center justify-end gap-3">
+              <LanguageSwitcher />
+              <HeaderActions />
             </div>
           </div>
         </div>
@@ -314,20 +302,20 @@ export default function MegaMenu({
                           >
                             <ul className="min-h-0 space-y-3 overflow-hidden">
                               <li className="pt-4">
-                                <Link
+                                <LocaleLink
                                   href={panel.href}
                                   onClick={closeMobile}
                                   className="type-body text-ink"
                                 >
-                                  Übersicht
-                                </Link>
+                                  {copy.overview}
+                                </LocaleLink>
                               </li>
                               {panel.groups.flatMap((group) =>
                                 group.links.map((link) => (
                                   <li
                                     key={`${group.title ?? "links"}-${link.label}`}
                                   >
-                                    <Link
+                                    <LocaleLink
                                       href={link.href}
                                       onClick={closeMobile}
                                       className={`type-body ${
@@ -337,7 +325,7 @@ export default function MegaMenu({
                                       }`}
                                     >
                                       {link.label}
-                                    </Link>
+                                    </LocaleLink>
                                   </li>
                                 )),
                               )}
@@ -347,20 +335,10 @@ export default function MegaMenu({
                       );
                     })}
                   </div>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="cta-invert type-nav h-auto w-full rounded-full py-3 hover:bg-ink"
-                  >
-                    <Link
-                      href={ctaUrl}
-                      onClick={closeMobile}
-                      data-umami-event="cta_beratung"
-                      data-umami-event-placement="header-mobile"
-                    >
-                      {ctaLabel}
-                    </Link>
-                  </Button>
+                  <div className="flex flex-col gap-4">
+                    <LanguageSwitcher />
+                    <HeaderActions className="w-full" onNavigate={closeMobile} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -368,19 +346,23 @@ export default function MegaMenu({
         </div>
       </div>
 
-      <div className="relative z-10 flex h-14 w-full items-center justify-between px-4 lg:hidden">
+      <div className="relative z-10 flex h-14 w-full items-center justify-between gap-2 px-4 lg:hidden">
         <BrandLogo src={logoSrc} alt={logoAlt} />
-        <Button
-          size="icon"
-          variant="outline"
-          onClick={toggleMobile}
-          className="border-line bg-transparent"
-          aria-expanded={mobileOpen}
-          aria-controls={`${panelId}-mobile`}
-          aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
-        >
-          <MenuToggleIcon open={mobileOpen} className="size-5" duration={500} />
-        </Button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <HeaderActions compact />
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={toggleMobile}
+            className="border-line bg-transparent text-black"
+            aria-expanded={mobileOpen}
+            aria-controls={`${panelId}-mobile`}
+            aria-label={mobileOpen ? copy.menuClose : copy.menuOpen}
+          >
+            <MenuToggleIcon open={mobileOpen} className="size-5" duration={500} />
+          </Button>
+        </div>
       </div>
     </div>
   );

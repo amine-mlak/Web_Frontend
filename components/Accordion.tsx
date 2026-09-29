@@ -21,15 +21,17 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
             <h3>
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-6 py-5 text-left"
+                className="flex w-full items-center justify-between gap-8 py-[1.35rem] text-left"
                 aria-expanded={open}
                 onClick={() =>
                   setOpenIndex((current) => (current === index ? null : index))
                 }
               >
-                <span className="type-body text-ink">{item.question}</span>
+                <span className="font-sans text-[16px] leading-snug font-normal text-ink md:text-[17px]">
+                  {item.question}
+                </span>
                 <span
-                  className="type-nav text-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="shrink-0 font-sans text-[1.35rem] leading-none font-light text-ink/55"
                   aria-hidden="true"
                 >
                   {open ? "–" : "+"}
@@ -43,7 +45,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
             >
               <div className="overflow-hidden">
                 <p
-                  className={`type-body max-w-2xl pb-5 text-muted transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`max-w-2xl pb-5 font-sans text-[15px] leading-relaxed font-light text-muted transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:text-[16px] ${
                     open ? "opacity-100" : "opacity-0"
                   }`}
                 >

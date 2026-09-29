@@ -84,6 +84,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/instagram/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+          ...robotsHeaders,
+        ],
+      },
+      {
         source: "/cms-opt/:path*",
         headers: [
           {

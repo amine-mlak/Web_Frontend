@@ -26,6 +26,7 @@ import {
 import {
   flattenCollection,
   flattenEntity,
+  resolveFaqBlock,
   strapiGet,
   strapiResponsiveImage,
   type StrapiMedia,
@@ -247,7 +248,7 @@ function mapArticle(entry: unknown): Article | null {
   };
 }
 
-function mapPage(entry: unknown): SitePage | null {
+async function mapPage(entry: unknown): Promise<SitePage | null> {
   const row = flattenEntity(entry);
   const slug = text(row, "slug");
   const title = text(row, "title");
@@ -265,19 +266,20 @@ function mapPage(entry: unknown): SitePage | null {
     srcSet: image.srcSet,
     ctaLabel: text(row, "ctaLabel"),
     ctaUrl: text(row, "ctaUrl"),
+    faq: await resolveFaqBlock(row.faq),
   };
 }
 
 async function loadMapped<T>(
   path: string,
   query: Record<string, string>,
-  map: (entry: unknown) => T | null,
+  map: (entry: unknown) => T | null | Promise<T | null>,
   fallback: T[],
 ) {
   const payload = await strapiGet<{ data?: unknown }>(path, query);
-  const items = flattenCollection(payload?.data)
-    .map(map)
-    .filter((item): item is T => Boolean(item));
+  const items = (
+    await Promise.all(flattenCollection(payload?.data).map((entry) => map(entry)))
+  ).filter((item): item is T => Boolean(item));
   return items.length > 0 ? items : fallback;
 }
 
@@ -378,6 +380,8 @@ export async function fetchSitePages() {
       sort: "title:asc",
       "pagination[pageSize]": "50",
       "populate[image]": "true",
+      "populate[faq][populate][theme]": "true",
+      "populate[faq][populate][questions][populate]": "item",
     },
     mapPage,
     FALLBACK_PAGES,

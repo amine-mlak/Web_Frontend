@@ -158,15 +158,47 @@
       "slug": "wie-laeuft-die-beratung-ab",
       "question": "Wie läuft die Beratung ab?",
       "answer": "Zuerst ein Gespräch – in der Ausstellung oder bei Ihnen. Wir klären Raum, Alltag und Budget, bevor gezeichnet wird. Daraus entsteht ein Vorschlag mit Materialien und einem ehrlichen Preisrahmen. Vertieft wird nur, was Sie weiterführen möchten.",
-      "showOnHome": true,
+      "showOnHome": false,
       "order": 10,
       "themes": ["allgemein", "ausstellung", "planung"]
+    },
+    {
+      "slug": "ist-ein-termin-zu-frueh",
+      "question": "Ich weiß noch gar nicht, was ich will – ist ein Termin zu früh?",
+      "answer": "Nein. Die meisten Gespräche beginnen genau so: mit Bildern, einem Raum und dem Gefühl, dass etwas besser gehen könnte. Wir sortieren gemeinsam – bevor gezeichnet wird.",
+      "showOnHome": true,
+      "order": 11,
+      "themes": ["allgemein", "ausstellung"]
+    },
+    {
+      "slug": "kuechen-anschauen-und-anfassen",
+      "question": "Kann ich fertige Küchen anschauen und anfassen?",
+      "answer": "Ja. In der Ausstellung in Wolfersdorf stehen Materialien, Muster und ausgeführte Details zum Anfassen – nicht nur Visualisierungen. Dafür lohnt ein Termin, dann ist Zeit dafür.",
+      "showOnHome": true,
+      "order": 12,
+      "themes": ["allgemein", "ausstellung"]
+    },
+    {
+      "slug": "pinterest-bilder-mitbringen",
+      "question": "Darf ich mit Pinterest-Bildern kommen?",
+      "answer": "Bitte. Bilder sagen oft mehr als ein Grundriss. Wir schauen, was daran wirklich zu Ihrem Alltag und zum Raum passt – und was nur auf dem Bildschirm funktioniert.",
+      "showOnHome": true,
+      "order": 13,
+      "themes": ["allgemein", "planung", "ausstellung"]
+    },
+    {
+      "slug": "was-kostet-der-erste-schritt",
+      "question": "Was kostet der erste Schritt?",
+      "answer": "Nichts. Das Erstgespräch in der Ausstellung oder bei Ihnen ist kostenlos. Verbindlich wird es erst mit Planung und Auftrag.",
+      "showOnHome": true,
+      "order": 14,
+      "themes": ["kosten", "allgemein", "ausstellung"]
     },
     {
       "slug": "brauche-ich-einen-termin",
       "question": "Brauche ich einen Termin für die Ausstellung?",
       "answer": "Sie können vorbeikommen. Für ein ruhiges Gespräch empfehlen wir einen Termin – dann ist Ihr Berater vorbereitet und die Zeit gehört Ihnen. Ohne Termin zeigen wir Ihnen gern die Ausstellung, vertiefen aber nicht jede Planung.",
-      "showOnHome": true,
+      "showOnHome": false,
       "order": 20,
       "themes": ["allgemein", "ausstellung"]
     },
@@ -174,7 +206,7 @@
       "slug": "was-kostet-eine-kueche-nach-mass",
       "question": "Was kostet eine Küche nach Maß?",
       "answer": "Jede Küche wird einzeln geplant. Der Preis hängt von Größe, Front, Arbeitsplatte und Geräten ab. Im Erstgespräch nennen wir einen Rahmen – bevor die Planung vertieft wird. Pauschalpreise aus dem Katalog führen hier nicht weiter.",
-      "showOnHome": true,
+      "showOnHome": false,
       "order": 30,
       "themes": ["kosten", "allgemein"]
     },
@@ -182,7 +214,7 @@
       "slug": "wie-lange-dauert-planung-und-fertigung",
       "question": "Wie lange dauert Planung und Fertigung?",
       "answer": "Von der ersten Beratung bis zur Montage rechnen wir in der Regel mit einigen Monaten. Aufmaß, Freigabe, Fertigung und Einbau folgen nacheinander. Den konkreten Zeitplan stimmen wir nach dem Aufmaß mit Ihnen ab – nicht vorher aus der Luft.",
-      "showOnHome": true,
+      "showOnHome": false,
       "order": 40,
       "themes": ["planung", "montage"]
     },
@@ -486,7 +518,7 @@
       "slug": "moebel-ausserhalb-der-kueche",
       "question": "Fertigen Sie auch Möbel außerhalb der Küche?",
       "answer": "Ja, in kleinerem Umfang: Einbauschränke, Ankleiden, Tische und Wohnmöbel – immer dann, wenn sie zur Küche und zum Haus gehören. Kein beliebiges Möbelprogramm, sondern Anschlüsse an das, was wir ohnehin bauen.",
-      "showOnHome": true,
+      "showOnHome": false,
       "order": 420,
       "themes": ["moebel"]
     },

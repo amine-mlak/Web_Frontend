@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import { EntryGrid, type CatalogCardItem } from "@/components/catalog/EntryCard";
 import SpecList from "@/components/catalog/SpecList";
@@ -71,13 +71,13 @@ export default function DetailPage({
           {links && links.length > 0 ? (
             <nav aria-label="Verwandte Seiten" className="mt-10 flex flex-wrap gap-2">
               {links.map((link) => (
-                <Link
+                <LocaleLink
                   key={link.href}
                   href={link.href}
                   className="type-nav border border-line bg-white px-3 py-2 text-ink transition-colors hover:border-ink"
                 >
                   {link.label}
-                </Link>
+                </LocaleLink>
               ))}
             </nav>
           ) : null}

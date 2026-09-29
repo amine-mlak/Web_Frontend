@@ -55,6 +55,7 @@ export default async function LandingSlugPage({
         ctaLabel={page.ctaLabel || undefined}
         ctaHref={page.ctaUrl || undefined}
       />
+      {page.faq ? <Faq content={page.faq} /> : null}
       {slug === "kueche-planen" ? <Process content={null} /> : null}
     </>
   );

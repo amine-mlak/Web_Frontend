@@ -1,5 +1,7 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
+import { chromeCopy } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
 import type { EntdeckenContent, EntdeckenPanel } from "@/lib/strapi";
 
 const fallback: EntdeckenContent = {
@@ -60,20 +62,21 @@ function PanelCard({ panel }: { panel: EntdeckenPanel }) {
             {panel.title}
           </h3>
           <p className="type-body mt-3 text-paper/90">{panel.subtitle}</p>
-          <Link href={panel.href} className="pill pill-light mt-6 md:mt-8">
+          <LocaleLink href={panel.href} className="pill pill-light mt-6 md:mt-8">
             {panel.buttonLabel}
-          </Link>
+          </LocaleLink>
         </div>
       </article>
     </li>
   );
 }
 
-export default function Entdecken({
+export default async function Entdecken({
   content,
 }: {
   content: EntdeckenContent | null;
 }) {
+  const copy = chromeCopy[await getRequestLocale()];
   const data = content ?? fallback;
   const panels = data.panels.length > 0 ? data.panels : fallback.panels;
 
@@ -81,9 +84,9 @@ export default function Entdecken({
     <section
       id="entdecken"
       className="bg-paper"
-      aria-label="Küchenwelten entdecken"
+      aria-label={copy.discover}
     >
-      <h2 className="sr-only">Küchenwelten entdecken</h2>
+      <h2 className="sr-only">{copy.discover}</h2>
       <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-6 py-16 sm:grid-cols-2 md:gap-6 md:py-24">
         {panels.map((panel, index) => (
           <PanelCard key={`${panel.title}-${index}`} panel={panel} />

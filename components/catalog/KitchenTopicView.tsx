@@ -1,4 +1,4 @@
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import SpecList from "@/components/catalog/SpecList";
 import Pill from "@/components/Pill";
@@ -39,9 +39,9 @@ export default function KitchenTopicView({
           <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-end md:py-24">
             <div>
               <p className="type-eyebrow mb-3">
-                <Link href={`/kuechen/${cluster.slug}`} className="hover:text-ink">
+                <LocaleLink href={`/kuechen/${cluster.slug}`} className="hover:text-ink">
                   {cluster.name}
-                </Link>
+                </LocaleLink>
               </p>
               <h1 className="type-h1 text-ink">{topic.name}</h1>
               {topic.hex ? (
@@ -111,12 +111,12 @@ export default function KitchenTopicView({
                         {[project.place, project.year].filter(Boolean).join(" · ")}
                       </p>
                       <h3 className="type-h3 mt-2 text-ink">
-                        <Link
+                        <LocaleLink
                           href={`/projekte/${project.slug}`}
                           className="hover:underline hover:decoration-line hover:underline-offset-4"
                         >
                           {project.title}
-                        </Link>
+                        </LocaleLink>
                       </h3>
                       <p className="type-body mt-4">{project.body || project.intro}</p>
                       {project.specs.length > 0 ? (
@@ -165,13 +165,13 @@ export default function KitchenTopicView({
             <ul className="mt-8 divide-y divide-line border-y border-line">
               {siblings.map((item) => (
                 <li key={item.slug}>
-                  <Link
+                  <LocaleLink
                     href={`/kuechen/${cluster.slug}/${item.slug}`}
                     className="grid gap-2 py-5 md:grid-cols-[14rem_minmax(0,1fr)] md:gap-8"
                   >
                     <span className="type-h3 text-ink">{item.name}</span>
                     <span className="type-body text-muted">{item.intro}</span>
-                  </Link>
+                  </LocaleLink>
                 </li>
               ))}
             </ul>
@@ -201,12 +201,12 @@ function DetailLinks({
       <ul className="mt-4 space-y-2">
         {items.map((item) => (
           <li key={item.slug}>
-            <Link
+            <LocaleLink
               href={hrefFor(item.slug)}
               className="type-body text-ink underline decoration-line underline-offset-4"
             >
               {item.name}
-            </Link>
+            </LocaleLink>
           </li>
         ))}
       </ul>

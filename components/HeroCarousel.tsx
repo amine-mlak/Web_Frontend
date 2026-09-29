@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import type { HeroSlide } from "@/lib/strapi";
 
@@ -20,22 +20,22 @@ const ROLL_MS = 1200;
 function HeroIntro({ panel }: { panel: HeroPanel }) {
   return (
     <div className="absolute inset-0 z-10 flex items-end px-4 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-28">
-      <div className="w-full max-w-xl bg-transparent px-7 py-9 text-paper backdrop-blur-[2px] sm:px-10 sm:py-12 lg:max-w-3xl">
-        <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper/80 uppercase">
+      <div className="w-fit max-w-full bg-transparent px-3 py-3 text-paper backdrop-blur-[12px] sm:px-4 sm:py-3.5">
+        <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper uppercase">
           {panel.eyebrow}
         </p>
-        <h1 className="mt-4 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:text-[44px] lg:text-[52px] lg:whitespace-nowrap">
+        <h1 className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px] lg:whitespace-nowrap">
           {panel.title} <em className="font-medium italic">{panel.emphasis}</em>
         </h1>
-        <p className="mt-5 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper/90 md:text-[18px]">
+        <p className="mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]">
           {panel.text}
         </p>
-        <Link
+        <LocaleLink
           href={panel.buttonHref}
-          className="mt-8 inline-flex items-center rounded-full bg-paper px-5 py-2.5 font-sans text-[15px] text-ink transition-colors hover:bg-white"
+          className="mt-5 inline-flex items-center rounded-full bg-paper px-5 py-2.5 font-sans text-[15px] text-ink transition-colors hover:bg-white"
         >
           {panel.buttonLabel}
-        </Link>
+        </LocaleLink>
       </div>
     </div>
   );
