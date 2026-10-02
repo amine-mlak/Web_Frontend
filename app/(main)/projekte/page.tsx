@@ -1,24 +1,40 @@
 import type { Metadata } from "next";
-import HubPage from "@/components/catalog/HubPage";
-import { projectCards } from "@/lib/catalog-cards";
+import CollectionHub from "@/components/catalog/CollectionHub";
+import { collectionHubMetadata } from "@/lib/collection-hubs";
 import { fetchProjects } from "@/lib/catalog-api";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 
-export const metadata: Metadata = {
-  title: "Projekte | BEER Küchenmanufaktur",
-  description: "Referenzküchen aus der Manufaktur – Ort, Jahr, Material und Geräte.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return collectionHubMetadata("projekte");
+}
 
 export default async function ProjektePage() {
+  const locale = await getRequestLocale();
   const projects = await fetchProjects();
+  const featured = projects.slice(0, 3).map((project) => ({
+    href: `/projekte/${project.slug}`,
+    title: project.title,
+    text: project.intro,
+    image: project.image,
+    srcSet: project.srcSet,
+    alt: project.title,
+  }));
+  const extras = projects.slice(3).map((project) => ({
+    href: `/projekte/${project.slug}`,
+    title: project.title,
+    meta: [project.place, project.year].filter(Boolean).join(" · "),
+    image: project.image,
+  }));
+
   return (
-    <HubPage
-      eyebrow="Referenzen"
-      title="Projekte"
-      intro="Keine Showrooms aus dem Katalog. Küchen, die in Häusern stehen."
-      image={projects[0]?.image}
-      items={projectCards(projects)}
+    <CollectionHub
+      id="projekte"
+      locale={locale}
+      branches={featured.length > 0 ? featured : undefined}
+      extras={extras}
+      extrasTitle={locale === "en" ? "Further houses" : "Weitere Häuser"}
     />
   );
 }

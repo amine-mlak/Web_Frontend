@@ -1,25 +1,39 @@
 import type { Metadata } from "next";
-import HubPage from "@/components/catalog/HubPage";
-import { regionCards } from "@/lib/catalog-cards";
+import CollectionHub from "@/components/catalog/CollectionHub";
+import { collectionHubMetadata } from "@/lib/collection-hubs";
 import { fetchRegions } from "@/lib/catalog-api";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 
-export const metadata: Metadata = {
-  title: "Regionen | BEER Küchenmanufaktur",
-  description:
-    "Küchen in München, Freising, Erding, Dachau, Pfaffenhofen, Landshut und im Umland.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return collectionHubMetadata("regionen");
+}
+
+const featuredSlugs = new Set([
+  "muenchen",
+  "freising",
+  "erding",
+  "pfaffenhofen",
+]);
 
 export default async function RegionenPage() {
-  const items = await fetchRegions();
+  const locale = await getRequestLocale();
+  const regions = await fetchRegions();
+  const extras = regions
+    .filter((region) => !featuredSlugs.has(region.slug))
+    .map((region) => ({
+      href: `/regionen/${region.slug}`,
+      title: region.name,
+      image: region.image,
+    }));
+
   return (
-    <HubPage
-      eyebrow="Einzugsgebiet"
-      title="Regionen"
-      intro="Ausstellung in Wolfersdorf. Aufmaß und Montage bei Ihnen – im Radius um München."
-      image="/kitchens/stile-modern.jpg"
-      items={regionCards(items)}
+    <CollectionHub
+      id="regionen"
+      locale={locale}
+      extras={extras}
+      extrasTitle={locale === "en" ? "Further places" : "Weitere Orte"}
     />
   );
 }

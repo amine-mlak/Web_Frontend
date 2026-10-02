@@ -7,6 +7,8 @@ import {
   topicsInCluster,
 } from "@/lib/catalog";
 import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
+import { clusterMetadata } from "@/lib/collection-clusters";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -21,11 +23,10 @@ export async function generateMetadata({
   params: Promise<{ cluster: string }>;
 }): Promise<Metadata> {
   const { cluster } = await params;
-  const entry = KITCHEN_CLUSTERS.find((item) => item.slug === cluster);
-  if (!entry) {
+  if (!isKitchenCluster(cluster)) {
     return { title: "Küchen | BEER Küchenmanufaktur" };
   }
-  return { title: entry.seoTitle, description: entry.seoDescription };
+  return clusterMetadata(cluster);
 }
 
 export default async function KitchenClusterPage({
@@ -41,7 +42,8 @@ export default async function KitchenClusterPage({
   if (!meta) {
     notFound();
   }
-  const [topics, projects] = await Promise.all([
+  const [locale, topics, projects] = await Promise.all([
+    getRequestLocale(),
     fetchKitchenTopics(),
     fetchProjects(),
   ]);
@@ -56,6 +58,7 @@ export default async function KitchenClusterPage({
       cluster={meta}
       topics={inCluster}
       projects={related}
+      locale={locale}
     />
   );
 }

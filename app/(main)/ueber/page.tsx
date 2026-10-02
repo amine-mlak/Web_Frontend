@@ -6,10 +6,10 @@ import { getRequestLocale } from "@/lib/locale";
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return collectionHubMetadata("ratgeber");
+  return collectionHubMetadata("ueber");
 }
 
-export default async function RatgeberPage() {
+export default async function UeberPage() {
   const locale = await getRequestLocale();
-  return <CollectionHub id="ratgeber" locale={locale} />;
+  return <CollectionHub id="ueber" locale={locale} />;
 }
