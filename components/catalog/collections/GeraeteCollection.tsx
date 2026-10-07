@@ -128,14 +128,7 @@ export default function GeraeteCollection({
                     {branch.kicker}
                   </p>
                   <div className="lg:col-span-4">
-                    {branch.brands && branch.brands.length > 0 ? (
-                      <p className="flex flex-wrap items-center gap-5">
-                        {branch.brands.map((slug) => (
-                          <BrandMark key={slug} slug={slug} />
-                        ))}
-                      </p>
-                    ) : null}
-                    <h3 className="mt-3 font-serif text-[28px] leading-tight font-medium tracking-[-0.03em] text-paper md:text-[34px]">
+                    <h3 className="font-serif text-[28px] leading-tight font-medium tracking-[-0.03em] text-paper md:text-[34px]">
                       {branch.title}
                     </h3>
                   </div>
