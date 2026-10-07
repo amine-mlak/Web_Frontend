@@ -88,7 +88,8 @@ export function withLocale(href: string, locale: Locale) {
     href.startsWith("//") ||
     href.startsWith("/cms-") ||
     href.startsWith("/kitchens/") ||
-    href.startsWith("/instagram/")
+    href.startsWith("/instagram/") ||
+    href.startsWith("/brands/")
   ) {
     return href;
   }

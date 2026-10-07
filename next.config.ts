@@ -64,6 +64,26 @@ const nextConfig: NextConfig = {
         hostname: "cdn.shopify.com",
         pathname: "/s/files/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        pathname: "/photos/**",
+      },
+      {
+        protocol: "https",
+        hostname: "commons.wikimedia.org",
+        pathname: "/wiki/**",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+        pathname: "/wikipedia/**",
+      },
+      {
+        protocol: "https",
+        hostname: "thumb.wikimedia.org",
+        pathname: "/wikipedia/**",
+      },
     ],
   },
   async headers() {
@@ -90,6 +110,16 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/instagram/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+          ...robotsHeaders,
+        ],
+      },
+      {
+        source: "/brands/:path*",
         headers: [
           {
             key: "Cache-Control",

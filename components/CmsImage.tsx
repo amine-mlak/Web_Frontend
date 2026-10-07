@@ -22,10 +22,11 @@ export default function CmsImage({
   const srcString = siteImage(raw);
   const remapped = srcString !== raw;
   const proxied = srcString.startsWith("/cms-uploads/");
-  const instagramOriginal = srcString.startsWith("/instagram/");
+  const localOriginal =
+    srcString.startsWith("/instagram/") || srcString.startsWith("/brands/");
   const remote = /^https?:\/\//.test(srcString);
   const native =
-    remapped || Boolean(srcSet) || proxied || remote || instagramOriginal;
+    remapped || Boolean(srcSet) || proxied || remote || localOriginal;
 
   if (native) {
     return (

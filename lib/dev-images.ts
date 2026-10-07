@@ -1,14 +1,7 @@
 import { beerNamed, beerPhoto } from "@/lib/beer-photos";
 
 export function isStockPhoto(src?: string) {
-  if (!src) {
-    return true;
-  }
-  return (
-    src.startsWith("/kitchens/") ||
-    src.includes("images.unsplash.com") ||
-    src.includes("images.pexels.com")
-  );
+  return !src || src.startsWith("/kitchens/");
 }
 
 export function isDevPlaceholder(src?: string) {
@@ -32,9 +25,6 @@ export function siteImage(src: string | undefined, width = 1800): string {
   }
   if (src.startsWith("/kitchens/")) {
     return beerNamed(src.slice("/kitchens/".length), width);
-  }
-  if (src.includes("images.unsplash.com") || src.includes("images.pexels.com")) {
-    return beerPhoto(0, width);
   }
   return src;
 }

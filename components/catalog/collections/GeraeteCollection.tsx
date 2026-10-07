@@ -1,7 +1,41 @@
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
+import CmsImage from "@/components/CmsImage";
 import type { PresentedHub } from "@/lib/collection-present";
+import {
+  APPLIANCE_BRANDS,
+  applianceBrand,
+} from "@/lib/appliance-media";
 import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { cn } from "@/lib/utils";
+
+function BrandMark({
+  slug,
+  className,
+}: {
+  slug: string;
+  className?: string;
+}) {
+  const brand = applianceBrand(slug);
+  if (!brand) {
+    return null;
+  }
+
+  return (
+    <span className={cn("relative block h-6 w-[7.5rem]", className)}>
+      <CmsImage
+        src={brand.logo}
+        alt={brand.name}
+        fill
+        sizes="120px"
+        className={cn(
+          "object-contain object-left",
+          brand.invert && "brightness-0 invert",
+        )}
+      />
+    </span>
+  );
+}
 
 export default function GeraeteCollection({
   hub,
@@ -10,17 +44,14 @@ export default function GeraeteCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
-  const sheet = hub.locale === "en" ? "Sheet" : "Blatt";
-  const task = hub.locale === "en" ? "Task" : "Aufgabe";
+  const partners = hub.locale === "en" ? "Partners we fit" : "Marken, die wir einbauen";
 
   return (
     <main className="bg-nacht text-paper">
       <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-14 lg:pt-20" aria-labelledby="geraete-hero">
-        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-paper/15 pb-6">
-          <p className="font-sans text-[11px] tracking-[0.22em] text-paper/50 uppercase">
-            {sheet} 01 · {hub.eyebrow}
-          </p>
-        </div>
+        <p className="font-sans text-[11px] tracking-[0.22em] text-paper/50 uppercase">
+          {hub.eyebrow}
+        </p>
         <div className="mt-12 grid gap-10 lg:grid-cols-12">
           <h1
             id="geraete-hero"
@@ -61,42 +92,71 @@ export default function GeraeteCollection({
         </dl>
       </section>
 
-      <section aria-labelledby="geraete-tasks">
-        <h2 id="geraete-tasks" className="sr-only">
-          {hub.indexEyebrow}
-        </h2>
-        <ul>
-          {hub.branches.map((branch) => (
-            <li key={branch.title} className="border-t border-paper/12">
+      <section
+        className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-14"
+        aria-label={partners}
+      >
+        <p className="type-eyebrow text-messing">{partners}</p>
+        <ul className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-6">
+          {APPLIANCE_BRANDS.map((brand) => (
+            <li key={brand.slug}>
               <LocaleLink
-                href={branch.href ?? "/beratung"}
-                className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-10"
+                href={`/marken/${brand.slug}`}
+                className="block opacity-90 transition-opacity hover:opacity-100"
               >
-                <p className="font-serif text-[28px] text-messing lg:col-span-1">
-                  {branch.kicker}
-                </p>
-                <div className="lg:col-span-4">
-                  <p className="font-sans text-[11px] tracking-[0.22em] text-paper/40 uppercase">
-                    {task}
-                  </p>
-                  <h3 className="mt-2 font-serif text-[28px] leading-tight font-medium tracking-[-0.03em] text-paper md:text-[34px]">
-                    {branch.title}
-                  </h3>
-                </div>
-                <p className="font-sans text-[15px] leading-relaxed font-light text-paper/65 lg:col-span-3">
-                  {branch.text}
-                </p>
-                <Frame
-                  src={branch.image}
-                  alt={branch.alt}
-                  srcSet={branch.srcSet}
-                  className="aspect-[16/7] lg:col-span-4"
-                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                />
+                <BrandMark slug={brand.slug} className="h-7 w-[8.5rem]" />
               </LocaleLink>
             </li>
           ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="geraete-index">
+        <h2 id="geraete-index" className="sr-only">
+          {hub.indexEyebrow}
+        </h2>
+        <ul>
+          {hub.branches.map((branch) => {
+            const sink = branch.href?.includes("spuelen");
+            return (
+              <li key={branch.title} className="border-t border-paper/12">
+                <LocaleLink
+                  href={branch.href ?? "/beratung"}
+                  className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-10"
+                >
+                  <p className="font-serif text-[28px] text-messing lg:col-span-1">
+                    {branch.kicker}
+                  </p>
+                  <div className="lg:col-span-4">
+                    {branch.brands && branch.brands.length > 0 ? (
+                      <p className="flex flex-wrap items-center gap-5">
+                        {branch.brands.map((slug) => (
+                          <BrandMark key={slug} slug={slug} />
+                        ))}
+                      </p>
+                    ) : null}
+                    <h3 className="mt-3 font-serif text-[28px] leading-tight font-medium tracking-[-0.03em] text-paper md:text-[34px]">
+                      {branch.title}
+                    </h3>
+                  </div>
+                  <p className="font-sans text-[15px] leading-relaxed font-light text-paper/65 lg:col-span-3">
+                    {branch.text}
+                  </p>
+                  <Frame
+                    src={branch.image}
+                    alt={branch.alt}
+                    srcSet={branch.srcSet}
+                    className="aspect-[16/7] lg:col-span-4"
+                    imgClassName={cn(
+                      "transition-transform duration-700 group-hover:scale-[1.03]",
+                      sink && "object-top",
+                    )}
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                  />
+                </LocaleLink>
+              </li>
+            );
+          })}
         </ul>
       </section>
 

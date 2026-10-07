@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { APPLIANCE_PHOTOS } from "@/lib/appliance-media";
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 
@@ -10,6 +11,7 @@ export type CollectionBranch = {
   srcSet?: string;
   alt: string;
   meta?: string;
+  brands?: string[];
 };
 
 export type CollectionHubCopy = {
@@ -157,11 +159,11 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     emphasis: "als Architektur.",
     lede: "Nicht die ganze Wand voller Geräte. Die, die der Alltag braucht — sauber in Nische und Hochschrank, oft unsichtbar.",
     statement:
-      "In unseren Küchen folgt die Technik dem Raum. Kochfeldabzug, wenn die Esse den Blick stört. Geräte auf Griffhöhe, wenn der Rücken das verlangt. Marken nach Aufgabe, nicht nach Zwang.",
+      "In unseren Küchen folgt die Technik dem Raum. Kochfeldabzug, wenn die Esse den Blick stört. Geräte auf Griffhöhe, wenn der Rücken das verlangt. Marken frei gewählt, nicht nach Zwang.",
     statementNote: "Bora, Miele, Gaggenau, Quooker, Siemens — frei gewählt, in der Manufaktur eingebaut.",
-    heroImage: "/kitchens/stile-insel.jpg",
-    heroAlt: "Kochinsel mit integrierter Technik",
-    indexEyebrow: "Die Aufgaben",
+    heroImage: APPLIANCE_PHOTOS.hero,
+    heroAlt: "Küche mit Edelstahlkühlschrank und Kochfeld",
+    indexEyebrow: "Fünf Bereiche",
     quote:
       "Ein Gerät, das man jeden Tag öffnet, gehört auf die Höhe der Hand. Nicht hinter eine Showfront, die niemand benutzt.",
     quoteSource: "Aus der Geräteplanung",
@@ -175,36 +177,41 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
         href: "/geraete/kochen",
         title: "Kochen",
         text: "Induktion, Gas, Kochfeldabzug. Für Inseln und offene Räume oft ehrlicher als die Esse.",
-        image: "/kitchens/stile-insel.jpg",
-        alt: "Kochfeld in der Insel",
+        image: APPLIANCE_PHOTOS.kochen,
+        alt: "Induktionskochfeld Siemens in der Arbeitsplatte",
+        brands: ["bora", "siemens"],
       },
       {
         href: "/geraete/backen",
         title: "Backen & Dämpfen",
         text: "Ofen, Dampf, Wärmeschublade. Im Hochschrank, wo man sie erreicht — oder unter der Platte, wenn der Raum das will.",
-        image: "/kitchens/stile-purist.jpg",
-        alt: "Gerätehochschrank",
+        image: APPLIANCE_PHOTOS.backen,
+        alt: "Einbaubackofen im Hochschrank",
+        brands: ["miele", "gaggenau"],
       },
       {
         href: "/geraete/kaelte",
         title: "Kälte",
         text: "Vollintegriert oder als Schrank. Lüftung und Nische zuerst, die Tür später.",
-        image: "/kitchens/stile-design.jpg",
-        alt: "Integrierte Kühlung",
+        image: APPLIANCE_PHOTOS.kaelte,
+        alt: "Edelstahl-Kühlschrank als Schrank",
+        brands: ["miele", "siemens"],
       },
       {
         href: "/geraete/spuelen",
         title: "Spülen",
         text: "Vollintegriert, oft neben der Spüle. Knock-to-open, wenn die Front grifflos bleibt.",
-        image: "/kitchens/stile-landhaus.jpg",
-        alt: "Integrierter Geschirrspüler",
+        image: APPLIANCE_PHOTOS.spuelen,
+        alt: "Vollintegrierter Geschirrspüler hinter der Front",
+        brands: ["miele", "siemens"],
       },
       {
         href: "/geraete/extra",
         title: "Extra",
         text: "Kaffee, Quooker, Vakuum. Nur was der Alltag trägt — mit Wasser und Ablauf gezeichnet.",
-        image: "/kitchens/stile-holz.jpg",
-        alt: "Kaffee in der Nische",
+        image: APPLIANCE_PHOTOS.extra,
+        alt: "Espressomaschine in der Nische",
+        brands: ["quooker", "miele"],
       },
     ],
   },
@@ -621,11 +628,11 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     emphasis: "as architecture.",
     lede: "Not a wall of machines. The ones everyday life needs — built into recess and tall housing, often unseen.",
     statement:
-      "In our kitchens the kit follows the room. Downdraft when a hood blocks the view. Appliances at hand height when the back asks for it. Brands by task, not by contract.",
+      "In our kitchens the kit follows the room. Downdraft when a hood blocks the view. Appliances at hand height when the back asks for it. Brands chosen freely, not by contract.",
     statementNote: "Bora, Miele, Gaggenau, Quooker, Siemens — chosen freely, built in by the workshop.",
-    heroImage: "/kitchens/stile-insel.jpg",
-    heroAlt: "Cooking island with integrated appliances",
-    indexEyebrow: "The tasks",
+    heroImage: APPLIANCE_PHOTOS.hero,
+    heroAlt: "Kitchen with stainless refrigerator and hob",
+    indexEyebrow: "Five areas",
     quote:
       "A machine you open every day belongs at the height of the hand. Not behind a show front nobody uses.",
     quoteSource: "From appliance planning",
@@ -639,36 +646,41 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
         href: "/geraete/kochen",
         title: "Cooking",
         text: "Induction, gas, downdraft. For islands and open rooms often more honest than a hood.",
-        image: "/kitchens/stile-insel.jpg",
-        alt: "Hob in the island",
+        image: APPLIANCE_PHOTOS.kochen,
+        alt: "Siemens induction hob in the worktop",
+        brands: ["bora", "siemens"],
       },
       {
         href: "/geraete/backen",
         title: "Baking & steam",
         text: "Oven, steam, warming drawer. In a tall housing you can reach — or under the top if the room wants that.",
-        image: "/kitchens/stile-purist.jpg",
-        alt: "Tall appliance housing",
+        image: APPLIANCE_PHOTOS.backen,
+        alt: "Built-in oven in a tall housing",
+        brands: ["miele", "gaggenau"],
       },
       {
         href: "/geraete/kaelte",
         title: "Cold",
         text: "Fully integrated or as a cabinet. Ventilation and recess first, the door later.",
-        image: "/kitchens/stile-design.jpg",
-        alt: "Integrated cooling",
+        image: APPLIANCE_PHOTOS.kaelte,
+        alt: "Stainless refrigerator as a cabinet",
+        brands: ["miele", "siemens"],
       },
       {
         href: "/geraete/spuelen",
         title: "Washing up",
         text: "Fully integrated, often next to the sink. Knock-to-open if the front stays handleless.",
-        image: "/kitchens/stile-landhaus.jpg",
-        alt: "Integrated dishwasher",
+        image: APPLIANCE_PHOTOS.spuelen,
+        alt: "Fully integrated dishwasher behind the front",
+        brands: ["miele", "siemens"],
       },
       {
         href: "/geraete/extra",
         title: "Extra",
         text: "Coffee, Quooker, vacuum. Only what everyday life carries — drawn with water and waste.",
-        image: "/kitchens/stile-holz.jpg",
-        alt: "Coffee in a recess",
+        image: APPLIANCE_PHOTOS.extra,
+        alt: "Espresso machine in a recess",
+        brands: ["quooker", "miele"],
       },
     ],
   },
