@@ -5,7 +5,6 @@ import ChapterIndex from "@/components/catalog/hub/ChapterIndex";
 import ChapterSpread from "@/components/catalog/hub/ChapterSpread";
 import CollectionHero from "@/components/catalog/hub/CollectionHero";
 import Interlude from "@/components/catalog/hub/Interlude";
-import LookStrip from "@/components/catalog/hub/LookStrip";
 import LookRail from "@/components/catalog/hub/LookRail";
 import PriceStance from "@/components/catalog/hub/PriceStance";
 import StatementSpread from "@/components/catalog/hub/StatementSpread";
@@ -41,10 +40,6 @@ export default function EditorialCollection({
         sentence={hub.ledgerLine}
       />
       <StatementSpread hub={hub} />
-      <LookStrip
-        looks={hub.filmstrip}
-        label={hub.locale === "en" ? "Looks" : "Ansichten"}
-      />
       <PriceStance line={hub.priceLine} />
 
       {hub.branches.length > 0 ? (

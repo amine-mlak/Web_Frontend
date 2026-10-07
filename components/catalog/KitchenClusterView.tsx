@@ -11,7 +11,6 @@ import CollectionSiblings from "@/components/catalog/hub/CollectionSiblings";
 import ColorField from "@/components/catalog/hub/ColorField";
 import Interlude from "@/components/catalog/hub/Interlude";
 import LookRail from "@/components/catalog/hub/LookRail";
-import LookStrip from "@/components/catalog/hub/LookStrip";
 import PriceStance from "@/components/catalog/hub/PriceStance";
 import StatementSpread from "@/components/catalog/hub/StatementSpread";
 import type { KitchenCluster, KitchenTopic, Project } from "@/lib/catalog";
@@ -52,10 +51,6 @@ export default function KitchenClusterView({
         sentence={hub.ledgerLine}
       />
       <StatementSpread hub={hub} />
-      <LookStrip
-        looks={hub.filmstrip}
-        label={locale === "en" ? "Looks" : "Ansichten"}
-      />
       <PriceStance line={hub.priceLine} />
       <ColorField swatches={hub.swatches} eyebrow={hub.indexEyebrow} />
 
