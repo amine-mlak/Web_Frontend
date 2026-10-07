@@ -13,10 +13,7 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
       : hub.parentHref && hub.parentLabel
         ? [{ href: hub.parentHref, label: hub.parentLabel }]
         : [];
-  const devNote =
-    hub.locale === "en"
-      ? "Development photography — workshop images follow"
-      : "Entwicklungsfotografie — Werkstattbilder folgen";
+  const filmstripLabel = hub.locale === "en" ? "Looks" : "Ansichten";
 
   return (
     <>
@@ -112,7 +109,7 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
         </div>
       </section>
 
-      <section aria-label={devNote} className="bg-nacht">
+      <section aria-label={filmstripLabel} className="bg-nacht">
         <ul className="grid grid-cols-2 lg:grid-cols-4">
           {hub.filmstrip.map((look, index) => (
             <li key={look.src} className="relative min-w-0">
@@ -140,9 +137,6 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
             </li>
           ))}
         </ul>
-        <p className="border-t border-paper/10 px-5 py-3 font-sans text-[10px] tracking-[0.18em] text-paper/45 uppercase sm:px-8 lg:px-14">
-          {devNote}
-        </p>
       </section>
     </>
   );
