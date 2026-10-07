@@ -3,10 +3,16 @@ import CmsImage from "@/components/CmsImage";
 import type { PresentedHub } from "@/lib/collection-present";
 
 export default function CollectionHero({ hub }: { hub: PresentedHub }) {
-  const chaptersHref = "#manufaktur-index";
-  const chapterCount = String(Math.max(hub.branches.length, 1)).padStart(2, "0");
-  const chapterWord = hub.locale === "en" ? "Chapters" : "Kapitel";
-  const readChapters = hub.locale === "en" ? "Read the chapters" : "Kapitel lesen";
+  const overviewHref = "#manufaktur-index";
+  const topicCount = String(Math.max(hub.branches.length, 1)).padStart(2, "0");
+  const topicWord = hub.locale === "en" ? "Topics" : "Themen";
+  const readTopics = hub.locale === "en" ? "To the overview" : "Zur Übersicht";
+  const crumbs =
+    hub.crumbs && hub.crumbs.length > 0
+      ? hub.crumbs
+      : hub.parentHref && hub.parentLabel
+        ? [{ href: hub.parentHref, label: hub.parentLabel }]
+        : [];
   const devNote =
     hub.locale === "en"
       ? "Development photography — workshop images follow"
@@ -42,26 +48,37 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
               {hub.placeLine}
             </p>
             <p className="hidden font-sans text-[11px] tracking-[0.22em] text-paper/70 uppercase sm:block">
-              {chapterCount} {chapterWord}
+              {topicCount} {topicWord}
             </p>
           </div>
 
           <div className="max-w-4xl py-10 lg:py-16">
             <p className="font-sans text-[11px] font-medium tracking-[0.28em] text-messing uppercase">
-              {hub.parentHref && hub.parentLabel ? (
-                <>
+              {crumbs.map((crumb, index) => (
+                <span key={`${crumb.href}-${crumb.label}`}>
+                  {index > 0 ? (
+                    <span className="mx-2 text-paper/40" aria-hidden="true">
+                      /
+                    </span>
+                  ) : null}
                   <LocaleLink
-                    href={hub.parentHref}
+                    href={crumb.href}
                     className="transition-opacity hover:opacity-70"
                   >
-                    {hub.parentLabel}
+                    {crumb.label}
                   </LocaleLink>
-                  <span className="mx-2 text-paper/40" aria-hidden="true">
-                    /
-                  </span>
+                </span>
+              ))}
+              {hub.eyebrow ? (
+                <>
+                  {crumbs.length > 0 ? (
+                    <span className="mx-2 text-paper/40" aria-hidden="true">
+                      /
+                    </span>
+                  ) : null}
+                  {hub.eyebrow}
                 </>
               ) : null}
-              {hub.eyebrow}
             </p>
             <h1
               id="collection-hero-heading"
@@ -71,6 +88,18 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
               <br />
               <em className="font-medium italic">{hub.emphasis}</em>
             </h1>
+            {hub.hex ? (
+              <p className="mt-6 flex items-center gap-3">
+                <span
+                  className="size-5 rounded-full border border-paper/35"
+                  style={{ backgroundColor: hub.hex }}
+                  aria-hidden
+                />
+                <span className="font-sans text-[11px] tracking-[0.22em] text-paper/70 uppercase">
+                  {hub.hex}
+                </span>
+              </p>
+            ) : null}
             <p className="mt-8 max-w-xl font-sans text-[17px] leading-relaxed font-light text-paper/85 md:text-[20px]">
               {hub.lede}
             </p>
@@ -78,8 +107,8 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
               <LocaleLink href={hub.ctaHref} className="pill pill-light">
                 {hub.ctaLabel}
               </LocaleLink>
-              <a href={chaptersHref} className="pill pill-ghost-dark">
-                {readChapters}
+              <a href={overviewHref} className="pill pill-ghost-dark">
+                {readTopics}
               </a>
             </div>
           </div>

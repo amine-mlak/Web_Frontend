@@ -32,10 +32,10 @@ export default function KitchenClusterView({
   locale: Locale;
 }) {
   const hub = presentCluster(cluster.slug, locale, topics, projects);
-  const continueLabel = locale === "en" ? "Open this chapter" : "Kapitel öffnen";
+  const continueLabel = locale === "en" ? "Open this" : "Öffnen";
   const asideEyebrow = locale === "en" ? "Worth knowing" : "Gut zu wissen";
   const indexHint =
-    locale === "en" ? "Jump to a chapter" : "Zum Kapitel springen";
+    locale === "en" ? "To the overview" : "Zur Übersicht";
   const housesTitle = locale === "en" ? "Houses, not halls" : "Häuser, nicht Hallen";
   const siblingsEyebrow = locale === "en" ? "Further collections" : "Weitere Sammlungen";
   const siblingsTitle =

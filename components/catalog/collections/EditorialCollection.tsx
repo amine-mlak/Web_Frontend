@@ -22,13 +22,13 @@ export default function EditorialCollection({
   extrasTitle?: string;
   children?: ReactNode;
 }) {
-  const continueLabel = hub.locale === "en" ? "Open this chapter" : "Kapitel öffnen";
+  const continueLabel = hub.locale === "en" ? "Open this" : "Öffnen";
   const lookTitle =
     hub.locale === "en"
       ? "Surfaces before the drawing."
       : "Oberflächen vor der Zeichnung.";
   const indexHint =
-    hub.locale === "en" ? "Jump to a chapter" : "Zum Kapitel springen";
+    hub.locale === "en" ? "To the overview" : "Zur Übersicht";
 
   return (
     <main className="bg-paper">

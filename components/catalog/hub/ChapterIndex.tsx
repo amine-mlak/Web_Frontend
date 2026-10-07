@@ -5,7 +5,7 @@ function hashHref(href: string | undefined, index: number) {
   if (href?.includes("#")) {
     return href.slice(href.indexOf("#"));
   }
-  return `#kapitel-${index + 1}`;
+  return `#thema-${index + 1}`;
 }
 
 export default function ChapterIndex({

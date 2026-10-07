@@ -87,7 +87,6 @@ function Points({
 export default function ChapterSpread({
   branch,
   index,
-  locale,
   continueLabel,
 }: {
   branch: PresentedBranch;
@@ -96,9 +95,8 @@ export default function ChapterSpread({
   continueLabel: string;
 }) {
   const variant = index % 5;
-  const id = hashId(branch.href) ?? `kapitel-${index + 1}`;
-  const kicker =
-    locale === "en" ? `Chapter ${branch.kicker}` : `Kapitel ${branch.kicker}`;
+  const id = hashId(branch.href) ?? `thema-${index + 1}`;
+  const kicker = branch.kicker;
 
   if (variant === 0) {
     return (
