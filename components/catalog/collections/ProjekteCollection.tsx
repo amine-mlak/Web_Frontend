@@ -24,7 +24,7 @@ export default function ProjekteCollection({
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
           <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
           <p className="font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
-            {dossier} · {hub.placeLine}
+            {dossier}
           </p>
         </div>
         <div className="mt-10 grid items-end gap-10 lg:grid-cols-12">

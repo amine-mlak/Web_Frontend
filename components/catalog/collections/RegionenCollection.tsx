@@ -47,9 +47,6 @@ export default function RegionenCollection({
             </div>
           </div>
         </div>
-        <p className="mt-8 font-sans text-[12px] tracking-[0.2em] text-muted uppercase">
-          {centre}: {hub.placeLine}
-        </p>
         <LocaleLink href={hub.ctaHref} className="pill pill-primary mt-10">
           {hub.ctaLabel}
         </LocaleLink>

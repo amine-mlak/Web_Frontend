@@ -40,7 +40,7 @@ export default function MaterialCollection({
           sizes="100vw"
         />
         <p className="mt-3 font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
-          {daylight} · {hub.placeLine}
+          {daylight}
         </p>
         <ul className="mt-10 grid grid-cols-2 border-y border-line sm:grid-cols-4">
           {hub.facts.map((fact) => (

@@ -17,9 +17,6 @@ export default function GeraeteCollection({
     <main className="bg-nacht text-paper">
       <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-14 lg:pt-20" aria-labelledby="geraete-hero">
         <div className="flex flex-wrap items-end justify-between gap-6 border-b border-paper/15 pb-6">
-          <p className="font-sans text-[11px] tracking-[0.28em] text-messing uppercase">
-            {hub.placeLine}
-          </p>
           <p className="font-sans text-[11px] tracking-[0.22em] text-paper/50 uppercase">
             {sheet} 01 · {hub.eyebrow}
           </p>

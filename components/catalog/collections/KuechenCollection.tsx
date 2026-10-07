@@ -66,14 +66,9 @@ export default function KuechenCollection({
 
       <section aria-labelledby="kuechen-doors" className="bg-paper">
         <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14">
-          <div className="flex items-end justify-between gap-6">
-            <h2 id="kuechen-doors" className="type-h2">
-              {hub.indexEyebrow}
-            </h2>
-            <p className="hidden max-w-xs text-right font-sans text-[13px] tracking-[0.14em] text-muted uppercase sm:block">
-              {hub.placeLine}
-            </p>
-          </div>
+          <h2 id="kuechen-doors" className="type-h2">
+            {hub.indexEyebrow}
+          </h2>
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
             {hub.branches.map((branch, index) => {
               const wide = index === 0;

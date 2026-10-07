@@ -43,11 +43,8 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
         />
 
         <div className="relative z-10 flex min-h-[100svh] flex-col justify-between px-5 pt-24 pb-10 sm:px-8 lg:px-14 lg:pt-28 lg:pb-14">
-          <div className="flex items-center justify-between gap-6 border-b border-paper/20 pb-4">
-            <p className="font-sans text-[11px] font-medium tracking-[0.28em] text-messing uppercase">
-              {hub.placeLine}
-            </p>
-            <p className="hidden font-sans text-[11px] tracking-[0.22em] text-paper/70 uppercase sm:block">
+          <div className="flex items-center justify-end gap-6 border-b border-paper/20 pb-4">
+            <p className="font-sans text-[11px] tracking-[0.22em] text-paper/70 uppercase">
               {topicCount} {topicWord}
             </p>
           </div>
