@@ -1,30 +1,31 @@
 import HeroCarousel, { type HeroPanel } from "@/components/HeroCarousel";
+import { beerNamed } from "@/lib/beer-photos";
 import { type HeroSlide } from "@/lib/strapi";
 
 const fallbackSlides: HeroSlide[] = [
   {
-    src: "/kitchens/stile-modern.jpg",
-    alt: "Graue moderne Küche mit weißer Rückwand",
+    src: beerNamed("stile-modern.jpg"),
+    alt: "Moderne Wohnküche von BEER",
   },
   {
-    src: "/kitchens/stile-landhaus.jpg",
-    alt: "Salbeigrüne Landhausküche",
+    src: beerNamed("stile-landhaus.jpg"),
+    alt: "Elegante Landhausküche von BEER",
   },
   {
-    src: "/kitchens/stile-design.jpg",
-    alt: "Schwarze Designküche mit Eiche",
+    src: beerNamed("stile-design.jpg"),
+    alt: "Designküche in Glas und Stein von BEER",
   },
   {
-    src: "/kitchens/stile-holz.jpg",
-    alt: "Weiße Küche mit Holz und Naturstein",
+    src: beerNamed("stile-holz.jpg"),
+    alt: "Holzküche von BEER",
   },
   {
-    src: "/kitchens/stile-insel.jpg",
-    alt: "Helle Küche mit Insel",
+    src: beerNamed("stile-insel.jpg"),
+    alt: "Küche mit Insel von BEER",
   },
   {
-    src: "/kitchens/stile-purist.jpg",
-    alt: "Puristische Küche mit anthrazitfarbenem Stein",
+    src: beerNamed("stile-purist.jpg"),
+    alt: "Puristische Küche von BEER",
   },
 ];
 

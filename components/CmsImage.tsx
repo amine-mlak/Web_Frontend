@@ -1,4 +1,5 @@
 import Image, { type ImageProps } from "next/image";
+import { siteImage } from "@/lib/dev-images";
 import { cn } from "@/lib/utils";
 
 type CmsImageProps = ImageProps & {
@@ -17,13 +18,14 @@ export default function CmsImage({
   quality: _quality,
   ...props
 }: CmsImageProps) {
-  const srcString = typeof src === "string" ? src : "";
+  const raw = typeof src === "string" ? src : "";
+  const srcString = siteImage(raw);
+  const remapped = srcString !== raw;
   const proxied = srcString.startsWith("/cms-uploads/");
-  const kitchenOriginal = srcString.startsWith("/kitchens/");
   const instagramOriginal = srcString.startsWith("/instagram/");
   const remote = /^https?:\/\//.test(srcString);
   const native =
-    Boolean(srcSet) || proxied || remote || kitchenOriginal || instagramOriginal;
+    remapped || Boolean(srcSet) || proxied || remote || instagramOriginal;
 
   if (native) {
     return (
@@ -31,7 +33,7 @@ export default function CmsImage({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={srcString}
-        srcSet={srcSet}
+        srcSet={remapped ? undefined : srcSet}
         sizes={typeof sizes === "string" ? sizes : undefined}
         alt={alt}
         decoding="async"
