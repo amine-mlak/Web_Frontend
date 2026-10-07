@@ -10,6 +10,7 @@ import type {
   Project,
   Region,
 } from "@/lib/catalog";
+import { articleHref } from "@/lib/catalog";
 
 export function projectCards(projects: Project[]): CatalogCardItem[] {
   return projects.map((project) => ({
@@ -91,7 +92,7 @@ export function materialCards(items: Material[]): CatalogCardItem[] {
 
 export function articleCards(items: Article[]): CatalogCardItem[] {
   return items.map((item) => ({
-    href: `/ratgeber/${item.slug}`,
+    href: articleHref(item),
     title: item.title,
     image: item.image,
     srcSet: item.srcSet,

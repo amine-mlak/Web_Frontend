@@ -8,6 +8,7 @@ import {
   FALLBACK_PROJECTS,
   FALLBACK_REGIONS,
   FALLBACK_TOPICS,
+  isPressArticle,
   type Appliance,
   type ApplianceKind,
   type Article,
@@ -368,7 +369,7 @@ export async function fetchMaterials() {
 }
 
 export async function fetchArticles() {
-  return loadMapped(
+  const items = await loadMapped(
     "/api/articles",
     {
       sort: "createdAt:desc",
@@ -380,6 +381,16 @@ export async function fetchArticles() {
     mapArticle,
     FALLBACK_ARTICLES,
   );
+  if (items.some(isPressArticle)) {
+    return items;
+  }
+  const seen = new Set(items.map((item) => item.slug));
+  return [
+    ...items,
+    ...FALLBACK_ARTICLES.filter(
+      (item) => isPressArticle(item) && !seen.has(item.slug),
+    ),
+  ];
 }
 
 export async function fetchSitePages() {

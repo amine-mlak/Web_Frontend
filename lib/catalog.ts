@@ -109,6 +109,16 @@ export type Article = {
   category?: ArticleCategory;
 };
 
+export const PRESS_CATEGORY_SLUG = "presse";
+
+export function isPressArticle(item: Article) {
+  return item.category?.slug === PRESS_CATEGORY_SLUG;
+}
+
+export function articleHref(item: Article) {
+  return isPressArticle(item) ? `/presse/${item.slug}` : `/ratgeber/${item.slug}`;
+}
+
 export type SitePage = {
   slug: string;
   eyebrow: string;

@@ -20,6 +20,7 @@ export default async function ProjektePage() {
     image: project.image,
     srcSet: project.srcSet,
     alt: project.title,
+    meta: [project.place, project.year].filter(Boolean).join(" · "),
   }));
   const extras = projects.slice(3).map((project) => ({
     href: `/projekte/${project.slug}`,

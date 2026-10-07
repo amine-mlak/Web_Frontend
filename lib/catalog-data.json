@@ -247,13 +247,22 @@
       "category": "geraete",
       "image": "/kitchens/stile-design.jpg",
       "body": "Offene Räume und Inseln vertragen oft keinen Hut über dem Herd. Der Abzug braucht Platz unter der Platte. Intensives Braten prüfen wir an beiden Varianten, ohne Verkaufsdruck."
+    },
+    {
+      "slug": "ausstellung-wolfersdorf-oeffnungszeiten",
+      "title": "Ausstellung Wolfersdorf: bitte mit Termin",
+      "description": "Ausstellung Wolfersdorf nur mit Termin. Muster unter Tageslicht.",
+      "category": "presse",
+      "image": "/kitchens/stile-landhaus.jpg",
+      "body": "Wer BEER sehen will, kommt nach Wolfersdorf bei Freising. Die Ausstellung ist kein Möbelhaus. Wir öffnen die Muster, Kanten und gebauten Details mit Termin — damit das Gespräch beim Haus beginnt, nicht an der Tür. Das Erstgespräch ist kostenlos. Die Küche nicht."
     }
   ],
   "categories": [
     {"slug":"kosten","name":"Kosten"},
     {"slug":"planung","name":"Küchenplanung"},
     {"slug":"geraete","name":"Geräte & Technik"},
-    {"slug":"material","name":"Material & Pflege"}
+    {"slug":"material","name":"Material & Pflege"},
+    {"slug":"presse","name":"Aktuelles & Presse"}
   ],
   "pages": [
     {

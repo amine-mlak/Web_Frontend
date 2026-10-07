@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const strapiUrl =
   process.env.STRAPI_URL ??
   process.env.NEXT_PUBLIC_STRAPI_URL ??
-  "http://strapi-2p2cktq4f2aqoklpusgyfdqt.217.160.8.26.sslip.io";
+  "https://cms.beer.de";
 
 const strapiHost = new URL(strapiUrl).hostname;
 

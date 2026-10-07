@@ -9,6 +9,7 @@ export type CollectionBranch = {
   image: string;
   srcSet?: string;
   alt: string;
+  meta?: string;
 };
 
 export type CollectionHubCopy = {
@@ -121,28 +122,28 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
       "Stein, Lack und Holz ändern sich mit dem Wetter. Deshalb liegen die Muster in Wolfersdorf, nicht nur auf dem Bildschirm.",
     branches: [
       {
-        href: "/material#fronten",
+        href: "/material/fronten",
         title: "Fronten",
         text: "Lack, Furnier, Fenix. Matt, seidenmatt, Holzsicht. Die Fläche, die den Raum hält.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Ruhige Küchenfronten",
       },
       {
-        href: "/material#arbeitsplatten",
+        href: "/material/arbeitsplatten",
         title: "Arbeitsplatten",
         text: "Naturstein, Keramik, Edelstahl, Holz. Die Fläche, auf der gearbeitet wird — nicht nur fotografiert.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Naturstein-Arbeitsplatte",
       },
       {
-        href: "/material#innenleben",
+        href: "/material/innenleben",
         title: "Innenleben",
         text: "Vollauszüge, Ecken, Vorrat. Was man nicht sieht, entscheidet den Tag öfter als die Farbe.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Präzises Innenleben",
       },
       {
-        href: "/material#spuele",
+        href: "/material/spuele",
         title: "Spüle & Armatur",
         text: "Unterbau, Stein, Quooker. Mit der Platte gezeichnet, nicht als Nachtrag in den Unterschrank geschoben.",
         image: "/kitchens/stile-insel.jpg",
@@ -171,35 +172,35 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
       "Lüftung, Wasser, Kabelführung. Bevor ein Gerät eine Überschrift wird, sitzt es im Aufmaß.",
     branches: [
       {
-        href: "/geraete#kochen",
+        href: "/geraete/kochen",
         title: "Kochen",
         text: "Induktion, Gas, Kochfeldabzug. Für Inseln und offene Räume oft ehrlicher als die Esse.",
         image: "/kitchens/stile-insel.jpg",
         alt: "Kochfeld in der Insel",
       },
       {
-        href: "/geraete#backen",
+        href: "/geraete/backen",
         title: "Backen & Dämpfen",
         text: "Ofen, Dampf, Wärmeschublade. Im Hochschrank, wo man sie erreicht — oder unter der Platte, wenn der Raum das will.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Gerätehochschrank",
       },
       {
-        href: "/geraete#kaelte",
+        href: "/geraete/kaelte",
         title: "Kälte",
         text: "Vollintegriert oder als Schrank. Lüftung und Nische zuerst, die Tür später.",
         image: "/kitchens/stile-design.jpg",
         alt: "Integrierte Kühlung",
       },
       {
-        href: "/geraete#spuelen",
+        href: "/geraete/spuelen",
         title: "Spülen",
         text: "Vollintegriert, oft neben der Spüle. Knock-to-open, wenn die Front grifflos bleibt.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Integrierter Geschirrspüler",
       },
       {
-        href: "/geraete#extra",
+        href: "/geraete/extra",
         title: "Extra",
         text: "Kaffee, Quooker, Vakuum. Nur was der Alltag trägt — mit Wasser und Ablauf gezeichnet.",
         image: "/kitchens/stile-holz.jpg",
@@ -489,6 +490,13 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
         alt: "Küche in einem Haus",
       },
       {
+        href: "/presse",
+        title: "Aktuelles",
+        text: "Termine, Presse, was in der Manufaktur ansteht. Kein Nachrichtenstrom — wenige Meldungen, wenn es etwas zu sagen gibt.",
+        image: "/kitchens/stile-insel.jpg",
+        alt: "Aktuelles aus der Manufaktur",
+      },
+      {
         href: "/regionen",
         title: "Radius",
         text: "Ausstellung Wolfersdorf. Montage im Umland Münchens. Weiter fort nur, wenn der Weg zur Manufaktur noch trägt.",
@@ -578,28 +586,28 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
       "Stone, lacquer and wood change with the weather. The samples sit in Wolfersdorf, not only on a screen.",
     branches: [
       {
-        href: "/material#fronten",
+        href: "/material/fronten",
         title: "Fronts",
         text: "Lacquer, veneer, Fenix. Matt, silk, visible wood. The plane that holds the room.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Quiet kitchen fronts",
       },
       {
-        href: "/material#arbeitsplatten",
+        href: "/material/arbeitsplatten",
         title: "Worktops",
         text: "Natural stone, ceramic, steel, wood. The plane you work on — not only photograph.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Natural stone worktop",
       },
       {
-        href: "/material#innenleben",
+        href: "/material/innenleben",
         title: "Interiors",
         text: "Full-extension drawers, corners, stores. What you do not see decides the day more often than the colour.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Precise interiors",
       },
       {
-        href: "/material#spuele",
+        href: "/material/spuele",
         title: "Sink & tap",
         text: "Undermount, stone, Quooker. Drawn with the top, not pushed into the cupboard afterwards.",
         image: "/kitchens/stile-insel.jpg",
@@ -628,35 +636,35 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
       "Ventilation, water, cable. Before an appliance becomes a headline, it sits in the survey.",
     branches: [
       {
-        href: "/geraete#kochen",
+        href: "/geraete/kochen",
         title: "Cooking",
         text: "Induction, gas, downdraft. For islands and open rooms often more honest than a hood.",
         image: "/kitchens/stile-insel.jpg",
         alt: "Hob in the island",
       },
       {
-        href: "/geraete#backen",
+        href: "/geraete/backen",
         title: "Baking & steam",
         text: "Oven, steam, warming drawer. In a tall housing you can reach — or under the top if the room wants that.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Tall appliance housing",
       },
       {
-        href: "/geraete#kaelte",
+        href: "/geraete/kaelte",
         title: "Cold",
         text: "Fully integrated or as a cabinet. Ventilation and recess first, the door later.",
         image: "/kitchens/stile-design.jpg",
         alt: "Integrated cooling",
       },
       {
-        href: "/geraete#spuelen",
+        href: "/geraete/spuelen",
         title: "Washing up",
         text: "Fully integrated, often next to the sink. Knock-to-open if the front stays handleless.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Integrated dishwasher",
       },
       {
-        href: "/geraete#extra",
+        href: "/geraete/extra",
         title: "Extra",
         text: "Coffee, Quooker, vacuum. Only what everyday life carries — drawn with water and waste.",
         image: "/kitchens/stile-holz.jpg",
@@ -944,6 +952,13 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
         text: "References in Munich, Freising, Erding. What we show stands. What we do not show belongs to the people who live there.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Kitchen in a house",
+      },
+      {
+        href: "/presse",
+        title: "News",
+        text: "Dates, press, what is happening in the workshop. Not a newsfeed — few notes, when there is something to say.",
+        image: "/kitchens/stile-insel.jpg",
+        alt: "News from the workshop",
       },
       {
         href: "/regionen",

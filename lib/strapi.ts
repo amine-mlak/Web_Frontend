@@ -11,8 +11,7 @@ import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
-const FALLBACK_STRAPI_URL =
-  "http://strapi-2p2cktq4f2aqoklpusgyfdqt.217.160.8.26.sslip.io";
+const FALLBACK_STRAPI_URL = "https://cms.beer.de";
 
 export const STRAPI_URL = (
   process.env.STRAPI_URL ??
@@ -998,11 +997,14 @@ function mapHeaderMenus(menus: StrapiHeaderMenu[]): MenuPanel[] {
           .map((group) => ({
             title: group.title?.trim() || undefined,
             links: (group.links ?? [])
-              .map((link) => ({
-                label: link.label?.trim() || "",
-                href: link.url?.trim() || "#",
-                highlight: Boolean(link.highlight),
-              }))
+              .map((link) => {
+                const label = link.label?.trim() || "";
+                return {
+                  label,
+                  href: pressCollectionHref(label, link.url?.trim() || "#"),
+                  highlight: Boolean(link.highlight),
+                };
+              })
               .filter((link) => link.label),
           }))
           .filter((group) => group.links.length > 0),
@@ -1058,12 +1060,27 @@ type StrapiFooterSocial = {
   icon?: string;
 };
 
+function pressCollectionHref(label: string, href: string) {
+  if (
+    href === "/ratgeber" &&
+    /^(presse|press|aktuelles(?:\s*&\s*presse)?|news(?:\s*&\s*press)?)$/i.test(
+      label.trim(),
+    )
+  ) {
+    return "/presse";
+  }
+  return href;
+}
+
 function mapFooterLinks(links?: StrapiFooterLink[]) {
   return (links ?? [])
-    .map((link) => ({
-      label: link.label?.trim() || "",
-      href: link.href?.trim() || "#",
-    }))
+    .map((link) => {
+      const label = link.label?.trim() || "";
+      return {
+        label,
+        href: pressCollectionHref(label, link.href?.trim() || "#"),
+      };
+    })
     .filter((link) => link.label);
 }
 

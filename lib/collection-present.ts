@@ -27,10 +27,17 @@ export type PresentedBranch = CollectionBranch & {
   hex?: string;
 };
 
+export type HubCrumb = {
+  href: string;
+  label: string;
+};
+
 export type PresentedHub = Omit<CollectionHubCopy, "branches"> & {
   id?: CollectionHubId;
   parentHref?: string;
   parentLabel?: string;
+  crumbs?: HubCrumb[];
+  hex?: string;
   locale: Locale;
   statementImage: string;
   statementImageB: string;
