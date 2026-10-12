@@ -1,0 +1,15 @@
+---
+description: Canonical BEER n8n and Strapi hosts — never mix them up
+alwaysApply: true
+---
+
+# BEER hosts
+
+- **n8n** is `https://n8n.beer.de` (editor, chat, webhooks). It is not Strapi.
+- **Strapi** is `https://cms.beer.de` (admin `/admin`, API `/api`). It is not n8n.
+- Next.js `STRAPI_URL` / fallback: `https://cms.beer.de`.
+- Live DNS is `89.58.45.227`. Ignore `*.sslip.io` copies on coolify.webentwicklung.tech.
+- **Coolify** is `https://srv.beer.de`. It is not n8n or Strapi.
+- CMS news chat drafts into `cms.beer.de` only. Never publish from n8n.
+- OpenAPI is public at `https://cms.beer.de/documentation` (no password).
+- Details: `docs/hosts-cms-n8n.txt`

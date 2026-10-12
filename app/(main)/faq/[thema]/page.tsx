@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FaqHub from "@/components/FaqHub";
 import { filterFaqItems } from "@/lib/faq";
+import { pageMetadata } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
 
 export const revalidate = 120;
@@ -27,12 +28,13 @@ export async function generateMetadata({
 
   const count = filterFaqItems(items, theme.slug).length;
 
-  return {
+  return pageMetadata({
     title: theme.seoTitle || `FAQ ${theme.name} | BEER Küchenmanufaktur`,
     description:
       theme.seoDescription ||
       `${count} Fragen zu ${theme.name} – Küchenmanufaktur BEER in Wolfersdorf.`,
-  };
+    path: `/faq/${theme.slug}`,
+  });
 }
 
 export default async function FaqThemePage({

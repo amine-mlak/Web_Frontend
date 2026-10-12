@@ -4,20 +4,23 @@ import { articleCards } from "@/lib/catalog-cards";
 import { isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return locale === "en"
-    ? {
+    ? pageMetadata({
         title: "News | BEER Küchenmanufaktur",
         description: "Dates and notes from the workshop in Wolfersdorf.",
-      }
-    : {
+        path: "/presse",
+      })
+    : pageMetadata({
         title: "Aktuelles | BEER Küchenmanufaktur",
         description: "Termine und Meldungen aus der Manufaktur in Wolfersdorf.",
-      };
+        path: "/presse",
+      });
 }
 
 export default async function PressePage() {

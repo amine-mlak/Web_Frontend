@@ -9,6 +9,8 @@ import {
   topicsInCluster,
 } from "@/lib/catalog";
 import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
+import { topicMetadata } from "@/lib/collection-topics";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -31,10 +33,7 @@ export async function generateMetadata({
   if (!topic || topic.cluster !== cluster) {
     return { title: "Küchen | BEER Küchenmanufaktur" };
   }
-  return {
-    title: `${topic.name} | BEER Küchenmanufaktur`,
-    description: topic.intro,
-  };
+  return topicMetadata(topic);
 }
 
 export default async function KitchenTopicPage({
@@ -46,7 +45,8 @@ export default async function KitchenTopicPage({
   if (!isKitchenCluster(cluster)) {
     notFound();
   }
-  const [topics, projects] = await Promise.all([
+  const [locale, topics, projects] = await Promise.all([
+    getRequestLocale(),
     fetchKitchenTopics(),
     fetchProjects(),
   ]);
@@ -59,14 +59,24 @@ export default async function KitchenTopicPage({
     notFound();
   }
 
+  const inCluster = topicsInCluster(topics, topic.cluster);
+  const related = projectsForTopic(projects, topic.slug);
+  const houses =
+    related.length > 0
+      ? related
+      : projects
+          .filter((project) =>
+            project.topics.some((item) => item.cluster === cluster),
+          )
+          .slice(0, 4);
+
   return (
     <KitchenTopicView
       cluster={clusterMeta}
       topic={topic}
-      siblings={topicsInCluster(topics, topic.cluster).filter(
-        (item) => item.slug !== topic.slug,
-      )}
-      projects={projectsForTopic(projects, topic.slug)}
+      topics={inCluster}
+      projects={houses}
+      locale={locale}
     />
   );
 }

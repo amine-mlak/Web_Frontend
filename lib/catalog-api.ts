@@ -24,6 +24,7 @@ import {
   type Region,
   type SitePage,
 } from "@/lib/catalog";
+import { CMS_NAMED } from "@/lib/cms-photos";
 import {
   flattenCollection,
   flattenEntity,
@@ -32,6 +33,10 @@ import {
   strapiResponsiveImage,
   type StrapiMedia,
 } from "@/lib/strapi";
+
+function stile(file: string) {
+  return CMS_NAMED[file] || `/kitchens/${file}`;
+}
 
 const LIST_QUERY = {
   "pagination[pageSize]": "100",
@@ -68,7 +73,7 @@ function mapTopic(entry: unknown): KitchenTopic | null {
   if (!slug || !name || !cluster) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-modern.jpg");
+  const image = mediaImage(row, "image", stile("stile-modern.jpg"));
   return {
     slug,
     name,
@@ -87,7 +92,7 @@ function mapBrand(entry: unknown): Brand | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-insel.jpg");
+  const image = mediaImage(row, "image", stile("stile-insel.jpg"));
   return {
     slug,
     name,
@@ -106,7 +111,7 @@ function mapAppliance(entry: unknown): Appliance | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-modern.jpg");
+  const image = mediaImage(row, "image", stile("stile-modern.jpg"));
   return {
     slug,
     name,
@@ -125,7 +130,7 @@ function mapFurniture(entry: unknown): Furniture | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-holz.jpg");
+  const image = mediaImage(row, "image", stile("stile-holz.jpg"));
   return {
     slug,
     name,
@@ -144,7 +149,7 @@ function mapRegion(entry: unknown): Region | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-modern.jpg");
+  const image = mediaImage(row, "image", stile("stile-modern.jpg"));
   return {
     slug,
     name,
@@ -161,7 +166,7 @@ function mapMaterial(entry: unknown): Material | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-holz.jpg");
+  const image = mediaImage(row, "image", stile("stile-holz.jpg"));
   return {
     slug,
     name,
@@ -189,7 +194,7 @@ function mapProject(entry: unknown): Project | null {
   if (!slug || !title) {
     return null;
   }
-  const image = mediaImage(row, "image", "/kitchens/stile-holz.jpg");
+  const image = mediaImage(row, "image", stile("stile-holz.jpg"));
   return {
     slug,
     title,
@@ -233,7 +238,7 @@ function mapArticle(entry: unknown): Article | null {
   if (!title) {
     return null;
   }
-  const image = mediaImage(row, "cover", "/kitchens/stile-holz.jpg");
+  const image = mediaImage(row, "cover", stile("stile-holz.jpg"));
   const bodyFromBlocks = flattenCollection(row?.blocks)
     .map((block) => text(block, "body"))
     .filter(Boolean)

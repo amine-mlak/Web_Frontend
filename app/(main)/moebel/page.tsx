@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
-import { collectionHubMetadata } from "@/lib/collection-hubs";
+import { fetchFurniture } from "@/lib/catalog-api";
+import {
+  collectionHub,
+  collectionHubMetadata,
+  overlayBranchImages,
+} from "@/lib/collection-hubs";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -11,5 +16,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function MoebelPage() {
   const locale = await getRequestLocale();
-  return <CollectionHub id="moebel" locale={locale} />;
+  const items = await fetchFurniture();
+  const images: Record<string, string> = {};
+  for (const item of items) {
+    images[`/moebel/${item.slug}`] = item.image;
+  }
+  return (
+    <CollectionHub
+      id="moebel"
+      locale={locale}
+      branches={overlayBranchImages(collectionHub("moebel", locale).branches, images)}
+    />
+  );
 }

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import MagazinePage from "@/components/catalog/hub/MagazinePage";
 import { findBySlug, projectsForRegion } from "@/lib/catalog";
-import { projectCards } from "@/lib/catalog-cards";
 import { fetchProjects, fetchRegions } from "@/lib/catalog-api";
+import { entryMetadata, presentRegionItem } from "@/lib/collection-entries";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -21,10 +22,12 @@ export async function generateMetadata({
   if (!item) {
     return { title: "Region | BEER Küchenmanufaktur" };
   }
-  return {
-    title: `Küche ${item.name} | BEER Küchenmanufaktur`,
-    description: item.intro,
-  };
+  return entryMetadata(
+    `Küchen in ${item.name}`,
+    item.intro,
+    `/regionen/${item.slug}`,
+    item.image,
+  );
 }
 
 export default async function RegionPage({
@@ -33,7 +36,8 @@ export default async function RegionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [regions, projects] = await Promise.all([
+  const [locale, regions, projects] = await Promise.all([
+    getRequestLocale(),
     fetchRegions(),
     fetchProjects(),
   ]);
@@ -41,15 +45,12 @@ export default async function RegionPage({
   if (!item) {
     notFound();
   }
+  const related = projectsForRegion(projects, item.slug);
+  const houses = related.length > 0 ? related : projects.slice(0, 4);
+
   return (
-    <DetailPage
-      eyebrow="Region"
-      title={`Küchen in ${item.name}`}
-      intro={item.intro}
-      image={item.image}
-      relatedTitle="Referenzen in der Nähe"
-      related={projectCards(projectsForRegion(projects, item.slug))}
-      ctaLabel="Beratung in dieser Region"
+    <MagazinePage
+      hub={presentRegionItem(item, locale, regions, houses)}
     />
   );
 }

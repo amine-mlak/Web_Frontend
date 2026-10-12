@@ -1,0 +1,19 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "BEER CMS API",
+    "description": "OpenAPI for the self-hosted Community Strapi of BEER Küchenmanufaktur. Restricted Access must stay on.",
+    "contact": {
+      "name": "BEER Küchenmanufaktur",
+      "url": "https://beer-kuechenmanufaktur.de"
+    }
+  },
+  "x-strapi-config": {
+    "path": "/documentation",
+    "showGeneratedFiles": true,
+    "generateDefaultResponse": true,
+    "plugins": []
+  },
+  "servers": []
+}

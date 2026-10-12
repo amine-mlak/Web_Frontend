@@ -5,6 +5,7 @@ import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
 import { getRequestLocale } from "@/lib/locale";
+import { siteUrl } from "@/lib/seo";
 import { allowSearchIndexing } from "@/lib/umami";
 import "./globals.css";
 
@@ -25,9 +26,15 @@ const cormorant = Cormorant_Garamond({
 const indexingOn = allowSearchIndexing();
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: "BEER Küchenmanufaktur | Wolfersdorf bei Freising",
   description:
     "Individuelle Manufakturküchen aus Wolfersdorf bei Freising. Beratung, Planung, Fertigung und Montage aus einer Hand.",
+  openGraph: {
+    type: "website",
+    siteName: "BEER Küchenmanufaktur",
+    locale: "de_DE",
+  },
   robots: indexingOn
     ? { index: true, follow: true }
     : {

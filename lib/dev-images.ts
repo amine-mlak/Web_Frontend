@@ -1,7 +1,13 @@
 import { beerNamed, beerPhoto } from "@/lib/beer-photos";
 
 export function isStockPhoto(src?: string) {
-  return !src || src.startsWith("/kitchens/");
+  if (!src) {
+    return true;
+  }
+  return (
+    src.startsWith("/kitchens/") ||
+    /cdn\.shopify\.com|images\.pexels\.com|wikimedia\.org/.test(src)
+  );
 }
 
 export function isDevPlaceholder(src?: string) {

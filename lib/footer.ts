@@ -89,7 +89,7 @@ export const footerColumns: FooterColumn[] = [
       { href: "/projekte", label: "Alle Projekte" },
       { href: "/ueber", label: "Nachhaltigkeit" },
       { href: "/kontakt", label: "Karriere" },
-      { href: "/ratgeber", label: "Presse" },
+      { href: "/presse", label: "Presse" },
     ],
   },
 ];
@@ -211,7 +211,7 @@ const englishFooter: FooterContent = {
         { href: "/projekte", label: "All projects" },
         { href: "/ueber", label: "Sustainability" },
         { href: "/kontakt", label: "Careers" },
-        { href: "/ratgeber", label: "Press" },
+        { href: "/presse", label: "Press" },
       ],
     },
   ],

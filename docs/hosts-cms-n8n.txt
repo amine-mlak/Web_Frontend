@@ -1,0 +1,59 @@
+BEER hosts  ·  n8n + Strapi + site
+==================================
+Canonical names. Do not invent sslip URLs as the CMS.
+
+DNS (both A 89.58.45.227)
+
+  https://n8n.beer.de     n8n editor, workflows, CMS news chat
+  https://cms.beer.de     Strapi Community (admin + API)
+  https://cms.beer.de/admin
+  https://cms.beer.de/documentation     OpenAPI / Swagger (public, no password)
+
+  https://beer.de         live marketing site (not this Next app)
+  https://beer.de/en/...  English
+
+Never mix these up:
+  n8n.beer.de  is NOT Strapi
+  cms.beer.de  is NOT n8n
+
+n8n
+---
+  Editor:     https://n8n.beer.de
+  Health:     https://n8n.beer.de/healthz
+  Public API: https://n8n.beer.de/api/v1   header X-N8N-API-KEY
+  Chat:       hosted Chat Trigger on this same host
+  Existing:   "Lead demo (dry-run)"  (CAPI stays dry-run)
+  CMS chat:   "BEER CMS news chat (draft only)"
+  Env on the n8n container (not git):
+    STRAPI_URL=https://cms.beer.de
+    STRAPI_API_TOKEN          draft only, no publish
+    OPENROUTER_API_KEY or N8N_LLM_API_KEY
+    N8N_LLM_BASE_URL=https://openrouter.ai/api/v1
+    N8N_LLM_MODEL=openai/gpt-4o-mini
+  Community n8n has no Variables feature. Use container env.
+
+Strapi
+------
+  Admin:      https://cms.beer.de/admin
+  API:        https://cms.beer.de/api/...
+  Uploads:    https://cms.beer.de/uploads/...
+  German is source of truth. Draft & Publish. Agents do not publish.
+  News: collection article + category presse -> /presse/[slug]
+  Guides: article + kosten|planung|geraete|material -> /ratgeber/[slug]
+  Static: site-pages
+  Next.js fallback and .env.local: STRAPI_URL=https://cms.beer.de
+
+Coolify
+-------
+  Dashboard:  https://srv.beer.de
+  Live beer.de stack is on 89.58.45.227 (n8n.beer.de / cms.beer.de / srv.beer.de).
+  coolify.webentwicklung.tech (this MCP token) is a different host.
+  Scratch copies there are NOT canonical:
+    beer-cms-n8n   izo90p320do4hr0dpeophabm
+    beer-strapi    f668lz0jgug7lchvziwchvck
+    sslip.io URLs  ignore unless someone is debugging that box
+
+Playbook: docs/strapi-plugins-i18n-ai.txt
+Workflow source: n8n/cms-news-chat.json
+Enable docs plugin on cms.beer.de: scripts/strapi-enable-documentation.js
+  inside the cms.beer.de container (not the scratch Strapi).

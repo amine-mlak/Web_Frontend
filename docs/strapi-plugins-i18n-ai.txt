@@ -10,6 +10,15 @@ Self-hosted Community Strapi on Christian's VPS (Coolify).
 No Strapi Cloud. No Growth. No Enterprise. No license keys.
 No credit-based Strapi AI. No paid marketplace plugins.
 
+Canonical hosts (see docs/hosts-cms-n8n.txt — do not forget):
+
+  https://n8n.beer.de     n8n editor / chat / webhooks   NOT Strapi
+  https://cms.beer.de     Strapi admin + API             NOT n8n
+  https://cms.beer.de/admin
+  https://cms.beer.de/documentation
+
+sslip.io Coolify copies are scratch. Live DNS is 89.58.45.227.
+
 Everything below is in the open-source product or already
 in this repo (Cursor). If a feature needs a Strapi plan,
 we do not use it.
@@ -77,6 +86,13 @@ USE  (already in Community, just configure)
   MCP server               Strapi 5.47+  free on self-hosted
                            config/server.ts  mcp: { enabled: true }
                            This is how Cursor talks to the CMS.
+  Documentation            @strapi/plugin-documentation
+                           Community OpenAPI/Swagger at /documentation
+                           Public OpenAPI at /documentation (no password)
+                           Enable in the Strapi container:
+                           node scripts/strapi-enable-documentation.js
+                           Config copies: strapi/config/plugins.js
+                           and strapi/src/extensions/documentation/...
 
 OPTIONAL later (still free)
 
@@ -292,7 +308,7 @@ Homepage does NOT use this zone.
 
 8. Where AI actually lives  (free, self-hosted)
 -----------------------------------------------
-Not inside a paid Strapi feature. Two free pieces:
+Not inside a paid Strapi feature. Three free pieces:
 
   A. Content-Type Builder in the admin
      We (or Christian) click the schema from this playbook.
@@ -305,6 +321,26 @@ Not inside a paid Strapi feature. Two free pieces:
      MCP cannot upload files; photos stay in Media Library.
      MCP is weak on deep dynamic zones — another reason our
      homepage uses named components.
+
+  C. n8n chat  (n8n/cms-news-chat.json)  on https://n8n.beer.de
+     Writes to https://cms.beer.de only. Set env on that n8n:
+       STRAPI_URL           https://cms.beer.de
+       STRAPI_API_TOKEN     draft create/update, no publish
+       N8N_LLM_BASE_URL     https://openrouter.ai/api/v1
+       N8N_LLM_API_KEY      OpenRouter key (or OPENROUTER_API_KEY)
+       N8N_LLM_MODEL        openai/gpt-4o-mini
+     Chat in the editor (or hosted chat with basic auth).
+     Router:
+       News / Presse / Aktuelles / Termin
+         -> collection article, category presse
+         -> live URL after publish: /presse/[slug]
+       Ratgeber (Kosten, Planung, Geraete, Material)
+         -> collection article, matching category
+         -> live URL after publish: /ratgeber/[slug]
+       Impressum, Datenschutz, feste Ueber-Seiten
+         -> collection site-pages
+     Always locale de. Always draft. Human publishes.
+     OpenAPI for the same API: /documentation (public, no password).
 
 What Cursor can help with, still as drafts:
 

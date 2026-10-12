@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
-import { collectionHubMetadata } from "@/lib/collection-hubs";
+import { isPressArticle } from "@/lib/catalog";
+import { fetchArticles } from "@/lib/catalog-api";
+import {
+  collectionHub,
+  collectionHubMetadata,
+  overlayBranchImages,
+} from "@/lib/collection-hubs";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -11,5 +17,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RatgeberPage() {
   const locale = await getRequestLocale();
-  return <CollectionHub id="ratgeber" locale={locale} />;
+  const articles = await fetchArticles();
+  const images: Record<string, string> = {};
+  for (const article of articles) {
+    if (isPressArticle(article) || !article.image) {
+      continue;
+    }
+    images[`/ratgeber/${article.slug}`] = article.image;
+  }
+  if (images["/ratgeber/was-kostet-eine-kueche"]) {
+    images["/faq"] = images["/ratgeber/was-kostet-eine-kueche"];
+  }
+  return (
+    <CollectionHub
+      id="ratgeber"
+      locale={locale}
+      branches={overlayBranchImages(collectionHub("ratgeber", locale).branches, images)}
+    />
+  );
 }

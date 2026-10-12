@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { APPLIANCE_PHOTOS } from "@/lib/appliance-media";
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
+import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export type CollectionBranch = {
   href?: string;
@@ -988,6 +989,16 @@ const packs: Record<Locale, Record<CollectionHubId, CollectionHubCopy>> = {
   en,
 };
 
+export function overlayBranchImages(
+  branches: CollectionBranch[],
+  images: Record<string, string | undefined>,
+): CollectionBranch[] {
+  return branches.map((branch) => {
+    const image = branch.href ? images[branch.href] : undefined;
+    return image ? { ...branch, image } : branch;
+  });
+}
+
 export function collectionHub(
   id: CollectionHubId,
   locale: Locale,
@@ -995,12 +1006,27 @@ export function collectionHub(
   return packs[locale][id];
 }
 
+const HUB_PATH: Record<CollectionHubId, string> = {
+  kuechen: "/kuechen",
+  material: "/material",
+  geraete: "/geraete",
+  moebel: "/moebel",
+  projekte: "/projekte",
+  regionen: "/regionen",
+  marken: "/marken",
+  ratgeber: "/ratgeber",
+  planen: "/kueche-planen",
+  ueber: "/ueber",
+};
+
 export async function collectionHubMetadata(
   id: CollectionHubId,
 ): Promise<Metadata> {
   const content = collectionHub(id, await getRequestLocale());
-  return {
-    title: `${content.title} | BEER Küchenmanufaktur`,
+  return pageMetadata({
+    title: brandedTitle(content.title),
     description: content.lede,
-  };
+    path: HUB_PATH[id],
+    image: content.heroImage,
+  });
 }

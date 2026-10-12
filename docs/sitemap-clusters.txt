@@ -252,7 +252,9 @@ Hub: /ueber
     - manufaktur / werkstatt
     - nachhaltigkeit          200 km Radius, regional
     - empfehlungen / stimmen
-    - aktuelles-presse
+    - aktuelles-presse          URL: /presse
+                                CMS: article + category presse
+                                n8n chat writes drafts here
     - karriere
     - projekte  (alias of /projekte)
 

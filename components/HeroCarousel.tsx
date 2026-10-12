@@ -104,7 +104,7 @@ export default function HeroCarousel({
       data-site-hero=""
       className={
         panel
-          ? "relative isolate h-[36rem] w-full overflow-hidden bg-nacht sm:h-[70vh] lg:h-[78dvh]"
+          ? "relative isolate -mt-14 h-[100svh] min-h-[100svh] w-full overflow-hidden bg-nacht"
           : "relative isolate h-[320px] w-full overflow-hidden bg-nacht sm:h-[48vh] lg:h-dvh"
       }
       aria-roledescription="carousel"

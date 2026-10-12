@@ -1,18 +1,10 @@
-function pexels(id: number, width = 1800) {
-  return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${width}`;
-}
-
-function commons(file: string, width = 1800) {
-  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
-}
-
 export const APPLIANCE_PHOTOS = {
-  hero: pexels(2343467),
-  kochen: commons("Induktionshäll.JPG"),
-  backen: pexels(38310809),
-  kaelte: commons("SubZeroExt.jpg"),
-  spuelen: commons("Kitchen cupboards with integrated dishwasher.jpg"),
-  extra: pexels(324028),
+  hero: "/kitchens/stile-insel.jpg",
+  kochen: "/kitchens/stile-modern.jpg",
+  backen: "/kitchens/stile-holz.jpg",
+  kaelte: "/kitchens/stile-design.jpg",
+  spuelen: "/kitchens/stile-purist.jpg",
+  extra: "/kitchens/stile-landhaus.jpg",
 } as const;
 
 export const APPLIANCE_BRANDS = [

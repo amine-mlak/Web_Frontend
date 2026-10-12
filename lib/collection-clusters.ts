@@ -14,6 +14,7 @@ import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
 export type ClusterHouse = {
   href: string;
@@ -620,7 +621,7 @@ const POINTS_EN: Record<string, string[]> = {
   ],
 };
 
-function topicCopy(topic: KitchenTopic, locale: Locale) {
+export function topicCopy(topic: KitchenTopic, locale: Locale) {
   if (locale === "en") {
     const pack = TOPIC_EN[topic.slug];
     if (pack) {
@@ -630,7 +631,7 @@ function topicCopy(topic: KitchenTopic, locale: Locale) {
   return { name: topic.name, intro: topic.intro };
 }
 
-function topicPoints(slug: string, locale: Locale) {
+export function topicPoints(slug: string, locale: Locale) {
   if (locale === "en") {
     return POINTS_EN[slug] ?? ["Drawn to measure", "Made in Wolfersdorf", "Fitted on site"];
   }
@@ -766,12 +767,30 @@ export function clusterLookTitle(slug: KitchenClusterSlug, locale: Locale) {
   return COPY[locale][slug].lookTitle;
 }
 
+export function clusterHeading(slug: KitchenClusterSlug, locale: Locale) {
+  const copy = COPY[locale][slug];
+  return { title: copy.title, eyebrow: copy.eyebrow };
+}
+
+export function clusterVisit(locale: Locale) {
+  return VISIT[locale];
+}
+
+export function kitchensParent(locale: Locale) {
+  return PARENT[locale];
+}
+
+export function clusterPhotoOffset(slug: KitchenClusterSlug) {
+  return OFFSET[slug];
+}
+
 export async function clusterMetadata(
   slug: KitchenClusterSlug,
 ): Promise<Metadata> {
   const copy = COPY[await getRequestLocale()][slug];
-  return {
+  return pageMetadata({
     title: copy.seoTitle,
     description: copy.seoDescription,
-  };
+    path: `/kuechen/${slug}`,
+  });
 }

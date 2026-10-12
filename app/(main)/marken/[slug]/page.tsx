@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import MagazinePage from "@/components/catalog/hub/MagazinePage";
 import { findBySlug, projectsForBrand } from "@/lib/catalog";
-import { projectCards } from "@/lib/catalog-cards";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
+import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -21,7 +22,7 @@ export async function generateMetadata({
   if (!brand) {
     return { title: "Marke | BEER Küchenmanufaktur" };
   }
-  return { title: `${brand.name} | BEER Küchenmanufaktur`, description: brand.intro };
+  return entryMetadata(brand.name, brand.intro, `/marken/${brand.slug}`, brand.image);
 }
 
 export default async function BrandPage({
@@ -30,22 +31,21 @@ export default async function BrandPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [brands, projects] = await Promise.all([fetchBrands(), fetchProjects()]);
+  const [locale, brands, projects] = await Promise.all([
+    getRequestLocale(),
+    fetchBrands(),
+    fetchProjects(),
+  ]);
   const brand = findBySlug(brands, slug);
   if (!brand) {
     notFound();
   }
+  const related = projectsForBrand(projects, brand.slug);
+  const houses = related.length > 0 ? related : projects.slice(0, 4);
+
   return (
-    <DetailPage
-      eyebrow="Marke"
-      title={brand.name}
-      intro={brand.intro}
-      body={brand.body}
-      image={brand.image}
-      srcSet={brand.srcSet}
-      relatedTitle="Küchen mit dieser Marke"
-      related={projectCards(projectsForBrand(projects, brand.slug))}
-      ctaLabel="Marke in der Planung"
+    <MagazinePage
+      hub={presentBrandItem(brand, locale, brands, houses)}
     />
   );
 }

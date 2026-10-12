@@ -156,7 +156,7 @@ export const menuPanels: MenuPanel[] = [
         links: [
           { href: "/ueber", label: "Über uns – Werte & Philosophie" },
           { href: "/ueber", label: "Team" },
-          { href: "/ratgeber", label: "Aktuelles & Presse" },
+          { href: "/presse", label: "Aktuelles & Presse" },
           { href: "/ueber", label: "Nachhaltigkeit" },
           { href: "/projekte", label: "Empfehlungen" },
           { href: "/kontakt", label: "Karriere" },

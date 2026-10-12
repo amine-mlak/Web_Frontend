@@ -6,10 +6,50 @@ import Hero from "@/components/Hero";
 import Kacheln from "@/components/Kacheln";
 import LeadCta from "@/components/LeadCta";
 import Process from "@/components/Process";
+import type { Metadata } from "next";
 import { fetchSitePage } from "@/lib/catalog-api";
+import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { fetchLandingBySlug } from "@/lib/strapi";
 
 export const revalidate = 120;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  if (slug === "home") {
+    return pageMetadata({
+      title: "BEER Küchenmanufaktur | Wolfersdorf bei Freising",
+      path: "/",
+    });
+  }
+
+  const landing = await fetchLandingBySlug(slug);
+  if (landing) {
+    const title = landing.heroPanel
+      ? `${landing.heroPanel.title} ${landing.heroPanel.emphasis}`.trim()
+      : landing.kacheln?.eyebrow;
+    return pageMetadata({
+      title: brandedTitle(title || slug),
+      description: landing.heroPanel?.text,
+      path: `/${slug}`,
+      image: landing.heroSlides[0]?.src,
+    });
+  }
+
+  const page = await fetchSitePage(slug);
+  if (!page) {
+    return { title: "BEER Küchenmanufaktur" };
+  }
+  return pageMetadata({
+    title: brandedTitle(page.title),
+    description: page.intro,
+    path: `/${slug}`,
+    image: page.image,
+  });
+}
 
 export default async function LandingSlugPage({
   params,

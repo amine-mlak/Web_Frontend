@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import DetailPage from "@/components/catalog/DetailPage";
 import { findBySlug, isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
+import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -23,7 +24,12 @@ export async function generateMetadata({
   if (!item) {
     return { title: "Aktuelles | BEER Küchenmanufaktur" };
   }
-  return { title: `${item.title} | BEER Küchenmanufaktur`, description: item.description };
+  return pageMetadata({
+    title: brandedTitle(item.title),
+    description: item.description,
+    path: `/presse/${item.slug}`,
+    image: item.image,
+  });
 }
 
 export default async function PresseArticlePage({

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import MagazinePage from "@/components/catalog/hub/MagazinePage";
 import { findBySlug } from "@/lib/catalog";
-import { fetchFurniture } from "@/lib/catalog-api";
+import { fetchFurniture, fetchProjects } from "@/lib/catalog-api";
+import { entryMetadata, presentFurnitureItem } from "@/lib/collection-entries";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -20,7 +22,7 @@ export async function generateMetadata({
   if (!item) {
     return { title: "Möbel | BEER Küchenmanufaktur" };
   }
-  return { title: `${item.name} | BEER Küchenmanufaktur`, description: item.intro };
+  return entryMetadata(item.name, item.intro, `/moebel/${item.slug}`, item.image);
 }
 
 export default async function FurniturePage({
@@ -28,18 +30,19 @@ export default async function FurniturePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const item = findBySlug(await fetchFurniture(), (await params).slug);
+  const { slug } = await params;
+  const [locale, items, projects] = await Promise.all([
+    getRequestLocale(),
+    fetchFurniture(),
+    fetchProjects(),
+  ]);
+  const item = findBySlug(items, slug);
   if (!item) {
     notFound();
   }
   return (
-    <DetailPage
-      eyebrow="Möbel nach Maß"
-      title={item.name}
-      intro={item.intro}
-      image={item.image}
-      srcSet={item.srcSet}
-      ctaLabel="Möbel anfragen"
+    <MagazinePage
+      hub={presentFurnitureItem(item, locale, items, projects)}
     />
   );
 }

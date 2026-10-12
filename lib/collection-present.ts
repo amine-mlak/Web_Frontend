@@ -4,7 +4,7 @@ import {
   type CollectionHubCopy,
   type CollectionHubId,
 } from "@/lib/collection-hubs";
-import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { devPhoto, isStockPhoto, resolveDevImage } from "@/lib/dev-images";
 import type { Locale } from "@/lib/i18n";
 
 export type CollectionFact = {
@@ -359,11 +359,14 @@ export function presentHub(
     alt: branch.alt || branch.title,
   }));
 
+  const heroFromCms = source.find((branch) => branch.image && !isStockPhoto(branch.image))
+    ?.image;
+
   return {
     ...copy,
     id,
     locale,
-    heroImage: resolveDevImage(copy.heroImage, photo(0)),
+    heroImage: resolveDevImage(heroFromCms || copy.heroImage, photo(0)),
     statementImage: photo(1),
     statementImageB: photo(2),
     closeImage: photo(3),

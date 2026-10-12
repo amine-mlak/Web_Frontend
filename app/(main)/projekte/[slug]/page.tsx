@@ -4,6 +4,7 @@ import DetailPage from "@/components/catalog/DetailPage";
 import { findBySlug } from "@/lib/catalog";
 import { topicCards } from "@/lib/catalog-cards";
 import { fetchProjects } from "@/lib/catalog-api";
+import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -23,10 +24,12 @@ export async function generateMetadata({
   if (!project) {
     return { title: "Projekt | BEER Küchenmanufaktur" };
   }
-  return {
-    title: `${project.title} | BEER Küchenmanufaktur`,
+  return pageMetadata({
+    title: brandedTitle(project.title),
     description: project.intro,
-  };
+    path: `/projekte/${project.slug}`,
+    image: project.image,
+  });
 }
 
 export default async function ProjectPage({
