@@ -21,10 +21,15 @@ import {
   type Material,
   type MaterialKind,
   type Project,
+  type ProjectFrame,
   type Region,
   type SitePage,
 } from "@/lib/catalog";
 import { CMS_NAMED } from "@/lib/cms-photos";
+import {
+  enrichProjectBody,
+  projectGalleryFor,
+} from "@/lib/project-photos";
 import {
   flattenCollection,
   flattenEntity,
@@ -178,6 +183,19 @@ function mapMaterial(entry: unknown): Material | null {
   };
 }
 
+function mapGallery(row: Record<string, unknown> | null): ProjectFrame[] {
+  return flattenCollection(row?.gallery)
+    .map((item) => {
+      const image = strapiResponsiveImage(item as StrapiMedia, { srcWidth: 1600 });
+      if (!image.src) {
+        return null;
+      }
+      const alt = text(item, "alternativeText") || text(item, "caption") || text(item, "name");
+      return { src: image.src, srcSet: image.srcSet, alt };
+    })
+    .filter((item): item is ProjectFrame => Boolean(item));
+}
+
 function mapSpecs(row: Record<string, unknown> | null): CatalogSpec[] {
   return flattenCollection(row?.specs)
     .map((item) => ({
@@ -195,13 +213,14 @@ function mapProject(entry: unknown): Project | null {
     return null;
   }
   const image = mediaImage(row, "image", stile("stile-holz.jpg"));
+  const body = enrichProjectBody(slug, text(row, "body"));
   return {
     slug,
     title,
     place: text(row, "place"),
     year: text(row, "year"),
     intro: text(row, "intro"),
-    body: text(row, "body"),
+    body,
     image: image.src,
     srcSet: image.srcSet,
     topics: related(row, "topics")
@@ -220,6 +239,7 @@ function mapProject(entry: unknown): Project | null {
       .map(mapRegion)
       .filter((item): item is Region => Boolean(item)),
     specs: mapSpecs(row),
+    gallery: projectGalleryFor(slug, mapGallery(row)),
   };
 }
 
@@ -302,6 +322,7 @@ const PROJECT_POPULATE = {
   sort: "year:desc",
   "pagination[pageSize]": "100",
   "populate[image]": "true",
+  "populate[gallery]": "true",
   "populate[specs]": "true",
   "populate[topics][populate]": "image",
   "populate[brands][populate]": "image",

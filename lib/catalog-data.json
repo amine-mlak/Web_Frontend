@@ -316,6 +316,36 @@
       "ctaUrl": "/beratung"
     },
     {
+      "slug": "team",
+      "eyebrow": "Menschen",
+      "title": "Team",
+      "intro": "Keine Filialmannschaft. Aufmaß, Zeichnung, Fertigung und Montage sitzen in Wolfersdorf.",
+      "body": "Wer die Küche baut, steht im Gespräch. Planung, Werkstatt und Montage in einer Verantwortung — nicht in einem Netz aus Gewerken, das niemand mehr zuordnet.",
+      "image": "/kitchens/stile-holz.jpg",
+      "ctaLabel": "Ausstellung besuchen",
+      "ctaUrl": "/ausstellung"
+    },
+    {
+      "slug": "nachhaltigkeit",
+      "eyebrow": "Haltung",
+      "title": "Nachhaltigkeit",
+      "intro": "Keine Kampagne. Maß, Stein, Zeit — Küchen, die nicht mit der Saison wechseln.",
+      "body": "Wer wenige Küchen baut, verschwendet weniger. Material, das man pflegt. Verbindungen, die man löst, ohne das Haus zu zerstören.",
+      "image": "/kitchens/stile-design.jpg",
+      "ctaLabel": "Haltung anfassen",
+      "ctaUrl": "/ausstellung"
+    },
+    {
+      "slug": "karriere",
+      "eyebrow": "Manufaktur",
+      "title": "Karriere",
+      "intro": "Selten eine Stelle. Wenn, dann Handwerk und Planung in Wolfersdorf — kein Vertriebsnetz.",
+      "body": "Wir stellen ein, wenn die Werkstatt es trägt. Schreiben Sie uns sachlich, ohne Motivationslyrik. Antwort, wenn eine Stelle offen ist — oder wenn sie es bald sein könnte.",
+      "image": "/kitchens/stile-purist.jpg",
+      "ctaLabel": "Nachricht senden",
+      "ctaUrl": "/beratung"
+    },
+    {
       "slug": "impressum",
       "eyebrow": "Rechtliches",
       "title": "Impressum",

@@ -287,23 +287,46 @@ A leaf URL like /kuechen/stile/landhaus is then:
 not a duplicate landing for every style.
 
 
-7. Dynamic zone  (later, small, curated)
-----------------------------------------
-Only when we add pages that are not the homepage and not a
-cluster filter. Allowed blocks, nothing else:
+7. Site-pages  (named sections, not a page builder)
+---------------------------------------------------
+Feste Seiten (Über, Ausstellung, Katalog, Kontakt, Team,
+Nachhaltigkeit, Karriere, Impressum) are Collection site-page
+with NAMED fields — the same idea as the homepage.
+
+  slug, title, eyebrow, intro, body, image, cta
+  seo          -> shared.seo          (add in CTB, not a plugin)
+  statement    -> page.statement      text + note
+  visit        -> page.visit          place + line + note
+  faq          -> landing.faq         picker, already there
+
+Next maps those fields onto reusable sections:
+
+  page.hero         CollectionHero
+  page.facts        AtelierFacts
+  page.statement    StatementSpread
+  page.body         HouseBody
+  page.visit        AtelierVisit
+  landing.faq       Faq
+  landing.beratung  LeadCta (Kontakt, Karriere, Katalog)
+  landing.ablauf    Process (Küche planen)
+  page.close        CloseAtelier
+
+Do NOT give editors a free dynamic zone for these pages.
+Copies in the repo: strapi/src/components/shared/seo.json,
+page/statement.json, page/visit.json.
+
+Homepage still uses Landing named sections (hero, kacheln,
+ablauf, entdecken, faq, beratung). Same rule: named, not DZ.
+
+Dynamic zone later, small, only if a page is neither Landing
+nor site-page nor a cluster filter. Allowed then:
 
   blocks.hero
   blocks.rich-text
-  blocks.faq-list          relation to faq-item[]
-  blocks.project-grid      relation to project[]
+  blocks.faq-list
+  blocks.project-grid
   blocks.cta
   blocks.media
-
-Official warning we follow: a dynamic zone is not a dumping
-ground. Deep nesting inside those blocks kills performance
-and confuses the team.
-
-Homepage does NOT use this zone.
 
 
 8. Where AI actually lives  (free, self-hosted)

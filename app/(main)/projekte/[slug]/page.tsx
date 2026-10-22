@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import ReferenzPage from "@/components/catalog/ReferenzPage";
 import { findBySlug } from "@/lib/catalog";
-import { topicCards } from "@/lib/catalog-cards";
 import { fetchProjects } from "@/lib/catalog-api";
+import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
@@ -38,41 +38,18 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = findBySlug(await fetchProjects(), slug);
+  const locale = await getRequestLocale();
+  const projects = await fetchProjects();
+  const project = findBySlug(projects, slug);
   if (!project) {
     notFound();
   }
 
   return (
-    <DetailPage
-      eyebrow="Referenz"
-      title={project.title}
-      meta={[project.place, project.year].filter(Boolean).join(" · ")}
-      intro={project.intro}
-      body={project.body}
-      image={project.image}
-      srcSet={project.srcSet}
-      specs={project.specs}
-      links={[
-        ...project.brands.map((item) => ({
-          href: `/marken/${item.slug}`,
-          label: item.name,
-        })),
-        ...project.materials.map((item) => ({
-          href: `/material/${item.slug}`,
-          label: item.name,
-        })),
-        ...project.appliances.map((item) => ({
-          href: `/geraete/${item.slug}`,
-          label: item.name,
-        })),
-        ...project.regions.map((item) => ({
-          href: `/regionen/${item.slug}`,
-          label: item.name,
-        })),
-      ]}
-      relatedTitle="Themen dieser Küche"
-      related={topicCards(project.topics)}
+    <ReferenzPage
+      project={project}
+      others={projects.filter((item) => item.slug !== project.slug).slice(0, 3)}
+      locale={locale}
     />
   );
 }

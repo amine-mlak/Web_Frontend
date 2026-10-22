@@ -1,4 +1,8 @@
 import catalog from "@/lib/catalog-data.json";
+import {
+  enrichProjectBody,
+  projectGalleryFor,
+} from "@/lib/project-photos";
 import type { FaqContent } from "@/lib/strapi";
 
 export type KitchenClusterSlug =
@@ -28,6 +32,12 @@ export type KitchenTopic = {
 
 export type CatalogSpec = { label: string; value: string };
 
+export type ProjectFrame = {
+  src: string;
+  srcSet?: string;
+  alt: string;
+};
+
 export type Project = {
   slug: string;
   title: string;
@@ -37,6 +47,7 @@ export type Project = {
   body: string;
   image: string;
   srcSet?: string;
+  gallery: ProjectFrame[];
   topics: KitchenTopic[];
   brands: Brand[];
   materials: Material[];
@@ -213,7 +224,7 @@ export const FALLBACK_PROJECTS: Project[] = catalog.projects.map((item) => ({
   place: item.place,
   year: item.year,
   intro: item.intro,
-  body: item.body,
+  body: enrichProjectBody(item.slug, item.body),
   image: item.image,
   topics: item.topics
     .map((slug) => topicBySlug.get(slug))
@@ -231,6 +242,7 @@ export const FALLBACK_PROJECTS: Project[] = catalog.projects.map((item) => ({
     .map((slug) => regionBySlug.get(slug))
     .filter((region): region is Region => Boolean(region)),
   specs: item.specs,
+  gallery: projectGalleryFor(item.slug, []),
 }));
 
 export function isKitchenCluster(value: string): value is KitchenClusterSlug {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import SamplePage from "@/components/catalog/entries/SamplePage";
 import { findBySlug } from "@/lib/catalog";
 import { fetchFurniture, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentFurnitureItem } from "@/lib/collection-entries";
@@ -41,8 +41,6 @@ export default async function FurniturePage({
     notFound();
   }
   return (
-    <MagazinePage
-      hub={presentFurnitureItem(item, locale, items, projects)}
-    />
+    <SamplePage hub={presentFurnitureItem(item, locale, items, projects)} />
   );
 }

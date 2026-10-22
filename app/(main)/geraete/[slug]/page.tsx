@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import SpecPage from "@/components/catalog/entries/SpecPage";
 import { findBySlug, projectsForAppliance } from "@/lib/catalog";
 import { fetchAppliances, fetchProjects } from "@/lib/catalog-api";
 import {
@@ -55,9 +55,7 @@ export default async function AppliancePage({
 
   if (isGeraeteKindRoute(slug)) {
     return (
-      <MagazinePage
-        hub={presentApplianceKind(slug, locale, items, projects)}
-      />
+      <SpecPage hub={presentApplianceKind(slug, locale, items, projects)} />
     );
   }
 
@@ -69,8 +67,6 @@ export default async function AppliancePage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <MagazinePage
-      hub={presentApplianceItem(item, locale, items, houses)}
-    />
+    <SpecPage hub={presentApplianceItem(item, locale, items, houses)} />
   );
 }

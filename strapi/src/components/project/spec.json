@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_project_specs",
+  "info": {
+    "displayName": "Baustein · Ausstattung",
+    "icon": "bulletList",
+    "description": "Eine Zeile innerhalb einer Referenzküche, zum Beispiel Arbeitsplatte: Naturstein. Keine eigene Seite."
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

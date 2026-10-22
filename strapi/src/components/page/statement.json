@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_page_statements",
+  "info": {
+    "displayName": "Statement",
+    "description": "Zwei Sätze unter dem Hero. Wiederverwendet auf festen Seiten, nicht auf der Startseite."
+  },
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    },
+    "note": {
+      "type": "text"
+    }
+  }
+}

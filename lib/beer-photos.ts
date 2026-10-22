@@ -13,7 +13,7 @@ function cmsFile(src: string) {
   return src.replace(/^\//, "");
 }
 
-function cmsSized(src: string, width = 1800) {
+export function cmsSrc(src: string, width = 1800) {
   const file = cmsFile(src);
   if (!SAFE_PATH.test(file)) {
     return src.startsWith("/") ? src : `/cms-uploads/${file}`;
@@ -42,10 +42,10 @@ export function beerPhoto(index: number, width = 1800) {
     BEER_PHOTOS[
       ((index % BEER_PHOTOS.length) + BEER_PHOTOS.length) % BEER_PHOTOS.length
     ];
-  return cmsSized(src, width);
+  return cmsSrc(src, width);
 }
 
 export function beerNamed(file: string, width = 1800) {
   const src = BEER_NAMED[file] ?? BEER_PHOTOS[0];
-  return cmsSized(src, width);
+  return cmsSrc(src, width);
 }

@@ -167,32 +167,40 @@ export default function ProjekteCollection({
       </section>
 
       {extras && extras.length > 0 ? (
-        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20">
+        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="projekte-more">
           {extrasTitle ? (
-            <h2 className="font-serif text-[28px] font-medium tracking-[-0.03em] text-ink">
+            <h2
+              id="projekte-more"
+              className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
+            >
               {extrasTitle}
             </h2>
           ) : null}
-          <ol className="mt-8 divide-y divide-line border-y border-line">
-            {extras.map((item, index) => (
+          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {extras.map((item) => (
               <li key={item.href}>
-                <LocaleLink
-                  href={item.href}
-                  className="grid items-center gap-4 py-5 sm:grid-cols-12"
-                >
-                  <span className="font-serif text-[18px] text-gold sm:col-span-1">
-                    {String(index + 4).padStart(2, "0")}
-                  </span>
-                  <span className="font-serif text-[22px] font-medium text-ink sm:col-span-6">
+                <LocaleLink href={item.href} className="group block">
+                  {item.image ? (
+                    <Frame
+                      src={item.image}
+                      alt={item.title}
+                      className="aspect-[4/5]"
+                      imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+                      sizes="(max-width: 1024px) 100vw, 33vw"
+                    />
+                  ) : null}
+                  <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">
                     {item.title}
-                  </span>
-                  <span className="font-sans text-[12px] tracking-[0.16em] text-muted uppercase sm:col-span-5 sm:text-right">
-                    {item.meta}
-                  </span>
+                  </p>
+                  {item.meta ? (
+                    <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
+                      {item.meta}
+                    </p>
+                  ) : null}
                 </LocaleLink>
               </li>
             ))}
-          </ol>
+          </ul>
         </section>
       ) : null}
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import PlacePage from "@/components/catalog/entries/PlacePage";
 import { findBySlug, projectsForRegion } from "@/lib/catalog";
 import { fetchProjects, fetchRegions } from "@/lib/catalog-api";
 import { entryMetadata, presentRegionItem } from "@/lib/collection-entries";
@@ -49,8 +49,6 @@ export default async function RegionPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <MagazinePage
-      hub={presentRegionItem(item, locale, regions, houses)}
-    />
+    <PlacePage hub={presentRegionItem(item, locale, regions, houses)} />
   );
 }

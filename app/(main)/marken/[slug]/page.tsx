@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import SpecPage from "@/components/catalog/entries/SpecPage";
 import { findBySlug, projectsForBrand } from "@/lib/catalog";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
@@ -44,8 +44,6 @@ export default async function BrandPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <MagazinePage
-      hub={presentBrandItem(brand, locale, brands, houses)}
-    />
+    <SpecPage hub={presentBrandItem(brand, locale, brands, houses)} />
   );
 }

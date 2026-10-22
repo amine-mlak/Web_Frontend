@@ -1,3 +1,6 @@
+import { beerNamed } from "@/lib/beer-photos";
+import { HOUSE_MEDIA, houseSrc } from "@/lib/house-photos";
+
 export type MenuLink = {
   href: string;
   label: string;
@@ -57,21 +60,21 @@ export const menuPanels: MenuPanel[] = [
     teasers: [
       {
         href: "/kuechen/stile/design",
-        image: "/kitchens/stile-design.jpg",
+        image: beerNamed("stile-design.jpg"),
         caption: "Designküche",
         alt: "Schwarze Designküche mit Eiche und Fischgrätparkett",
         objectPosition: "center 42%",
       },
       {
         href: "/kuechen/farben/salbei",
-        image: "/kitchens/stile-landhaus.jpg",
+        image: beerNamed("stile-landhaus.jpg"),
         caption: "Salbeigrüne Küche",
         alt: "Salbeigrüne Landhausküche mit Marmor und schwarzen Beschlägen",
         objectPosition: "center 40%",
       },
       {
         href: "/kuechen/stile/modern",
-        image: "/kitchens/stile-modern.jpg",
+        image: beerNamed("stile-modern.jpg"),
         caption: "Moderne Küche",
         alt: "Graue moderne Küche mit weißer Rückwand",
         objectPosition: "center 38%",
@@ -98,7 +101,7 @@ export const menuPanels: MenuPanel[] = [
     teasers: [
       {
         href: "/moebel",
-        image: "/kitchens/stile-holz.jpg",
+        image: beerNamed("stile-holz.jpg"),
         caption: "Möbel nach Maß",
         alt: "Eingebaute Möbel aus Holz, präzise nach Maß gefertigt",
         objectPosition: "center 40%",
@@ -137,9 +140,9 @@ export const menuPanels: MenuPanel[] = [
     teasers: [
       {
         href: "/kueche-planen",
-        image: "/kitchens/stile-insel.jpg",
+        image: houseSrc(HOUSE_MEDIA["kueche-planen"].hero, 1400),
         caption: "Küche planen",
-        alt: "Kücheninsel in der Ausstellung – der Weg zur eigenen Planung",
+        alt: "Erstes Gespräch in der Ausstellung Wolfersdorf",
         objectPosition: "center 38%",
       },
     ],
@@ -155,20 +158,20 @@ export const menuPanels: MenuPanel[] = [
       {
         links: [
           { href: "/ueber", label: "Über uns – Werte & Philosophie" },
-          { href: "/ueber", label: "Team" },
+          { href: "/team", label: "Team" },
           { href: "/presse", label: "Aktuelles & Presse" },
-          { href: "/ueber", label: "Nachhaltigkeit" },
+          { href: "/nachhaltigkeit", label: "Nachhaltigkeit" },
           { href: "/projekte", label: "Empfehlungen" },
-          { href: "/kontakt", label: "Karriere" },
+          { href: "/karriere", label: "Karriere" },
         ],
       },
     ],
     teasers: [
       {
         href: "/ueber",
-        image: "/kitchens/stile-purist.jpg",
+        image: houseSrc(HOUSE_MEDIA.ueber.hero, 1400),
         caption: "Über BEER",
-        alt: "Puristische Manufakturküche – Haltung und Handwerk bei BEER",
+        alt: "Manufaktur in Wolfersdorf",
         objectPosition: "center 42%",
       },
     ],

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import SamplePage from "@/components/catalog/entries/SamplePage";
 import { findBySlug, projectsForMaterial } from "@/lib/catalog";
 import { fetchMaterials, fetchProjects } from "@/lib/catalog-api";
 import {
@@ -55,9 +55,7 @@ export default async function MaterialDetailPage({
 
   if (isMaterialKindRoute(slug)) {
     return (
-      <MagazinePage
-        hub={presentMaterialKind(slug, locale, items, projects)}
-      />
+      <SamplePage hub={presentMaterialKind(slug, locale, items, projects)} />
     );
   }
 
@@ -69,8 +67,6 @@ export default async function MaterialDetailPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <MagazinePage
-      hub={presentMaterialItem(item, locale, items, houses)}
-    />
+    <SamplePage hub={presentMaterialItem(item, locale, items, houses)} />
   );
 }

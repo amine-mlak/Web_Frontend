@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_page_visits",
+  "info": {
+    "displayName": "Besuch",
+    "description": "Ausstellung / Adresse. Wiederverwendet auf Über, Kontakt, Team, Karriere."
+  },
+  "attributes": {
+    "place": {
+      "type": "string"
+    },
+    "line": {
+      "type": "string"
+    },
+    "note": {
+      "type": "text"
+    }
+  }
+}

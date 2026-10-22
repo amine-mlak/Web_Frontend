@@ -21,7 +21,8 @@ export default function CmsImage({
   const raw = typeof src === "string" ? src : "";
   const srcString = siteImage(raw);
   const remapped = srcString !== raw;
-  const proxied = srcString.startsWith("/cms-uploads/");
+  const proxied =
+    srcString.startsWith("/cms-uploads/") || srcString.startsWith("/cms-opt/");
   const localOriginal =
     srcString.startsWith("/instagram/") || srcString.startsWith("/brands/");
   const remote = /^https?:\/\//.test(srcString);

@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import CollectionHub from "@/components/catalog/CollectionHub";
-import { collectionHubMetadata } from "@/lib/collection-hubs";
-import { getRequestLocale } from "@/lib/locale";
+import HouseScreen from "@/components/catalog/house/HouseScreen";
+import { houseMetadata } from "@/lib/house-pages";
 
 export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return collectionHubMetadata("ueber");
+  return houseMetadata("ueber");
 }
 
-export default async function UeberPage() {
-  const locale = await getRequestLocale();
-  return <CollectionHub id="ueber" locale={locale} />;
+export default function UeberPage() {
+  return <HouseScreen slug="ueber" />;
 }

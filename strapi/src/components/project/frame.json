@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_project_frames",
+  "info": {
+    "displayName": "Baustein · Bild",
+    "icon": "picture",
+    "description": "Ein Bild einer Referenzküche mit Bildunterschrift. Die Live-Sammlung nutzt noch das Feld gallery. Dieser Baustein kommt dazu, sobald Bildzeilen eine eigene Zeile brauchen."
+  },
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "caption": {
+      "type": "string"
+    }
+  }
+}

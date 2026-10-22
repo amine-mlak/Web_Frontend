@@ -1,4 +1,8 @@
-import MagazinePage from "@/components/catalog/hub/MagazinePage";
+import { BesondereTopic } from "@/components/catalog/clusters/Besondere";
+import { FarbenTopic } from "@/components/catalog/clusters/Farben";
+import { FormenTopic } from "@/components/catalog/clusters/Formen";
+import { InselnTopic } from "@/components/catalog/clusters/Inseln";
+import { StileTopic } from "@/components/catalog/clusters/Stile";
 import type { KitchenCluster, KitchenTopic, Project } from "@/lib/catalog";
 import { presentTopic } from "@/lib/collection-topics";
 import type { Locale } from "@/lib/i18n";
@@ -17,5 +21,17 @@ export default function KitchenTopicView({
   locale: Locale;
 }) {
   const hub = presentTopic(cluster.slug, topic, locale, topics, projects);
-  return <MagazinePage hub={hub} />;
+
+  switch (cluster.slug) {
+    case "formen":
+      return <FormenTopic hub={hub} />;
+    case "farben":
+      return <FarbenTopic hub={hub} />;
+    case "inseln":
+      return <InselnTopic hub={hub} />;
+    case "besondere":
+      return <BesondereTopic hub={hub} />;
+    default:
+      return <StileTopic hub={hub} />;
+  }
 }
