@@ -93,7 +93,7 @@ function hmac(value: string) {
   return createHmac("sha256", challengeSecret()).update(value).digest("hex");
 }
 
-function safeEqual(a: string, b: string) {
+export function safeEqual(a: string, b: string) {
   const left = Buffer.from(a);
   const right = Buffer.from(b);
   if (left.length !== right.length) {
