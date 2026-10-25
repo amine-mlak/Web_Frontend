@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 export type AccordionItem = {
   slug?: string;
@@ -8,21 +8,34 @@ export type AccordionItem = {
   answer: string;
 };
 
-export default function Accordion({ items }: { items: AccordionItem[] }) {
+export default function Accordion({
+  items,
+  headingLevel = "h3",
+}: {
+  items: AccordionItem[];
+  /** One level below the heading of the section the accordion sits in. */
+  headingLevel?: "h2" | "h3" | "h4";
+}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const baseId = useId();
+  const Heading = headingLevel;
 
   return (
     <div>
       {items.map((item, index) => {
         const open = openIndex === index;
+        const buttonId = `${baseId}-q${index}`;
+        const panelId = `${baseId}-a${index}`;
 
         return (
           <div key={item.slug || item.question} className="border-t border-line">
-            <h3>
+            <Heading>
               <button
+                id={buttonId}
                 type="button"
                 className="flex w-full items-center justify-between gap-8 py-[1.35rem] text-left"
                 aria-expanded={open}
+                aria-controls={panelId}
                 onClick={() =>
                   setOpenIndex((current) => (current === index ? null : index))
                 }
@@ -37,8 +50,14 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
                   {open ? "–" : "+"}
                 </span>
               </button>
-            </h3>
+            </Heading>
+            {/* The answer stays in the HTML when closed (search engines read it);
+                inert keeps closed answers out of screen readers and tab order. */}
             <div
+              id={panelId}
+              role="region"
+              aria-labelledby={buttonId}
+              inert={!open}
               className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
               }`}

@@ -19,7 +19,7 @@ export default async function BeratungPage() {
 
   return (
     <main className="bg-paper">
-      <LeadCta content={beratung} />
+      <LeadCta content={beratung} headingLevel="h1" />
     </main>
   );
 }

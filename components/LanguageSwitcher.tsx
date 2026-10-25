@@ -57,10 +57,10 @@ export default function LanguageSwitcher({
               aria-current={current ? "true" : undefined}
               aria-label={LOCALE_NAMES[item]}
               className={cn(
-                "font-sans text-[12px] tracking-[0.12em] uppercase transition-opacity",
+                "inline-flex min-h-6 min-w-6 items-center justify-center font-sans text-[12px] tracking-[0.12em] uppercase transition-opacity",
                 current
                   ? "text-black"
-                  : "text-black/45 hover:text-black hover:opacity-80",
+                  : "text-black/60 hover:text-black hover:opacity-80",
               )}
             >
               {LOCALE_LABELS[item]}

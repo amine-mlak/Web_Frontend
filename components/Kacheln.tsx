@@ -172,6 +172,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           ) : null}
           <LocaleLink
             href={tile.href}
+            aria-label={`${buttonLabel}: ${title}`}
             className={`mt-8 inline-flex items-center rounded-full border px-4 py-2 font-sans text-[13px] tracking-[0.04em] transition-colors ${
               light
                 ? "border-ink text-ink hover:bg-ink hover:text-paper"

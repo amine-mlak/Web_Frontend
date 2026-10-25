@@ -1,5 +1,8 @@
+import { useId } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { Frame } from "@/components/catalog/collections/parts";
+import { chromeCopy } from "@/lib/i18n";
+import { absoluteUrl } from "@/lib/seo";
 import type { ClusterHouse, ClusterSibling, PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 
@@ -19,35 +22,57 @@ export function Crumbs({
       ? crumbs
       : [{ href: hub.parentHref ?? "/kuechen", label: hub.parentLabel ?? "" }];
 
+  // Home → parents → this page, for Google's breadcrumb trail. The last item has no URL.
+  const trail = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { href: "/", label: chromeCopy[hub.locale].home },
+      ...items,
+      ...(hub.title ? [{ href: "", label: hub.title }] : []),
+    ].map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.label,
+      ...(crumb.href ? { item: absoluteUrl(crumb.href, hub.locale) } : {}),
+    })),
+  };
+
   return (
-    <p
-      className={`font-sans text-[11px] tracking-[0.22em] uppercase ${
-        tone === "paper" ? "text-paper/75" : "text-muted"
-      }`}
-    >
-      {items.map((crumb, index) => (
-        <span key={`${crumb.href}-${crumb.label}`}>
-          {index > 0 ? (
-            <span
-              className={`mx-2 ${tone === "paper" ? "text-paper/40" : "text-line"}`}
-              aria-hidden="true"
+    <nav aria-label={hub.locale === "en" ? "Breadcrumb" : "Brotkrumen"}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(trail) }}
+      />
+      <ol
+        className={`flex flex-wrap items-center font-sans text-[11px] tracking-[0.22em] uppercase ${
+          tone === "paper" ? "text-paper/75" : "text-muted"
+        }`}
+      >
+        {items.map((crumb, index) => (
+          <li key={`${crumb.href}-${crumb.label}`} className="flex items-center">
+            {index > 0 ? (
+              <span
+                className={`mx-2 ${tone === "paper" ? "text-paper/40" : "text-line"}`}
+                aria-hidden="true"
+              >
+                /
+              </span>
+            ) : null}
+            <LocaleLink
+              href={crumb.href}
+              className={`inline-flex min-h-6 items-center ${
+                tone === "paper"
+                  ? "text-paper transition-opacity hover:opacity-70"
+                  : "transition-opacity hover:opacity-60"
+              }`}
             >
-              /
-            </span>
-          ) : null}
-          <LocaleLink
-            href={crumb.href}
-            className={
-              tone === "paper"
-                ? "text-paper transition-opacity hover:opacity-70"
-                : "transition-opacity hover:opacity-60"
-            }
-          >
-            {crumb.label}
-          </LocaleLink>
-        </span>
-      ))}
-    </p>
+              {crumb.label}
+            </LocaleLink>
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }
 
@@ -170,15 +195,16 @@ export function IndexRows({
   eyebrow: string;
   title: string;
 }) {
+  const headingId = useId();
   if (items.length === 0) {
     return null;
   }
 
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14" aria-labelledby="index-rows-heading">
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14" aria-labelledby={headingId}>
       <p className="type-eyebrow text-gold">{eyebrow}</p>
       <h2
-        id="index-rows-heading"
+        id={headingId}
         className="mt-3 font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
       >
         {title}

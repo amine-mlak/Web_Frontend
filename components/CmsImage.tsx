@@ -16,6 +16,8 @@ export default function CmsImage({
   loading,
   sizes,
   quality: _quality,
+  width,
+  height,
   ...props
 }: CmsImageProps) {
   const raw = typeof src === "string" ? src : "";
@@ -38,6 +40,9 @@ export default function CmsImage({
         srcSet={remapped ? undefined : srcSet}
         sizes={typeof sizes === "string" ? sizes : undefined}
         alt={alt}
+        // Without fill, the size reserves space so the layout does not jump.
+        width={fill ? undefined : width}
+        height={fill ? undefined : height}
         decoding="async"
         fetchPriority={priority ? "high" : "auto"}
         loading={priority ? "eager" : loading ?? "lazy"}
@@ -52,6 +57,8 @@ export default function CmsImage({
       src={src}
       alt={alt}
       fill={fill}
+      width={width}
+      height={height}
       priority={priority}
       loading={loading}
       sizes={sizes}

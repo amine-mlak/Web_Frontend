@@ -21,7 +21,7 @@ export default function FooterRegions({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex items-center gap-1.5 text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white"
+        className="inline-flex min-h-7 items-center gap-1.5 text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white"
       >
         {label}
         <svg
@@ -38,7 +38,7 @@ export default function FooterRegions({
             <li key={`${link.href}-${link.label}`}>
               <LocaleLink
                 href={link.href}
-                className="text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white"
+                className="inline-flex min-h-7 items-center text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white"
               >
                 {link.label}
               </LocaleLink>

@@ -144,9 +144,9 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       </section>
 
       <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <p className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
+        <h2 className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
           {hub.statement}
-        </p>
+        </h2>
         <div className="lg:col-span-7">
           <RuledPoints branches={hub.branches} />
         </div>

@@ -32,6 +32,7 @@ export default function FaqHub({
         <div className="mt-12">
           {items.length > 0 ? (
             <Accordion
+              headingLevel="h2"
               items={items.map((item) => ({
                 slug: item.slug,
                 question: item.question,

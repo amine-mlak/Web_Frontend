@@ -15,7 +15,8 @@
   --color-muted: #4a4a46;
   --color-sage: #9eae92;
   --color-line: #e5e1da;
-  --color-gold: #a17a4a;
+  /* Text accent. #a17a4a only reached 3.8:1 on paper; this passes WCAG AA for small text. */
+  --color-gold: #8a6437;
   --color-bronze: #a17a4a;
   --color-bronze-dark: #8a6437;
   --color-messing: #c8a87e;

@@ -99,9 +99,9 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
 
       <section className="grid lg:grid-cols-12">
         <div className="flex flex-col justify-center px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
-          <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[34px]">
+          <h2 className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[34px]">
             {hub.statement}
-          </p>
+          </h2>
           <p className="mt-6 max-w-sm font-sans text-[15px] leading-relaxed text-muted">
             {hub.statementNote}
           </p>
@@ -166,9 +166,9 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       </section>
 
       <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <p className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
+        <h2 className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
           {hub.statement}
-        </p>
+        </h2>
         <div className="lg:col-span-7">
           <RuledPoints branches={hub.branches} />
         </div>

@@ -92,10 +92,14 @@ async function fetchChallenge() {
 
 export default function LeadCta({
   content,
+  headingLevel = "h2",
 }: {
   content: BeratungContent | null;
+  /** "h1" when the form is the whole page (/beratung), "h2" as a section. */
+  headingLevel?: "h1" | "h2";
 }) {
   const data = content ?? fallback;
+  const Heading = headingLevel;
   const [challenge, setChallenge] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [stepIndex, setStepIndex] = useState(0);
@@ -464,9 +468,9 @@ export default function LeadCta({
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-16 px-6 py-24 md:py-32 lg:grid-cols-12 lg:gap-20">
         <div className="lg:col-span-5">
           <p className="type-eyebrow mb-3 text-ink">{data.eyebrow}</p>
-          <h2 id="beratung-heading" className="type-h2 text-ink">
+          <Heading id="beratung-heading" className="type-h2 text-ink">
             {data.title}
-          </h2>
+          </Heading>
           <p className="type-intro mt-6 max-w-md text-muted">{data.intro}</p>
 
           <address className="type-body mt-12 not-italic">

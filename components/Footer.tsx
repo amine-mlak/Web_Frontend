@@ -9,8 +9,11 @@ import { type SocialIcon } from "@/lib/footer";
 const headingClass =
   "font-sans text-[11px] font-medium tracking-[0.22em] text-[#c2a483]";
 
+// inline-flex + min height: same look, but a tap target of at least 24px (WCAG 2.2).
 const linkClass =
-  "text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
+  "inline-flex min-h-7 items-center text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
+
+const shortcutClass = `inline-flex min-h-6 items-center ${headingClass}`;
 
 export default async function Footer() {
   const year = new Date().getFullYear();
@@ -74,7 +77,7 @@ export default async function Footer() {
           <ul className="mt-6 flex gap-8">
             {footer.shortcuts.map((link) => (
               <li key={link.label}>
-                <LocaleLink href={link.href} className={headingClass}>
+                <LocaleLink href={link.href} className={shortcutClass}>
                   {link.label}
                 </LocaleLink>
               </li>
@@ -91,7 +94,7 @@ export default async function Footer() {
                 <li key={link.label}>
                   <LocaleLink
                     href={link.href}
-                    className="text-[13px] text-[#9c9892] transition-colors hover:text-white"
+                    className="inline-flex min-h-6 items-center text-[13px] text-[#9c9892] transition-colors hover:text-white"
                   >
                     {link.label}
                   </LocaleLink>

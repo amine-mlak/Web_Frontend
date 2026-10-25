@@ -62,8 +62,8 @@ export default function TopicReading({
           </ul>
         </div>
         <div className="max-w-2xl space-y-6 lg:col-span-7 lg:col-start-6">
-          {copy.paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 40)} className="font-sans text-[17px] leading-[1.7] text-ink/85">
+          {copy.paragraphs.map((paragraph, index) => (
+            <p key={index} className="font-sans text-[17px] leading-[1.7] text-ink/85">
               {paragraph}
             </p>
           ))}
