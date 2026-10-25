@@ -1,6 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import Faq from "@/components/Faq";
-import LeadCta from "@/components/LeadCta";
+import PlannerSection from "@/components/planner/PlannerSection";
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
 import AtelierVisit from "@/components/catalog/hub/AtelierVisit";
 import ChapterRun from "@/components/catalog/hub/ChapterRun";
@@ -14,7 +14,6 @@ import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
 import { houseParagraphs, type PresentedHouse } from "@/lib/house-pages";
 import type { HouseLayout } from "@/lib/house-photos";
-import type { BeratungContent } from "@/lib/strapi";
 
 type HouseBlock =
   | "night"
@@ -40,7 +39,8 @@ const COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   lasting: ["title", "ledger", "body"],
   place: ["night", "ledger", "body", "visit", "form"],
   papers: ["film", "body", "form"],
-  path: ["title", "price", "chapters", "visit"],
+  // Küche planen: the online planner follows the explanation (design "Küchenplaner").
+  path: ["title", "price", "chapters", "form", "visit"],
   letter: ["title", "body", "form"],
 };
 
@@ -63,13 +63,7 @@ const COPY = {
   },
 } as const;
 
-export default function HousePage({
-  house,
-  lead,
-}: {
-  house: PresentedHouse;
-  lead?: BeratungContent | null;
-}) {
+export default function HousePage({ house }: { house: PresentedHouse }) {
   const copy = COPY[house.locale === "en" ? "en" : "de"];
   const paragraphs = houseParagraphs(house.body);
 
@@ -133,7 +127,7 @@ export default function HousePage({
     form: (
       <>
         {house.faq ? <Faq content={house.faq} /> : null}
-        <LeadCta content={lead ?? null} />
+        <PlannerSection />
       </>
     ),
     close: <CloseAtelier hub={house} />,

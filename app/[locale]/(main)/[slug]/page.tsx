@@ -3,7 +3,7 @@ import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
 import Kacheln from "@/components/Kacheln";
-import LeadCta from "@/components/LeadCta";
+import PlannerSection from "@/components/planner/PlannerSection";
 import Process from "@/components/Process";
 import HouseScreen from "@/components/catalog/house/HouseScreen";
 import type { Metadata } from "next";
@@ -64,7 +64,7 @@ export default async function LandingSlugPage({
         {landing.ablauf ? <Process content={landing.ablauf} /> : null}
         {landing.entdecken ? <Entdecken content={landing.entdecken} /> : null}
         {landing.faq ? <Faq content={landing.faq} /> : null}
-        {landing.beratung ? <LeadCta content={landing.beratung} /> : null}
+        {landing.beratung ? <PlannerSection /> : null}
       </main>
     );
   }

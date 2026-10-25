@@ -10,8 +10,12 @@ export type LeadFieldError =
   | "invalid_phone"
   | "invalid_message";
 
+/** Which page a lead came from, for analytics. Works for DE and EN URLs. */
 export function leadFormSource(pathname: string) {
-  return pathname === "/beratung" ? "beratung" : "home";
+  const path = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  if (path === "/beratung" || path === "/consultation") return "beratung";
+  if (path === "/kueche-planen" || path === "/plan-your-kitchen") return "kueche-planen";
+  return path === "/" ? "home" : "page";
 }
 
 export function trimLead(value: unknown, max: number) {

@@ -1,25 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
+import type { PlannerContent } from "@/lib/kitchen-planner-model";
 import { trimLead, validateLeadFields } from "@/lib/lead-fields";
-import {
-  composeLeadMessage,
-  isBeratungAppliance,
-  isBeratungBudget,
-  isBeratungColour,
-  isBeratungCooking,
-  isBeratungFloorplan,
-  isBeratungHandle,
-  isBeratungIntent,
-  isBeratungOccasion,
-  isBeratungPlace,
-  isBeratungPreparation,
-  isBeratungRoom,
-  isBeratungSalutation,
-  isBeratungShape,
-  isBeratungStyle,
-  isBeratungTiming,
-  isBeratungWorktop,
-  parseIdList,
-} from "@/lib/beratung-wizard";
+import { composePlannerMessage, readPlannerAnswers } from "@/lib/planner-lead";
 
 const CHALLENGE_TTL_MS = 20 * 60 * 1000;
 const MIN_SOLVE_MS = 1500;
@@ -55,22 +37,11 @@ export type LeadBody = {
   email?: string;
   phone?: string;
   message?: string;
-  intent?: string;
-  shape?: string;
-  room?: string;
-  style?: string;
-  handle?: string;
-  colour?: string;
-  worktop?: string;
-  appliances?: unknown;
-  cooking?: string;
-  preparations?: unknown;
-  timing?: string;
-  budget?: string;
-  floorplan?: string;
+  /** Kitchen planner answers, see lib/planner-lead.ts. */
+  answers?: unknown;
+  notes?: unknown;
+  budget?: unknown;
   place?: string;
-  salutation?: string;
-  plz?: string;
   event_id?: string;
   event_source_url?: string;
   landing_url?: string;
@@ -264,72 +235,13 @@ export function honeypotFilled(body: LeadBody) {
   return trim(body.company_website, 200).length > 0;
 }
 
-export function validateLead(body: LeadBody) {
+/**
+ * `planner` is the German planner content: option values are the same in
+ * every language, and the lead mail is written for the team in German.
+ */
+export function validateLead(body: LeadBody, planner: PlannerContent) {
   const fields = validateLeadFields(body);
   if (!fields.ok) {
-    return { ok: false as const };
-  }
-
-  const shape = trim(body.shape, 40);
-  const room = trim(body.room, 40);
-  const style = trim(body.style, 40);
-  const handle = trim(body.handle, 40);
-  const colour = trim(body.colour, 40);
-  const worktop = trim(body.worktop, 40);
-  const cooking = trim(body.cooking, 40);
-  const intent = trim(body.intent, 40);
-  const timing = trim(body.timing, 40);
-  const budget = trim(body.budget, 40);
-  const floorplan = trim(body.floorplan, 40);
-  const place = trim(body.place, 40);
-  const salutation = trim(body.salutation, 20);
-  const plz = trim(body.plz, 8).replace(/\D/g, "").slice(0, 5);
-  const appliances = parseIdList(body.appliances, isBeratungAppliance);
-  const preparations = parseIdList(body.preparations, isBeratungPreparation);
-
-  if (!isBeratungShape(shape)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungRoom(room)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungStyle(style)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungHandle(handle)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungColour(colour)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungWorktop(worktop)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungCooking(cooking)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungIntent(intent) || !isBeratungOccasion(intent)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungTiming(timing)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungBudget(budget)) {
-    return { ok: false as const };
-  }
-  if (!isBeratungFloorplan(floorplan)) {
-    return { ok: false as const };
-  }
-  if (appliances.length === 0 || preparations.length === 0) {
-    return { ok: false as const };
-  }
-  if (!isBeratungPlace(place)) {
-    return { ok: false as const };
-  }
-  if (salutation && !isBeratungSalutation(salutation)) {
-    return { ok: false as const };
-  }
-  if (place === "vor_ort" && !/^\d{5}$/.test(plz)) {
     return { ok: false as const };
   }
 
@@ -338,28 +250,8 @@ export function validateLead(body: LeadBody) {
   const landingUrl = trim(body.landing_url, 500);
   const clickIds = sanitizeClickIds(body.click_ids);
   const utm = sanitizeUtm(body.utm);
-  const details = {
-    shape,
-    room,
-    style,
-    handle,
-    colour,
-    worktop,
-    appliances,
-    cooking,
-    intent,
-    preparations,
-    timing,
-    budget,
-    floorplan,
-    place,
-    ...(salutation ? { salutation } : {}),
-    ...(plz ? { plz } : {}),
-  };
-  const message = composeLeadMessage({
-    ...details,
-    message: fields.message,
-  });
+  const details = readPlannerAnswers(body, planner);
+  const message = composePlannerMessage({ ...details, message: fields.message }, planner);
 
   return {
     ok: true as const,

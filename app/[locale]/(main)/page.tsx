@@ -3,7 +3,7 @@ import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
 import Kacheln from "@/components/Kacheln";
-import LeadCta from "@/components/LeadCta";
+import PlannerSection from "@/components/planner/PlannerSection";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import Process from "@/components/Process";
 import { getRequestLocale } from "@/lib/locale";
@@ -45,7 +45,7 @@ const fallbackHeroPanel: Record<"de" | "en", HeroIntroContent> = {
 
 export default async function Home() {
   const locale = await getRequestLocale();
-  const { heroSlides, heroPanel, kacheln, entdecken, faq, ablauf, beratung } =
+  const { heroSlides, heroPanel, kacheln, entdecken, faq, ablauf } =
     await fetchHomeCms();
 
   return (
@@ -56,7 +56,7 @@ export default async function Home() {
       <Process content={ablauf} />
       <Entdecken content={entdecken} />
       <Faq content={faq} />
-      <LeadCta content={beratung} />
+      <PlannerSection />
     </main>
   );
 }

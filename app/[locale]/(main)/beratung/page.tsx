@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import LeadCta from "@/components/LeadCta";
+import PlannerSection from "@/components/planner/PlannerSection";
+import { getRequestLocale } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
-import { fetchHomeCms } from "@/lib/strapi";
 
 export const revalidate = 120;
 
-export function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
+  const en = (await getRequestLocale()) === "en";
   return pageMetadata({
-    title: "Beratung | BEER Küchenmanufaktur",
-    description:
-      "Erstgespräch kostenlos. Küchenplanung in Wolfersdorf bei Freising — Aufmaß, Zeichnung, Fertigung.",
+    title: en ? "Kitchen planner & consultation | BEER Küchenmanufaktur" : "Küchenplaner & Beratung | BEER Küchenmanufaktur",
+    description: en
+      ? "Plan your kitchen in seven short steps – style, materials, appliances, room, shape and budget. The first consultation in Wolfersdorf near Freising is free."
+      : "Planen Sie Ihre Küche in sieben kurzen Schritten – Stil, Material, Geräte, Raum, Form und Budget. Das Erstgespräch in Wolfersdorf bei Freising ist kostenlos.",
     path: "/beratung",
   });
 }
 
-export default async function BeratungPage() {
-  const { beratung } = await fetchHomeCms();
-
+export default function BeratungPage() {
   return (
     <main className="bg-paper">
-      <LeadCta content={beratung} headingLevel="h1" />
+      <PlannerSection headingLevel="h1" />
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import { LEAD_FORM, leadFormSource } from "@/lib/lead-fields";
 import { trackEvent } from "@/lib/umami";
-import type { BeratungWizardStep } from "@/lib/beratung-wizard";
+// Planner step keys (lib/kitchen-planner.ts) or "complete".
+type BeratungWizardStep = string;
 
 type FormErrorReason =
   | "invalid_name"
@@ -42,7 +43,7 @@ export function trackFormWizardStep(step: BeratungWizardStep) {
   trackEvent(`form_step_${step}`, meta());
 }
 
-export function trackFormAttempt(step: BeratungWizardStep = "nachricht") {
+export function trackFormAttempt(step: BeratungWizardStep = "kontakt") {
   trackEvent("form_attempt", meta({ step }));
 }
 

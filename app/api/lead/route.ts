@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { createHash, randomUUID } from "crypto";
+import { getKitchenPlanner } from "@/lib/kitchen-planner";
 import {
   clientIp,
   honeypotFilled,
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
     return jsonError(400, GENERIC_ERROR);
   }
 
-  const valid = validateLead(parsed.body);
+  const valid = validateLead(parsed.body, await getKitchenPlanner("de"));
   if (!valid.ok) {
     return jsonError(400, GENERIC_ERROR);
   }
