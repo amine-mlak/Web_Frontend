@@ -1,3 +1,4 @@
+import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import { Fragment, type ReactNode } from "react";
 import Faq from "@/components/Faq";
 import PlannerSection from "@/components/planner/PlannerSection";
@@ -12,37 +13,13 @@ import HouseBanner from "@/components/catalog/house/HouseBanner";
 import HouseBody from "@/components/catalog/house/HouseBody";
 import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
-import { houseParagraphs, type PresentedHouse } from "@/lib/house-pages";
-import type { HouseLayout } from "@/lib/house-photos";
-
-type HouseBlock =
-  | "night"
-  | "title"
-  | "film"
-  | "plate"
-  | "ledger"
-  | "price"
-  | "body"
-  | "gallery"
-  | "people"
-  | "chapters"
-  | "visit"
-  | "siblings"
-  | "form"
-  | "close";
-
-const COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
-  legal: [],
-  manufactory: ["night", "body", "chapters", "siblings", "close"],
-  showroom: ["plate", "gallery", "visit"],
-  people: ["film", "people", "body", "close"],
-  lasting: ["title", "ledger", "body"],
-  place: ["night", "ledger", "body", "visit", "form"],
-  papers: ["film", "body", "form"],
-  // Küche planen: the online planner follows the explanation (design "Küchenplaner").
-  path: ["title", "price", "chapters", "form", "visit"],
-  letter: ["title", "body", "form"],
-};
+import {
+  HOUSE_COMPOSITION,
+  houseParagraphs,
+  withUniquePhotos,
+  type HouseBlock,
+  type PresentedHouse,
+} from "@/lib/house-pages";
 
 const COPY = {
   de: {
@@ -63,7 +40,8 @@ const COPY = {
   },
 } as const;
 
-export default function HousePage({ house }: { house: PresentedHouse }) {
+export default function HousePage({ house: presented }: { house: PresentedHouse }) {
+  const house = withUniquePhotos(presented);
   const copy = COPY[house.locale === "en" ? "en" : "de"];
   const paragraphs = houseParagraphs(house.body);
 
@@ -135,7 +113,9 @@ export default function HousePage({ house }: { house: PresentedHouse }) {
 
   return (
     <main className="bg-paper">
-      {COMPOSITION[house.layout].map((name) => (
+      {/* The pages people open to find the showroom carry the business data for local search. */}
+      {house.slug === "kontakt" || house.slug === "ausstellung" ? <LocalBusinessJsonLd /> : null}
+      {HOUSE_COMPOSITION[house.layout].map((name) => (
         <Fragment key={name}>{block[name]}</Fragment>
       ))}
     </main>

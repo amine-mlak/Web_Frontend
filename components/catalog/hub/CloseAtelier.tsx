@@ -1,5 +1,5 @@
-import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
+import NextSteps from "@/components/catalog/NextSteps";
 import type { PresentedHub } from "@/lib/collection-present";
 
 export default function CloseAtelier({ hub }: { hub: PresentedHub }) {
@@ -22,9 +22,7 @@ export default function CloseAtelier({ hub }: { hub: PresentedHub }) {
         <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80 md:text-[19px]">
           {hub.closeText}
         </p>
-        <LocaleLink href={hub.ctaHref} className="pill pill-light mt-10 w-fit">
-          {hub.ctaLabel}
-        </LocaleLink>
+        <NextSteps primary={{ href: hub.ctaHref, label: hub.ctaLabel }} locale={hub.locale} tone="dark" className="mt-10" />
       </div>
     </section>
   );

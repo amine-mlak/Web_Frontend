@@ -7,6 +7,7 @@ import { cmsLarge } from "@/lib/beer-photos";
 import { isStockPhoto } from "@/lib/dev-images";
 import {
   SIBLING_IMAGES,
+  reserveShots,
   sizedMedia,
   type HouseLayout,
   type HousePerson,
@@ -48,6 +49,40 @@ type Voice = {
 };
 
 const LEGAL = new Set(["impressum", "datenschutz", "agb", "cookies"]);
+
+// Headings while the CMS "Seitentitel" is empty (the emphasis comes after it).
+const HOUSE_TITLE: Record<Locale, Record<string, string>> = {
+  de: {
+    ueber: "Über BEER",
+    "kueche-planen": "Küche planen",
+    ausstellung: "Ausstellung",
+    kontakt: "Kontakt",
+    katalog: "Katalog",
+    team: "Team",
+    nachhaltigkeit: "Nachhaltigkeit",
+    karriere: "Karriere",
+    impressum: "Impressum",
+    datenschutz: "Datenschutz",
+    agb: "AGB",
+  },
+  en: {
+    ueber: "About BEER",
+    "kueche-planen": "Plan your kitchen",
+    ausstellung: "Showroom",
+    kontakt: "Contact",
+    katalog: "Catalogue",
+    team: "Team",
+    nachhaltigkeit: "Sustainability",
+    karriere: "Careers",
+    impressum: "Legal notice",
+    datenschutz: "Privacy",
+    agb: "Terms",
+  },
+};
+
+function builtInTitle(slug: string, locale: Locale) {
+  return HOUSE_TITLE[locale][slug] ?? HOUSE_TITLE.de[slug] ?? slug.charAt(0).toUpperCase() + slug.slice(1);
+}
 
 const VOICE: Record<Locale, Record<string, Voice>> = {
   de: {
@@ -433,6 +468,119 @@ function remapBranches(hub: PresentedHub, shots: HouseShot[]) {
   });
 }
 
+export type HouseBlock =
+  | "night"
+  | "title"
+  | "film"
+  | "plate"
+  | "ledger"
+  | "price"
+  | "body"
+  | "gallery"
+  | "people"
+  | "chapters"
+  | "visit"
+  | "siblings"
+  | "form"
+  | "close";
+
+/** The blocks of each house layout, top to bottom (rendered by HousePage). */
+export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
+  legal: [],
+  manufactory: ["night", "body", "chapters", "siblings", "close"],
+  showroom: ["plate", "gallery", "visit"],
+  people: ["film", "people", "body", "close"],
+  lasting: ["title", "ledger", "body"],
+  place: ["night", "ledger", "body", "visit", "form"],
+  papers: ["film", "body", "form"],
+  // Küche planen: the online planner follows the explanation (design "Küchenplaner").
+  path: ["title", "price", "chapters", "form", "visit"],
+  letter: ["title", "body", "form"],
+};
+
+/** The file name, so one photo matches at any size. */
+function photoKey(src: string) {
+  return src.split("?")[0].split("/").pop() ?? src;
+}
+
+/** Photos each chapter spread shows, by its variant (see ChapterSpread: variant 2 has three, variant 4 two). */
+function spreadPhotoCount(index: number) {
+  const variant = index % 5;
+  return variant === 2 ? 3 : variant === 4 ? 2 : 1;
+}
+
+/**
+ * No photo twice on one page. The photos of the blocks this layout shows are
+ * taken first (hero, ledger, gallery, visit, close, chapter index); a sibling
+ * card or chapter that would repeat one gets the next unused photo from the
+ * page's chapter shots, its gallery, then the house reserve.
+ */
+export function withUniquePhotos(house: PresentedHouse): PresentedHouse {
+  const blocks = new Set(HOUSE_COMPOSITION[house.layout]);
+  const used = new Set<string>();
+  const claim = (src?: string) => {
+    if (src) used.add(photoKey(src));
+  };
+  const pool: HouseShot[] = [
+    ...house.branches.flatMap((branch) => (branch.image ? [{ src: branch.image, alt: branch.alt ?? "" }] : [])),
+    ...house.gallery,
+    ...reserveShots(),
+  ];
+  const next = () => {
+    const found = pool.find((item) => !used.has(photoKey(item.src)));
+    claim(found?.src);
+    return found ?? null;
+  };
+
+  if (blocks.has("night") || blocks.has("film") || blocks.has("plate")) claim(house.heroImage);
+  if (blocks.has("ledger")) claim(house.ledgerImage);
+  if (blocks.has("gallery")) house.gallery.forEach((item) => claim(item.src));
+  if (blocks.has("visit")) claim(house.visitImage);
+  if (blocks.has("close")) claim(house.closeImage);
+  if (blocks.has("chapters")) claim(house.filmstrip[0]?.src ?? house.heroImage);
+
+  const siblings = blocks.has("siblings")
+    ? house.siblings.map((sibling) => {
+        if (!sibling.image || !used.has(photoKey(sibling.image))) {
+          claim(sibling.image);
+          return sibling;
+        }
+        return { ...sibling, image: next()?.src ?? sibling.image };
+      })
+    : house.siblings;
+
+  const branches = blocks.has("chapters")
+    ? house.branches.map((branch, index) => {
+        const count = spreadPhotoCount(index);
+        const main = next();
+        const b = count > 1 ? next() : null;
+        const c = count > 2 ? next() : null;
+        return {
+          ...branch,
+          image: main?.src ?? branch.image,
+          srcSet: main ? undefined : branch.srcSet,
+          alt: main?.alt || branch.alt,
+          imageB: b?.src ?? branch.imageB,
+          imageC: c?.src ?? branch.imageC,
+        };
+      })
+    : house.branches;
+
+  return { ...house, siblings, branches };
+}
+
+/** "Seitentitel" from the CMS, unless it is empty, just the slug, or in another language. */
+function houseTitle(page: SitePage | null, slug: string, locale: Locale) {
+  if (page?.contentLocale && page.contentLocale !== locale) {
+    return "";
+  }
+  const title = page?.seitentitel?.trim();
+  if (!title || title.toLowerCase() === slug.toLowerCase()) {
+    return "";
+  }
+  return title;
+}
+
 function asHouse(
   slug: string,
   locale: Locale,
@@ -452,7 +600,9 @@ function asHouse(
     kind: LEGAL.has(slug) ? "legal" : voice.kind,
     layout: media?.layout ?? (LEGAL.has(slug) ? "legal" : "manufactory"),
     locale,
-    title: page?.title?.trim() || hub.title,
+    // The heading is "Seitentitel" + "Betonung". The CMS "title" already holds
+    // both, and an old seed stored the bare slug ("kontakt") as the title.
+    title: houseTitle(page, slug, locale) || hub.title,
     eyebrow: page?.eyebrow?.trim() || hub.eyebrow,
     lede: page?.intro?.trim() || hub.lede,
     emphasis: page && (!page.contentLocale || page.contentLocale === locale) && page.betonung
@@ -532,7 +682,7 @@ function emptyHub(locale: Locale, slug: string, voice: Voice, page: SitePage | n
   return {
     locale,
     eyebrow: page?.eyebrow || "",
-    title: page?.title || slug,
+    title: houseTitle(page, slug, locale) || builtInTitle(slug, locale),
     emphasis: voice.emphasis,
     lede: page?.intro || "",
     statement: voice.statement,
@@ -575,13 +725,13 @@ export function houseCms(slug: string) {
   }
   return {
     slug,
-    title: slug,
+    title: builtInTitle(slug, "de"),
     eyebrow: "",
     intro: voice.statementNote,
     body: [voice.statement, voice.statementNote].filter(Boolean).join("\n\n"),
     ctaLabel: "Termin anfragen",
     ctaUrl: "/beratung",
-    seitentitel: slug,
+    seitentitel: builtInTitle(slug, "de"),
     betonung: voice.emphasis,
     aussage: voice.statement,
     hinweis: voice.statementNote,

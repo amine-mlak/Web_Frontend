@@ -223,7 +223,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     statementB: ROOM.r0004,
     close: ROOM.r0081,
     ledger: WORKSHOP.two,
-    visit: ROOM.r0002,
+    visit: ROOM.r0047,
     gallery: [
       shot(ROOM.r0002, "Erstes Gespräch in der Ausstellung"),
       shot(WORKSHOP.one, "Fertigung nach Aufmaß"),
@@ -271,6 +271,24 @@ export function sizedMedia(slug: string): HouseMedia | null {
       src: size(person.src, 1280),
     })),
   };
+}
+
+/** Extra house photos for a page that would otherwise show one twice. */
+export function reserveShots(): HouseShot[] {
+  return [
+    shot(BUILDING.facade, "Manufaktur in Wolfersdorf"),
+    shot(BUILDING.dusk, "Manufaktur am Abend"),
+    shot(BUILDING.snow3, "Manufaktur im Winter"),
+    shot(WORKSHOP.two, "Werkstatt"),
+    shot(CREW.table, "Team in der Manufaktur"),
+    shot(ROOM.r0047, "Ausstellung Wolfersdorf"),
+    shot(ROOM.r0048, "Ausstellung Wolfersdorf"),
+    shot(ROOM.r0068, "Ausstellung Wolfersdorf"),
+    shot(ROOM.r0070, "Ausstellung Wolfersdorf"),
+    shot(ROOM.r0071, "Querschnitte und Kanten"),
+    shot(ROOM.r0074, "Einrichtung im Studio"),
+    shot(ROOM.r0058, "Ausstellung Wolfersdorf"),
+  ].map((item) => ({ ...item, src: houseSrc(item.src, 1600) }));
 }
 
 export const SIBLING_IMAGES = {

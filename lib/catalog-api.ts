@@ -12,6 +12,7 @@ import {
   type Appliance,
   type ApplianceKind,
   type Article,
+  type ArticleBlock,
   type ArticleCategory,
   type Brand,
   type CatalogSpec,
@@ -298,6 +299,37 @@ function mapCategory(entry: unknown): ArticleCategory | null {
   return { slug: text(row, "slug") || name.toLowerCase(), name };
 }
 
+function articleImage(media: unknown, title: string): ArticleBlock | null {
+  const file = media as StrapiMedia | undefined;
+  const mapped = strapiResponsiveImage(file, { srcWidth: 1400 });
+  if (!mapped.src) {
+    return null;
+  }
+  return { kind: "image", src: mapped.src, srcSet: mapped.srcSet, alt: file?.alternativeText || title };
+}
+
+/** The dynamic zone "blocks" in editor order: text, quote, single image, slider. */
+function mapArticleBlocks(row: Record<string, unknown> | null, title: string): ArticleBlock[] {
+  const blocks: ArticleBlock[] = [];
+  for (const block of flattenCollection(row?.blocks)) {
+    const component = text(block, "__component");
+    if (component === "shared.rich-text" && text(block, "body")) {
+      blocks.push({ kind: "text", body: text(block, "body") });
+    } else if (component === "shared.quote" && text(block, "body")) {
+      blocks.push({ kind: "quote", body: text(block, "body"), by: text(block, "title") || undefined });
+    } else if (component === "shared.media") {
+      const image = articleImage(block.file, title);
+      if (image) blocks.push(image);
+    } else if (component === "shared.slider") {
+      for (const file of Array.isArray(block.files) ? block.files : []) {
+        const image = articleImage(file, title);
+        if (image) blocks.push(image);
+      }
+    }
+  }
+  return blocks;
+}
+
 function mapArticle(entry: unknown): Article | null {
   const row = flattenEntity(entry);
   const title = text(row, "title");
@@ -305,9 +337,9 @@ function mapArticle(entry: unknown): Article | null {
     return null;
   }
   const image = mediaImage(row, "cover", stile("stile-holz.jpg"));
-  const bodyFromBlocks = flattenCollection(row?.blocks)
-    .map((block) => text(block, "body"))
-    .filter(Boolean)
+  const blocks = mapArticleBlocks(row, title);
+  const bodyFromBlocks = blocks
+    .flatMap((block) => (block.kind === "text" ? [block.body] : []))
     .join("\n\n");
   return {
     slug: text(row, "slug") || title,
@@ -317,6 +349,9 @@ function mapArticle(entry: unknown): Article | null {
     image: image.src,
     srcSet: image.srcSet,
     category: mapCategory(row?.category) ?? undefined,
+    blocks,
+    publishedAt: text(row, "publishedAt") || undefined,
+    updatedAt: text(row, "updatedAt") || undefined,
   };
 }
 
@@ -462,7 +497,7 @@ export async function fetchArticles() {
       "pagination[pageSize]": "50",
       "populate[cover]": "true",
       "populate[category]": "true",
-      populate: "blocks",
+      "populate[blocks][populate]": "*",
     },
     mapArticle,
     FALLBACK_ARTICLES,

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import DetailPage from "@/components/catalog/DetailPage";
+import ArticlePage from "@/components/catalog/entries/ArticlePage";
 import { findBySlug, isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
+import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
@@ -29,6 +30,7 @@ export async function generateMetadata({
     description: item.description,
     path: `/presse/${item.slug}`,
     image: item.image,
+    article: { publishedTime: item.publishedAt, modifiedTime: item.updatedAt, section: item.category?.name },
   });
 }
 
@@ -37,23 +39,14 @@ export default async function PresseArticlePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const item = findBySlug(await fetchArticles(), (await params).slug);
+  const locale = await getRequestLocale();
+  const articles = await fetchArticles();
+  const item = findBySlug(articles, (await params).slug);
   if (!item) {
     notFound();
   }
   if (!isPressArticle(item)) {
     redirect(`/ratgeber/${item.slug}`);
   }
-  return (
-    <DetailPage
-      eyebrow={item.category?.name || "Aktuelles"}
-      title={item.title}
-      intro={item.description}
-      body={item.body}
-      image={item.image}
-      srcSet={item.srcSet}
-      ctaLabel="Gespräch vereinbaren"
-      links={[{ href: "/presse", label: "Alle Meldungen" }]}
-    />
-  );
+  return <ArticlePage item={item} articles={articles} locale={locale} />;
 }

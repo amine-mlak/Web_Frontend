@@ -1,5 +1,6 @@
 import { useId } from "react";
 import LocaleLink from "@/components/LocaleLink";
+import NextSteps from "@/components/catalog/NextSteps";
 import { Frame } from "@/components/catalog/collections/parts";
 import { chromeCopy } from "@/lib/i18n";
 import { absoluteUrl } from "@/lib/seo";
@@ -22,24 +23,39 @@ export function Crumbs({
       ? crumbs
       : [{ href: hub.parentHref ?? "/kuechen", label: hub.parentLabel ?? "" }];
 
-  // Home → parents → this page, for Google's breadcrumb trail. The last item has no URL.
+  return <Breadcrumbs items={items} current={hub.title} locale={hub.locale} tone={tone} />;
+}
+
+/** The visible parent links plus the BreadcrumbList JSON-LD (Home → parents → this page). */
+export function Breadcrumbs({
+  items,
+  current,
+  locale,
+  tone = "ink",
+}: {
+  items: { href: string; label: string }[];
+  current?: string;
+  locale: PresentedHub["locale"];
+  tone?: "ink" | "paper";
+}) {
+  // The last item (this page) has no URL.
   const trail = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { href: "/", label: chromeCopy[hub.locale].home },
+      { href: "/", label: chromeCopy[locale].home },
       ...items,
-      ...(hub.title ? [{ href: "", label: hub.title }] : []),
+      ...(current ? [{ href: "", label: current }] : []),
     ].map((crumb, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: crumb.label,
-      ...(crumb.href ? { item: absoluteUrl(crumb.href, hub.locale) } : {}),
+      ...(crumb.href ? { item: absoluteUrl(crumb.href, locale) } : {}),
     })),
   };
 
   return (
-    <nav aria-label={hub.locale === "en" ? "Breadcrumb" : "Brotkrumen"}>
+    <nav aria-label={locale === "en" ? "Breadcrumb" : "Brotkrumen"}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trail) }}
@@ -272,9 +288,7 @@ export function SoftClose({ hub }: { hub: PresentedHub }) {
       <p className="mt-5 max-w-md font-sans text-[16px] leading-relaxed text-muted">
         {hub.closeText}
       </p>
-      <LocaleLink href={hub.ctaHref} className="pill pill-primary mt-8 w-fit">
-        {hub.ctaLabel}
-      </LocaleLink>
+      <NextSteps primary={{ href: hub.ctaHref, label: hub.ctaLabel }} locale={hub.locale} className="mt-8" />
     </section>
   );
 }

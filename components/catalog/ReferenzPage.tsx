@@ -1,5 +1,7 @@
 import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
+import NextSteps from "@/components/catalog/NextSteps";
+import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import type { Project } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
@@ -7,6 +9,7 @@ import type { Locale } from "@/lib/i18n";
 const COPY = {
   de: {
     eyebrow: "Referenzküche",
+    projects: "Projekte",
     file: "Hausakte",
     equipment: "Ausstattung",
     materials: "Material",
@@ -14,7 +17,7 @@ const COPY = {
     brands: "Marken",
     region: "Ort",
     topics: "Themen",
-    others: "Andere Häuser",
+    others: "Ähnliche Häuser",
     close: "Ihr Haus ist keines davon.",
     closeText:
       "Die Akte zeigt, was gebaut wurde. Was bei Ihnen entsteht, folgt dem Aufmaß.",
@@ -22,6 +25,7 @@ const COPY = {
   },
   en: {
     eyebrow: "Reference kitchen",
+    projects: "Projects",
     file: "House file",
     equipment: "Specification",
     materials: "Material",
@@ -29,12 +33,17 @@ const COPY = {
     brands: "Brands",
     region: "Place",
     topics: "Themes",
-    others: "Other houses",
+    others: "Similar houses",
     close: "Your house is none of these.",
     closeText: "The file shows what was built. What is made for you follows the survey.",
     cta: "Plan something similar",
   },
 } as const;
+
+/** The file name, so the same photo matches at any size or host. */
+function photoKey(src: string) {
+  return src.split("?")[0].split("/").pop() ?? src;
+}
 
 function paragraphs(body: string) {
   return body
@@ -55,6 +64,16 @@ export default function ReferenzPage({
   const copy = COPY[locale === "en" ? "en" : "de"];
   const meta = [project.place, project.year].filter(Boolean).join(" · ");
   const body = paragraphs(project.body);
+  // The hero photo is not repeated in the gallery, and no photo appears twice.
+  const seen = new Set(project.image ? [photoKey(project.image)] : []);
+  const gallery = project.gallery.filter((frame) => {
+    const key = photoKey(frame.src);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  // The last frame moves to the closing band instead of being shown twice.
+  const closePhoto = gallery.length > 3 ? gallery.pop()! : null;
   const groups = [
     {
       label: copy.materials,
@@ -97,7 +116,8 @@ export default function ReferenzPage({
     <main className="bg-paper">
       <article>
         <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
-          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
+          <Breadcrumbs items={[{ href: "/projekte", label: copy.projects }]} current={project.title} locale={locale} />
+          <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
             <p className="type-eyebrow text-gold">{copy.eyebrow}</p>
             <p className="font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
               {copy.file}
@@ -158,9 +178,9 @@ export default function ReferenzPage({
           </div>
         </div>
 
-        {project.gallery.length > 0 ? (
+        {gallery.length > 0 ? (
           <ul className="grid gap-3 px-5 pb-8 sm:px-8 lg:grid-cols-12 lg:px-14">
-            {project.gallery.map((frame, index) => (
+            {gallery.map((frame, index) => (
               <li
                 key={`${frame.src}-${index}`}
                 className={index % 3 === 0 ? "lg:col-span-7" : "lg:col-span-5"}
@@ -249,6 +269,18 @@ export default function ReferenzPage({
       ) : null}
 
       <section className="grid bg-nacht lg:grid-cols-12">
+        {closePhoto ? (
+          <figure className="relative min-h-[18rem] overflow-hidden lg:order-2 lg:col-span-5 lg:min-h-[30rem]">
+            <CmsImage
+              src={closePhoto.src}
+              srcSet={closePhoto.srcSet}
+              alt=""
+              fill
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover"
+            />
+          </figure>
+        ) : null}
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:px-16 lg:py-24">
           <h2 className="font-serif text-[36px] leading-[1.08] font-medium tracking-[-0.03em] text-paper md:text-[48px]">
             {copy.close}
@@ -256,9 +288,7 @@ export default function ReferenzPage({
           <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80">
             {copy.closeText}
           </p>
-          <LocaleLink href="/beratung" className="pill pill-light mt-10 w-fit">
-            {copy.cta}
-          </LocaleLink>
+          <NextSteps primary={{ href: "/beratung", label: copy.cta }} locale={locale} tone="dark" className="mt-10" />
         </div>
       </section>
     </main>

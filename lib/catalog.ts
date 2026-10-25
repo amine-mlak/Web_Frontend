@@ -177,6 +177,12 @@ export type Material = {
 
 export type ArticleCategory = { slug: string; name: string };
 
+/** One block of an article body, in the order the editor placed them. */
+export type ArticleBlock =
+  | { kind: "text"; body: string }
+  | { kind: "quote"; body: string; by?: string }
+  | { kind: "image"; src: string; srcSet?: string; alt: string };
+
 export type Article = {
   slug: string;
   title: string;
@@ -185,6 +191,9 @@ export type Article = {
   image: string;
   srcSet?: string;
   category?: ArticleCategory;
+  blocks?: ArticleBlock[];
+  publishedAt?: string;
+  updatedAt?: string;
 };
 
 export const PRESS_CATEGORY_SLUG = "presse";

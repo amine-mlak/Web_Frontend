@@ -23,7 +23,7 @@ export function absoluteUrl(path = "/", locale: Locale = DEFAULT_LOCALE) {
   return new URL(href, `${siteUrl()}/`).toString();
 }
 
-function absoluteAsset(src?: string) {
+export function absoluteAsset(src?: string) {
   if (!src) {
     return undefined;
   }
@@ -38,6 +38,8 @@ export type PageSeo = {
   description?: string;
   path: string;
   image?: string;
+  /** Ratgeber and Presse posts: Open Graph "article" with its dates. */
+  article?: { publishedTime?: string; modifiedTime?: string; section?: string };
 };
 
 export async function pageMetadata(seo: PageSeo): Promise<Metadata> {
@@ -60,7 +62,7 @@ export async function pageMetadata(seo: PageSeo): Promise<Metadata> {
       },
     },
     openGraph: {
-      type: "website",
+      ...(seo.article ? { type: "article", ...seo.article } : { type: "website" }),
       locale: locale === "en" ? "en_GB" : "de_DE",
       url: canonical,
       siteName: SITE_NAME,
