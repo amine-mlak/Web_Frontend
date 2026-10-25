@@ -25,22 +25,20 @@ type StrapiAnnouncement = {
 
 /**
  * Used only while the CMS has no "Ankündigungsleiste" field yet (before
- * beer-cms schema v2 is live). Same message as the current beer.de; it
- * switches itself off after the event.
+ * beer-cms schema v2 is live), so the bar can be seen on staging. Once the
+ * CMS has the field, only the CMS decides whether and when it shows.
  */
 const BUILT_IN: Record<Locale, StrapiAnnouncement> = {
   de: {
     enabled: true,
     scrolling: true,
     tone: "dunkel",
-    endsAt: "2026-11-08T17:00:00.000Z",
     items: [{ text: "Tag der offenen Tür: 7.–8. November, 13–18 Uhr", href: "/ausstellung" }],
   },
   en: {
     enabled: true,
     scrolling: true,
     tone: "dunkel",
-    endsAt: "2026-11-08T17:00:00.000Z",
     items: [{ text: "Open house: 7–8 November, 1–6 pm", href: "/ausstellung" }],
   },
 };
