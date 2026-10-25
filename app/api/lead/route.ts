@@ -22,6 +22,26 @@ function emailKey(email: string) {
   return createHash("sha256").update(email).digest("hex").slice(0, 16);
 }
 
+function hostOf(value: string | null) {
+  if (!value) return "none";
+  try {
+    return new URL(value).host;
+  } catch {
+    return "invalid";
+  }
+}
+
+/**
+ * Every refused lead leaves one log line with the reason (no names, mails
+ * or phone numbers), so a failed submit can be traced in the Coolify logs.
+ */
+function reject(request: Request, status: number, reason: string, body = GENERIC_ERROR) {
+  console.warn(
+    `[lead] refused ${status} ${reason} origin=${hostOf(request.headers.get("origin"))} referer=${hostOf(request.headers.get("referer"))}`,
+  );
+  return jsonError(status, body);
+}
+
 function n8nConfig() {
   const url = process.env.N8N_WEBHOOK_URL?.trim();
   const secret = process.env.N8N_WEBHOOK_SECRET?.trim();
@@ -41,35 +61,39 @@ function n8nConfig() {
 
 export async function POST(request: Request) {
   if (request.headers.get("content-type")?.split(";")[0]?.trim() !== "application/json") {
-    return jsonError(415, GENERIC_ERROR);
+    return reject(request, 415, "content_type");
   }
-  if (!originAllowed(request) || userAgentBlocked(request)) {
-    return jsonError(403, GENERIC_ERROR);
+  if (!originAllowed(request)) {
+    return reject(request, 403, "origin");
+  }
+  if (userAgentBlocked(request)) {
+    return reject(request, 403, "user_agent");
   }
 
   const ip = clientIp(request);
   if (!rateLimit(`lead:${ip}`, leadLimits.LEAD_MAX_PER_IP, leadLimits.LEAD_WINDOW_MS)) {
-    return jsonError(429, "rate_limited");
+    return reject(request, 429, "rate_ip", "rate_limited");
   }
 
   const raw = await request.text();
   const parsed = parseLeadBody(raw);
   if (!parsed.ok) {
-    return jsonError(400, GENERIC_ERROR);
+    return reject(request, 400, `body (${raw.length} bytes)`);
   }
 
   if (honeypotFilled(parsed.body)) {
+    console.warn("[lead] honeypot filled, answered ok without sending");
     return Response.json({ ok: true }, { headers: noStoreHeaders() });
   }
 
   const challenge = readChallenge(parsed.body.challenge ?? "", ip);
   if (!challenge.ok) {
-    return jsonError(400, GENERIC_ERROR);
+    return reject(request, 400, `${challenge.reason} ip=${ip === "unknown" ? "unknown" : "known"}`);
   }
 
   const valid = validateLead(parsed.body, await getKitchenPlanner("de"));
   if (!valid.ok) {
-    return jsonError(400, GENERIC_ERROR);
+    return reject(request, 400, valid.reason);
   }
 
   if (
@@ -79,12 +103,12 @@ export async function POST(request: Request) {
       leadLimits.LEAD_WINDOW_MS,
     )
   ) {
-    return jsonError(429, "rate_limited");
+    return reject(request, 429, "rate_email", "rate_limited");
   }
 
   const n8n = n8nConfig();
   if (!n8n) {
-    return jsonError(503, "unavailable");
+    return reject(request, 503, "n8n_not_configured", "unavailable");
   }
 
   const eventId = valid.lead.eventId || randomUUID();
@@ -124,7 +148,7 @@ export async function POST(request: Request) {
     });
 
     if (!upstream.ok) {
-      return jsonError(502, "unavailable");
+      return reject(request, 502, `n8n_status_${upstream.status}`, "unavailable");
     }
     const result: unknown = await upstream.json().catch(() => null);
     if (
@@ -133,12 +157,14 @@ export async function POST(request: Request) {
       !("ok" in result) ||
       result.ok !== true
     ) {
-      return jsonError(502, "unavailable");
+      return reject(request, 502, "n8n_not_ok", "unavailable");
     }
-  } catch {
-    return jsonError(502, "unavailable");
+  } catch (error) {
+    const code = error instanceof Error ? error.name : "unknown";
+    return reject(request, 502, `n8n_unreachable_${code}`, "unavailable");
   }
 
+  console.info(`[lead] sent to n8n event=${eventId}`);
   return Response.json({ ok: true, event_id: eventId }, { headers: noStoreHeaders() });
 }
 

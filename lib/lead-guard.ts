@@ -199,22 +199,26 @@ export function issueChallenge(ip: string) {
 export function readChallenge(token: string, ip: string) {
   const parts = token.split(".");
   if (parts.length !== 3) {
-    return { ok: false as const };
+    return { ok: false as const, reason: token ? "challenge_format" : "challenge_missing" };
   }
   const [ts, nonce, mac] = parts;
   if (!ts || !nonce || !mac || nonce.length < 16) {
-    return { ok: false as const };
+    return { ok: false as const, reason: "challenge_format" };
   }
+  // A different IP than at issue time also ends up here (signature covers the IP).
   if (!safeEqual(mac, hmac(`${ts}.${nonce}.${ip}`))) {
-    return { ok: false as const };
+    return { ok: false as const, reason: "challenge_signature_or_ip" };
   }
   const issuedAt = Number(ts);
   if (!Number.isFinite(issuedAt)) {
-    return { ok: false as const };
+    return { ok: false as const, reason: "challenge_format" };
   }
   const age = Date.now() - issuedAt;
-  if (age < MIN_SOLVE_MS || age > CHALLENGE_TTL_MS) {
-    return { ok: false as const };
+  if (age < MIN_SOLVE_MS) {
+    return { ok: false as const, reason: "challenge_too_fast" };
+  }
+  if (age > CHALLENGE_TTL_MS) {
+    return { ok: false as const, reason: "challenge_expired" };
   }
   return { ok: true as const, issuedAt };
 }
@@ -245,7 +249,7 @@ export function honeypotFilled(body: LeadBody) {
 export function validateLead(body: LeadBody, planner: PlannerContent) {
   const fields = validateLeadFields(body);
   if (!fields.ok) {
-    return { ok: false as const };
+    return { ok: false as const, reason: fields.reason };
   }
 
   const eventId = trim(body.event_id, 80);

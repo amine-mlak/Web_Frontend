@@ -70,8 +70,8 @@ const SKETCH: PlannerMediaName = "planer-skizze-offen.jpg";
 const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholder?: Copy; options: OptionSeed[] }[] = [
   {
     group: "style",
-    label: { de: "Küchenstil", en: "Kitchen style" },
-    hint: { de: "Mehrfachauswahl", en: "Choose as many as you like" },
+    label: { de: "Welcher Küchenstil spricht Sie an?", en: "Which kitchen style speaks to you?" },
+    hint: { de: "Mehrfachauswahl möglich", en: "Choose as many as you like" },
     placeholder: { de: "Beschreiben Sie Ihren Stil (optional)", en: "Describe your style (optional)" },
     options: [
       { value: "modern-schlicht", label: { de: "Modern & Schlicht", en: "Modern & simple" }, subtitle: { de: "Klare Flächen, reduziert auf das Wesentliche, viel Ruhe.", en: "Clean surfaces, reduced to the essentials, a lot of calm." }, image: "planer-stil-modern-schlicht.jpg" },
@@ -84,8 +84,8 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "front",
-    label: { de: "Fronten", en: "Fronts" },
-    hint: { de: "Mehrfachauswahl", en: "Choose as many as you like" },
+    label: { de: "Welche Fronten gefallen Ihnen?", en: "Which fronts do you like?" },
+    hint: { de: "Mehrfachauswahl möglich", en: "Choose as many as you like" },
     options: [
       { value: "hell-weiss", label: { de: "Front hell & weiß", en: "Light & white fronts" }, subtitle: { de: "Von reinem Weiß bis zu sanften Creme- und Grautönen.", en: "From pure white to soft cream and grey tones." }, image: "planer-front-hell-weiss.jpg" },
       { value: "dunkel", label: { de: "Front dunkel", en: "Dark fronts" }, subtitle: { de: "Anthrazit, Schwarz und tiefe Töne mit starker Präsenz.", en: "Anthracite, black and deep tones with a strong presence." }, image: "planer-front-dunkel.jpg" },
@@ -96,8 +96,8 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "top",
-    label: { de: "Arbeitsplatte", en: "Worktop" },
-    hint: { de: "Mehrfachauswahl", en: "Choose as many as you like" },
+    label: { de: "Welche Arbeitsplatte wünschen Sie sich?", en: "Which worktop would you like?" },
+    hint: { de: "Mehrfachauswahl möglich", en: "Choose as many as you like" },
     options: [
       { value: "naturstein", label: { de: "Naturstein", en: "Natural stone" }, subtitle: { de: "Jede Platte ein Unikat.", en: "Every slab is one of a kind." }, image: "planer-platte-naturstein.jpg" },
       { value: "keramik", label: { de: "Keramik", en: "Ceramic" }, subtitle: { de: "Hitzefest, kratzfest, porenfrei.", en: "Heat-proof, scratch-proof, non-porous." }, image: "planer-platte-keramik.jpg" },
@@ -109,8 +109,8 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "griffe",
-    label: { de: "Griffe", en: "Handles" },
-    hint: { de: "Mehrfachauswahl", en: "Choose as many as you like" },
+    label: { de: "Welche Griffe mögen Sie?", en: "Which handles do you like?" },
+    hint: { de: "Mehrfachauswahl möglich", en: "Choose as many as you like" },
     options: [
       { value: "grifflos", label: { de: "Grifflos", en: "Handleless" }, subtitle: { de: "Tip-On oder Push-to-open.", en: "Tip-On or push-to-open." }, image: "planer-griff-grifflos.jpg" },
       { value: "griff", label: { de: "Griff", en: "Bar handle" }, subtitle: { de: "Schlicht und zeitlos, unendliche Möglichkeiten.", en: "Simple and timeless, endless options." }, image: "planer-griff-stange.jpg" },
@@ -122,8 +122,8 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "appliances",
-    label: { de: "Besondere E-Geräte", en: "Special appliances" },
-    hint: { de: "Mehrfachauswahl", en: "Choose as many as you like" },
+    label: { de: "Welche besonderen Geräte wünschen Sie sich?", en: "Which special appliances would you like?" },
+    hint: { de: "Mehrfachauswahl möglich", en: "Choose as many as you like" },
     options: [
       { value: "kuehl-einbau", label: { de: "Kühl- & Gefrierkombination (Einbau)", en: "Built-in fridge-freezer" } },
       { value: "kuehl-frei", label: { de: "Freistehender Kühl- & Gefrierschrank", en: "Freestanding fridge-freezer" } },
@@ -146,7 +146,7 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "project",
-    label: { de: "Ihr Vorhaben", en: "Your project" },
+    label: { de: "Was haben Sie vor?", en: "What are you planning?" },
     options: [
       { value: "neubau", label: { de: "Neubau", en: "New build" }, image: "planer-raum-neubau.png", iconSize: 98 },
       { value: "umbau", label: { de: "Umbau / Renovierung", en: "Conversion / renovation" }, image: "planer-raum-umbau.png", iconSize: 98 },
@@ -162,7 +162,7 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "size",
-    label: { de: "Raumgröße", en: "Room size" },
+    label: { de: "Wie groß ist der Raum?", en: "How big is the room?" },
     options: [
       { value: "bis-10", label: { de: "bis 10 m²", en: "up to 10 m²" }, image: "planer-groesse-bis-10.png", iconSize: 124 },
       { value: "10-25", label: { de: "10–25 m²", en: "10–25 m²" }, image: "planer-groesse-10-25.png", iconSize: 124 },
@@ -171,7 +171,7 @@ const GROUP_SEED: { group: PlannerGroupKey; label: Copy; hint?: Copy; placeholde
   },
   {
     group: "form",
-    label: { de: "Grundform", en: "Basic shape" },
+    label: { de: "Welche Küchenform passt zu Ihrem Raum?", en: "Which kitchen shape suits your room?" },
     placeholder: { de: "Beschreiben Sie Ihre Form (optional)", en: "Describe your shape (optional)" },
     options: [
       { value: "zeile", label: { de: "Küchenzeile", en: "Single wall" }, image: "planer-form-zeile.png", iconSize: 144 },

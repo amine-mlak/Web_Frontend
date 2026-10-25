@@ -16,7 +16,6 @@ import {
 import type { Locale } from "@/lib/i18n";
 import {
   PLANNER_GROUPS,
-  PLANNER_STEPS,
   type PlannerContent,
   type PlannerGroup,
   type PlannerGroupKey,
@@ -25,19 +24,30 @@ import {
 import { validateLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
 
+/**
+ * The kitchen planner, one question per screen (after SieMatic's planner):
+ * a single-choice answer moves on by itself, multiple choice needs at least
+ * one answer before "Weiter", the budget needs a value or "Keine Angabe".
+ */
+
 type Status = "idle" | "sending" | "done" | "error";
 type Selection = Partial<Record<PlannerGroupKey, string[]>>;
+type Screen = { kind: "group"; group: PlannerGroup } | { kind: "budget" } | { kind: "contact" };
 
 const UI: Record<Locale, Record<string, string>> = {
   de: {
-    step: "Schritt {n} von {total}",
-    steps: "Schritte des Küchenplaners",
+    progress: "Frage {n} von {total}",
     back: "Zurück",
     next: "Weiter",
     submit: "Beratung anfragen",
     sending: "Wird gesendet …",
+    pickOne: "Bitte wählen Sie mindestens eine Antwort.",
+    budgetTitle: "Welchen Rahmen haben Sie sich für Ihre Küche vorgestellt?",
+    budgetHint: "Ehrliche Zahlen helfen uns, realistisch zu planen. Alles bleibt unverbindlich.",
+    contactTitle: "Wie dürfen wir Sie erreichen?",
+    contactHint: "Ihre Antworten bereiten das Gespräch vor. Den Termin vereinbaren wir danach direkt mit Ihnen.",
     summary: "Ihre Auswahl",
-    contact: "Ihre Kontaktdaten",
+    change: "Ändern",
     name: "Name",
     email: "E-Mail",
     phone: "Telefon",
@@ -46,23 +56,27 @@ const UI: Record<Locale, Record<string, string>> = {
     required: "Pflichtfeld",
     noAnswer: "Keine Angabe",
     budgetAbout: "ca.",
+    wishes: "Wünsche",
+    budget: "Budget",
     errName: "Bitte Ihren Namen angeben.",
     errEmail: "Bitte eine gültige E-Mail-Adresse angeben.",
     errPhone: "Bitte eine Telefonnummer angeben.",
     errMessage: "Bitte die Nachricht kürzen (höchstens zwei Links).",
     errSend: "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal oder rufen Sie uns an: 08168 909910.",
-    wishes: "Wünsche",
-    budget: "Budget",
   },
   en: {
-    step: "Step {n} of {total}",
-    steps: "Kitchen planner steps",
+    progress: "Question {n} of {total}",
     back: "Back",
     next: "Next",
     submit: "Request a consultation",
     sending: "Sending …",
+    pickOne: "Please choose at least one answer.",
+    budgetTitle: "What budget do you have in mind for your kitchen?",
+    budgetHint: "Honest numbers help us plan realistically. Nothing is binding.",
+    contactTitle: "How can we reach you?",
+    contactHint: "Your answers prepare the conversation. We then arrange the appointment with you directly.",
     summary: "Your choices",
-    contact: "Your contact details",
+    change: "Change",
     name: "Name",
     email: "Email",
     phone: "Phone",
@@ -71,14 +85,20 @@ const UI: Record<Locale, Record<string, string>> = {
     required: "required",
     noAnswer: "Not specified",
     budgetAbout: "approx.",
+    wishes: "Wishes",
+    budget: "Budget",
     errName: "Please enter your name.",
     errEmail: "Please enter a valid email address.",
     errPhone: "Please enter a phone number.",
     errMessage: "Please shorten your message (two links at most).",
     errSend: "That did not work, sorry. Please try again or call us: +49 8168 909910.",
-    wishes: "Wishes",
-    budget: "Budget",
   },
+};
+
+// Short names for the summary (the screen headings are full questions).
+const SHORT: Record<Locale, Record<PlannerGroupKey, string>> = {
+  de: { style: "Stil", front: "Fronten", top: "Arbeitsplatte", griffe: "Griffe", appliances: "Geräte", wishes: "Wünsche", project: "Vorhaben", raum: "Raum", size: "Raumgröße", form: "Küchenform" },
+  en: { style: "Style", front: "Fronts", top: "Worktop", griffe: "Handles", appliances: "Appliances", wishes: "Wishes", project: "Project", raum: "Room", size: "Room size", form: "Kitchen shape" },
 };
 
 async function fetchChallenge() {
@@ -111,15 +131,24 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const ui = UI[locale];
   const Heading = headingLevel;
   const baseId = useId();
-  const stepHeading = useRef<HTMLHeadingElement>(null);
+  const screenHeading = useRef<HTMLHeadingElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const mountedAt = useRef(0);
   const started = useRef(false);
   const seen = useRef(false);
   const tracked = useRef(new Set<string>());
   const moved = useRef(false);
+  const advanceTimer = useRef(0);
 
-  const [stepIndex, setStepIndex] = useState(0);
+  // Wishes are an optional note on the appliance screen, not a screen of their own.
+  const screens: Screen[] = [
+    ...content.groups.filter((group) => group.group !== "wishes" && group.options.length > 0).map((group) => ({ kind: "group" as const, group })),
+    { kind: "budget" },
+    { kind: "contact" },
+  ];
+  const wishes = content.groups.find((group) => group.group === "wishes");
+
+  const [index, setIndex] = useState(0);
   const [selection, setSelection] = useState<Selection>({});
   const [notes, setNotes] = useState<{ style: string; form: string; wishes: string }>({ style: "", form: "", wishes: "" });
   const [budgetPos, setBudgetPos] = useState(50);
@@ -129,10 +158,8 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const [status, setStatus] = useState<Status>("idle");
   const [challenge, setChallenge] = useState("");
 
-  const step = PLANNER_STEPS[stepIndex];
-  const stepCopy = content.steps.find((item) => item.step === step)!;
-  const groups = content.groups.filter((group) => PLANNER_GROUPS[group.group].step === step);
-  const last = stepIndex === PLANNER_STEPS.length - 1;
+  const screen = screens[Math.min(index, screens.length - 1)];
+  const last = index === screens.length - 1;
   const budgetValue = budgetAt(budgetPos, content.budget);
 
   useEffect(() => {
@@ -147,6 +174,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      window.clearTimeout(advanceTimer.current);
     };
   }, []);
 
@@ -166,45 +194,71 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     return () => observer.disconnect();
   }, []);
 
-  // After a step change, bring the step into view and move focus to its heading.
+  // After moving on, bring the question into view and move focus to it.
   useEffect(() => {
     if (!moved.current) return;
-    const heading = stepHeading.current;
-    if (!heading) return;
-    heading.focus({ preventScroll: true });
+    screenHeading.current?.focus({ preventScroll: true });
     const top = (formRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 96;
     if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: "smooth" });
-  }, [stepIndex, status]);
+  }, [index, status]);
+
+  function screenKey(item: Screen) {
+    return item.kind === "group" ? item.group.group : item.kind;
+  }
 
   function markStart() {
     if (started.current) return;
     started.current = true;
-    trackFormStart(step);
+    trackFormStart(screenKey(screen));
   }
 
-  function goTo(index: number) {
-    if (index === stepIndex) return;
-    if (index > stepIndex && !tracked.current.has(step)) {
-      tracked.current.add(step);
-      trackFormWizardStep(step);
+  function answered(item: Screen) {
+    if (item.kind === "group") return (selection[item.group.group] ?? []).length > 0;
+    if (item.kind === "budget") return budgetState !== "untouched";
+    return true;
+  }
+
+  function goTo(next: number) {
+    window.clearTimeout(advanceTimer.current);
+    if (next > index) {
+      if (!answered(screen)) {
+        setError(ui.pickOne);
+        trackFormError("invalid_choice", screenKey(screen));
+        return;
+      }
+      if (!tracked.current.has(screenKey(screen))) {
+        tracked.current.add(screenKey(screen));
+        trackFormWizardStep(screenKey(screen));
+      }
     }
     moved.current = true;
     setError("");
     setStatus((current) => (current === "error" ? "idle" : current));
-    setStepIndex(Math.max(0, Math.min(index, PLANNER_STEPS.length - 1)));
+    setIndex(Math.max(0, Math.min(next, screens.length - 1)));
   }
 
-  function toggle(group: PlannerGroup, option: PlannerOption) {
+  function choose(group: PlannerGroup, option: PlannerOption) {
     markStart();
+    setError("");
     const multi = PLANNER_GROUPS[group.group].multi;
-    setSelection((current) => {
-      const picked = current[group.group] ?? [];
-      const has = picked.includes(option.value);
-      const next = multi
-        ? has ? picked.filter((value) => value !== option.value) : [...picked, option.value]
-        : has ? [] : [option.value];
-      return { ...current, [group.group]: next };
-    });
+    const picked = selection[group.group] ?? [];
+    const has = picked.includes(option.value);
+    const next = multi
+      ? has ? picked.filter((value) => value !== option.value) : [...picked, option.value]
+      : [option.value];
+    setSelection((current) => ({ ...current, [group.group]: next }));
+    // Single choice moves on by itself, unless the answer opens a text field.
+    if (!multi && !option.freeText) {
+      window.clearTimeout(advanceTimer.current);
+      advanceTimer.current = window.setTimeout(() => {
+        moved.current = true;
+        if (!tracked.current.has(group.group)) {
+          tracked.current.add(group.group);
+          trackFormWizardStep(group.group);
+        }
+        setIndex((current) => Math.min(current + 1, screens.length - 1));
+      }, 320);
+    }
   }
 
   function labelOf(group: PlannerGroupKey, value: string) {
@@ -212,16 +266,19 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   }
 
   const summary = [
-    ...content.groups
-      .filter((group) => group.group !== "wishes")
-      .map((group) => {
-        const values = (selection[group.group] ?? []).map((value) => labelOf(group.group, value));
-        const note = group.group === "style" ? notes.style : group.group === "form" ? notes.form : "";
-        return { key: group.group, label: group.label, value: values.length ? values.join(", ") + (note ? ` (${note})` : "") : "—" };
-      }),
-    { key: "wishes", label: ui.wishes, value: notes.wishes.trim() || "—" },
+    ...screens.flatMap((item, at) => {
+      if (item.kind !== "group") return [];
+      const key = item.group.group;
+      const values = (selection[key] ?? []).map((value) => labelOf(key, value));
+      const note = key === "style" ? notes.style : key === "form" ? notes.form : "";
+      return [{ key, at, label: SHORT[locale][key], value: values.length ? values.join(", ") + (note ? ` (${note})` : "") : "—" }];
+    }),
+    ...(notes.wishes.trim()
+      ? [{ key: "wishes", at: screens.findIndex((item) => item.kind === "group" && item.group.group === "appliances"), label: ui.wishes, value: notes.wishes.trim() }]
+      : []),
     {
       key: "budget",
+      at: screens.findIndex((item) => item.kind === "budget"),
       label: ui.budget,
       value: budgetState === "set" ? `${ui.budgetAbout} ${formatEuros(budgetValue, locale, content.budget.max)}` : ui.noAnswer,
     },
@@ -230,7 +287,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!last) {
-      goTo(stepIndex + 1);
+      goTo(index + 1);
       return;
     }
     if (status === "sending") return;
@@ -245,7 +302,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
       const messages = { invalid_name: ui.errName, invalid_email: ui.errEmail, invalid_phone: ui.errPhone, invalid_message: ui.errMessage };
       setError(messages[fields.reason]);
       trackFormError(fields.reason, "kontakt");
-      document.getElementById(`${baseId}-${fields.field === "message" ? "message" : fields.field}`)?.focus();
+      document.getElementById(`${baseId}-${fields.field}`)?.focus();
       return;
     }
 
@@ -303,119 +360,142 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     }
   }
 
+  const stepTitle = (key: string) => content.steps.find((item) => item.step === key)?.title ?? "";
+  const eyebrow =
+    screen.kind === "group" ? stepTitle(PLANNER_GROUPS[screen.group.group].step) : screen.kind === "budget" ? stepTitle("budget") : stepTitle("kontakt");
+  const heading = screen.kind === "group" ? screen.group.label : screen.kind === "budget" ? ui.budgetTitle : ui.contactTitle;
+  const hint =
+    screen.kind === "group" ? (PLANNER_GROUPS[screen.group.group].multi ? screen.group.hint : undefined) : screen.kind === "budget" ? ui.budgetHint : ui.contactHint;
+  const needsNext =
+    screen.kind !== "group" || PLANNER_GROUPS[screen.group.group].multi || screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value));
+
   return (
     <section id="planer" className="scroll-mt-24 bg-karte px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby={`${baseId}-title`}>
       <div className="mx-auto max-w-[70rem]">
-        <p className="type-eyebrow text-gold">{content.eyebrow}</p>
-        <Heading id={`${baseId}-title`} className="mt-4 max-w-2xl font-serif text-[34px] leading-[1.15] font-medium text-ink md:text-[42px]">
-          {content.title} {content.titleEmphasis ? <em>{content.titleEmphasis}</em> : null}
-        </Heading>
-        <p className="mt-4 max-w-[38rem] font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="type-eyebrow text-gold">{content.eyebrow}</p>
+          <Heading id={`${baseId}-title`} className="mt-4 font-serif text-[34px] leading-[1.15] font-medium text-ink md:text-[42px]">
+            {content.title} {content.titleEmphasis ? <em>{content.titleEmphasis}</em> : null}
+          </Heading>
+          <p className="mt-4 font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
+        </div>
 
-        <div className="mt-12 grid items-start gap-8 md:mt-14 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-14">
-          {/* Step list: a vertical index on desktop, a scrollable row on phones. */}
-          <nav aria-label={ui.steps} className="-mx-5 overflow-x-auto px-5 sm:mx-0 sm:px-0 lg:sticky lg:top-28">
-            <ol className="flex gap-1 lg:flex-col">
-              {PLANNER_STEPS.map((key, index) => {
-                const title = content.steps.find((item) => item.step === key)!.title;
-                const current = index === stepIndex && status !== "done";
-                const doneStep = index < stepIndex || status === "done";
-                return (
-                  <li key={key} className="shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => status !== "done" && goTo(index)}
-                      aria-current={current ? "step" : undefined}
-                      disabled={status === "done"}
-                      className={cn(
-                        "flex min-h-11 items-center gap-3.5 pr-4 font-sans text-[14px] transition-colors lg:pr-0",
-                        current ? "text-ink" : "text-muted hover:text-ink",
-                      )}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[12px]",
-                          current
-                            ? "border-ink bg-ink text-paper"
-                            : doneStep
-                              ? "border-messing bg-messing text-paper"
-                              : "border-line text-muted",
-                        )}
-                      >
-                        {index + 1}
-                      </span>
-                      <span className="whitespace-nowrap">{title}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
+        <form ref={formRef} onSubmit={submit} noValidate className="relative mt-12 bg-paper md:mt-14">
+          {/* Honeypot for bots; hidden from people and screen readers. */}
+          <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+            <label>
+              Website
+              <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
+            </label>
+          </div>
 
-          <form ref={formRef} onSubmit={submit} noValidate className="relative bg-paper p-6 sm:p-10 lg:p-12">
-            {/* Honeypot for bots; hidden from people and screen readers. */}
-            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-              <label>
-                Website
-                <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-              </label>
+          {status === "done" ? (
+            <div className="px-6 py-20 text-center sm:px-10">
+              <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
+              <h3 ref={screenHeading} tabIndex={-1} className="font-serif text-[30px] leading-tight font-medium text-ink outline-none md:text-[38px]">
+                {content.done.title.replace("{name}", contact.name.trim().split(/\s+/)[0] ?? "")}
+              </h3>
+              <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{content.done.text}</p>
+              {content.done.linkHref ? (
+                <LocaleLink href={content.done.linkHref} className="pill pill-secondary mt-8">
+                  {content.done.linkLabel}
+                </LocaleLink>
+              ) : null}
             </div>
-
-            {status === "done" ? (
-              <div className="py-12 text-center">
-                <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
-                <h3 ref={stepHeading} tabIndex={-1} className="font-serif text-[30px] leading-tight font-medium text-ink outline-none md:text-[36px]">
-                  {content.done.title.replace("{name}", contact.name.trim().split(/\s+/)[0] ?? "")}
-                </h3>
-                <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{content.done.text}</p>
-                {content.done.linkHref ? (
-                  <LocaleLink href={content.done.linkHref} className="pill pill-secondary mt-8">
-                    {content.done.linkLabel}
-                  </LocaleLink>
-                ) : null}
-              </div>
-            ) : (
-              <>
+          ) : (
+            <>
+              {/* Back + thin progress bar across the full width, as at SieMatic. */}
+              <div className="flex min-h-14 items-center justify-between px-6 pt-4 sm:px-10">
+                {index > 0 ? (
+                  <button type="button" onClick={() => goTo(index - 1)} className="inline-flex min-h-10 items-center gap-2 font-sans text-[14px] text-ink hover:opacity-70">
+                    <span aria-hidden="true">←</span> {ui.back}
+                  </button>
+                ) : (
+                  <span />
+                )}
                 <p className="font-sans text-[12px] tracking-[0.16em] text-muted uppercase">
-                  {ui.step.replace("{n}", String(stepIndex + 1)).replace("{total}", String(PLANNER_STEPS.length))}
+                  {ui.progress.replace("{n}", String(index + 1)).replace("{total}", String(screens.length))}
                 </p>
-                <div className="mt-2.5 mb-8 h-0.5 bg-line" aria-hidden="true">
-                  <div
-                    className="h-0.5 bg-messing transition-[width] duration-500"
-                    style={{ width: `${((stepIndex + 1) / PLANNER_STEPS.length) * 100}%` }}
-                  />
+              </div>
+              <div
+                className="mt-3 h-1 bg-line"
+                role="progressbar"
+                aria-valuemin={1}
+                aria-valuemax={screens.length}
+                aria-valuenow={index + 1}
+                aria-label={ui.progress.replace("{n}", String(index + 1)).replace("{total}", String(screens.length))}
+              >
+                <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
+              </div>
+
+              <div className="px-6 pt-12 pb-10 sm:px-10 md:pt-16 md:pb-14">
+                <div className="mx-auto max-w-3xl text-center">
+                  <p className="type-eyebrow text-gold">{eyebrow}</p>
+                  <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[30px] leading-[1.15] font-medium text-ink outline-none md:text-[40px]">
+                    {heading}
+                  </h3>
+                  {hint ? <p className="mt-3 font-sans text-[14px] leading-relaxed text-muted">{hint}</p> : null}
                 </div>
-                <h3 ref={stepHeading} tabIndex={-1} className="font-serif text-[30px] font-medium text-ink outline-none md:text-[32px]">
-                  {stepCopy.title}
-                </h3>
-                <p className="mt-2 max-w-2xl font-sans text-[15px] leading-[1.7] font-light text-ink/85">{stepCopy.subtitle}</p>
 
-                <div className="mt-12 space-y-14">
-                  {groups.map((group) => (
-                    <PlannerQuestion
-                      key={group.group}
-                      group={group}
-                      selected={selection[group.group] ?? []}
-                      onToggle={(option) => toggle(group, option)}
-                      note={group.group === "wishes" ? notes.wishes : group.group === "style" ? notes.style : group.group === "form" ? notes.form : ""}
-                      onNote={(value) => {
-                        markStart();
-                        if (group.group === "wishes" || group.group === "style" || group.group === "form") {
-                          setNotes((current) => ({ ...current, [group.group]: value }));
-                        }
-                      }}
-                      idPrefix={`${baseId}-${group.group}`}
-                    />
-                  ))}
+                <div className="mx-auto mt-10 max-w-[58rem] md:mt-12">
+                  {screen.kind === "group" ? (
+                    <>
+                      <PlannerChoices
+                        group={screen.group}
+                        selected={selection[screen.group.group] ?? []}
+                        onChoose={(option) => choose(screen.group, option)}
+                        labelledBy={`${baseId}-screen`}
+                      />
+                      {screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value)) ? (
+                        <div className="mx-auto mt-10 max-w-xl">
+                          <label htmlFor={`${baseId}-other`} className="sr-only">
+                            {screen.group.placeholder ?? screen.group.label}
+                          </label>
+                          <input
+                            id={`${baseId}-other`}
+                            type="text"
+                            placeholder={screen.group.placeholder}
+                            value={screen.group.group === "form" ? notes.form : notes.style}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              setNotes((current) => ({ ...current, [screen.group.group === "form" ? "form" : "style"]: value }));
+                            }}
+                            className="w-full border-0 border-b border-line bg-transparent py-3 text-center font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                          />
+                        </div>
+                      ) : null}
+                      {screen.group.group === "appliances" && wishes ? (
+                        <div className="mx-auto mt-12 max-w-xl">
+                          <label htmlFor={`${baseId}-wishes`} className="block text-center font-serif text-[22px] text-ink">
+                            {wishes.label}
+                          </label>
+                          <textarea
+                            id={`${baseId}-wishes`}
+                            rows={3}
+                            placeholder={wishes.placeholder}
+                            value={notes.wishes}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              setNotes((current) => ({ ...current, wishes: value }));
+                            }}
+                            className="mt-3 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                          />
+                        </div>
+                      ) : null}
+                    </>
+                  ) : null}
 
-                  {step === "budget" ? (
-                    <div className="bg-karte p-6 sm:p-7">
-                      <label htmlFor={`${baseId}-budget`} className="type-eyebrow text-gold">
-                        {stepCopy.title}
+                  {screen.kind === "budget" ? (
+                    <div className="mx-auto max-w-xl bg-karte p-6 text-center sm:p-8">
+                      <label htmlFor={`${baseId}-budget`} className="sr-only">
+                        {ui.budgetTitle}
                       </label>
-                      <p className="mt-3.5 font-serif text-[30px] text-ink md:text-[34px]" aria-live="polite">
-                        {budgetState === "none" ? ui.noAnswer : `${ui.budgetAbout} ${formatEuros(budgetValue, locale, content.budget.max)}`}
+                      <p className="font-serif text-[34px] text-ink md:text-[40px]" aria-live="polite">
+                        {budgetState === "none"
+                          ? ui.noAnswer
+                          : budgetState === "set"
+                            ? `${ui.budgetAbout} ${formatEuros(budgetValue, locale, content.budget.max)}`
+                            : "—"}
                       </p>
                       <input
                         id={`${baseId}-budget`}
@@ -427,10 +507,11 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                         aria-valuetext={formatEuros(budgetValue, locale, content.budget.max)}
                         onChange={(event) => {
                           markStart();
+                          setError("");
                           setBudgetPos(Number(event.target.value));
                           setBudgetState("set");
                         }}
-                        className="mt-5 w-full cursor-pointer accent-[var(--color-primary)]"
+                        className="mt-6 w-full cursor-pointer accent-[var(--color-primary)]"
                       />
                       <div className="mt-2 flex justify-between font-sans text-[12px] text-muted" aria-hidden="true">
                         <span>{formatEuros(content.budget.min, locale, content.budget.max)}</span>
@@ -439,10 +520,13 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                       <button
                         type="button"
                         aria-pressed={budgetState === "none"}
-                        onClick={() => setBudgetState((current) => (current === "none" ? "untouched" : "none"))}
+                        onClick={() => {
+                          setError("");
+                          setBudgetState((current) => (current === "none" ? "untouched" : "none"));
+                        }}
                         className={cn(
-                          "mt-5 inline-flex min-h-10 items-center rounded-full border px-5 font-sans text-[14px] text-ink transition-colors",
-                          budgetState === "none" ? "border-ink bg-karte ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink",
+                          "mt-6 inline-flex min-h-10 items-center rounded-full border px-5 font-sans text-[14px] text-ink transition-colors",
+                          budgetState === "none" ? "border-ink bg-paper ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink",
                         )}
                       >
                         {ui.noAnswer}
@@ -450,220 +534,188 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                     </div>
                   ) : null}
 
-                  {last ? (
-                    <>
+                  {screen.kind === "contact" ? (
+                    <div className="mx-auto max-w-2xl">
                       <div className="bg-karte px-6 py-6">
                         <p className="type-eyebrow text-gold">{ui.summary}</p>
                         <dl className="mt-3.5">
                           {summary.map((row) => (
-                            <div key={row.key} className="grid grid-cols-1 gap-1 border-b border-line py-2 font-sans text-[14px] sm:grid-cols-[9.5rem_minmax(0,1fr)] sm:gap-4">
+                            <div key={row.key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-b border-line py-2.5 font-sans text-[14px] sm:grid-cols-[8.5rem_minmax(0,1fr)_auto]">
                               <dt className="text-muted">{row.label}</dt>
-                              <dd className="text-ink">{row.value}</dd>
+                              <dd className="col-start-1 text-ink sm:col-start-2">{row.value}</dd>
+                              <dd className="col-start-2 row-span-2 row-start-1 self-center sm:col-start-3 sm:row-span-1">
+                                <button type="button" onClick={() => goTo(row.at)} className="min-h-6 text-[13px] text-muted underline underline-offset-4 hover:text-ink">
+                                  {ui.change}
+                                  <span className="sr-only">: {row.label}</span>
+                                </button>
+                              </dd>
                             </div>
                           ))}
                         </dl>
                       </div>
 
-                      <fieldset>
-                        <legend className="type-eyebrow text-gold">{ui.contact}</legend>
-                        <div className="mt-4 grid gap-x-7 gap-y-5 sm:grid-cols-2">
-                          {(["name", "email", "phone", "place"] as const).map((field) => (
-                            <PlannerField
-                              key={field}
-                              id={`${baseId}-${field}`}
-                              label={ui[field]}
-                              required={field !== "place"}
-                              requiredLabel={ui.required}
-                              type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
-                              autoComplete={field === "name" ? "name" : field === "email" ? "email" : field === "phone" ? "tel" : "postal-code"}
-                              value={contact[field]}
-                              onChange={(value) => {
-                                markStart();
-                                setContact((current) => ({ ...current, [field]: value }));
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <div className="mt-5">
-                          <label htmlFor={`${baseId}-message`} className="font-sans text-[13px] text-muted">
-                            {ui.message}
-                          </label>
-                          <textarea
-                            id={`${baseId}-message`}
-                            rows={3}
-                            value={contact.message}
-                            onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
-                            className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none focus:border-ink"
+                      <div className="mt-10 grid gap-x-7 gap-y-5 sm:grid-cols-2">
+                        {(["name", "email", "phone", "place"] as const).map((field) => (
+                          <PlannerField
+                            key={field}
+                            id={`${baseId}-${field}`}
+                            label={ui[field]}
+                            required={field !== "place"}
+                            requiredLabel={ui.required}
+                            type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+                            autoComplete={field === "name" ? "name" : field === "email" ? "email" : field === "phone" ? "tel" : "postal-code"}
+                            value={contact[field]}
+                            onChange={(value) => {
+                              markStart();
+                              setContact((current) => ({ ...current, [field]: value }));
+                            }}
                           />
-                        </div>
-                      </fieldset>
-                    </>
+                        ))}
+                      </div>
+                      <div className="mt-5">
+                        <label htmlFor={`${baseId}-message`} className="font-sans text-[13px] text-muted">
+                          {ui.message}
+                        </label>
+                        <textarea
+                          id={`${baseId}-message`}
+                          rows={3}
+                          value={contact.message}
+                          onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
+                          className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none focus:border-ink"
+                        />
+                      </div>
+                    </div>
                   ) : null}
                 </div>
 
-                <p role="alert" className="mt-6 min-h-5 font-sans text-[14px] text-destructive">
+                <p role="alert" className="mt-8 min-h-5 text-center font-sans text-[14px] text-destructive">
                   {error}
                 </p>
 
-                <div className="mt-12 flex flex-wrap items-center justify-between gap-4 md:mt-16">
-                  <div>
-                    {stepIndex > 0 ? (
-                      <button type="button" onClick={() => goTo(stepIndex - 1)} className="pill pill-secondary">
-                        {ui.back}
-                      </button>
-                    ) : null}
+                {needsNext ? (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      type="submit"
+                      aria-disabled={!answered(screen)}
+                      disabled={status === "sending"}
+                      className={cn("pill pill-primary inline-flex items-center gap-2.5", !answered(screen) && "opacity-40")}
+                    >
+                      {last ? (
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
+                          <rect x="3.5" y="5.5" width="17" height="15" rx="3" stroke="currentColor" strokeWidth="1.4" />
+                          <path d="M3.5 9.75H20.5M8 3.5V6.5M16 3.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                          <path d="M8.25 13.25L10.6 15.6L15.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : null}
+                      <span>{last ? (status === "sending" ? ui.sending : ui.submit) : ui.next}</span>
+                    </button>
                   </div>
-                  <button type="submit" className="pill pill-primary inline-flex items-center gap-2.5" disabled={status === "sending"}>
-                    {last ? (
-                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
-                        <rect x="3.5" y="5.5" width="17" height="15" rx="3" stroke="currentColor" strokeWidth="1.4" />
-                        <path d="M3.5 9.75H20.5M8 3.5V6.5M16 3.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                        <path d="M8.25 13.25L10.6 15.6L15.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    ) : null}
-                    <span>{last ? (status === "sending" ? ui.sending : ui.submit) : ui.next}</span>
-                  </button>
-                </div>
-              </>
-            )}
-          </form>
-        </div>
+                ) : null}
+              </div>
+            </>
+          )}
+          <span id={`${baseId}-screen`} className="sr-only">
+            {heading}
+          </span>
+        </form>
       </div>
     </section>
   );
 }
 
-function PlannerQuestion({
+function PlannerChoices({
   group,
   selected,
-  onToggle,
-  note,
-  onNote,
-  idPrefix,
+  onChoose,
+  labelledBy,
 }: {
   group: PlannerGroup;
   selected: string[];
-  onToggle: (option: PlannerOption) => void;
-  note: string;
-  onNote: (value: string) => void;
-  idPrefix: string;
+  onChoose: (option: PlannerOption) => void;
+  labelledBy: string;
 }) {
-  const { kind } = PLANNER_GROUPS[group.group];
-  const labelId = `${idPrefix}-label`;
-
-  if (kind === "note") {
-    return (
-      <div>
-        <label htmlFor={`${idPrefix}-note`} className="font-serif text-[24px] leading-tight text-ink">
-          {group.label}
-        </label>
-        <textarea
-          id={`${idPrefix}-note`}
-          rows={3}
-          placeholder={group.placeholder}
-          value={note}
-          onChange={(event) => onNote(event.target.value)}
-          className="mt-4 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
-        />
-      </div>
-    );
-  }
-
-  const freeTextOpen = group.options.some((option) => option.freeText && selected.includes(option.value));
+  const { kind, multi } = PLANNER_GROUPS[group.group];
+  // Few answers sit centred in a narrower row, like SieMatic's three-up grid.
+  const columns = group.options.length <= 2 ? "sm:grid-cols-2 max-w-xl" : group.options.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3";
 
   return (
-    <div role="group" aria-labelledby={labelId}>
-      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
-        <p id={labelId} className="font-serif text-[24px] leading-tight text-ink">
-          {group.label}
-        </p>
-        {group.hint ? <p className="font-sans text-[12px] text-muted">{group.hint}</p> : null}
-      </div>
-
-      <ul
-        className={cn(
-          "grid gap-3 sm:gap-4",
-          kind === "images" && "grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3",
-          kind === "icons" && "auto-rows-fr grid-cols-2 sm:grid-cols-3",
-          kind === "chips" && "auto-rows-fr grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3",
-        )}
-      >
-        {group.options.map((option) => {
-          const on = selected.includes(option.value);
-          const tile = cn(
-            "flex h-full w-full border text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
-            on ? "border-ink bg-karte ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink/40",
-          );
-          return (
-            <li key={option.value}>
-              <button type="button" aria-pressed={on} onClick={() => onToggle(option)} className={cn(tile, kind === "images" ? "flex-col" : kind === "icons" ? "flex-col items-center px-3 py-6 text-center" : "min-h-[4.5rem] items-center justify-center px-5 py-3.5 text-center")}>
-                {kind === "images" ? (
-                  <>
-                    <span className="relative block aspect-[4/3] w-full overflow-hidden bg-karte">
-                      {option.image ? (
-                        <CmsImage
-                          src={option.image.src}
-                          srcSet={option.image.srcSet}
-                          alt=""
-                          fill
-                          sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 300px"
-                          className="object-cover"
-                        />
-                      ) : null}
-                    </span>
-                    <span className="flex flex-col gap-1.5 px-4.5 pt-4 pb-5">
-                      <span className="font-serif text-[21px] leading-snug font-medium text-ink">{option.label}</span>
-                      {option.subtitle ? (
-                        <span className="font-sans text-[13px] leading-[1.55] font-light text-muted">{option.subtitle}</span>
-                      ) : null}
-                    </span>
-                  </>
-                ) : kind === "icons" ? (
-                  <>
+    <ul
+      role={multi ? "group" : "radiogroup"}
+      aria-labelledby={labelledBy}
+      className={cn(
+        "mx-auto grid gap-3 sm:gap-5",
+        kind === "images" && cn("grid-cols-2", columns),
+        kind === "icons" && cn("auto-rows-fr grid-cols-2", columns),
+        kind === "chips" && "auto-rows-fr grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3",
+      )}
+    >
+      {group.options.map((option) => {
+        const on = selected.includes(option.value);
+        const tile = cn(
+          "flex h-full w-full border text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
+          on ? "border-ink bg-karte ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink/40",
+        );
+        const state = multi ? { "aria-pressed": on } : { role: "radio", "aria-checked": on };
+        return (
+          <li key={option.value} role={multi ? undefined : "none"}>
+            <button
+              type="button"
+              {...state}
+              onClick={() => onChoose(option)}
+              className={cn(tile, kind === "images" ? "flex-col" : kind === "icons" ? "flex-col items-center px-3 py-7" : "min-h-[4.5rem] items-center justify-center px-5 py-3.5")}
+            >
+              {kind === "images" ? (
+                <>
+                  <span className="relative block aspect-[4/3] w-full overflow-hidden bg-karte">
                     {option.image ? (
-                      // Icons ship at 2× with deliberate whitespace: show them whole, never cropped.
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <CmsImage
                         src={option.image.src}
+                        srcSet={option.image.srcSet}
                         alt=""
-                        width={option.iconSize ?? 120}
-                        height={option.iconSize ?? 120}
-                        loading="lazy"
-                        decoding="async"
-                        className="max-w-full object-contain"
-                        style={{ width: option.iconSize ?? 120, height: option.iconSize ?? 120 }}
+                        fill
+                        // Only the current question is rendered, so load its images straight away.
+                        loading="eager"
+                        sizes="(max-width: 640px) 50vw, 300px"
+                        className="object-cover"
                       />
                     ) : null}
-                    <span className="mt-3.5 font-sans text-[15px] text-ink">{option.label}</span>
+                  </span>
+                  <span className="flex flex-col gap-1.5 px-3 pt-3 pb-4 sm:px-4 sm:pt-4 sm:pb-5">
+                    <span className="font-serif text-[18px] leading-snug font-medium text-ink sm:text-[21px]">{option.label}</span>
                     {option.subtitle ? (
-                      <span className="mt-1 font-sans text-[12px] leading-snug font-light text-muted">{option.subtitle}</span>
+                      <span className="font-sans text-[12px] leading-[1.5] font-light text-muted sm:text-[13px]">{option.subtitle}</span>
                     ) : null}
-                  </>
-                ) : (
-                  <span className="font-sans text-[15px] leading-snug text-ink">{option.label}</span>
-                )}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      {freeTextOpen ? (
-        <div className="mt-10">
-          <label htmlFor={`${idPrefix}-other`} className="sr-only">
-            {group.placeholder ?? group.label}
-          </label>
-          <input
-            id={`${idPrefix}-other`}
-            type="text"
-            placeholder={group.placeholder}
-            value={note}
-            onChange={(event) => onNote(event.target.value)}
-            className="w-full border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
-          />
-        </div>
-      ) : null}
-    </div>
+                  </span>
+                </>
+              ) : kind === "icons" ? (
+                <>
+                  {option.image ? (
+                    // Icons ship at 2× with deliberate whitespace: show them whole, never cropped.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={option.image.src}
+                      alt=""
+                      width={option.iconSize ?? 120}
+                      height={option.iconSize ?? 120}
+                      loading="eager"
+                      decoding="async"
+                      className="max-w-full object-contain"
+                      style={{ width: option.iconSize ?? 120, height: option.iconSize ?? 120 }}
+                    />
+                  ) : null}
+                  <span className="mt-4 font-sans text-[15px] text-ink">{option.label}</span>
+                  {option.subtitle ? (
+                    <span className="mt-1 font-sans text-[12px] leading-snug font-light text-muted">{option.subtitle}</span>
+                  ) : null}
+                </>
+              ) : (
+                <span className="font-sans text-[15px] leading-snug text-ink">{option.label}</span>
+              )}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
