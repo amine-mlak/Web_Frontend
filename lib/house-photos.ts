@@ -252,8 +252,8 @@ export function sizedMedia(slug: string): HouseMedia | null {
   const size = (src: string, width: number) => houseSrc(src, width);
   return {
     ...media,
-    hero: size(media.hero, 1920),
-    statement: size(media.statement, 1600),
+    hero: size(media.hero, 3840),
+    statement: size(media.statement, 2560),
     statementB: size(media.statementB, 1200),
     close: size(media.close, 1600),
     ledger: size(media.ledger, 1400),

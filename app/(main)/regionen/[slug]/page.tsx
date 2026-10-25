@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlacePage from "@/components/catalog/entries/PlacePage";
-import { findBySlug, projectsForRegion } from "@/lib/catalog";
+import { cmsValue, findBySlug, projectsForRegion } from "@/lib/catalog";
 import { fetchProjects, fetchRegions } from "@/lib/catalog-api";
 import { entryMetadata, presentRegionItem } from "@/lib/collection-entries";
+import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -18,13 +19,19 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const item = findBySlug(await fetchRegions(), (await params).slug);
   if (!item) {
     return { title: "Region | BEER Küchenmanufaktur" };
   }
-  return entryMetadata(
-    `Küchen in ${item.name}`,
+  const reading = entryReading(
+    locale === "en" ? `Kitchens in ${item.name}` : `Küchen in ${item.name}`,
     item.intro,
+    locale,
+  );
+  return entryMetadata(
+    cmsValue(locale, item, item.seoTitle) || reading.title,
+    cmsValue(locale, item, item.seoDescription) || reading.description,
     `/regionen/${item.slug}`,
     item.image,
   );

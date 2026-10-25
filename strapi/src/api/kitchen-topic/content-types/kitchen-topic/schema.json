@@ -1,0 +1,121 @@
+{
+  "kind": "collectionType",
+  "collectionName": "kitchen_topics",
+  "info": {
+    "singularName": "kitchen-topic",
+    "pluralName": "kitchen-topics",
+    "displayName": "Küchenthemen",
+    "description": "Eine Küchenseite unter /kuechen. Überschrift und Lesetext stehen unter den Bildern. SEO ist der Titel für Google. Cluster: Formen, Stile, Farben, Inseln oder Besondere."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "cluster": {
+      "type": "enumeration",
+      "enum": ["formen", "stile", "farben", "inseln", "besondere"],
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "intro": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "ueberschrift": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "lesetext": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "seitentitel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "betonung": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "aussage": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "hinweis": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "zitat": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "zitatQuelle": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "schlussTitel": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "schlussText": {
+      "type": "text",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "stichworte": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stichwort",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "punkte": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.punkt",
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "hex": {
+      "type": "string",
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "topics"
+    }
+  }
+}

@@ -12,7 +12,17 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local scratch scripts, never committed.
+    ".tmp-*",
+    ".tmp-*/**",
   ]),
+  {
+    // Node scripts that run outside Next.js (CMS container, n8n packing).
+    files: ["scripts/**/*.js", "n8n/**/*.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

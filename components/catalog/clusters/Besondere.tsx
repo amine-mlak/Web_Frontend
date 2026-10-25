@@ -13,6 +13,7 @@ import {
 } from "@/components/catalog/clusters/parts";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Where the grid ended" : "Wo das Raster endete";
@@ -93,7 +94,7 @@ export function BesondereCluster({ hub }: { hub: PresentedCluster }) {
   );
 }
 
-export function BesondereTopic({ hub }: { hub: PresentedTopic }) {
+export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   return (
     <main className="bg-paper">
       <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
@@ -136,6 +137,7 @@ export function BesondereTopic({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
+      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
       <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />

@@ -1,9 +1,11 @@
+import type { SitePage } from "@/lib/catalog";
 import {
   collectionHub,
   type CollectionBranch,
   type CollectionHubCopy,
   type CollectionHubId,
 } from "@/lib/collection-hubs";
+import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, isStockPhoto, resolveDevImage } from "@/lib/dev-images";
 import type { Locale } from "@/lib/i18n";
 
@@ -54,6 +56,8 @@ export type PresentedHub = Omit<CollectionHubCopy, "branches"> & {
   visitNote: string;
   priceLine: string;
   placeLine: string;
+  ueberschrift?: string;
+  lesetext?: string;
 };
 
 const OFFSET: Record<CollectionHubId, number> = {
@@ -340,8 +344,28 @@ export function presentHub(
   id: CollectionHubId,
   locale: Locale,
   branches?: CollectionBranch[],
+  page?: SitePage | null,
 ): PresentedHub {
-  const copy = collectionHub(id, locale);
+  const raw = collectionHub(id, locale);
+  const cms = page && (!page.contentLocale || page.contentLocale === locale) ? page : undefined;
+  const copy: CollectionHubCopy = cms
+    ? {
+        ...raw,
+        eyebrow: cms.eyebrow || raw.eyebrow,
+        title: cms.seitentitel || raw.title,
+        emphasis: cms.betonung || raw.emphasis,
+        lede: cms.intro || raw.lede,
+        statement: cms.aussage || raw.statement,
+        statementNote: cms.hinweis || raw.statementNote,
+        quote: cms.zitat || raw.quote,
+        quoteSource: cms.zitatQuelle || raw.quoteSource,
+        ctaLabel: cms.ctaLabel || raw.ctaLabel,
+        ctaHref: cms.ctaUrl || raw.ctaHref,
+        closeTitle: cms.schlussTitel || raw.closeTitle,
+        closeText: cms.schlussText || raw.closeText,
+        heroImage: cms.image ? cmsLarge(cms.image, 3840) : raw.heroImage,
+      }
+    : raw;
   const source = branches && branches.length > 0 ? branches : copy.branches;
   const start = OFFSET[id];
   const photo = (n: number, width?: number) => devPhoto(start + n, width);
@@ -350,9 +374,9 @@ export function presentHub(
 
   const presented: PresentedBranch[] = source.map((branch, index) => ({
     ...branch,
-    image: resolveDevImage(branch.image, photo(16 + index * 3)),
-    imageB: photo(17 + index * 3, 1200),
-    imageC: photo(18 + index * 3, 1200),
+    image: resolveDevImage(branch.image, photo(16 + index * 3, 1920)),
+    imageB: photo(17 + index * 3, 1920),
+    imageC: photo(18 + index * 3, 1600),
     kicker: String(index + 1).padStart(2, "0"),
     points: pointsFor(branch.title, locale),
     caption: captions[index % captions.length] ?? branch.title,
@@ -366,21 +390,23 @@ export function presentHub(
     ...copy,
     id,
     locale,
-    heroImage: resolveDevImage(heroFromCms || copy.heroImage, photo(0)),
-    statementImage: photo(1),
-    statementImageB: photo(2),
-    closeImage: photo(3),
-    ledgerImage: photo(4),
-    visitImage: photo(5),
+    heroImage: cmsLarge(resolveDevImage(heroFromCms || copy.heroImage, photo(0, 3840)), 3840),
+    statementImage: photo(1, 2560),
+    statementImageB: photo(2, 1920),
+    closeImage: photo(3, 2560),
+    ledgerImage: photo(4, 1920),
+    visitImage: photo(5, 1920),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
-      src: photo(6 + slot, 1000),
+      src: photo(6 + slot, 1920),
       alt: copy.title,
       caption: FILM_CAPTION[locale][slot] ?? copy.title,
     })),
-    facts: FACTS[locale][id] ?? FACTS[locale].default,
+    facts: cms?.stichworte?.length
+      ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
+      : FACTS[locale][id] ?? FACTS[locale].default,
     ledgerLine: LEDGER_LINE[locale],
     looks: captions.map((caption, slot) => ({
-      src: photo(10 + slot, 1100),
+      src: photo(10 + slot, 1600),
       alt: caption,
       caption,
     })),

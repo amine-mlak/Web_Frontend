@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SpecPage from "@/components/catalog/entries/SpecPage";
-import { findBySlug, projectsForBrand } from "@/lib/catalog";
+import { cmsValue, findBySlug, projectsForBrand } from "@/lib/catalog";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
+import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -18,11 +19,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const brand = findBySlug(await fetchBrands(), (await params).slug);
   if (!brand) {
     return { title: "Marke | BEER Küchenmanufaktur" };
   }
-  return entryMetadata(brand.name, brand.intro, `/marken/${brand.slug}`, brand.image);
+  const reading = entryReading(brand.name, brand.intro, locale);
+  return entryMetadata(
+    cmsValue(locale, brand, brand.seoTitle) || reading.title,
+    cmsValue(locale, brand, brand.seoDescription) || reading.description,
+    `/marken/${brand.slug}`,
+    brand.image,
+  );
 }
 
 export default async function BrandPage({

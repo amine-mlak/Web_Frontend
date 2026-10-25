@@ -120,7 +120,7 @@ export default function LeadCta({
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [stepError, setStepError] = useState("");
-  const mountedAt = useRef(Date.now());
+  const mountedAt = useRef(0);
   const formRef = useRef<HTMLFormElement>(null);
   const seen = useRef(false);
   const started = useRef(false);
@@ -129,6 +129,10 @@ export default function LeadCta({
   const step = BERATUNG_WIZARD_STEPS[stepIndex] ?? "shape";
   const copy = WIZARD_STEP_COPY[step];
   const autoAdvance = PICTURE_STEPS.has(step) && step !== "ort";
+
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

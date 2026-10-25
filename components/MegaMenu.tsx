@@ -47,19 +47,15 @@ export default function MegaMenu({
   const closeDropdownTimer = useRef<number>(0);
   const closeMobileTimer = useRef<number>(0);
   const menuValueRef = useRef(menuValue);
-  const sheetWasOpen = useRef(false);
-  menuValueRef.current = menuValue;
   const solid = true;
   const sheetEase = solid
     ? "ease-[cubic-bezier(0.22,1,0.36,1)]"
     : "ease-[cubic-bezier(0.64,0,0.78,0)]";
   const panelExpanded = dropdownOpen || (!solid && Boolean(menuValue));
-  const panelInstant = panelExpanded && solid && !sheetWasOpen.current;
   const panelEase = panelExpanded
     ? "ease-[cubic-bezier(0.22,1,0.36,1)]"
     : "ease-[cubic-bezier(0.64,0,0.78,0)]";
   const mobileExpanded = mobileOpen || (!solid && mobileVisible);
-  const mobileInstant = mobileExpanded && solid && !sheetWasOpen.current;
   const mobileEase = mobileExpanded
     ? "ease-[cubic-bezier(0.22,1,0.36,1)]"
     : "ease-[cubic-bezier(0.64,0,0.78,0)]";
@@ -110,8 +106,8 @@ export default function MegaMenu({
   }, []);
 
   useEffect(() => {
-    sheetWasOpen.current = solid;
-  }, [solid]);
+    menuValueRef.current = menuValue;
+  }, [menuValue]);
 
   useEffect(() => {
     return () => {
@@ -207,7 +203,6 @@ export default function MegaMenu({
                   "grid transition-[grid-template-rows] duration-500",
                   panelEase,
                   panelExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-                  panelInstant && "duration-0",
                 )}
               >
                 <div className="min-h-0 overflow-hidden bg-white">
@@ -263,7 +258,6 @@ export default function MegaMenu({
               "grid transition-[grid-template-rows] duration-500",
               mobileEase,
               mobileExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-              mobileInstant && "duration-0",
             )}
           >
             <div

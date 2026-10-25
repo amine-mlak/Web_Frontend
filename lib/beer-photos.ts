@@ -49,3 +49,20 @@ export function beerNamed(file: string, width = 1800) {
   const src = BEER_NAMED[file] ?? BEER_PHOTOS[0];
   return cmsSrc(src, width);
 }
+
+export function cmsLarge(src: string | undefined, width = 3840) {
+  if (!src) {
+    return "";
+  }
+  const optimized = src.match(/^\/cms-opt\/\d+\/(.+)$/);
+  if (optimized) {
+    return cmsSrc(`/cms-uploads/${optimized[1]}`, width);
+  }
+  if (src.startsWith("/cms-uploads/") || src.startsWith("/uploads/")) {
+    return cmsSrc(src, width);
+  }
+  if (src.startsWith("/kitchens/")) {
+    return beerNamed(src.slice("/kitchens/".length), width);
+  }
+  return src;
+}

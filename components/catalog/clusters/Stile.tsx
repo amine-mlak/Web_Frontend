@@ -2,15 +2,12 @@ import LocaleLink from "@/components/LocaleLink";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
   ClusterLinks,
-  Crumbs,
   HouseLine,
   QuoteLine,
-  RuledPoints,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch } from "@/lib/collection-present";
-import type { PresentedTopic } from "@/lib/collection-topics";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Houses with a stance" : "Häuser mit Haltung";
@@ -123,88 +120,6 @@ export function StileCluster({ hub }: { hub: PresentedCluster }) {
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
       <ClusterLinks hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-export function StileTopic({ hub }: { hub: PresentedTopic }) {
-  return (
-    <main className="bg-paper">
-      <section
-        data-site-hero=""
-        className="relative isolate -mt-14 min-h-[78svh] bg-nacht"
-        aria-labelledby="stile-topic"
-      >
-        <Frame
-          src={hub.heroImage}
-          alt={hub.heroAlt}
-          className="absolute inset-0"
-          priority
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-nacht/80 via-transparent to-nacht/30" aria-hidden />
-        <div className="relative z-10 flex min-h-[78svh] flex-col justify-end px-5 pb-12 sm:px-8 lg:px-14">
-          <Crumbs hub={hub} tone="paper" />
-          <h1
-            id="stile-topic"
-            className="mt-4 max-w-3xl font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-paper sm:text-[72px]"
-          >
-            {hub.title} <em className="italic">{hub.emphasis}</em>
-          </h1>
-          <p className="mt-4 max-w-lg font-sans text-[17px] leading-relaxed font-light text-paper/85">
-            {hub.lede}
-          </p>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <div className="lg:col-span-5">
-          <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink italic md:text-[34px]">
-            {hub.statement}
-          </p>
-          {hub.statementNote ? (
-            <p className="mt-6 max-w-md font-sans text-[15px] leading-relaxed text-muted">
-              {hub.statementNote}
-            </p>
-          ) : null}
-        </div>
-        <div className="lg:col-span-6 lg:col-start-7">
-          <RuledPoints branches={hub.branches} />
-        </div>
-      </section>
-
-      {hub.siblings.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14" aria-labelledby="stile-siblings">
-          <p className="type-eyebrow text-gold">{hub.siblingEyebrow}</p>
-          <h2
-            id="stile-siblings"
-            className="mt-3 font-serif text-[32px] font-medium tracking-[-0.03em] text-ink"
-          >
-            {hub.siblingTitle}
-          </h2>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {hub.siblings.map((item) => (
-              <li key={item.href}>
-                <LocaleLink href={item.href} className="group relative block">
-                  <Frame
-                    src={item.image}
-                    alt={item.title}
-                    className="aspect-[3/4]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-                    sizes="(max-width: 1024px) 50vw, 20vw"
-                  />
-                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-nacht/70 to-transparent p-4 font-serif text-[20px] leading-tight text-paper">
-                    {item.title}
-                  </span>
-                </LocaleLink>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>
   );

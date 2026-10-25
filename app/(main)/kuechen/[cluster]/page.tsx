@@ -6,7 +6,7 @@ import {
   KITCHEN_CLUSTERS,
   topicsInCluster,
 } from "@/lib/catalog";
-import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
+import { fetchKitchenTopics, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
 import { clusterMetadata } from "@/lib/collection-clusters";
 import { getRequestLocale } from "@/lib/locale";
 
@@ -42,10 +42,11 @@ export default async function KitchenClusterPage({
   if (!meta) {
     notFound();
   }
-  const [locale, topics, projects] = await Promise.all([
+  const [locale, topics, projects, page] = await Promise.all([
     getRequestLocale(),
     fetchKitchenTopics(),
     fetchProjects(),
+    fetchSitePage(cluster),
   ]);
   const inCluster = topicsInCluster(topics, cluster);
   const slugs = new Set(inCluster.map((topic) => topic.slug));
@@ -59,6 +60,7 @@ export default async function KitchenClusterPage({
       topics={inCluster}
       projects={related}
       locale={locale}
+      page={page}
     />
   );
 }

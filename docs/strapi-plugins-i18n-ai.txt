@@ -192,6 +192,17 @@ Categories (the folders editors see):
   project    Referenzkueche            spec, gallery-item
   geraete    appliance copy            (later)
 
+Küchenthemen, fields the team edits:
+
+  intro            Kurztext unter der Überschrift im Bild
+  ueberschrift     Zeile über dem Lesetext, deutsch
+  lesetext         Absätze unter den Bildern, Leerzeile trennt Absätze
+  seo              Baustein · SEO, Titel und Beschreibung für Google
+
+Same three fields belong on Material, Gerät, Möbel, Marke, Region
+when the Content-Type Builder is opened. API names stay as above.
+Editors see Überschrift, Lesetext, Baustein · SEO.
+
 Keep the starter components that already exist:
   shared.seo   shared.media   shared.quote
   shared.rich-text   shared.slider

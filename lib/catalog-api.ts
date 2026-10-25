@@ -70,6 +70,46 @@ function related(row: Record<string, unknown> | null, key: string) {
   return flattenCollection(row?.[key]);
 }
 
+function repeaters(
+  row: Record<string, unknown> | null,
+  key: string,
+  map: (item: Record<string, unknown>) => { a: string; b: string },
+) {
+  return flattenCollection(row?.[key])
+    .map((item) => map(item))
+    .filter((item) => item.a && item.b);
+}
+
+function pageFields(row: Record<string, unknown> | null) {
+  const seo =
+    row?.seo && typeof row.seo === "object"
+      ? (row.seo as Record<string, unknown>)
+      : null;
+  return {
+    ueberschrift: text(row, "ueberschrift"),
+    lesetext: text(row, "lesetext"),
+    seitentitel: text(row, "seitentitel"),
+    betonung: text(row, "betonung"),
+    aussage: text(row, "aussage"),
+    hinweis: text(row, "hinweis"),
+    zitat: text(row, "zitat"),
+    zitatQuelle: text(row, "zitatQuelle"),
+    schlussTitel: text(row, "schlussTitel"),
+    schlussText: text(row, "schlussText"),
+    seoTitle: seo ? text(seo, "metaTitle") : "",
+    seoDescription: seo ? text(seo, "metaDescription") : "",
+    contentLocale: text(row, "locale"),
+    stichworte: repeaters(row, "stichworte", (item) => ({
+      a: text(item, "wert"),
+      b: text(item, "zeile"),
+    })).map((item) => ({ wert: item.a, zeile: item.b })),
+    punkte: repeaters(row, "punkte", (item) => ({
+      a: text(item, "titel"),
+      b: text(item, "text"),
+    })).map((item) => ({ titel: item.a, text: item.b })),
+  };
+}
+
 function mapTopic(entry: unknown): KitchenTopic | null {
   const row = flattenEntity(entry);
   const slug = text(row, "slug");
@@ -87,6 +127,7 @@ function mapTopic(entry: unknown): KitchenTopic | null {
     image: image.src,
     intro: text(row, "intro"),
     order: Number(row?.order ?? 0) || 0,
+    ...pageFields(row),
   };
 }
 
@@ -106,6 +147,7 @@ function mapBrand(entry: unknown): Brand | null {
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
     srcSet: image.srcSet,
+    ...pageFields(row),
   };
 }
 
@@ -125,6 +167,7 @@ function mapAppliance(entry: unknown): Appliance | null {
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
     srcSet: image.srcSet,
+    ...pageFields(row),
   };
 }
 
@@ -144,6 +187,7 @@ function mapFurniture(entry: unknown): Furniture | null {
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
     srcSet: image.srcSet,
+    ...pageFields(row),
   };
 }
 
@@ -161,6 +205,7 @@ function mapRegion(entry: unknown): Region | null {
     intro: text(row, "intro"),
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
+    ...pageFields(row),
   };
 }
 
@@ -180,20 +225,19 @@ function mapMaterial(entry: unknown): Material | null {
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
     srcSet: image.srcSet,
+    ...pageFields(row),
   };
 }
 
 function mapGallery(row: Record<string, unknown> | null): ProjectFrame[] {
-  return flattenCollection(row?.gallery)
-    .map((item) => {
-      const image = strapiResponsiveImage(item as StrapiMedia, { srcWidth: 1600 });
-      if (!image.src) {
-        return null;
-      }
-      const alt = text(item, "alternativeText") || text(item, "caption") || text(item, "name");
-      return { src: image.src, srcSet: image.srcSet, alt };
-    })
-    .filter((item): item is ProjectFrame => Boolean(item));
+  return flattenCollection(row?.gallery).flatMap((item): ProjectFrame[] => {
+    const image = strapiResponsiveImage(item as StrapiMedia, { srcWidth: 1600 });
+    if (!image.src) {
+      return [];
+    }
+    const alt = text(item, "alternativeText") || text(item, "caption") || text(item, "name");
+    return [{ src: image.src, srcSet: image.srcSet, alt }];
+  });
 }
 
 function mapSpecs(row: Record<string, unknown> | null): CatalogSpec[] {
@@ -213,7 +257,8 @@ function mapProject(entry: unknown): Project | null {
     return null;
   }
   const image = mediaImage(row, "image", stile("stile-holz.jpg"));
-  const body = enrichProjectBody(slug, text(row, "body"));
+  const copy = pageFields(row);
+  const body = enrichProjectBody(slug, copy.lesetext || text(row, "body"));
   return {
     slug,
     title,
@@ -221,6 +266,7 @@ function mapProject(entry: unknown): Project | null {
     year: text(row, "year"),
     intro: text(row, "intro"),
     body,
+    ...copy,
     image: image.src,
     srcSet: image.srcSet,
     topics: related(row, "topics")
@@ -295,6 +341,7 @@ async function mapPage(entry: unknown): Promise<SitePage | null> {
     srcSet: image.srcSet,
     ctaLabel: text(row, "ctaLabel"),
     ctaUrl: text(row, "ctaUrl"),
+    ...pageFields(row),
     faq: await resolveFaqBlock(row.faq),
   };
 }
@@ -329,12 +376,25 @@ const PROJECT_POPULATE = {
   "populate[materials][populate]": "image",
   "populate[appliances][populate]": "image",
   "populate[regions]": "true",
+  "populate[seo]": "true",
+};
+
+const SEO_QUERY = {
+  "populate[seo]": "true",
+  "populate[stichworte]": "true",
+  "populate[punkte]": "true",
 };
 
 export async function fetchKitchenTopics() {
   return loadMapped(
     "/api/kitchen-topics",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    {
+      ...LIST_QUERY,
+      "populate[image]": "true",
+      "populate[seo]": "true",
+      "populate[stichworte]": "true",
+      "populate[punkte]": "true",
+    },
     mapTopic,
     FALLBACK_TOPICS,
   );
@@ -352,7 +412,7 @@ export async function fetchProjects() {
 export async function fetchBrands() {
   return loadMapped(
     "/api/brands",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
     mapBrand,
     FALLBACK_BRANDS,
   );
@@ -361,7 +421,7 @@ export async function fetchBrands() {
 export async function fetchAppliances() {
   return loadMapped(
     "/api/appliances",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
     mapAppliance,
     FALLBACK_APPLIANCES,
   );
@@ -370,7 +430,7 @@ export async function fetchAppliances() {
 export async function fetchFurniture() {
   return loadMapped(
     "/api/furniture-items",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
     mapFurniture,
     FALLBACK_FURNITURE,
   );
@@ -379,7 +439,7 @@ export async function fetchFurniture() {
 export async function fetchRegions() {
   return loadMapped(
     "/api/regions",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
     mapRegion,
     FALLBACK_REGIONS,
   );
@@ -388,7 +448,7 @@ export async function fetchRegions() {
 export async function fetchMaterials() {
   return loadMapped(
     "/api/materials",
-    { ...LIST_QUERY, "populate[image]": "true" },
+    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
     mapMaterial,
     FALLBACK_MATERIALS,
   );
@@ -426,6 +486,8 @@ export async function fetchSitePages() {
       sort: "title:asc",
       "pagination[pageSize]": "50",
       "populate[image]": "true",
+      "populate[stichworte]": "true",
+      "populate[punkte]": "true",
       "populate[faq][populate][theme]": "true",
       "populate[faq][populate][questions][populate]": "item",
     },

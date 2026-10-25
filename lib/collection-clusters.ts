@@ -4,6 +4,7 @@ import {
   type KitchenClusterSlug,
   type KitchenTopic,
   type Project,
+  type SitePage,
 } from "@/lib/catalog";
 import {
   type CollectionFact,
@@ -11,6 +12,7 @@ import {
   type PresentedHub,
 } from "@/lib/collection-present";
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
+import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
@@ -659,13 +661,56 @@ const SIBLING_TEXT: Record<Locale, Record<KitchenClusterSlug, string>> = {
   },
 };
 
+export function clusterCms(slug: KitchenClusterSlug) {
+  const copy = COPY.de[slug];
+  return {
+    slug,
+    title: `${copy.title} ${copy.emphasis}`.trim(),
+    eyebrow: copy.eyebrow,
+    intro: copy.lede,
+    body: [copy.statement, copy.statementNote].filter(Boolean).join("\n\n"),
+    ctaLabel: copy.ctaLabel,
+    ctaUrl: "/beratung",
+    seitentitel: copy.title,
+    betonung: copy.emphasis,
+    aussage: copy.statement,
+    hinweis: copy.statementNote,
+    zitat: copy.quote,
+    zitatQuelle: copy.quoteSource,
+    schlussTitel: copy.closeTitle,
+    schlussText: copy.closeText,
+    stichworte: copy.facts.map((fact) => ({ wert: fact.value, zeile: fact.label })),
+  };
+}
+
 export function presentCluster(
   slug: KitchenClusterSlug,
   locale: Locale,
   topics: KitchenTopic[],
   projects: Project[],
+  page?: SitePage | null,
 ): PresentedCluster {
-  const copy = COPY[locale][slug];
+  const base = COPY[locale][slug];
+  const cms = page && (!page.contentLocale || page.contentLocale === locale) ? page : undefined;
+  const copy = cms
+    ? {
+        ...base,
+        eyebrow: cms.eyebrow || base.eyebrow,
+        title: cms.seitentitel || base.title,
+        emphasis: cms.betonung || base.emphasis,
+        lede: cms.intro || base.lede,
+        statement: cms.aussage || base.statement,
+        statementNote: cms.hinweis || base.statementNote,
+        quote: cms.zitat || base.quote,
+        quoteSource: cms.zitatQuelle || base.quoteSource,
+        ctaLabel: cms.ctaLabel || base.ctaLabel,
+        closeTitle: cms.schlussTitel || base.closeTitle,
+        closeText: cms.schlussText || base.closeText,
+        facts: cms.stichworte?.length
+          ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
+          : base.facts,
+      }
+    : base;
   const parent = PARENT[locale];
   const visit = VISIT[locale];
   const start = OFFSET[slug];
@@ -699,7 +744,7 @@ export function presentCluster(
     lede: copy.lede,
     statement: copy.statement,
     statementNote: copy.statementNote,
-    heroImage: resolveDevImage(topics[0]?.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(topics[0]?.image, photo(0, 3840)), 3840),
     heroAlt: topics[0] ? topicCopy(topics[0], locale).name : copy.title,
     indexEyebrow: copy.indexEyebrow,
     quote: copy.quote,
@@ -710,20 +755,20 @@ export function presentCluster(
     closeText: copy.closeText,
     parentHref: parent.href,
     parentLabel: parent.label,
-    statementImage: photo(1),
-    statementImageB: photo(2),
-    closeImage: photo(3),
-    ledgerImage: photo(4),
-    visitImage: photo(5),
+    statementImage: photo(1, 2560),
+    statementImageB: photo(2, 1920),
+    closeImage: photo(3, 2560),
+    ledgerImage: photo(4, 1920),
+    visitImage: photo(5, 1920),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
-      src: photo(6 + slot, 1000),
+      src: photo(6 + slot, 1920),
       alt: filmCaptions[slot] ?? copy.title,
       caption: filmCaptions[slot] ?? copy.title,
     })),
     facts: copy.facts,
     ledgerLine: copy.ledgerLine,
     looks: lookCaptions.map((caption, slot) => ({
-      src: photo(10 + slot, 1100),
+      src: photo(10 + slot, 1600),
       alt: caption,
       caption,
     })),

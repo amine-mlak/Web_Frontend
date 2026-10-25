@@ -10,6 +10,7 @@ import {
 } from "@/components/catalog/clusters/parts";
 import type { ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function isLight(hex: string) {
   const raw = hex.replace("#", "");
@@ -121,7 +122,7 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
   );
 }
 
-export function FarbenTopic({ hub }: { hub: PresentedTopic }) {
+export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   const hex = hub.hex || "#f4f1ea";
   const light = isLight(hex);
 
@@ -173,7 +174,7 @@ export function FarbenTopic({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
-      <SwatchField swatches={hub.swatches} label={hub.siblingTitle} />
+      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>

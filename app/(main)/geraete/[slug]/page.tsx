@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SpecPage from "@/components/catalog/entries/SpecPage";
-import { findBySlug, projectsForAppliance } from "@/lib/catalog";
-import { fetchAppliances, fetchProjects } from "@/lib/catalog-api";
+import { cmsValue, findBySlug, projectsForAppliance } from "@/lib/catalog";
+import { fetchAppliances, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
 import {
   applianceKindMetadata,
   entryMetadata,
@@ -11,6 +11,7 @@ import {
   presentApplianceItem,
   presentApplianceKind,
 } from "@/lib/collection-entries";
+import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -38,7 +39,13 @@ export async function generateMetadata({
   if (!item) {
     return { title: "Gerät | BEER Küchenmanufaktur" };
   }
-  return entryMetadata(item.name, item.intro, `/geraete/${item.slug}`, item.image);
+  const reading = entryReading(item.name, item.intro, locale);
+  return entryMetadata(
+    cmsValue(locale, item, item.seoTitle) || reading.title,
+    cmsValue(locale, item, item.seoDescription) || reading.description,
+    `/geraete/${item.slug}`,
+    item.image,
+  );
 }
 
 export default async function AppliancePage({
@@ -54,8 +61,9 @@ export default async function AppliancePage({
   ]);
 
   if (isGeraeteKindRoute(slug)) {
+    const page = await fetchSitePage(slug);
     return (
-      <SpecPage hub={presentApplianceKind(slug, locale, items, projects)} />
+      <SpecPage hub={presentApplianceKind(slug, locale, items, projects, page)} />
     );
   }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { APPLIANCE_PHOTOS } from "@/lib/appliance-media";
+import { cmsLarge } from "@/lib/beer-photos";
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
@@ -999,11 +1000,57 @@ export function overlayBranchImages(
   });
 }
 
+const HUB_PAGE_SLUG: Record<CollectionHubId, string> = {
+  kuechen: "kuechen",
+  material: "material",
+  geraete: "geraete",
+  moebel: "moebel",
+  projekte: "projekte",
+  regionen: "regionen",
+  marken: "marken",
+  ratgeber: "ratgeber",
+  planen: "kueche-planen",
+  ueber: "ueber",
+};
+
+export function hubPageSlug(id: CollectionHubId) {
+  return HUB_PAGE_SLUG[id];
+}
+
+export function hubCms(id: CollectionHubId) {
+  const copy = packs.de[id];
+  return {
+    slug: HUB_PAGE_SLUG[id],
+    title: `${copy.title} ${copy.emphasis}`.trim(),
+    eyebrow: copy.eyebrow,
+    intro: copy.lede,
+    body: [copy.statement, copy.statementNote].filter(Boolean).join("\n\n"),
+    ctaLabel: copy.ctaLabel,
+    ctaUrl: copy.ctaHref,
+    seitentitel: copy.title,
+    betonung: copy.emphasis,
+    aussage: copy.statement,
+    hinweis: copy.statementNote,
+    zitat: copy.quote,
+    zitatQuelle: copy.quoteSource,
+    schlussTitel: copy.closeTitle,
+    schlussText: copy.closeText,
+  };
+}
+
 export function collectionHub(
   id: CollectionHubId,
   locale: Locale,
 ): CollectionHubCopy {
-  return packs[locale][id];
+  const copy = packs[locale][id];
+  return {
+    ...copy,
+    heroImage: cmsLarge(copy.heroImage, 3840),
+    branches: copy.branches.map((branch) => ({
+      ...branch,
+      image: cmsLarge(branch.image, 1920),
+    })),
+  };
 }
 
 const HUB_PATH: Record<CollectionHubId, string> = {

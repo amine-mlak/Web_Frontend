@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import type {
-  KitchenClusterSlug,
-  KitchenTopic,
-  Project,
+import {
+  cmsValue,
+  type KitchenClusterSlug,
+  type KitchenTopic,
+  type Project,
 } from "@/lib/catalog";
 import {
   clusterHeading,
@@ -19,6 +20,7 @@ import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
+import { topicReading } from "@/lib/topic-reading";
 
 export type PresentedTopic = PresentedCluster & {
   lookTitle: string;
@@ -1489,19 +1491,65 @@ function voiceFor(slug: string, locale: Locale): TopicVoice | undefined {
   return VOICE[locale][slug];
 }
 
+export function kitchenTopicCms(slug: string) {
+  const voice = voiceFor(slug, "de");
+  const notes = TOPIC_NOTES[slug] ?? [];
+  if (!voice) {
+    return null;
+  }
+  return {
+    seitentitel: voice.title,
+    betonung: voice.emphasis,
+    aussage: voice.statement,
+    hinweis: voice.statementNote,
+    zitat: voice.quote,
+    zitatQuelle: voice.quoteSource,
+    schlussTitel: voice.closeTitle,
+    schlussText: voice.closeText,
+    stichworte: voice.facts.map((fact) => ({ wert: fact.value, zeile: fact.label })),
+    punkte: notes
+      .map((note, index) => ({
+        titel: note.label,
+        text: (voice.extras[index] ?? []).join("\n"),
+      }))
+      .filter((item) => item.titel && item.text),
+  };
+}
+
+function cmsPointLines(punkt?: { titel?: string; text?: string }) {
+  const lines = (punkt?.text || "")
+    .split(/\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return lines.length ? lines : null;
+}
+
+function cmsForLocale<T extends { contentLocale?: string }>(item: T | undefined, locale: Locale) {
+  if (!item) {
+    return undefined;
+  }
+  if (item.contentLocale && item.contentLocale !== locale) {
+    return undefined;
+  }
+  return item;
+}
+
 function chapterBranches(
   topic: KitchenTopic,
   locale: Locale,
   photo: (n: number, width?: number) => string,
 ): PresentedBranch[] {
   const voice = voiceFor(topic.slug, locale);
+  const cms = cmsForLocale(topic, locale);
   const notes = TOPIC_NOTES[topic.slug] ?? [];
   const texts = topicPoints(topic.slug, locale);
   const looks = voice?.looks ?? [];
 
   return notes.map((note, index) => {
+    const punkt = cms?.punkte?.[index];
     const title =
-      locale === "en" ? (LABEL_EN[note.label] ?? note.label) : note.label;
+      punkt?.titel ||
+      (locale === "en" ? (LABEL_EN[note.label] ?? note.label) : note.label);
     const text = texts[index] ?? note.text;
     return {
       title,
@@ -1511,7 +1559,7 @@ function chapterBranches(
       imageC: photo(18 + index * 3, 1200),
       alt: title,
       kicker: String(index + 1).padStart(2, "0"),
-      points: voice?.extras[index] ?? [],
+      points: cmsPointLines(punkt) ?? voice?.extras[index] ?? [],
       caption: looks[index % looks.length] ?? title,
     };
   });
@@ -1526,6 +1574,7 @@ export function presentTopic(
 ): PresentedTopic {
   const local = topicCopy(topic, locale);
   const voice = voiceFor(topic.slug, locale);
+  const cms = cmsForLocale(topic, locale);
   const heading = clusterHeading(cluster, locale);
   const parent = kitchensParent(locale);
   const visit = clusterVisit(locale);
@@ -1568,21 +1617,23 @@ export function presentTopic(
 
   return {
     locale,
+    ueberschrift: cms?.ueberschrift,
+    lesetext: cms?.lesetext,
     eyebrow: locale === "en" ? "Kitchen" : "Küche",
-    title: voice?.title ?? local.name,
-    emphasis: voice?.emphasis ?? "",
+    title: cms?.seitentitel || voice?.title || local.name,
+    emphasis: cms?.betonung || voice?.emphasis || "",
     lede: local.intro,
-    statement: voice?.statement ?? local.intro,
-    statementNote: voice?.statementNote ?? "",
+    statement: cms?.aussage || voice?.statement || local.intro,
+    statementNote: cms?.hinweis || voice?.statementNote || "",
     heroImage: resolveDevImage(topic.image, photo(0)),
     heroAlt: local.name,
     indexEyebrow: voice?.indexEyebrow ?? heading.eyebrow,
-    quote: voice?.quote ?? "",
-    quoteSource: voice?.quoteSource ?? "",
+    quote: cms?.zitat || voice?.quote || "",
+    quoteSource: cms?.zitatQuelle || voice?.quoteSource || "",
     ctaLabel: voice?.ctaLabel ?? heading.eyebrow,
     ctaHref: "/beratung",
-    closeTitle: voice?.closeTitle ?? local.name,
-    closeText: voice?.closeText ?? local.intro,
+    closeTitle: cms?.schlussTitel || voice?.closeTitle || local.name,
+    closeText: cms?.schlussText || voice?.closeText || local.intro,
     parentHref: `/kuechen/${cluster}`,
     parentLabel: heading.title,
     crumbs: [
@@ -1600,7 +1651,9 @@ export function presentTopic(
       alt: film[slot] ?? local.name,
       caption: film[slot] ?? local.name,
     })),
-    facts: voice?.facts ?? [
+    facts: cms?.stichworte?.length
+      ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
+      : voice?.facts ?? [
       { value: locale === "en" ? "Survey" : "Aufmaß", label: locale === "en" ? "first" : "zuerst" },
       { value: "Wolfersdorf", label: locale === "en" ? "workshop" : "Werkstatt" },
       { value: locale === "en" ? "To measure" : "Auf Maß", label: locale === "en" ? "no grid" : "kein Raster" },
@@ -1637,9 +1690,10 @@ export function presentTopic(
 export async function topicMetadata(topic: KitchenTopic): Promise<Metadata> {
   const locale = await getRequestLocale();
   const local = topicCopy(topic, locale);
+  const reading = topicReading(topic.slug, locale);
   return pageMetadata({
-    title: brandedTitle(local.name),
-    description: local.intro,
+    title: brandedTitle(cmsValue(locale, topic, topic.seoTitle) || reading?.title || local.name),
+    description: cmsValue(locale, topic, topic.seoDescription) || reading?.description || local.intro,
     path: `/kuechen/${topic.cluster}/${topic.slug}`,
     image: topic.image,
   });

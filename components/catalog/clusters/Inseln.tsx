@@ -10,6 +10,7 @@ import {
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Islands that stand" : "Inseln, die stehen";
@@ -116,7 +117,7 @@ export function InselnCluster({ hub }: { hub: PresentedCluster }) {
   );
 }
 
-export function InselnTopic({ hub }: { hub: PresentedTopic }) {
+export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   return (
     <main className="bg-paper">
       <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
@@ -171,6 +172,7 @@ export function InselnTopic({ hub }: { hub: PresentedTopic }) {
         </section>
       ) : null}
 
+      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>

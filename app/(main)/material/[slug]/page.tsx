@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SamplePage from "@/components/catalog/entries/SamplePage";
-import { findBySlug, projectsForMaterial } from "@/lib/catalog";
-import { fetchMaterials, fetchProjects } from "@/lib/catalog-api";
+import { cmsValue, findBySlug, projectsForMaterial } from "@/lib/catalog";
+import { fetchMaterials, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
 import {
   entryMetadata,
   isMaterialKindRoute,
@@ -11,6 +11,7 @@ import {
   presentMaterialItem,
   presentMaterialKind,
 } from "@/lib/collection-entries";
+import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -38,7 +39,13 @@ export async function generateMetadata({
   if (!item) {
     return { title: "Material | BEER Küchenmanufaktur" };
   }
-  return entryMetadata(item.name, item.intro, `/material/${item.slug}`, item.image);
+  const reading = entryReading(item.name, item.intro, locale);
+  return entryMetadata(
+    cmsValue(locale, item, item.seoTitle) || reading.title,
+    cmsValue(locale, item, item.seoDescription) || reading.description,
+    `/material/${item.slug}`,
+    item.image,
+  );
 }
 
 export default async function MaterialDetailPage({
@@ -54,8 +61,9 @@ export default async function MaterialDetailPage({
   ]);
 
   if (isMaterialKindRoute(slug)) {
+    const page = await fetchSitePage(slug);
     return (
-      <SamplePage hub={presentMaterialKind(slug, locale, items, projects)} />
+      <SamplePage hub={presentMaterialKind(slug, locale, items, projects, page)} />
     );
   }
 

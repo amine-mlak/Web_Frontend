@@ -28,6 +28,49 @@ export type KitchenTopic = {
   image: string;
   intro: string;
   order: number;
+  ueberschrift?: string;
+  lesetext?: string;
+  seitentitel?: string;
+  betonung?: string;
+  aussage?: string;
+  hinweis?: string;
+  zitat?: string;
+  zitatQuelle?: string;
+  schlussTitel?: string;
+  schlussText?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  contentLocale?: string;
+  stichworte?: { wert: string; zeile: string }[];
+  punkte?: { titel: string; text: string }[];
+};
+
+export function cmsValue(
+  locale: string,
+  item: { contentLocale?: string } | null | undefined,
+  value?: string,
+) {
+  if (!item || !value?.trim()) {
+    return "";
+  }
+  if (item.contentLocale && item.contentLocale !== locale) {
+    return "";
+  }
+  return value;
+}
+
+export type CmsPageFields = {
+  contentLocale?: string;
+  seitentitel?: string;
+  betonung?: string;
+  aussage?: string;
+  hinweis?: string;
+  zitat?: string;
+  zitatQuelle?: string;
+  schlussTitel?: string;
+  schlussText?: string;
+  stichworte?: { wert: string; zeile: string }[];
+  punkte?: { titel: string; text: string }[];
 };
 
 export type CatalogSpec = { label: string; value: string };
@@ -47,6 +90,10 @@ export type Project = {
   body: string;
   image: string;
   srcSet?: string;
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   gallery: ProjectFrame[];
   topics: KitchenTopic[];
   brands: Brand[];
@@ -64,7 +111,11 @@ export type Brand = {
   intro: string;
   body: string;
   order: number;
-};
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+} & CmsPageFields;
 
 export type ApplianceKind = "kochen" | "backen" | "kaelte" | "spuelen" | "extra";
 
@@ -76,7 +127,11 @@ export type Appliance = {
   srcSet?: string;
   intro: string;
   order: number;
-};
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+} & CmsPageFields;
 
 export type Furniture = {
   slug: string;
@@ -86,7 +141,11 @@ export type Furniture = {
   srcSet?: string;
   intro: string;
   order: number;
-};
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+} & CmsPageFields;
 
 export type Region = {
   slug: string;
@@ -94,7 +153,11 @@ export type Region = {
   intro: string;
   image?: string;
   order: number;
-};
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+} & CmsPageFields;
 
 export type MaterialKind = "front" | "worktop" | "interior";
 
@@ -106,7 +169,11 @@ export type Material = {
   srcSet?: string;
   intro: string;
   order: number;
-};
+  ueberschrift?: string;
+  lesetext?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+} & CmsPageFields;
 
 export type ArticleCategory = { slug: string; name: string };
 
@@ -141,7 +208,7 @@ export type SitePage = {
   ctaLabel: string;
   ctaUrl: string;
   faq: FaqContent | null;
-};
+} & CmsPageFields;
 
 export const KITCHEN_CLUSTERS: KitchenCluster[] = catalog.clusters.map(
   (cluster) => ({

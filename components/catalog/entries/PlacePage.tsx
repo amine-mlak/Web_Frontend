@@ -6,6 +6,8 @@ import {
   RuledPoints,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { entryReading } from "@/lib/entry-reading";
 import type { PresentedTopic } from "@/lib/collection-topics";
 
 export default function PlacePage({ hub }: { hub: PresentedTopic }) {
@@ -49,7 +51,7 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
-      <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
+      <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <SoftClose hub={hub} />
     </main>

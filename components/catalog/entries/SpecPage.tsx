@@ -1,4 +1,6 @@
 import CmsImage from "@/components/CmsImage";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { entryReading } from "@/lib/entry-reading";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
   Crumbs,
@@ -82,7 +84,7 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
-      <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
+      <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <HouseLine houses={hub.houses} title={houses} />
       <SoftClose hub={hub} />

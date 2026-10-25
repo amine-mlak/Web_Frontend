@@ -3,7 +3,7 @@ import { FarbenCluster } from "@/components/catalog/clusters/Farben";
 import { FormenCluster } from "@/components/catalog/clusters/Formen";
 import { InselnCluster } from "@/components/catalog/clusters/Inseln";
 import { StileCluster } from "@/components/catalog/clusters/Stile";
-import type { KitchenCluster, KitchenTopic, Project } from "@/lib/catalog";
+import type { KitchenCluster, KitchenTopic, Project, SitePage } from "@/lib/catalog";
 import { presentCluster } from "@/lib/collection-clusters";
 import type { Locale } from "@/lib/i18n";
 
@@ -12,13 +12,15 @@ export default function KitchenClusterView({
   topics,
   projects,
   locale,
+  page,
 }: {
   cluster: KitchenCluster;
   topics: KitchenTopic[];
   projects: Project[];
   locale: Locale;
+  page?: SitePage | null;
 }) {
-  const hub = presentCluster(cluster.slug, locale, topics, projects);
+  const hub = presentCluster(cluster.slug, locale, topics, projects, page);
 
   switch (cluster.slug) {
     case "formen":

@@ -3,6 +3,7 @@ import { FALLBACK_PAGES, type SitePage } from "@/lib/catalog";
 import { fetchSitePage } from "@/lib/catalog-api";
 import type { ClusterSibling } from "@/lib/collection-clusters";
 import { presentHub, type CollectionFact, type PresentedHub } from "@/lib/collection-present";
+import { cmsLarge } from "@/lib/beer-photos";
 import { isStockPhoto } from "@/lib/dev-images";
 import {
   SIBLING_IMAGES,
@@ -454,14 +455,24 @@ function asHouse(
     title: page?.title?.trim() || hub.title,
     eyebrow: page?.eyebrow?.trim() || hub.eyebrow,
     lede: page?.intro?.trim() || hub.lede,
-    emphasis: voice.emphasis,
-    statement: voice.statement,
-    statementNote: voice.statementNote,
-    closeTitle: voice.closeTitle,
-    closeText: voice.closeText,
+    emphasis: page && (!page.contentLocale || page.contentLocale === locale) && page.betonung
+      ? page.betonung
+      : voice.emphasis,
+    statement: page && (!page.contentLocale || page.contentLocale === locale) && page.aussage
+      ? page.aussage
+      : voice.statement,
+    statementNote: page && (!page.contentLocale || page.contentLocale === locale) && page.hinweis
+      ? page.hinweis
+      : voice.statementNote,
+    closeTitle: page && (!page.contentLocale || page.contentLocale === locale) && page.schlussTitel
+      ? page.schlussTitel
+      : voice.closeTitle,
+    closeText: page && (!page.contentLocale || page.contentLocale === locale) && page.schlussText
+      ? page.schlussText
+      : voice.closeText,
     ctaLabel: page?.ctaLabel?.trim() || hub.ctaLabel,
     ctaHref: page?.ctaUrl?.trim() || hub.ctaHref,
-    heroImage: cmsHero || media?.hero || hub.heroImage,
+    heroImage: cmsLarge(cmsHero || media?.hero || hub.heroImage, 3840),
     heroAlt: page?.title?.trim() || hub.heroAlt,
     statementImage: media?.statement || hub.statementImage,
     statementImageB: media?.statementB || hub.statementImageB,
@@ -554,6 +565,31 @@ function emptyHub(locale: Locale, slug: string, voice: Voice, page: SitePage | n
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"
         : "Wolfersdorf · Freising · München",
+  };
+}
+
+export function houseCms(slug: string) {
+  const voice = VOICE.de[slug];
+  if (!voice) {
+    return null;
+  }
+  return {
+    slug,
+    title: slug,
+    eyebrow: "",
+    intro: voice.statementNote,
+    body: [voice.statement, voice.statementNote].filter(Boolean).join("\n\n"),
+    ctaLabel: "Termin anfragen",
+    ctaUrl: "/beratung",
+    seitentitel: slug,
+    betonung: voice.emphasis,
+    aussage: voice.statement,
+    hinweis: voice.statementNote,
+    zitat: voice.statement,
+    zitatQuelle: "BEER Küchenmanufaktur, Wolfersdorf",
+    schlussTitel: voice.closeTitle,
+    schlussText: voice.closeText,
+    stichworte: voice.facts.map((fact) => ({ wert: fact.value, zeile: fact.label })),
   };
 }
 

@@ -10,12 +10,14 @@ import RegionenCollection from "@/components/catalog/collections/RegionenCollect
 import type { CollectionExtra } from "@/components/catalog/collections/parts";
 import type { CollectionBranch, CollectionHubId } from "@/lib/collection-hubs";
 import { presentHub } from "@/lib/collection-present";
-import { resolveDevImage, devPhoto } from "@/lib/dev-images";
+import { fetchSitePage } from "@/lib/catalog-api";
+import { hubPageSlug } from "@/lib/collection-hubs";
+import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import type { Locale } from "@/lib/i18n";
 
 export type { CollectionExtra };
 
-export default function CollectionHub({
+export default async function CollectionHub({
   id,
   locale,
   branches,
@@ -30,10 +32,11 @@ export default function CollectionHub({
   extrasTitle?: string;
   children?: ReactNode;
 }) {
-  const hub = presentHub(id, locale, branches);
+  const page = await fetchSitePage(hubPageSlug(id));
+  const hub = presentHub(id, locale, branches, page);
   const resolvedExtras = extras?.map((item, index) => ({
     ...item,
-    image: resolveDevImage(item.image, devPhoto(40 + index, 900)),
+    image: resolveDevImage(item.image, devPhoto(40 + index, 1920)),
   }));
 
   const layout = { hub, extras: resolvedExtras, extrasTitle, children };

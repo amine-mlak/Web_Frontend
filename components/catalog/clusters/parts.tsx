@@ -216,7 +216,7 @@ export function ClusterLinks({ hub }: { hub: PresentedCluster }) {
   if (hub.siblings.length === 0) {
     return null;
   }
-  const label = hub.locale === "en" ? "Other collections" : "Weitere Sammlungen";
+  const label = hub.locale === "en" ? "Other rooms" : "Andere Bereiche";
 
   return (
     <nav aria-label={label} className="border-t border-line px-5 py-8 sm:px-8 lg:px-14">

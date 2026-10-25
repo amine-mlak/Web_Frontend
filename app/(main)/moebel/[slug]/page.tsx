@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SamplePage from "@/components/catalog/entries/SamplePage";
-import { findBySlug } from "@/lib/catalog";
+import { cmsValue, findBySlug } from "@/lib/catalog";
 import { fetchFurniture, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentFurnitureItem } from "@/lib/collection-entries";
+import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -18,11 +19,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const item = findBySlug(await fetchFurniture(), (await params).slug);
   if (!item) {
     return { title: "Möbel | BEER Küchenmanufaktur" };
   }
-  return entryMetadata(item.name, item.intro, `/moebel/${item.slug}`, item.image);
+  const reading = entryReading(item.name, item.intro, locale);
+  return entryMetadata(
+    cmsValue(locale, item, item.seoTitle) || reading.title,
+    cmsValue(locale, item, item.seoDescription) || reading.description,
+    `/moebel/${item.slug}`,
+    item.image,
+  );
 }
 
 export default async function FurniturePage({

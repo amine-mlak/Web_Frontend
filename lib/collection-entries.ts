@@ -3,11 +3,13 @@ import type {
   Appliance,
   ApplianceKind,
   Brand,
+  CmsPageFields,
   Furniture,
   Material,
   MaterialKind,
   Project,
   Region,
+  SitePage,
 } from "@/lib/catalog";
 import type {
   ClusterHouse,
@@ -16,6 +18,7 @@ import type {
 import { clusterVisit } from "@/lib/collection-clusters";
 import type { CollectionFact, HubCrumb, PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
@@ -1222,6 +1225,88 @@ function itemBranches(
   }));
 }
 
+function cmsMatches(cms: CmsPageFields | undefined, locale: Locale) {
+  if (!cms?.contentLocale || cms.contentLocale === locale) {
+    return cms;
+  }
+  return undefined;
+}
+
+function withCms(voice: Voice, cms?: CmsPageFields): Voice {
+  if (!cms) {
+    return voice;
+  }
+  return {
+    ...voice,
+    title: cms.seitentitel || voice.title,
+    emphasis: cms.betonung || voice.emphasis,
+    statement: cms.aussage || voice.statement,
+    statementNote: cms.hinweis || voice.statementNote,
+    quote: cms.zitat || voice.quote,
+    quoteSource: cms.zitatQuelle || voice.quoteSource,
+    closeTitle: cms.schlussTitel || voice.closeTitle,
+    closeText: cms.schlussText || voice.closeText,
+    facts: cms.stichworte?.length
+      ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
+      : voice.facts,
+  };
+}
+
+function withPunkte(
+  branches: PresentedBranch[],
+  punkte: CmsPageFields["punkte"],
+) {
+  if (!punkte?.length) {
+    return branches;
+  }
+  return branches.map((branch, index) => {
+    const punkt = punkte[index];
+    const points = (punkt?.text || "")
+      .split(/\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (!punkt || points.length === 0) {
+      return branch;
+    }
+    return {
+      ...branch,
+      title: punkt.titel || branch.title,
+      text: points[0] || branch.text,
+      points,
+    };
+  });
+}
+
+function toCms(voice: Voice, titles: string[]) {
+  return {
+    seitentitel: voice.title,
+    betonung: voice.emphasis,
+    aussage: voice.statement,
+    hinweis: voice.statementNote,
+    zitat: voice.quote,
+    zitatQuelle: voice.quoteSource,
+    schlussTitel: voice.closeTitle,
+    schlussText: voice.closeText,
+    stichworte: voice.facts.map((fact) => ({ wert: fact.value, zeile: fact.label })),
+    punkte: voice.extras
+      .map((points, index) => ({
+        titel: titles[index] || String(index + 1).padStart(2, "0"),
+        text: points.join("\n"),
+      }))
+      .filter((item) => item.titel && item.text),
+  };
+}
+
+export function catalogEntryCms(slug: string) {
+  const voice = voiceFor(slug, "de");
+  return voice ? toCms(voice, voice.film) : null;
+}
+
+export function regionEntryCms(name: string) {
+  const voice = regionVoice(name, "de");
+  return toCms(voice, voice.film);
+}
+
 function assemble(args: {
   locale: Locale;
   voice: Voice;
@@ -1239,8 +1324,13 @@ function assemble(args: {
   houses: ClusterHouse[];
   siblingEyebrow: string;
   siblingTitle: string;
+  ueberschrift?: string;
+  lesetext?: string;
+  cms?: CmsPageFields;
 }): PresentedTopic {
-  const { locale, voice, photo } = args;
+  const { locale, photo } = args;
+  const voice = withCms(args.voice, cmsMatches(args.cms, locale));
+  const branches = withPunkte(args.branches, cmsMatches(args.cms, locale)?.punkte);
   const visit = clusterVisit(locale);
   const hub: PresentedTopic = {
     locale,
@@ -1250,7 +1340,7 @@ function assemble(args: {
     lede: args.lede,
     statement: voice.statement,
     statementNote: voice.statementNote,
-    heroImage: args.heroImage,
+    heroImage: cmsLarge(args.heroImage, 3840),
     heroAlt: args.heroAlt,
     indexEyebrow: voice.indexEyebrow,
     quote: voice.quote,
@@ -1262,24 +1352,24 @@ function assemble(args: {
     parentHref: args.parentHref,
     parentLabel: args.parentLabel,
     crumbs: args.crumbs ?? [{ href: args.parentHref, label: args.parentLabel }],
-    statementImage: photo(1),
-    statementImageB: photo(2),
-    closeImage: photo(3),
-    ledgerImage: photo(4),
-    visitImage: photo(5),
+    statementImage: photo(1, 2560),
+    statementImageB: photo(2, 1920),
+    closeImage: photo(3, 2560),
+    ledgerImage: photo(4, 1920),
+    visitImage: photo(5, 1920),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
-      src: photo(6 + slot, 1000),
+      src: photo(6 + slot, 1920),
       alt: voice.film[slot] ?? voice.title,
       caption: voice.film[slot] ?? voice.title,
     })),
     facts: voice.facts,
     ledgerLine: voice.ledgerLine,
     looks: voice.looks.map((caption, slot) => ({
-      src: photo(10 + slot, 1100),
+      src: photo(10 + slot, 1600),
       alt: caption,
       caption,
     })),
-    branches: args.branches,
+    branches,
     visitPlace: visit.place,
     visitLine: visit.line,
     visitNote: visit.note,
@@ -1297,6 +1387,8 @@ function assemble(args: {
     lookTitle: voice.lookTitle,
     siblingEyebrow: args.siblingEyebrow,
     siblingTitle: args.siblingTitle,
+    ueberschrift: args.ueberschrift,
+    lesetext: args.lesetext,
   };
   return hub;
 }
@@ -1369,6 +1461,7 @@ export function presentMaterialKind(
   locale: Locale,
   materials: Material[],
   projects: Project[],
+  page?: SitePage | null,
 ): PresentedTopic {
   const meta = MATERIAL_KIND_ROUTES.find((item) => item.slug === slug)!;
   const parent = PARENT.material[locale];
@@ -1433,7 +1526,7 @@ export function presentMaterialKind(
     locale,
     voice,
     lede: voice.statementNote,
-    heroImage: resolveDevImage(related[0]?.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(related[0]?.image, photo(0, 3840)), 3840),
     heroAlt: voice.title,
     parentHref: parent.href,
     parentLabel: parent.label,
@@ -1447,6 +1540,7 @@ export function presentMaterialKind(
     siblingEyebrow: locale === "en" ? "Further layers" : "Weitere Schichten",
     siblingTitle:
       locale === "en" ? "Other planes of the kitchen." : "Andere Ebenen der Küche.",
+    cms: page ?? undefined,
   });
 }
 
@@ -1455,6 +1549,7 @@ export function presentApplianceKind(
   locale: Locale,
   appliances: Appliance[],
   projects: Project[],
+  page?: SitePage | null,
 ): PresentedTopic {
   const parent = PARENT.geraete[locale];
   const voice = voiceFor(slug, locale)!;
@@ -1474,7 +1569,7 @@ export function presentApplianceKind(
     locale,
     voice,
     lede: voice.statementNote,
-    heroImage: resolveDevImage(related[0]?.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(related[0]?.image, photo(0, 3840)), 3840),
     heroAlt: voice.title,
     parentHref: parent.href,
     parentLabel: parent.label,
@@ -1501,6 +1596,7 @@ export function presentApplianceKind(
     siblingEyebrow: locale === "en" ? "Further tasks" : "Weitere Aufgaben",
     siblingTitle:
       locale === "en" ? "Other kit in the kitchen." : "Andere Technik in der Küche.",
+    cms: page ?? undefined,
   });
 }
 
@@ -1528,7 +1624,7 @@ export function presentMaterialItem(
     locale,
     voice,
     lede: item.intro,
-    heroImage: resolveDevImage(item.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
     heroAlt: item.name,
     parentHref: kindRoute?.href ?? parent.href,
     parentLabel: kindRoute
@@ -1551,6 +1647,9 @@ export function presentMaterialItem(
       locale === "en" ? "Further surfaces" : "Weitere Flächen",
     siblingTitle:
       locale === "en" ? "Other material beside it." : "Anderes Material daneben.",
+    ueberschrift: item.ueberschrift,
+    lesetext: item.lesetext,
+    cms: item,
   });
 }
 
@@ -1578,7 +1677,7 @@ export function presentApplianceItem(
     locale,
     voice,
     lede: item.intro,
-    heroImage: resolveDevImage(item.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
     heroAlt: item.name,
     parentHref: kindRoute?.href ?? parent.href,
     parentLabel: kindRoute
@@ -1602,6 +1701,9 @@ export function presentApplianceItem(
     siblingEyebrow: locale === "en" ? "Further kit" : "Weitere Geräte",
     siblingTitle:
       locale === "en" ? "Other appliances in this task." : "Andere Geräte dieser Aufgabe.",
+    ueberschrift: item.ueberschrift,
+    lesetext: item.lesetext,
+    cms: item,
   });
 }
 
@@ -1628,7 +1730,7 @@ export function presentFurnitureItem(
     locale,
     voice,
     lede: item.intro,
-    heroImage: resolveDevImage(item.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
     heroAlt: item.name,
     parentHref: parent.href,
     parentLabel: parent.label,
@@ -1639,6 +1741,9 @@ export function presentFurnitureItem(
     siblingEyebrow: locale === "en" ? "Further furniture" : "Weitere Möbel",
     siblingTitle:
       locale === "en" ? "Other pieces from the workshop." : "Andere Stücke aus der Werkstatt.",
+    ueberschrift: item.ueberschrift,
+    lesetext: item.lesetext,
+    cms: item,
   });
 }
 
@@ -1665,7 +1770,7 @@ export function presentBrandItem(
     locale,
     voice,
     lede: item.intro,
-    heroImage: resolveDevImage(item.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
     heroAlt: item.name,
     parentHref: parent.href,
     parentLabel: parent.label,
@@ -1681,6 +1786,9 @@ export function presentBrandItem(
     siblingEyebrow: locale === "en" ? "Further brands" : "Weitere Marken",
     siblingTitle:
       locale === "en" ? "Chosen to the task, not a contract." : "Nach Aufgabe, nicht nach Vertrag.",
+    ueberschrift: item.ueberschrift,
+    lesetext: item.lesetext,
+    cms: item,
   });
 }
 
@@ -1708,7 +1816,7 @@ export function presentRegionItem(
     locale,
     voice,
     lede: item.intro,
-    heroImage: resolveDevImage(item.image, photo(0)),
+    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
     heroAlt:
       locale === "en" ? `Kitchens in ${item.name}` : `Küchen in ${item.name}`,
     parentHref: parent.href,
@@ -1725,6 +1833,9 @@ export function presentRegionItem(
     siblingEyebrow: locale === "en" ? "Further places" : "Weitere Orte",
     siblingTitle:
       locale === "en" ? "Other houses in the radius." : "Andere Häuser im Radius.",
+    ueberschrift: item.ueberschrift,
+    lesetext: item.lesetext,
+    cms: item,
   });
 }
 
