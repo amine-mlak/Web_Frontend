@@ -15,6 +15,8 @@ export default function CmsImage({
   priority,
   loading,
   sizes,
+  // Taken out so it is not passed to the plain <img>; next/image picks its own.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   quality: _quality,
   width,
   height,

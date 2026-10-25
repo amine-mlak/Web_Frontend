@@ -91,6 +91,8 @@ export async function POST(request: Request) {
   const payload = {
     auth_secret: n8n.secret,
     event_name: "Lead",
+    // Which form sent it; the n8n workflow reads `details` by this.
+    lead_source: "kuechenplaner",
     event_id: eventId,
     event_time: Math.floor(Date.now() / 1000),
     action_source: "website",

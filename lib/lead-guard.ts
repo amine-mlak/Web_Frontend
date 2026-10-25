@@ -142,7 +142,10 @@ export function extraAllowedOrigins() {
       extras.add(value);
     }
   }
-  extras.add("https://mwnw2vfalrhrso250cxmnje9.89.58.45.227.sslip.io");
+  // Behind the Coolify proxy request.url is internal, so name the public hosts.
+  extras.add("https://staging.beer.de");
+  extras.add("https://www.beer.de");
+  extras.add("https://beer.de");
   extras.add("http://localhost:3000");
   extras.add("https://localhost:3000");
   extras.add("http://127.0.0.1:3000");
