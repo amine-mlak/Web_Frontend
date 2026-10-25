@@ -43,7 +43,7 @@ const llmModel = String($env.N8N_LLM_MODEL || "openai/gpt-4o-mini");
 const llmHeaders = {
   Authorization: `Bearer ${llmKey}`,
   "Content-Type": "application/json",
-  "HTTP-Referer": "https://beer-kuechenmanufaktur.de",
+  "HTTP-Referer": "https://www.beer.de",
   "X-Title": "BEER CMS news chat",
 };
 

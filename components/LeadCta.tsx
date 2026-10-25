@@ -62,7 +62,7 @@ const fallback: BeratungContent = {
   city: "85395 Wolfersdorf",
   phoneLabel: "T 08168 909910",
   phoneHref: "tel:+498168909910",
-  email: "beratung@beer-kuechenmanufaktur.de",
+  email: "info@beer.de",
 };
 
 type FormStatus = "idle" | "sending" | "success" | "error";

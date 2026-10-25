@@ -6,7 +6,7 @@
     "description": "OpenAPI for the self-hosted Community Strapi of BEER Küchenmanufaktur. Restricted Access must stay on.",
     "contact": {
       "name": "BEER Küchenmanufaktur",
-      "url": "https://beer-kuechenmanufaktur.de"
+      "url": "https://www.beer.de"
     }
   },
   "x-strapi-config": {

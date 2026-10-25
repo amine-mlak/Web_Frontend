@@ -19,7 +19,7 @@ module.exports = ({ env }) => ({
           "OpenAPI for the self-hosted Community Strapi of BEER Küchenmanufaktur.",
         contact: {
           name: "BEER Küchenmanufaktur",
-          url: env("PUBLIC_URL", "https://beer-kuechenmanufaktur.de"),
+          url: env("PUBLIC_URL", "https://www.beer.de"),
         },
       },
       "x-strapi-config": {

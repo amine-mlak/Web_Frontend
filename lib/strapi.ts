@@ -597,7 +597,7 @@ function mapBeratungContent(data?: {
     city: data.city?.trim() || "85395 Wolfersdorf",
     phoneLabel: data.phoneLabel?.trim() || "T 08168 909910",
     phoneHref: data.phoneHref?.trim() || "tel:+498168909910",
-    email: data.email?.trim() || "beratung@beer-kuechenmanufaktur.de",
+    email: data.email?.trim() || "info@beer.de",
   };
 }
 

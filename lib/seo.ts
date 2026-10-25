@@ -3,7 +3,7 @@ import { DEFAULT_LOCALE, withLocale, type Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { allowSearchIndexing } from "@/lib/umami";
 
-const FALLBACK_SITE = "https://beer-kuechenmanufaktur.de";
+const FALLBACK_SITE = "https://www.beer.de";
 const SITE_NAME = "BEER Küchenmanufaktur";
 
 export function siteUrl() {

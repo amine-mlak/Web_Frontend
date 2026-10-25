@@ -14,5 +14,5 @@ BEER GmbH plant und fertigt Küchen und Möbel nach Maß. Die Website zeigt Küc
 ## Kontakt
 
 - [Telefon +49 8168 909910](tel:+498168909910): Ausstellung und Beratung
-- [beratung@beer-kuechenmanufaktur.de](mailto:beratung@beer-kuechenmanufaktur.de): E-Mail für Planungsanfragen
+- [info@beer.de](mailto:info@beer.de): E-Mail für Planungsanfragen
 - Adresse: Badendorf 6, 85395 Wolfersdorf

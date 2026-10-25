@@ -20,7 +20,7 @@ export default function LocalBusinessJsonLd() {
         name: "BEER Küchenmanufaktur",
         legalName: "BEER GmbH",
         url,
-        email: "beratung@beer-kuechenmanufaktur.de",
+        email: "info@beer.de",
         telephone: "+49-8168-909910",
         address: ADDRESS,
         sameAs: ["https://www.instagram.com/beer.kuechen/"],
@@ -33,7 +33,7 @@ export default function LocalBusinessJsonLd() {
         image: `${url}/beer-wordmark.png`,
         logo: `${url}/beer-wordmark.png`,
         telephone: "+49-8168-909910",
-        email: "beratung@beer-kuechenmanufaktur.de",
+        email: "info@beer.de",
         address: ADDRESS,
         openingHoursSpecification: [
           {
