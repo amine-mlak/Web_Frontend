@@ -313,3 +313,34 @@ body {
     color: var(--color-paper);
   }
 }
+
+/* Announcement bar: seamless loop of two identical tracks (components/AnnouncementBar.tsx). */
+@keyframes announce-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.announce-track {
+  animation: announce-scroll linear infinite;
+}
+
+.announce-marquee:hover .announce-track,
+.announce-marquee:focus-within .announce-track,
+.announce-track.announce-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announce-track {
+    animation: none;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .announce-copy,
+  .announce-repeat,
+  .announce-toggle {
+    display: none;
+  }
+}

@@ -3,7 +3,14 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export default function SiteHeader({ children }: { children: ReactNode }) {
+export default function SiteHeader({
+  children,
+  top,
+}: {
+  children: ReactNode;
+  /** Optional announcement bar above the navigation; it hides together with it. */
+  top?: ReactNode;
+}) {
   const barRef = useRef<HTMLDivElement>(null);
   const [hidden, setHidden] = useState(false);
 
@@ -68,9 +75,11 @@ export default function SiteHeader({ children }: { children: ReactNode }) {
             : "translate-y-0 ease-[cubic-bezier(0.22,1,0.36,1)]",
         )}
       >
+        {top}
         {children}
       </div>
-      <div className="h-14" aria-hidden="true" />
+      {/* Space for the fixed header: navigation 3.5rem, plus 2.25rem for the announcement bar. */}
+      <div className={top ? "h-[5.75rem]" : "h-14"} aria-hidden="true" />
     </>
   );
 }
