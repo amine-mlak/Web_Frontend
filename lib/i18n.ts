@@ -1,10 +1,10 @@
+import { localizePath } from "@/lib/routes";
+
 export const LOCALES = ["de", "en"] as const;
 
 export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = "de";
-export const LOCALE_COOKIE = "NEXT_LOCALE";
-export const LOCALE_HEADER = "x-beer-locale";
 
 export const LOCALE_LABELS: Record<Locale, string> = {
   de: "DE",
@@ -74,7 +74,8 @@ export function isLocale(value: string | null | undefined): value is Locale {
 }
 
 export function stripLocalePrefix(pathname: string) {
-  const match = pathname.match(/^\/en(?=\/|$)/);
+  // Server renders see the internal /de/... path from the proxy rewrite.
+  const match = pathname.match(/^\/(?:de|en)(?=\/|$)/);
   if (!match) {
     return pathname || "/";
   }
@@ -98,19 +99,6 @@ export function withLocale(href: string, locale: Locale) {
   const path = match?.[1] || href;
   const search = match?.[2] || "";
   const hash = match?.[3] || "";
-  const unprefixed = stripLocalePrefix(path);
-  const localized =
-    locale === DEFAULT_LOCALE
-      ? unprefixed
-      : unprefixed === "/"
-        ? `/${locale}`
-        : `/${locale}${unprefixed}`;
 
-  return `${localized}${search}${hash}`;
-}
-
-export function localeFromPathname(pathname: string): Locale {
-  return pathname === "/en" || pathname.startsWith("/en/")
-    ? "en"
-    : DEFAULT_LOCALE;
+  return `${localizePath(stripLocalePrefix(path), locale)}${search}${hash}`;
 }

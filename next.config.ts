@@ -45,6 +45,10 @@ const robotsHeaders = allowIndexing
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    // The root layout sits in app/[locale], so unmatched URLs need app/global-not-found.tsx.
+    globalNotFound: true,
+  },
   images: {
     qualities: [75, 90],
     minimumCacheTTL: 60 * 60 * 24,

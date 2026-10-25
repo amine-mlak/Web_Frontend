@@ -93,5 +93,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [...paths].map((path) => ({
     url: absoluteUrl(path),
     changeFrequency: path === "/" ? "weekly" : "monthly",
+    alternates: {
+      languages: {
+        de: absoluteUrl(path, "de"),
+        en: absoluteUrl(path, "en"),
+      },
+    },
   }));
 }

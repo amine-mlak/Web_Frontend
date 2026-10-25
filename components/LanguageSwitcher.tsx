@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 import { useLocale } from "@/components/LocaleProvider";
 import {
   LOCALES,
@@ -22,6 +23,18 @@ export default function LanguageSwitcher({
   const path = stripLocalePrefix(pathname);
   const copy = chromeCopy[locale];
 
+  // Entries can have a different slug per language; the page's hreflang
+  // link knows the real counterpart, so prefer it over path mapping.
+  const followAlternate = (event: MouseEvent<HTMLAnchorElement>, lang: string) => {
+    const link = document.querySelector<HTMLLinkElement>(
+      `link[rel="alternate"][hreflang="${lang}"]`,
+    );
+    if (link) {
+      const url = new URL(link.href);
+      event.currentTarget.href = `${url.pathname}${url.search}`;
+    }
+  };
+
   return (
     <nav
       aria-label={copy.language}
@@ -38,6 +51,7 @@ export default function LanguageSwitcher({
             ) : null}
             <a
               href={withLocale(path, item)}
+              onClick={(event) => followAlternate(event, item)}
               hrefLang={item}
               lang={item}
               aria-current={current ? "true" : undefined}

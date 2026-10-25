@@ -1,55 +1,47 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  DEFAULT_LOCALE,
-  LOCALE_COOKIE,
-  LOCALE_HEADER,
-  stripLocalePrefix,
-  type Locale,
-} from "@/lib/i18n";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { localizePath, toInternalSegments } from "@/lib/routes";
 
-function withLocaleHeaders(request: NextRequest, locale: Locale) {
-  const headers = new Headers(request.headers);
-  headers.set(LOCALE_HEADER, locale);
-  return headers;
-}
-
-function rememberLocale(response: NextResponse, locale: Locale) {
-  response.cookies.set(LOCALE_COOKIE, locale, {
-    path: "/",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 365,
-  });
-  return response;
-}
-
+/**
+ * Every page lives under app/[locale]/ with German folder names.
+ *
+ *   /kuechen/farben/weiss          → rewrite /de/kuechen/farben/weiss
+ *   /en/kitchens/colours/weiss     → rewrite /en/kuechen/farben/weiss
+ *   /en/kuechen/farben/weiss       → 301 /en/kitchens/colours/weiss
+ *   /de/kuechen/...                → 301 /kuechen/...
+ */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const first = pathname.split("/").filter(Boolean)[0];
+  const segments = pathname.split("/").filter(Boolean);
+  const first = segments[0];
 
-  if (first === "de") {
+  if (first === DEFAULT_LOCALE) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname === "/de" ? "/" : pathname.replace(/^\/de/, "");
-    return NextResponse.redirect(url);
+    url.pathname = `/${segments.slice(1).join("/")}`;
+    return NextResponse.redirect(url, 301);
   }
 
   if (first === "en") {
+    const rest = segments.slice(1);
+    const canonical = localizePath(`/${rest.join("/")}`, "en");
+    if (canonical !== pathname.replace(/\/$/, "")) {
+      const url = request.nextUrl.clone();
+      url.pathname = canonical;
+      return NextResponse.redirect(url, 301);
+    }
     const url = request.nextUrl.clone();
-    url.pathname = stripLocalePrefix(pathname);
-    const response = NextResponse.rewrite(url, {
-      request: { headers: withLocaleHeaders(request, "en") },
-    });
-    return rememberLocale(response, "en");
+    url.pathname = `/en/${toInternalSegments(rest).join("/")}`;
+    return NextResponse.rewrite(url);
   }
 
-  const response = NextResponse.next({
-    request: { headers: withLocaleHeaders(request, DEFAULT_LOCALE) },
-  });
-  return rememberLocale(response, DEFAULT_LOCALE);
+  const url = request.nextUrl.clone();
+  url.pathname = `/${DEFAULT_LOCALE}${pathname === "/" ? "" : pathname}`;
+  return NextResponse.rewrite(url);
 }
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|_next/data|favicon.ico|robots.txt|cms-uploads|cms-opt|kitchens|instagram|health|llms.txt|.*\\..*).*)",
+    "/((?!api|_next/static|_next/image|_next/data|favicon.ico|robots.txt|sitemap.xml|cms-uploads|cms-opt|kitchens/|instagram|health|llms.txt|.*\\..*).*)",
   ],
 };

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Figtree } from "next/font/google";
+import { notFound } from "next/navigation";
 import ClickIds from "@/components/ClickIds";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
-import { getRequestLocale } from "@/lib/locale";
+import { isLocale, LOCALES } from "@/lib/i18n";
 import { siteUrl } from "@/lib/seo";
 import { allowSearchIndexing } from "@/lib/umami";
-import "./globals.css";
+import "../globals.css";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -51,8 +52,21 @@ export const metadata: Metadata = {
       },
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const locale = await getRequestLocale();
+// The proxy rewrites every page request to /de/... or /en/..., so only these two exist.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) {
+    notFound();
+  }
 
   return (
     <html
