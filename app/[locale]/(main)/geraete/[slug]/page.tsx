@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import CategoryPage from "@/components/catalog/entries/CategoryPage";
 import SpecPage from "@/components/catalog/entries/SpecPage";
 import { cmsValue, findBySlug, projectsForAppliance } from "@/lib/catalog";
 import { fetchAppliances, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
@@ -63,7 +64,7 @@ export default async function AppliancePage({
   if (isGeraeteKindRoute(slug)) {
     const page = await fetchSitePage(slug);
     return (
-      <SpecPage hub={presentApplianceKind(slug, locale, items, projects, page)} />
+      <CategoryPage hub={presentApplianceKind(slug, locale, items, projects, page)} faqTheme="geraete" />
     );
   }
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import CategoryPage from "@/components/catalog/entries/CategoryPage";
 import SamplePage from "@/components/catalog/entries/SamplePage";
 import { cmsValue, findBySlug, projectsForMaterial } from "@/lib/catalog";
 import { fetchMaterials, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
@@ -13,6 +14,14 @@ import {
 } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
+
+// FAQ theme in the CMS that answers questions about each category.
+const MATERIAL_FAQ: Record<string, string> = {
+  fronten: "material",
+  arbeitsplatten: "arbeitsplatten",
+  innenleben: "innenleben",
+  spuele: "arbeitsplatten",
+};
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -63,7 +72,10 @@ export default async function MaterialDetailPage({
   if (isMaterialKindRoute(slug)) {
     const page = await fetchSitePage(slug);
     return (
-      <SamplePage hub={presentMaterialKind(slug, locale, items, projects, page)} />
+      <CategoryPage
+        hub={presentMaterialKind(slug, locale, items, projects, page)}
+        faqTheme={MATERIAL_FAQ[slug]}
+      />
     );
   }
 

@@ -1209,7 +1209,6 @@ function pointBranches(voice: Voice | undefined, photo: (n: number, w?: number) 
 function itemBranches(
   items: { href: string; title: string; text: string; image?: string }[],
   photo: (n: number, w?: number) => string,
-  extras: string[][],
 ): PresentedBranch[] {
   return items.map((item, index) => ({
     href: item.href,
@@ -1220,7 +1219,8 @@ function itemBranches(
     imageC: photo(18 + index * 3, 1200),
     alt: item.title,
     kicker: String(index + 1).padStart(2, "0"),
-    points: extras[index] ?? [],
+    // Cards carry no notes: the category's notes belong to the category, not to one card.
+    points: [],
     caption: item.title,
   }));
 }
@@ -1260,6 +1260,11 @@ function withPunkte(
     return branches;
   }
   return branches.map((branch, index) => {
+    // Cards that link to an entry keep that entry's own name and intro;
+    // the page's CMS points describe the page, not a single card.
+    if (branch.href) {
+      return branch;
+    }
     const punkt = punkte[index];
     const points = (punkt?.text || "")
       .split(/\n/)
@@ -1501,9 +1506,10 @@ export function presentMaterialKind(
           },
         ]
       : related.map((item) => ({
+          // Category cards name the material plainly and use its CMS intro.
           href: `/material/${item.slug}`,
-          title: voiceFor(item.slug, locale)?.title ?? item.name,
-          text: voiceFor(item.slug, locale)?.statementNote ?? item.intro,
+          title: item.name,
+          text: item.intro,
           image: item.image,
         }));
   const kindHouses = meta.kind
@@ -1534,7 +1540,7 @@ export function presentMaterialKind(
     eyebrow: locale === "en" ? "Layer" : "Schicht",
     ctaHref: VISIT_CTA,
     photo,
-    branches: itemBranches(sinkItems, photo, voice.extras),
+    branches: itemBranches(sinkItems, photo),
     siblings,
     houses: housesFrom(kindHouses, photo),
     siblingEyebrow: locale === "en" ? "Further layers" : "Weitere Schichten",
@@ -1579,12 +1585,11 @@ export function presentApplianceKind(
     branches: itemBranches(
       related.map((item) => ({
         href: `/geraete/${item.slug}`,
-        title: voiceFor(item.slug, locale)?.title ?? item.name,
+        title: item.name,
         text: item.intro,
         image: item.image,
       })),
       photo,
-      voice.extras,
     ),
     siblings,
     houses: housesFrom(

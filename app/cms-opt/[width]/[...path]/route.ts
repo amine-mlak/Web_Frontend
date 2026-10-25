@@ -44,9 +44,13 @@ export async function GET(
     }
 
     const input = Buffer.from(await source.arrayBuffer());
+    // Some CMS originals are huge (e.g. a 14,000 px worktop scan). sharp shrinks
+    // JPEGs while decoding, so a high pixel limit stays affordable; a low one
+    // sent visitors the full 10 MB original instead.
     const output = await sharp(input, {
       failOn: "none",
-      limitInputPixels: 40_000_000,
+      limitInputPixels: 400_000_000,
+      sequentialRead: true,
     })
       .rotate()
       .resize({ width, withoutEnlargement: true })
@@ -61,7 +65,8 @@ export async function GET(
     }
 
     return imageResponse(output);
-  } catch {
+  } catch (error) {
+    console.warn(`[cms-opt] serving original for ${filePath}: ${error instanceof Error ? error.message : "unknown"}`);
     return Response.redirect(new URL(`/cms-uploads/${filePath}`, _request.url));
   }
 }
