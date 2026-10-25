@@ -1,62 +1,60 @@
-import { siteUrl } from "@/lib/seo";
+import { fetchRegions } from "@/lib/catalog-api";
+import { getSiteSettings } from "@/lib/site-settings";
 
-const ADDRESS = {
-  "@type": "PostalAddress",
-  streetAddress: "Badendorf 6",
-  addressLocality: "Wolfersdorf",
-  postalCode: "85395",
-  addressRegion: "Bayern",
-  addressCountry: "DE",
-} as const;
+export default async function LocalBusinessJsonLd() {
+  const [settings, regions] = await Promise.all([getSiteSettings(), fetchRegions()]);
+  const url = settings.siteUrl;
+  const address = {
+    "@type": "PostalAddress",
+    streetAddress: settings.street,
+    addressLocality: settings.city,
+    postalCode: settings.postalCode,
+    addressRegion: settings.region,
+    addressCountry: settings.country,
+  };
+  const telephone = settings.phone.replace(/\s+/g, "-");
 
-export default function LocalBusinessJsonLd() {
-  const url = siteUrl();
   const json = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
         "@id": `${url}/#organization`,
-        name: "BEER Küchenmanufaktur",
-        legalName: "BEER GmbH",
+        name: settings.siteName,
+        legalName: settings.legalName,
         url,
-        email: "info@beer.de",
-        telephone: "+49-8168-909910",
-        address: ADDRESS,
-        sameAs: ["https://www.instagram.com/beer.kuechen/"],
+        email: settings.email,
+        telephone,
+        address,
+        sameAs: settings.sameAs,
       },
       {
         "@type": "HomeAndConstructionBusiness",
         "@id": `${url}/#localbusiness`,
-        name: "BEER Küchenmanufaktur",
+        name: settings.siteName,
+        description: settings.description,
         url,
-        image: `${url}/beer-wordmark.png`,
+        image: settings.shareImage ?? `${url}/beer-wordmark.png`,
         logo: `${url}/beer-wordmark.png`,
-        telephone: "+49-8168-909910",
-        email: "info@beer.de",
-        address: ADDRESS,
-        openingHoursSpecification: [
-          {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            opens: "09:00",
-            closes: "18:00",
-          },
-          {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: "Saturday",
-            opens: "09:00",
-            closes: "14:00",
-          },
-        ],
-        areaServed: [
-          "Freising",
-          "München",
-          "Erding",
-          "Pfaffenhofen",
-          "Landshut",
-          "Dachau",
-        ],
+        telephone,
+        email: settings.email,
+        address,
+        ...(settings.latitude !== undefined && settings.longitude !== undefined
+          ? {
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: settings.latitude,
+                longitude: settings.longitude,
+              },
+            }
+          : {}),
+        openingHoursSpecification: settings.openingHours.map((row) => ({
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: row.days,
+          opens: row.opens,
+          closes: row.closes,
+        })),
+        areaServed: regions.map((region) => region.name),
         parentOrganization: { "@id": `${url}/#organization` },
       },
     ],
