@@ -1,0 +1,423 @@
+{
+  "name": "BEER Neue Seite",
+  "nodes": [
+    {
+      "name": "Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07",
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "authentication": "basicAuth",
+        "initialMessages": "Hallo! Beschreiben Sie in ein paar Sätzen die neue Seite – zum Beispiel „Materialseite Keramik-Arbeitsplatten: hart, hitzefest, wir verarbeiten sie bei …“. Ich lege einen Entwurf in Strapi an; veröffentlicht wird dort von Ihnen.",
+        "options": {
+          "title": "BEER Neue Seite",
+          "subtitle": "Seitenentwürfe im Stil der Website",
+          "responseMode": "lastNode",
+          "allowFileUploads": false
+        }
+      },
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "sFn2LKN6pXyjwxsT",
+          "name": "BEER Redaktion (Login)"
+        }
+      }
+    },
+    {
+      "name": "Bestand: Auftrag",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Bestand: Auftrag\" (workflow \"BEER Neue Seite\").\n * Reads the names of the existing pages per type, so Claude can spot overlaps, plus one\n * finished page as the house-style example. The chat message rides along as `chat`.\n */\n\nconst chat = $input.first()?.json ?? {};\nconst TYPES = [\"site-pages\", \"kitchen-topics\", \"materials\", \"appliances\", \"brands\", \"furniture-items\", \"regions\"];\nconst items = TYPES.map((api) => ({\n  json: {\n    chat,\n    kind: api,\n    url: `${CMS}/api/${api}?${qs({ status: \"draft\", locale: \"de\", \"pagination[pageSize]\": 100, \"fields[0]\": api === \"site-pages\" ? \"title\" : \"name\", \"fields[1]\": \"slug\" })}`,\n  },\n}));\nitems.push({\n  json: {\n    chat,\n    kind: \"beispiel\",\n    url: `${CMS}/api/kitchen-topics?${qs({ locale: \"de\", \"filters[slug][$eq]\": \"weiss\", \"populate[punkte]\": \"true\", \"populate[stichworte]\": \"true\", \"populate[seo]\": \"true\" })}`,\n  },\n});\nreturn items;\n"
+      }
+    },
+    {
+      "name": "Bestand lesen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "C8xOct5tTECxfmmp",
+          "name": "BEER Strapi (Token)"
+        }
+      }
+    },
+    {
+      "name": "Anfrage",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Anfrage\" (workflow \"BEER Neue Seite\").\n * Builds the Claude request: from the team's brief, a page draft of the right type in the\n * house style, or one question back. Notes of a chat session are kept until a draft exists.\n */\n\nconst store = $getWorkflowStaticData(\"global\");\nstore.sessions ??= {};\nconst requests = $(\"Bestand: Auftrag\").all().map((i) => i.json);\nconst answers = $input.all().map((i) => i.json);\nconst existing = {};\nlet example = null;\nanswers.forEach((a, i) => {\n  const kind = requests[i]?.kind;\n  if (kind === \"beispiel\") example = a?.data?.[0] ?? null;\n  else if (Array.isArray(a?.data)) existing[kind] = a.data.map((e) => `${e.title ?? e.name} (${e.slug})`);\n});\n\nconst { chatInput = \"\", sessionId = \"ohne-sitzung\" } = requests[0]?.chat ?? {};\nconst earlier = store.sessions[sessionId];\nconst notes = [earlier?.open ? earlier.notes : \"\", String(chatInput).trim()].filter(Boolean).join(\"\\n\\n\");\nstore.sessions[sessionId] = { notes, open: false, at: new Date().toISOString() };\n\nconst LABEL = {\n  \"site-pages\": \"Feste Seite (z. B. Über uns, Nachhaltigkeit, Karriere)\",\n  \"kitchen-topics\": \"Küchen-Thema (Farbe, Stil, Form, Insel, Besonderes)\",\n  materials: \"Material (Front, Arbeitsplatte, Innenausstattung)\",\n  appliances: \"Gerät (Kochen, Backen, Kälte, Spülen, Extra)\",\n  brands: \"Marke\",\n  \"furniture-items\": \"Möbel außerhalb der Küche\",\n  regions: \"Region\",\n};\n\nconst SYSTEM = `Du legst neue Seiten für die Website der BEER Küchenmanufaktur an.\n${BEER_FACTS}\n\nAus der Notiz der Redaktion entsteht ein Seitenentwurf im Stil der vorhandenen Seiten. Stil: kurze, ruhige Sätze wie aus der Werkstatt, konkrete Dinge statt Adjektive, keine Superlative, keine Werbefloskeln, keine Ausrufezeichen. Das Beispiel unten zeigt Ton und Länge der Felder.\n\nRegeln:\n- Zuerst den Seitentyp bestimmen: ${Object.entries(LABEL).map(([k, v]) => `\"${k}\" = ${v}`).join(\"; \")}.\n- Gibt es schon eine Seite zum selben Thema (Liste unten), oder ist unklar, worum es gehen soll: action \"frage\" mit genau einer kurzen Rückfrage; alle anderen Felder leer.\n- Nur Fakten aus der Notiz, dem Beispiel und den Firmenangaben. Keine erfundenen Zahlen, Preise, Namen. „zitat“ nur, wenn die Notiz ein echtes Zitat enthält – sonst zitat und zitatQuelle leer.\n- cluster nur bei kitchen-topics (formen, stile, farben, inseln, besondere); kind bei materials (front, worktop, interior) und appliances (kochen, backen, kaelte, spuelen, extra); sonst leer.\n- name: Seitenname, höchstens 40 Zeichen. slug: a–z, 0–9, Bindestriche, ä→ae, ö→oe, ü→ue, ß→ss.\n- intro: ein Satz, höchstens 160 Zeichen. ueberschrift: höchstens 60 Zeichen, betonung ist ein Teil davon. seitentitel: ein bis drei Wörter.\n- lesetext: zwei bis vier kurze Absätze. aussage: ein bis zwei Sätze. hinweis: ein Satz. schlussTitel: höchstens 40 Zeichen. schlussText: ein bis zwei Sätze.\n- punkte: genau drei, je titel (ein Wort) und text (zwei kurze Zeilen, mit \\\\n getrennt). stichworte: genau vier, je wert (ein Wort) und zeile (zwei bis drei Wörter).\n- metaTitle: 40–60 Zeichen. metaDescription: 120–155 Zeichen.\n- projectWords: zwei bis drei markante Wörter aus dem Titel eines Projekts, das als Titelbild passt; sonst leer.`;\n\nconst str = { type: \"string\" };\nconst pair = (a, b) => ({ type: \"object\", properties: { [a]: str, [b]: str }, required: [a, b], additionalProperties: false });\nconst fields = [\"frage\", \"name\", \"slug\", \"cluster\", \"kind\", \"intro\", \"ueberschrift\", \"betonung\", \"seitentitel\", \"lesetext\", \"aussage\", \"hinweis\", \"zitat\", \"zitatQuelle\", \"schlussTitel\", \"schlussText\", \"metaTitle\", \"metaDescription\"];\nconst schema = {\n  type: \"object\",\n  properties: {\n    action: { type: \"string\", enum: [\"frage\", \"entwurf\"] },\n    type: { type: \"string\", enum: [...Object.keys(LABEL), \"\"] },\n    ...Object.fromEntries(fields.map((f) => [f, str])),\n    punkte: { type: \"array\", items: pair(\"titel\", \"text\") },\n    stichworte: { type: \"array\", items: pair(\"wert\", \"zeile\") },\n    projectWords: { type: \"array\", items: str },\n  },\n  required: [\"action\", \"type\", ...fields, \"punkte\", \"stichworte\", \"projectWords\"],\n  additionalProperties: false,\n};\n\nconst sample = example\n  ? JSON.stringify({ name: example.name, intro: example.intro, ueberschrift: example.ueberschrift, betonung: example.betonung, seitentitel: example.seitentitel, lesetext: example.lesetext, aussage: example.aussage, hinweis: example.hinweis, schlussTitel: example.schlussTitel, schlussText: example.schlussText, punkte: example.punkte?.map(({ titel, text }) => ({ titel, text })), stichworte: example.stichworte?.map(({ wert, zeile }) => ({ wert, zeile })), metaTitle: example.seo?.metaTitle, metaDescription: example.seo?.metaDescription }, null, 1)\n  : \"(kein Beispiel verfügbar)\";\n\nconst user = `Notiz der Redaktion:\n${notes}\n\nBeispiel einer fertigen Seite (Küchen-Thema „Weiße Küchen“):\n${sample}\n\nVorhandene Seiten:\n${Object.entries(existing).map(([k, list]) => `${LABEL[k]}: ${list.join(\", \")}`).join(\"\\n\")}`;\n\nreturn [{ json: { sessionId, notes, existing, request: claudeRequest({ system: SYSTEM, user, schema, effort: \"high\" }) } }];\n"
+      }
+    },
+    {
+      "name": "Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2026-10-21"
+            },
+            {
+              "name": "anthropic-beta",
+              "value": "server-side-fallback-2026-07-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.request) }}",
+        "options": {
+          "timeout": 300000,
+          "batching": {
+            "batch": {
+              "batchSize": 2,
+              "batchInterval": 1500
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "LdYFwH2lw89KeO7o",
+          "name": "Claude API (BEER)"
+        }
+      }
+    },
+    {
+      "name": "Plan",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Plan\" (workflow \"BEER Neue Seite\").\n * A question back goes to the chat (route 0). A draft goes on (route 1) with the address\n * made free of collisions and a project search for the cover photo.\n */\n\nconst store = $getWorkflowStaticData(\"global\");\nconst { sessionId, notes, existing } = $(\"Anfrage\").first().json;\nconst answer = claudeAnswer($input.first().json);\nif (answer.error) return [{ json: { route: 0, output: `Das hat nicht geklappt (${answer.error}). Bitte noch einmal senden.` } }];\n\nconst plan = answer.value;\nif (plan.action === \"frage\" || !plan.type || !plan.name) {\n  store.sessions[sessionId] = { notes, open: true, at: new Date().toISOString() };\n  return [{ json: { route: 0, output: plan.frage || \"Welche Art Seite soll es werden, und worum genau geht es?\" } }];\n}\n\nconst taken = new Set((existing[plan.type] ?? []).map((line) => line.match(/\\(([^)]+)\\)$/)?.[1]));\nconst base = slugify(plan.slug || plan.name);\nlet slug = base;\nfor (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;\n\nconst words = (plan.projectWords ?? []).map((w) => String(w).trim()).filter((w) => w.length > 2).slice(0, 3);\nconst filter = words.length ? Object.fromEntries(words.map((w, i) => [`filters[$and][${i}][title][$containsi]`, w])) : { \"filters[slug][$eq]\": \"__keins__\" };\nreturn [\n  {\n    json: {\n      route: 1,\n      plan: { ...plan, slug },\n      projectsUrl: `${CMS}/api/projects?${qs({ ...filter, locale: \"de\", status: \"published\", \"fields[0]\": \"title\", \"populate[image][fields][0]\": \"name\", \"pagination[pageSize]\": 1 })}`,\n    },\n  },\n];\n"
+      }
+    },
+    {
+      "name": "Rückfrage?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ $json.route }}"
+      }
+    },
+    {
+      "name": "Rückfrage",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Rückfrage\" (workflow \"BEER Meldungen\"): passes the question back (or an\n * error message) from \"Plan\" to the chat as its reply.\n */\nreturn [{ json: { output: $input.first().json.output } }];\n"
+      }
+    },
+    {
+      "name": "Projekt suchen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        520
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.projectsUrl }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "C8xOct5tTECxfmmp",
+          "name": "BEER Strapi (Token)"
+        }
+      }
+    },
+    {
+      "name": "Bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        520
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Bauen\" (workflow \"BEER Neue Seite\"): the Strapi draft for the chosen type,\n * with only the fields that type has.\n */\n\nconst { plan } = $(\"Plan\").first().json;\nconst project = $input.first().json?.data?.[0];\nconst t = plan.type;\n\nconst common = {\n  slug: plan.slug,\n  intro: plan.intro,\n  ueberschrift: plan.ueberschrift,\n  betonung: plan.betonung,\n  seitentitel: plan.seitentitel,\n  lesetext: plan.lesetext,\n  aussage: plan.aussage,\n  hinweis: plan.hinweis,\n  schlussTitel: plan.schlussTitel,\n  schlussText: plan.schlussText,\n  ...(plan.zitat ? { zitat: plan.zitat, zitatQuelle: plan.zitatQuelle } : {}),\n  punkte: (plan.punkte ?? []).slice(0, 3),\n  stichworte: (plan.stichworte ?? []).slice(0, 4),\n  ...(project?.image?.id ? { image: project.image.id } : {}),\n};\n\nlet data;\nif (t === \"site-pages\") {\n  // Fixed pages use \"title\" and \"body\", have no \"ueberschrift\"/\"lesetext\" and no SEO block\n  // (the intro is the description).\n  const { ueberschrift, lesetext, ...rest } = common;\n  data = { ...rest, title: plan.name, body: lesetext };\n  void ueberschrift;\n} else {\n  data = { ...common, name: plan.name, seo: { metaTitle: plan.metaTitle, metaDescription: plan.metaDescription } };\n  if (t === \"kitchen-topics\") data.cluster = [\"formen\", \"stile\", \"farben\", \"inseln\", \"besondere\"].includes(plan.cluster) ? plan.cluster : \"besondere\";\n  if (t === \"materials\") data.kind = [\"front\", \"worktop\", \"interior\"].includes(plan.kind) ? plan.kind : \"front\";\n  if (t === \"appliances\") data.kind = [\"kochen\", \"backen\", \"kaelte\", \"spuelen\", \"extra\"].includes(plan.kind) ? plan.kind : \"extra\";\n  if (t === \"furniture-items\" && plan.kind) data.kind = plan.kind;\n}\n\nreturn [{ json: { type: t, url: `${CMS}/api/${t}?${qs({ status: \"draft\", locale: \"de\" })}`, payload: JSON.stringify({ data }), project: project?.title ?? null } }];\n"
+      }
+    },
+    {
+      "name": "Speichern",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        520
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.payload }}"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "C8xOct5tTECxfmmp",
+          "name": "BEER Strapi (Token)"
+        }
+      }
+    },
+    {
+      "name": "Kontrolle",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        520
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://cms.beer.de/api/{{ $('Bauen').first().json.type }}/{{ $json.data?.documentId ?? 'keiner' }}?status=published&locale=de",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "C8xOct5tTECxfmmp",
+          "name": "BEER Strapi (Token)"
+        }
+      }
+    },
+    {
+      "name": "Antwort",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        520
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared helpers, pasted by pack-workflows.mjs in front of every Code node that needs them:\n * addresses, query strings, escaping, slugs, Strapi admin links, and the one page layout\n * with navigation used by all review pages. Nothing here talks to an API.\n */\n\nconst CMS = \"https://cms.beer.de\";\n// Links to the website go to staging until the new site is live on beer.de.\nconst SITE = \"https://staging.beer.de\";\n\nconst qs = (query) =>\n  Object.entries(query)\n    .filter(([, value]) => value !== undefined && value !== null)\n    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)\n    .join(\"&\");\n\nconst esc = (value) =>\n  String(value ?? \"\").replace(/[&<>\"]/g, (c) => ({ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\" })[c]);\n\nconst slugify = (value, max = 60) =>\n  String(value ?? \"\")\n    .toLowerCase()\n    .replace(/ä/g, \"ae\").replace(/ö/g, \"oe\").replace(/ü/g, \"ue\").replace(/ß/g, \"ss\")\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-|-$/g, \"\")\n    .slice(0, max)\n    .replace(/-$/, \"\");\n\nconst UID = {\n  projects: \"api::project.project\",\n  articles: \"api::article.article\",\n  \"site-pages\": \"api::site-page.site-page\",\n  \"kitchen-topics\": \"api::kitchen-topic.kitchen-topic\",\n  regions: \"api::region.region\",\n  materials: \"api::material.material\",\n  appliances: \"api::appliance.appliance\",\n  brands: \"api::brand.brand\",\n  \"furniture-items\": \"api::furniture-item.furniture-item\",\n};\nconst adminUrl = (api, documentId, locale = \"de\") =>\n  `${CMS}/admin/content-manager/collection-types/${UID[api] ?? api}/${documentId}?plugins[i18n][locale]=${locale}`;\n\nconst when = (iso) => (iso ? new Date(iso).toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\", dateStyle: \"medium\", timeStyle: \"short\" }) : \"\");\n\n// Same words as the website uses for a \"useful\" photo description.\nconst weakAlt = (alt) => {\n  const text = String(alt ?? \"\").trim();\n  return text.length < 30 || !text.includes(\" \") || /\\.(jpe?g|png|webp|gif)$/i.test(text);\n};\n\nconst NAV = [\n  [\"Übersicht\", \"/webhook/redaktion\"],\n  [\"SEO-Prüfung\", \"/webhook/seo-pruefung\"],\n  [\"SEO-Vorschläge\", \"/webhook/seo-vorschlaege\"],\n  [\"Projekttexte\", \"/webhook/beer-texte\"],\n  [\"Ratgeber\", \"/webhook/beer-ratgeber\"],\n  [\"GEO-Monitor\", \"/webhook/geo-monitor\"],\n  [\"Regionen\", \"/webhook/beer-regionen\"],\n  [\"Meldungen\", \"/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat\"],\n  [\"Neue Seite\", \"/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat\"],\n];\n\n/** One full HTML page in the shared layout. `active` is the NAV label to highlight. */\nfunction page(title, active, body, notice = \"\") {\n  return `<!doctype html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(title)} · BEER Redaktion</title><style>\n:root{--ink:#1d1d1b;--muted:#6b6760;--line:#e3ded6;--paper:#faf8f5;--card:#fff;--red:#a4161a;--amber:#7a5c00;--green:#2d6a4f}\n*{box-sizing:border-box}body{font:15px/1.55 system-ui,-apple-system,\"Segoe UI\",sans-serif;margin:0;color:var(--ink);background:var(--paper)}\nnav{display:flex;flex-wrap:wrap;gap:4px 14px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}\nnav a{color:var(--muted);text-decoration:none}nav a.on{color:var(--ink);font-weight:600}nav b{margin-right:8px}\nmain{max-width:1080px;margin:0 auto;padding:24px 16px 64px}h1{font-weight:500;font-size:28px;margin:0 0 4px}\nh2{font-size:19px;margin:28px 0 8px}h3{font-size:15px;margin:16px 0 6px}a{color:var(--ink)}\n.small{font-size:13px;color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin:14px 0}\ntable{border-collapse:collapse;width:100%}td,th{vertical-align:top;text-align:left;padding:7px 8px;border-bottom:1px solid #ece8e1}th{font-weight:600;font-size:13px;color:var(--muted)}\nul{margin:0;padding-left:18px}.fehler{color:var(--red)}.hinweis{color:var(--amber)}.ok{color:var(--green)}\n.kpi{display:flex;gap:28px;margin:16px 0 20px;flex-wrap:wrap}.kpi b{display:block;font-size:24px;font-weight:600}\n.notice{background:#eef6f0;border:1px solid #b7d8c2;padding:8px 12px;border-radius:4px;margin:12px 0}\n.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}form{margin:0;display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}\nbutton{font:inherit;padding:7px 14px;border:1px solid var(--ink);background:#fff;border-radius:4px;cursor:pointer}button.primary{background:var(--ink);color:#fff}\ninput,select,textarea{font:inherit;padding:6px 8px;border:1px solid #cfc9bf;border-radius:4px;background:#fff}textarea{width:100%;min-height:90px}\ndl{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin:0}dt{color:var(--muted)}dd{margin:0}.pre{white-space:pre-wrap}\ndetails>summary{cursor:pointer;padding:10px 0}img{border-radius:3px;display:block;max-width:100%}\n@media (max-width:640px){dl{grid-template-columns:1fr}.kpi{gap:18px}}</style></head><body>\n<nav><b>BEER Redaktion</b>${NAV.map(([label, href]) => `<a href=\"${href}\"${label === active ? ' class=\"on\"' : \"\"}>${esc(label)}</a>`).join(\"\")}</nav>\n<main><h1>${esc(title)}</h1>${notice ? `<p class=\"notice\">${notice}</p>` : \"\"}${body}</main></body></html>`;\n}\n\n/** A small POST form with hidden fields and one button. */\nfunction button(action, fields, label, primary = false) {\n  const hidden = Object.entries(fields).map(([k, v]) => `<input type=\"hidden\" name=\"${esc(k)}\" value=\"${esc(v)}\">`).join(\"\");\n  return `<form method=\"post\" action=\"${esc(action)}\">${hidden}<button${primary ? ' class=\"primary\"' : \"\"}>${esc(label)}</button></form>`;\n}\n\n/* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */\n/**\n * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).\n * claudeRequest() builds a Messages API body; the HTTP node \"… Claude\" sends it with the\n * credential \"Claude API (BEER)\". claudeAnswer() reads the JSON answer back.\n */\n\nconst MODEL = \"claude-opus-5-5\";\n\n/**\n * schema: JSON schema for structured output (strict JSON back).\n * webSearch: number of searches allowed; then the answer is asked for as a JSON block in the\n * text instead, since search results come back with citations.\n */\nfunction claudeRequest({ system, user, schema, effort = \"medium\", maxTokens = 16000, webSearch = 0 }) {\n  const request = {\n    model: MODEL,\n    max_tokens: maxTokens,\n    system,\n    output_config: { effort },\n    // Lets the API answer with a fallback model when a request is declined.\n    fallbacks: \"default\",\n    messages: [{ role: \"user\", content: user }],\n  };\n  if (webSearch) {\n    request.tools = [\n      {\n        type: \"web_search_20260209\",\n        name: \"web_search\",\n        max_uses: webSearch,\n        user_location: { type: \"approximate\", city: \"Freising\", region: \"Bayern\", country: \"DE\", timezone: \"Europe/Berlin\" },\n      },\n    ];\n    if (schema) {\n      request.system += `\\n\\nAntworte am Ende ausschließlich mit einem JSON-Objekt nach diesem Schema, ohne weiteren Text:\\n${JSON.stringify(schema)}`;\n    }\n  } else if (schema) {\n    request.output_config.format = { type: \"json_schema\", schema };\n  }\n  return request;\n}\n\n/** { value } with the parsed JSON answer, or { error } when the call produced none. */\nfunction claudeAnswer(response) {\n  if (!response || response.type === \"error\" || response.error) {\n    // After retries the HTTP node passes the failure on as { error: \"…\" } or { error: { message } }.\n    const error = response?.error;\n    const message = typeof error === \"string\" ? error : error?.message ?? response?.message ?? \"keine Antwort\";\n    return { error: `Claude: ${message}` };\n  }\n  if (response.stop_reason === \"refusal\") return { error: \"Claude hat abgelehnt.\" };\n  if (response.stop_reason === \"max_tokens\") return { error: \"Antwort abgeschnitten (max_tokens).\" };\n  if (response.stop_reason === \"pause_turn\") return { error: \"Suche nicht fertig geworden – bitte erneut starten.\" };\n  const text = (response.content ?? []).filter((block) => block.type === \"text\").map((block) => block.text).join(\"\");\n  for (const candidate of [text, text.match(/```(?:json)?\\s*([\\s\\S]*?)```/)?.[1], text.slice(text.indexOf(\"{\"), text.lastIndexOf(\"}\") + 1)]) {\n    if (!candidate) continue;\n    try {\n      return { value: JSON.parse(candidate), sources: webSources(response) };\n    } catch {\n      // try the next form\n    }\n  }\n  return { error: \"Antwort war kein gültiges JSON.\" };\n}\n\n/** The pages Claude's web searches returned (title and address), for reports. */\nfunction webSources(response) {\n  const seen = new Map();\n  for (const block of response.content ?? []) {\n    if (block.type !== \"web_search_tool_result\" || !Array.isArray(block.content)) continue;\n    for (const hit of block.content) if (hit.url && !seen.has(hit.url)) seen.set(hit.url, hit.title ?? hit.url);\n  }\n  return [...seen].map(([url, title]) => ({ url, title }));\n}\n\n/** Short company facts every prompt may use; nothing beyond these may be invented. */\nconst BEER_FACTS = `BEER Küchenmanufaktur: Schreinerei und Küchenmanufaktur mit eigener Fertigung und Ausstellung in Wolfersdorf bei Freising (Bayern). Plant und baut Küchen und Möbel nach Maß für Kundinnen und Kunden im Raum München, Freising, Landshut und Umgebung. Arbeitet mit Geräten und Materialien unter anderem von Bora, Miele, Gaggenau, Siemens, Quooker und Fenix.`;\n\n/**\n * n8n Code node \"Antwort\" (workflow \"BEER Neue Seite\"): the chat reply after saving.\n */\n\nconst store = $getWorkflowStaticData(\"global\");\nconst { sessionId } = $(\"Anfrage\").first().json;\nconst built = $(\"Bauen\").first().json;\nconst saved = $(\"Speichern\").first().json;\nconst live = $input.first().json;\nconst id = saved?.data?.documentId;\nif (!id) {\n  return [{ json: { output: `Der Entwurf wurde nicht gespeichert: ${saved?.error?.message ?? \"Strapi hat nicht geantwortet\"}. Die Notiz bleibt erhalten – bitte später noch einmal senden.` } }];\n}\ndelete store.sessions[sessionId];\nconst name = saved.data.title ?? saved.data.name;\nreturn [\n  {\n    json: {\n      output: [\n        live?.data?.publishedAt\n          ? `⚠️ Achtung: Strapi meldet eine veröffentlichte Fassung von „${name}“. Bitte sofort prüfen.`\n          : `Entwurf gespeichert (nicht veröffentlicht): **${name}**`,\n        `Strapi: ${adminUrl(built.type, id)}`,\n        built.project ? `Titelbild aus dem Projekt „${built.project}“ – bitte prüfen.` : \"Kein passendes Titelbild gefunden – bitte in Strapi wählen.\",\n        \"Bitte Texte lesen, Punkte und Stichworte prüfen, dann veröffentlichen.\",\n      ].join(\"\\n\"),\n    },\n  },\n];\n"
+      }
+    }
+  ],
+  "connections": {
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Bestand: Auftrag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestand: Auftrag": {
+      "main": [
+        [
+          {
+            "node": "Bestand lesen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestand lesen": {
+      "main": [
+        [
+          {
+            "node": "Anfrage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anfrage": {
+      "main": [
+        [
+          {
+            "node": "Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "main": [
+        [
+          {
+            "node": "Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan": {
+      "main": [
+        [
+          {
+            "node": "Rückfrage?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rückfrage?": {
+      "main": [
+        [
+          {
+            "node": "Rückfrage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Projekt suchen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Projekt suchen": {
+      "main": [
+        [
+          {
+            "node": "Bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bauen": {
+      "main": [
+        [
+          {
+            "node": "Speichern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Speichern": {
+      "main": [
+        [
+          {
+            "node": "Kontrolle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kontrolle": {
+      "main": [
+        [
+          {
+            "node": "Antwort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
