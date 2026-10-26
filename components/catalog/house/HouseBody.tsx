@@ -1,3 +1,5 @@
+import RichText from "@/components/RichText";
+
 export default function HouseBody({
   eyebrow,
   title,
@@ -26,13 +28,9 @@ export default function HouseBody({
             </h2>
           ) : null}
         </div>
-        <div className="space-y-6 lg:col-span-7 lg:col-start-6">
-          {paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 48)} className="type-intro max-w-xl">
-              {paragraph}
-            </p>
-          ))}
-        </div>
+        {/* The CMS text is Markdown: headings, lists and bold, as on the article pages. */}
+        <RichText source={paragraphs.join("\n\n")} className="max-w-xl lg:col-span-7 lg:col-start-6" />
+
       </div>
     </section>
   );
