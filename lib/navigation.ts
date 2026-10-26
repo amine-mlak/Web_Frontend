@@ -119,7 +119,7 @@ export const menuPanels: MenuPanel[] = [
       {
         links: [
           { href: "/kueche-planen", label: "So entsteht Ihre Küche" },
-          { href: "/ausstellung", label: "Ausstellung Freising" },
+          { href: "/ausstellung", label: "Ausstellung Wolfersdorf" },
           {
             href: "/beratung",
             label: "Küchenplaner – Welche Küche passt zu Ihnen?",

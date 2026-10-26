@@ -10,7 +10,7 @@ export const fallbackGutZuWissen: GutZuWissenContent = {
   eyebrow: "Gut zu wissen",
   quote:
     "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt – den Rest sortieren wir gemeinsam.",
-  source: "Aus dem ersten Gespräch in unserer Ausstellung Freising",
+  source: "Aus dem ersten Gespräch in unserer Ausstellung Wolfersdorf",
 };
 
 export default function GutZuWissen({

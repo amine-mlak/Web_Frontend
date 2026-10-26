@@ -139,7 +139,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       closeTitle: "Mit Termin wird es ein Gespräch.",
       closeText:
         "Wir öffnen Muster und Querschnitte, wenn Zeit da ist.",
-      bodyTitle: "Ausstellung Freising.",
+      bodyTitle: "Ausstellung Wolfersdorf.",
       facts: [
         { value: "Wolfersdorf", label: "bei Freising" },
         { value: "Muster", label: "unter Tageslicht" },
@@ -491,7 +491,8 @@ export type HouseBlock =
 export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   legal: [],
   manufactory: ["night", "body", "chapters", "siblings", "close"],
-  showroom: ["plate", "gallery", "visit"],
+  // Ausstellung: what is there (text, photos, facts), how to visit, then the questions people ask.
+  showroom: ["plate", "body", "gallery", "ledger", "visit", "form"],
   people: ["film", "people", "body", "close"],
   lasting: ["title", "ledger", "body"],
   place: ["night", "ledger", "body", "visit", "form"],

@@ -52,7 +52,7 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { href: "/ratgeber", label: "Inspiration" },
       { href: "/kueche-planen", label: "So läuft es ab" },
-      { href: "/ausstellung", label: "Ausstellung Freising" },
+      { href: "/ausstellung", label: "Ausstellung Wolfersdorf" },
       { href: "/beratung", label: "Küchenplaner" },
       { href: "/katalog", label: "Katalog bestellen" },
       { href: "/beratung", label: "Beratung & Termin" },
@@ -174,7 +174,7 @@ const englishFooter: FooterContent = {
       links: [
         { href: "/ratgeber", label: "Inspiration" },
         { href: "/kueche-planen", label: "How it works" },
-        { href: "/ausstellung", label: "Freising showroom" },
+        { href: "/ausstellung", label: "Wolfersdorf showroom" },
         { href: "/beratung", label: "Kitchen planner" },
         { href: "/katalog", label: "Order a catalogue" },
         { href: "/beratung", label: "Advice & appointment" },

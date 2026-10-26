@@ -56,7 +56,7 @@ const fallback: FaqContent = {
   title: "Was viele zuerst fragen",
   quote:
     "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt – den Rest sortieren wir gemeinsam.",
-  quoteSource: "Aus dem ersten Gespräch in unserer Ausstellung Freising",
+  quoteSource: "Aus dem ersten Gespräch in unserer Ausstellung Wolfersdorf",
   items: editorialItems,
 };
 
@@ -65,7 +65,7 @@ const fallbackEn: FaqContent = {
   title: "What people ask first",
   quote:
     "You don't have to know what you want. You only have to know what you like — we'll sort the rest together.",
-  quoteSource: "From the first conversation in our Freising showroom",
+  quoteSource: "From the first conversation in our Wolfersdorf showroom",
   items: editorialItemsEn,
 };
 

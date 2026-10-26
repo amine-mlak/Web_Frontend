@@ -61,7 +61,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     indexEyebrow: "Fünf Zugänge",
     quote:
       "Eine Küche in diesem Haus muss in zehn Jahren noch selbstverständlich wirken. Nicht nach dem Jahr, in dem sie bestellt wurde.",
-    quoteSource: "Aus der Planung in der Ausstellung Freising",
+    quoteSource: "Aus der Planung in der Ausstellung Wolfersdorf",
     ctaLabel: "Küche besprechen",
     ctaHref: "/beratung",
     closeTitle: "Zuerst der Raum.",
@@ -422,7 +422,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     indexEyebrow: "So gehen wir vor",
     quote:
       "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt — den Rest sortieren wir gemeinsam.",
-    quoteSource: "Aus dem ersten Gespräch in der Ausstellung Freising",
+    quoteSource: "Aus dem ersten Gespräch in der Ausstellung Wolfersdorf",
     ctaLabel: "Beratung beginnen",
     ctaHref: "/beratung",
     closeTitle: "Ein Termin reicht zum Anfang.",
@@ -431,7 +431,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     branches: [
       {
         href: "/ausstellung",
-        title: "Ausstellung Freising",
+        title: "Ausstellung Wolfersdorf",
         text: "Wolfersdorf. Materialien, Muster, gebaute Details — zum Anfassen, mit Termin.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Ausstellung der Manufaktur",
@@ -530,7 +530,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     indexEyebrow: "Five ways in",
     quote:
       "A kitchen in this house has to feel inevitable in ten years. Not like the year it was ordered.",
-    quoteSource: "From planning in the Freising showroom",
+    quoteSource: "From planning in the Wolfersdorf showroom",
     ctaLabel: "Talk about a kitchen",
     ctaHref: "/beratung",
     closeTitle: "The room first.",
@@ -891,7 +891,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     indexEyebrow: "How we proceed",
     quote:
       "You don't have to know what you want. You only have to know what you like — we'll sort the rest together.",
-    quoteSource: "From the first conversation in the Freising showroom",
+    quoteSource: "From the first conversation in the Wolfersdorf showroom",
     ctaLabel: "Start a consultation",
     ctaHref: "/beratung",
     closeTitle: "One appointment is enough to begin.",
@@ -900,7 +900,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     branches: [
       {
         href: "/ausstellung",
-        title: "Freising showroom",
+        title: "Wolfersdorf showroom",
         text: "Wolfersdorf. Materials, samples, built details — to handle, by appointment.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Workshop showroom",

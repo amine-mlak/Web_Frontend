@@ -140,7 +140,7 @@ const COPY: Record<Locale, Record<KitchenClusterSlug, ClusterCopy>> = {
       indexEyebrow: "Sechs Haltungen",
       quote:
         "Eine Küche in diesem Haus muss in zehn Jahren noch selbstverständlich wirken. Nicht nach dem Jahr, in dem sie bestellt wurde.",
-      quoteSource: "Aus der Planung in der Ausstellung Freising",
+      quoteSource: "Aus der Planung in der Ausstellung Wolfersdorf",
       ctaLabel: "Haltung mustern",
       closeTitle: "Das Haus gibt den Ton.",
       closeText:
@@ -302,7 +302,7 @@ const COPY: Record<Locale, Record<KitchenClusterSlug, ClusterCopy>> = {
       indexEyebrow: "Six stances",
       quote:
         "A kitchen in this house has to feel inevitable in ten years. Not like the year it was ordered.",
-      quoteSource: "From planning in the Freising showroom",
+      quoteSource: "From planning in the Wolfersdorf showroom",
       ctaLabel: "Sample a stance",
       closeTitle: "The house sets the tone.",
       closeText:

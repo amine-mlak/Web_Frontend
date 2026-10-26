@@ -231,7 +231,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
       shot(BUILDING.snow1, "Übergabe, Wolfersdorf"),
     ],
     chapters: [
-      shot(ROOM.r0002, "Ausstellung Freising"),
+      shot(ROOM.r0002, "Ausstellung Wolfersdorf"),
       shot(ROOM.r0004, "Beratung in der Ausstellung"),
       shot(ROOM.r0076, "Unterlagen zum Anfassen"),
       shot(ROOM.r0065, "Fragen vor dem Gespräch"),

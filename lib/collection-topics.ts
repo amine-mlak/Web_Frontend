@@ -308,7 +308,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
         "Griffe, Licht und Auszüge entscheiden, ob die Ruhe hält. Kalt wird es nur, wenn das Material fehlt.",
       quote:
         "Die Front sollte in zehn Jahren noch selbstverständlich sein. Nicht nach dem Jahr, in dem sie lackiert wurde.",
-      quoteSource: "Aus der Planung in der Ausstellung Freising",
+      quoteSource: "Aus der Planung in der Ausstellung Wolfersdorf",
       closeTitle: "Das Haus, nicht das Jahr.",
       closeText:
         "Bilder aus dem Haus. Dann mustern wir Fläche, Fuge und den Stein, der die Moderne warm hält.",
@@ -996,7 +996,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
         "Handles, light and drawers decide whether the calm holds. It turns cold only when the material is missing.",
       quote:
         "The front should still feel inevitable in ten years. Not like the year it was lacquered.",
-      quoteSource: "From planning in the Freising showroom",
+      quoteSource: "From planning in the Wolfersdorf showroom",
       closeTitle: "The house, not the year.",
       closeText:
         "Pictures from the house. Then we sample face, joint and the stone that keeps modern warm.",
