@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import legacyRedirects from "./lib/legacy-redirects.json";
 
 const strapiUrl =
   process.env.STRAPI_URL ??
@@ -178,6 +179,11 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  // Old beer.de (Shopify) addresses keep their search rankings: permanent (308) redirects to
+  // the new pages. They run before proxy.ts, on the address as requested.
+  async redirects() {
+    return legacyRedirects.redirects.map((redirect) => ({ ...redirect, permanent: true }));
   },
   async rewrites() {
     return [

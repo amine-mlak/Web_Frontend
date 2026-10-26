@@ -1,0 +1,893 @@
+{
+ "_about": "Old beer.de (Shopify) addresses → new site. Generated from the blog import of 2026-10-27; used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls.",
+ "redirects": [
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/neue-kueche-planen",
+   "destination": "/ratgeber/neue-kueche-planen"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/neue-kueche-planen",
+   "destination": "/en/guides/neue-kueche-planen"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/die-weisse-kueche",
+   "destination": "/ratgeber/die-weisse-kueche"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/die-weisse-kueche",
+   "destination": "/en/guides/die-weisse-kueche"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/kuechentipps-vom-profi",
+   "destination": "/ratgeber/kuechentipps-vom-profi"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/kuechentipps-vom-profi",
+   "destination": "/en/guides/kuechentipps-vom-profi"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/die-ideale-arbeitsplattenhohe",
+   "destination": "/ratgeber/die-ideale-arbeitsplattenhohe"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/die-ideale-arbeitsplattenhohe",
+   "destination": "/en/guides/die-ideale-arbeitsplattenhohe"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/die-grifflose-kuche",
+   "destination": "/ratgeber/die-grifflose-kuche"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/die-grifflose-kuche",
+   "destination": "/en/guides/die-grifflose-kuche"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/musik-in-der-kueche",
+   "destination": "/ratgeber/musik-in-der-kueche"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/musik-in-der-kueche",
+   "destination": "/en/guides/musik-in-der-kueche"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/kuechenschreiner-aus-muenchen",
+   "destination": "/ratgeber/kuechenschreiner-aus-muenchen"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/kuechenschreiner-aus-muenchen",
+   "destination": "/en/guides/kuechenschreiner-aus-muenchen"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/kochfeld",
+   "destination": "/ratgeber/kochfeld"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/kochfeld",
+   "destination": "/en/guides/kochfeld"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/dampfgarer",
+   "destination": "/ratgeber/dampfgarer"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/dampfgarer",
+   "destination": "/en/guides/dampfgarer"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/mikrowelle",
+   "destination": "/ratgeber/mikrowelle"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/mikrowelle",
+   "destination": "/en/guides/mikrowelle"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/kuehlschrank",
+   "destination": "/ratgeber/kuehlschrank"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/kuehlschrank",
+   "destination": "/en/guides/kuehlschrank"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/spuelmaschine",
+   "destination": "/ratgeber/spuelmaschine"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/spuelmaschine",
+   "destination": "/en/guides/spuelmaschine"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/backofen",
+   "destination": "/ratgeber/backofen"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/backofen",
+   "destination": "/en/guides/backofen"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/kaffeevollautomat",
+   "destination": "/ratgeber/kaffeevollautomat"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/kaffeevollautomat",
+   "destination": "/en/guides/kaffeevollautomat"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/tellerwaermer",
+   "destination": "/ratgeber/tellerwaermer"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/tellerwaermer",
+   "destination": "/en/guides/tellerwaermer"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/vakuumierschublade",
+   "destination": "/ratgeber/vakuumierschublade"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/vakuumierschublade",
+   "destination": "/en/guides/vakuumierschublade"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/brotschneidemaschine",
+   "destination": "/ratgeber/brotschneidemaschine"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/brotschneidemaschine",
+   "destination": "/en/guides/brotschneidemaschine"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/dunstabzug",
+   "destination": "/ratgeber/dunstabzug"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/dunstabzug",
+   "destination": "/en/guides/dunstabzug"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/gewuerzaufbewahrung",
+   "destination": "/ratgeber/gewuerzaufbewahrung"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/gewuerzaufbewahrung",
+   "destination": "/en/guides/gewuerzaufbewahrung"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/abfalltrennsysteme",
+   "destination": "/ratgeber/abfalltrennsysteme"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/abfalltrennsysteme",
+   "destination": "/en/guides/abfalltrennsysteme"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/besteckeinsatz",
+   "destination": "/ratgeber/besteckeinsatz"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/besteckeinsatz",
+   "destination": "/en/guides/besteckeinsatz"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/der-eckschrank",
+   "destination": "/ratgeber/der-eckschrank"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/der-eckschrank",
+   "destination": "/en/guides/der-eckschrank"
+  },
+  {
+   "source": "/blogs/team-news/grill-opening-der-neuen-miele-outdoor-cooking-welt-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/grill-opening-der-neuen-miele-outdoor-cooking-welt-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/grill-opening-der-neuen-miele-outdoor-cooking-welt-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/grill-opening-der-neuen-miele-outdoor-cooking-welt-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/einblick-in-unsere-werkstatt-wir-hatten-besuch",
+   "destination": "/presse/einblick-in-unsere-werkstatt-wir-hatten-besuch"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/einblick-in-unsere-werkstatt-wir-hatten-besuch",
+   "destination": "/en/press/einblick-in-unsere-werkstatt-wir-hatten-besuch"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/offene-landhauskuche-als-generationsubergreifender-wohlfuhl-und-begegnungsort",
+   "destination": "/presse/offene-landhauskuche-als-generationsubergreifender-wohlfuhl-und-begegnungsort"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/offene-landhauskuche-als-generationsubergreifender-wohlfuhl-und-begegnungsort",
+   "destination": "/en/press/offene-landhauskuche-als-generationsubergreifender-wohlfuhl-und-begegnungsort"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/grifflose-kuche-planen-griffnutprofil-push-to-open-mambo-und-c-profil",
+   "destination": "/presse/grifflose-kuche-planen-griffnutprofil-push-to-open-mambo-und-c-profil"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/grifflose-kuche-planen-griffnutprofil-push-to-open-mambo-und-c-profil",
+   "destination": "/en/press/grifflose-kuche-planen-griffnutprofil-push-to-open-mambo-und-c-profil"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/mansarden-kuche-nach-mass-so-gelingt-die-perfekte-schreinerkuche-unter-der-dachschrage",
+   "destination": "/presse/mansarden-kuche-nach-mass-so-gelingt-die-perfekte-schreinerkuche-unter-der-dachschrage"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/mansarden-kuche-nach-mass-so-gelingt-die-perfekte-schreinerkuche-unter-der-dachschrage",
+   "destination": "/en/press/mansarden-kuche-nach-mass-so-gelingt-die-perfekte-schreinerkuche-unter-der-dachschrage"
+  },
+  {
+   "source": "/blogs/team-news/herzlichen-gluckwunsch-zur-bestandenen-gesellenprufung-avi",
+   "destination": "/presse/herzlichen-gluckwunsch-zur-bestandenen-gesellenprufung-avi"
+  },
+  {
+   "source": "/en/blogs/team-news/herzlichen-gluckwunsch-zur-bestandenen-gesellenprufung-avi",
+   "destination": "/en/press/herzlichen-gluckwunsch-zur-bestandenen-gesellenprufung-avi"
+  },
+  {
+   "source": "/blogs/team-news/robert-ist-mitarbeiter-des-monats",
+   "destination": "/presse/robert-ist-mitarbeiter-des-monats"
+  },
+  {
+   "source": "/en/blogs/team-news/robert-ist-mitarbeiter-des-monats",
+   "destination": "/en/press/robert-ist-mitarbeiter-des-monats"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/moderne-kucheninsel-aus-eichenfurnier-und-edelstahl-beer-kuchenmanufaktur",
+   "destination": "/ratgeber/moderne-kucheninsel-aus-eichenfurnier-und-edelstahl-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/moderne-kucheninsel-aus-eichenfurnier-und-edelstahl-beer-kuchenmanufaktur",
+   "destination": "/en/guides/moderne-kucheninsel-aus-eichenfurnier-und-edelstahl-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kundenkuche-schwarz-weiss-minimalistisches-design-mit-holzboden-kochinsel-und-hochwertiger-ausstattung",
+   "destination": "/presse/kundenkuche-schwarz-weiss-minimalistisches-design-mit-holzboden-kochinsel-und-hochwertiger-ausstattung"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kundenkuche-schwarz-weiss-minimalistisches-design-mit-holzboden-kochinsel-und-hochwertiger-ausstattung",
+   "destination": "/en/press/kundenkuche-schwarz-weiss-minimalistisches-design-mit-holzboden-kochinsel-und-hochwertiger-ausstattung"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/schwarze-industrial-style-kuche-mit-grauer-kochinsel-modern-elegant-und-individuell-geplant",
+   "destination": "/presse/schwarze-industrial-style-kuche-mit-grauer-kochinsel-modern-elegant-und-individuell-geplant"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/schwarze-industrial-style-kuche-mit-grauer-kochinsel-modern-elegant-und-individuell-geplant",
+   "destination": "/en/press/schwarze-industrial-style-kuche-mit-grauer-kochinsel-modern-elegant-und-individuell-geplant"
+  },
+  {
+   "source": "/blogs/team-news/beer-kuchenmanufaktur-erhalt-auszeichnung-auf-houzz",
+   "destination": "/presse/beer-kuchenmanufaktur-erhalt-auszeichnung-auf-houzz"
+  },
+  {
+   "source": "/en/blogs/team-news/beer-kuchenmanufaktur-erhalt-auszeichnung-auf-houzz",
+   "destination": "/en/press/beer-kuchenmanufaktur-erhalt-auszeichnung-auf-houzz"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kucheninsel-wie-sie-zur-stilvollen-mittelpunktkuche-wird",
+   "destination": "/presse/kucheninsel-wie-sie-zur-stilvollen-mittelpunktkuche-wird"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kucheninsel-wie-sie-zur-stilvollen-mittelpunktkuche-wird",
+   "destination": "/en/press/kucheninsel-wie-sie-zur-stilvollen-mittelpunktkuche-wird"
+  },
+  {
+   "source": "/blogs/team-news/miele-grill-event-und-opening-der-outdoor-kuche",
+   "destination": "/presse/miele-grill-event-und-opening-der-outdoor-kuche"
+  },
+  {
+   "source": "/en/blogs/team-news/miele-grill-event-und-opening-der-outdoor-kuche",
+   "destination": "/en/press/miele-grill-event-und-opening-der-outdoor-kuche"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/massivholzkuche-nach-mass-naturlichkeit-und-moderne-architektur-perfekt-verbunden",
+   "destination": "/presse/massivholzkuche-nach-mass-naturlichkeit-und-moderne-architektur-perfekt-verbunden"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/massivholzkuche-nach-mass-naturlichkeit-und-moderne-architektur-perfekt-verbunden",
+   "destination": "/en/press/massivholzkuche-nach-mass-naturlichkeit-und-moderne-architektur-perfekt-verbunden"
+  },
+  {
+   "source": "/blogs/team-news/teamzeit-im-aqua-dome-betriebsausflug-der-beer-kuchenmanufaktur",
+   "destination": "/presse/teamzeit-im-aqua-dome-betriebsausflug-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/teamzeit-im-aqua-dome-betriebsausflug-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/teamzeit-im-aqua-dome-betriebsausflug-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/minimalistische-weisse-schreinerkuche-mit-halbinsel-ruhe-eleganz-und-alltagstauglichkeit-vereint",
+   "destination": "/presse/minimalistische-weisse-schreinerkuche-mit-halbinsel-ruhe-eleganz-und-alltagstauglichkeit-vereint"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/minimalistische-weisse-schreinerkuche-mit-halbinsel-ruhe-eleganz-und-alltagstauglichkeit-vereint",
+   "destination": "/en/press/minimalistische-weisse-schreinerkuche-mit-halbinsel-ruhe-eleganz-und-alltagstauglichkeit-vereint"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/moderne-u-form-kuche-wie-edelstahl-eiche-und-griffloses-design-wohnlichkeit-schaffen",
+   "destination": "/presse/moderne-u-form-kuche-wie-edelstahl-eiche-und-griffloses-design-wohnlichkeit-schaffen"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/moderne-u-form-kuche-wie-edelstahl-eiche-und-griffloses-design-wohnlichkeit-schaffen",
+   "destination": "/en/press/moderne-u-form-kuche-wie-edelstahl-eiche-und-griffloses-design-wohnlichkeit-schaffen"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kundenkuche-weiss-eiche-minimalistische-inselkuche-mit-architektonischer-eleganz",
+   "destination": "/presse/kundenkuche-weiss-eiche-minimalistische-inselkuche-mit-architektonischer-eleganz"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kundenkuche-weiss-eiche-minimalistische-inselkuche-mit-architektonischer-eleganz",
+   "destination": "/en/press/kundenkuche-weiss-eiche-minimalistische-inselkuche-mit-architektonischer-eleganz"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/architekturkuche-planen-massgeschneiderte-kuchenplanung-von-beer",
+   "destination": "/ratgeber/architekturkuche-planen-massgeschneiderte-kuchenplanung-von-beer"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/architekturkuche-planen-massgeschneiderte-kuchenplanung-von-beer",
+   "destination": "/en/guides/architekturkuche-planen-massgeschneiderte-kuchenplanung-von-beer"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/edelstahlkuche-wohnlich-gestalten-so-wirkt-edelstahl-optik-modern-warm-und-zeitlos",
+   "destination": "/presse/edelstahlkuche-wohnlich-gestalten-so-wirkt-edelstahl-optik-modern-warm-und-zeitlos"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/edelstahlkuche-wohnlich-gestalten-so-wirkt-edelstahl-optik-modern-warm-und-zeitlos",
+   "destination": "/en/press/edelstahlkuche-wohnlich-gestalten-so-wirkt-edelstahl-optik-modern-warm-und-zeitlos"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/blaue-landhauskuche-exklusive-massanfertigung-mit-halbinsel-und-premium-ausstattung",
+   "destination": "/presse/blaue-landhauskuche-exklusive-massanfertigung-mit-halbinsel-und-premium-ausstattung"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/blaue-landhauskuche-exklusive-massanfertigung-mit-halbinsel-und-premium-ausstattung",
+   "destination": "/en/press/blaue-landhauskuche-exklusive-massanfertigung-mit-halbinsel-und-premium-ausstattung"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/weisse-kuche-mit-eiche-und-abgerundeter-kochinsel-zeitlose-eleganz-modern-interpretiert",
+   "destination": "/presse/weisse-kuche-mit-eiche-und-abgerundeter-kochinsel-zeitlose-eleganz-modern-interpretiert"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/weisse-kuche-mit-eiche-und-abgerundeter-kochinsel-zeitlose-eleganz-modern-interpretiert",
+   "destination": "/en/press/weisse-kuche-mit-eiche-und-abgerundeter-kochinsel-zeitlose-eleganz-modern-interpretiert"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kundenkuche-designkuche-so-entsteht-eine-zeitlose-kuche-mit-weiss-granit-und-schwarzstahl",
+   "destination": "/presse/kundenkuche-designkuche-so-entsteht-eine-zeitlose-kuche-mit-weiss-granit-und-schwarzstahl"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kundenkuche-designkuche-so-entsteht-eine-zeitlose-kuche-mit-weiss-granit-und-schwarzstahl",
+   "destination": "/en/press/kundenkuche-designkuche-so-entsteht-eine-zeitlose-kuche-mit-weiss-granit-und-schwarzstahl"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/zeitloses-kuchendesign-was-eine-hochwertige-kuche-auch-nach-15-jahren-noch-modern-wirken-lasst",
+   "destination": "/presse/zeitloses-kuchendesign-was-eine-hochwertige-kuche-auch-nach-15-jahren-noch-modern-wirken-lasst"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/zeitloses-kuchendesign-was-eine-hochwertige-kuche-auch-nach-15-jahren-noch-modern-wirken-lasst",
+   "destination": "/en/press/zeitloses-kuchendesign-was-eine-hochwertige-kuche-auch-nach-15-jahren-noch-modern-wirken-lasst"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/mansardenkuche-vorher-nachher-aussergewohnliches-kuchendesign-mit-uber-4-meter-hoher-einbaukuche",
+   "destination": "/presse/mansardenkuche-vorher-nachher-aussergewohnliches-kuchendesign-mit-uber-4-meter-hoher-einbaukuche"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/mansardenkuche-vorher-nachher-aussergewohnliches-kuchendesign-mit-uber-4-meter-hoher-einbaukuche",
+   "destination": "/en/press/mansardenkuche-vorher-nachher-aussergewohnliches-kuchendesign-mit-uber-4-meter-hoher-einbaukuche"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/wohnkuche-im-holzhaus-hell-offen-und-harmonisch-integriert",
+   "destination": "/presse/wohnkuche-im-holzhaus-hell-offen-und-harmonisch-integriert"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/wohnkuche-im-holzhaus-hell-offen-und-harmonisch-integriert",
+   "destination": "/en/press/wohnkuche-im-holzhaus-hell-offen-und-harmonisch-integriert"
+  },
+  {
+   "source": "/blogs/team-news/head-of-marketing-m-w-d-gesucht",
+   "destination": "/presse/head-of-marketing-m-w-d-gesucht"
+  },
+  {
+   "source": "/en/blogs/team-news/head-of-marketing-m-w-d-gesucht",
+   "destination": "/en/press/head-of-marketing-m-w-d-gesucht"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/schwarze-inselkuche-mit-edelstahl-arbeitsplatte-stilvolle-losung-fur-die-offene-wohnkuche",
+   "destination": "/presse/schwarze-inselkuche-mit-edelstahl-arbeitsplatte-stilvolle-losung-fur-die-offene-wohnkuche"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/schwarze-inselkuche-mit-edelstahl-arbeitsplatte-stilvolle-losung-fur-die-offene-wohnkuche",
+   "destination": "/en/press/schwarze-inselkuche-mit-edelstahl-arbeitsplatte-stilvolle-losung-fur-die-offene-wohnkuche"
+  },
+  {
+   "source": "/blogs/team-news/after-work-summer-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/after-work-summer-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/after-work-summer-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/after-work-summer-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/designkuche-referenz-eine-moderne-traumkuche-mit-bora-xbo-edelstahl-und-eiche",
+   "destination": "/presse/designkuche-referenz-eine-moderne-traumkuche-mit-bora-xbo-edelstahl-und-eiche"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/designkuche-referenz-eine-moderne-traumkuche-mit-bora-xbo-edelstahl-und-eiche",
+   "destination": "/en/press/designkuche-referenz-eine-moderne-traumkuche-mit-bora-xbo-edelstahl-und-eiche"
+  },
+  {
+   "source": "/blogs/team-news/gesellenstuck-von-simon-ein-japanisches-lowboard-kurz-vor-der-gesellenprufung",
+   "destination": "/presse/gesellenstuck-von-simon-ein-japanisches-lowboard-kurz-vor-der-gesellenprufung"
+  },
+  {
+   "source": "/en/blogs/team-news/gesellenstuck-von-simon-ein-japanisches-lowboard-kurz-vor-der-gesellenprufung",
+   "destination": "/en/press/gesellenstuck-von-simon-ein-japanisches-lowboard-kurz-vor-der-gesellenprufung"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/massgefertigte-wohnmobel-mit-stauraum-fur-kuche-garderobe-bad",
+   "destination": "/ratgeber/massgefertigte-wohnmobel-mit-stauraum-fur-kuche-garderobe-bad"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/massgefertigte-wohnmobel-mit-stauraum-fur-kuche-garderobe-bad",
+   "destination": "/en/guides/massgefertigte-wohnmobel-mit-stauraum-fur-kuche-garderobe-bad"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/moderne-designkuche-mit-bora-xbo-minimalismus-materialmix-und-individuelle-planung",
+   "destination": "/presse/moderne-designkuche-mit-bora-xbo-minimalismus-materialmix-und-individuelle-planung"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/moderne-designkuche-mit-bora-xbo-minimalismus-materialmix-und-individuelle-planung",
+   "destination": "/en/press/moderne-designkuche-mit-bora-xbo-minimalismus-materialmix-und-individuelle-planung"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/kuche-nach-mass-unter-dachschrage-planen-massgefertigte-designkuche",
+   "destination": "/ratgeber/kuche-nach-mass-unter-dachschrage-planen-massgefertigte-designkuche"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/kuche-nach-mass-unter-dachschrage-planen-massgefertigte-designkuche",
+   "destination": "/en/guides/kuche-nach-mass-unter-dachschrage-planen-massgefertigte-designkuche"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/kuchenfronten-aus-eigener-cnc-fertigung-flexible-breiten-fur-individuelle-kuchen",
+   "destination": "/presse/kuchenfronten-aus-eigener-cnc-fertigung-flexible-breiten-fur-individuelle-kuchen"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/kuchenfronten-aus-eigener-cnc-fertigung-flexible-breiten-fur-individuelle-kuchen",
+   "destination": "/en/press/kuchenfronten-aus-eigener-cnc-fertigung-flexible-breiten-fur-individuelle-kuchen"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/moderne-rustikale-kuche-wie-schlichtes-design-und-warme-holzelemente-perfekt-harmonieren",
+   "destination": "/presse/moderne-rustikale-kuche-wie-schlichtes-design-und-warme-holzelemente-perfekt-harmonieren"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/moderne-rustikale-kuche-wie-schlichtes-design-und-warme-holzelemente-perfekt-harmonieren",
+   "destination": "/en/press/moderne-rustikale-kuche-wie-schlichtes-design-und-warme-holzelemente-perfekt-harmonieren"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/space-tower-hochschrank-statt-metallgestell-mehr-stauraum-in-der-kuche",
+   "destination": "/ratgeber/space-tower-hochschrank-statt-metallgestell-mehr-stauraum-in-der-kuche"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/space-tower-hochschrank-statt-metallgestell-mehr-stauraum-in-der-kuche",
+   "destination": "/en/guides/space-tower-hochschrank-statt-metallgestell-mehr-stauraum-in-der-kuche"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/kuchenfronten-nach-mass-holz-lack-oder-struktur-passend-zum-raum",
+   "destination": "/presse/kuchenfronten-nach-mass-holz-lack-oder-struktur-passend-zum-raum"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/kuchenfronten-nach-mass-holz-lack-oder-struktur-passend-zum-raum",
+   "destination": "/en/press/kuchenfronten-nach-mass-holz-lack-oder-struktur-passend-zum-raum"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/kuche-unter-dachschrage-planen-massgefertigte-kuche-fur-kleine-raume",
+   "destination": "/ratgeber/kuche-unter-dachschrage-planen-massgefertigte-kuche-fur-kleine-raume"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/kuche-unter-dachschrage-planen-massgefertigte-kuche-fur-kleine-raume",
+   "destination": "/en/guides/kuche-unter-dachschrage-planen-massgefertigte-kuche-fur-kleine-raume"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/regionale-zusammenarbeit-bei-naturstein-und-individueller-kuchenplanung",
+   "destination": "/presse/regionale-zusammenarbeit-bei-naturstein-und-individueller-kuchenplanung"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/regionale-zusammenarbeit-bei-naturstein-und-individueller-kuchenplanung",
+   "destination": "/en/press/regionale-zusammenarbeit-bei-naturstein-und-individueller-kuchenplanung"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/induktionskochfeld-mit-muldenabzug-keramik-spulstein-kuchenplanung",
+   "destination": "/ratgeber/induktionskochfeld-mit-muldenabzug-keramik-spulstein-kuchenplanung"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/induktionskochfeld-mit-muldenabzug-keramik-spulstein-kuchenplanung",
+   "destination": "/en/guides/induktionskochfeld-mit-muldenabzug-keramik-spulstein-kuchenplanung"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/designkuche-kosten-preisfaktoren-budgetbeispiele-schreinerkuchen",
+   "destination": "/ratgeber/designkuche-kosten-preisfaktoren-budgetbeispiele-schreinerkuchen"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/designkuche-kosten-preisfaktoren-budgetbeispiele-schreinerkuchen",
+   "destination": "/en/guides/designkuche-kosten-preisfaktoren-budgetbeispiele-schreinerkuchen"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kundenkuche-anthrazit-eiche-zeitlose-naturholzkuche-in-modernem-design",
+   "destination": "/presse/kundenkuche-anthrazit-eiche-zeitlose-naturholzkuche-in-modernem-design"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kundenkuche-anthrazit-eiche-zeitlose-naturholzkuche-in-modernem-design",
+   "destination": "/en/press/kundenkuche-anthrazit-eiche-zeitlose-naturholzkuche-in-modernem-design"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/massgefertigte-einbaukuche-nach-mass-flachenbundig-raumhoch-geplant",
+   "destination": "/ratgeber/massgefertigte-einbaukuche-nach-mass-flachenbundig-raumhoch-geplant"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/massgefertigte-einbaukuche-nach-mass-flachenbundig-raumhoch-geplant",
+   "destination": "/en/guides/massgefertigte-einbaukuche-nach-mass-flachenbundig-raumhoch-geplant"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/so-entsteht-eine-kuche-mit-wohlfuhlgarantie-die-perfekte-landhauskuche-u-form-mit-halbinsel",
+   "destination": "/presse/so-entsteht-eine-kuche-mit-wohlfuhlgarantie-die-perfekte-landhauskuche-u-form-mit-halbinsel"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/so-entsteht-eine-kuche-mit-wohlfuhlgarantie-die-perfekte-landhauskuche-u-form-mit-halbinsel",
+   "destination": "/en/press/so-entsteht-eine-kuche-mit-wohlfuhlgarantie-die-perfekte-landhauskuche-u-form-mit-halbinsel"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung",
+   "destination": "/ratgeber/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung",
+   "destination": "/en/guides/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kuchendesign-mit-3-farben-so-gelingt-der-materialmix-aus-schwarz-weiss-und-eiche",
+   "destination": "/presse/kuchendesign-mit-3-farben-so-gelingt-der-materialmix-aus-schwarz-weiss-und-eiche"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kuchendesign-mit-3-farben-so-gelingt-der-materialmix-aus-schwarz-weiss-und-eiche",
+   "destination": "/en/press/kuchendesign-mit-3-farben-so-gelingt-der-materialmix-aus-schwarz-weiss-und-eiche"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/versteckte-speisekammer-kuche-planen-massgefertigte-kuchenlosungen",
+   "destination": "/ratgeber/versteckte-speisekammer-kuche-planen-massgefertigte-kuchenlosungen"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/versteckte-speisekammer-kuche-planen-massgefertigte-kuchenlosungen",
+   "destination": "/en/guides/versteckte-speisekammer-kuche-planen-massgefertigte-kuchenlosungen"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/moderne-kuchenarchitektur-wie-schwarze-kucheninseln-und-graue-hochschranke-zeitlose-eleganz-schaffen",
+   "destination": "/presse/moderne-kuchenarchitektur-wie-schwarze-kucheninseln-und-graue-hochschranke-zeitlose-eleganz-schaffen"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/moderne-kuchenarchitektur-wie-schwarze-kucheninseln-und-graue-hochschranke-zeitlose-eleganz-schaffen",
+   "destination": "/en/press/moderne-kuchenarchitektur-wie-schwarze-kucheninseln-und-graue-hochschranke-zeitlose-eleganz-schaffen"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/ein-blick-in-unsere-werkstatt",
+   "destination": "/presse/ein-blick-in-unsere-werkstatt"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/ein-blick-in-unsere-werkstatt",
+   "destination": "/en/press/ein-blick-in-unsere-werkstatt"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/steckdosenplanung-kuche-tipps-fur-positionen-hohe-und-moderne-losungen",
+   "destination": "/ratgeber/steckdosenplanung-kuche-tipps-fur-positionen-hohe-und-moderne-losungen"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/steckdosenplanung-kuche-tipps-fur-positionen-hohe-und-moderne-losungen",
+   "destination": "/en/guides/steckdosenplanung-kuche-tipps-fur-positionen-hohe-und-moderne-losungen"
+  },
+  {
+   "source": "/blogs/team-news/sepp-feiert-seinen-66-geburtstag-in-der-beer-kuchenmanufaktur",
+   "destination": "/presse/sepp-feiert-seinen-66-geburtstag-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/sepp-feiert-seinen-66-geburtstag-in-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/sepp-feiert-seinen-66-geburtstag-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/englische-landhauskuche-planen-stil-qualitat-personliche-beratung",
+   "destination": "/ratgeber/englische-landhauskuche-planen-stil-qualitat-personliche-beratung"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/englische-landhauskuche-planen-stil-qualitat-personliche-beratung",
+   "destination": "/en/guides/englische-landhauskuche-planen-stil-qualitat-personliche-beratung"
+  },
+  {
+   "source": "/blogs/team-news/handwerk-trifft-zukunft-unsere-neuen-azubis",
+   "destination": "/presse/handwerk-trifft-zukunft-unsere-neuen-azubis"
+  },
+  {
+   "source": "/en/blogs/team-news/handwerk-trifft-zukunft-unsere-neuen-azubis",
+   "destination": "/en/press/handwerk-trifft-zukunft-unsere-neuen-azubis"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/kuchenarmatur-richtig-auswahlen-edelstahl-oder-mattes-schwarz",
+   "destination": "/ratgeber/kuchenarmatur-richtig-auswahlen-edelstahl-oder-mattes-schwarz"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/kuchenarmatur-richtig-auswahlen-edelstahl-oder-mattes-schwarz",
+   "destination": "/en/guides/kuchenarmatur-richtig-auswahlen-edelstahl-oder-mattes-schwarz"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kuchenplanung-fur-mietobjekte-zeitlos-funktional-und-modern-gedacht",
+   "destination": "/presse/kuchenplanung-fur-mietobjekte-zeitlos-funktional-und-modern-gedacht"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kuchenplanung-fur-mietobjekte-zeitlos-funktional-und-modern-gedacht",
+   "destination": "/en/press/kuchenplanung-fur-mietobjekte-zeitlos-funktional-und-modern-gedacht"
+  },
+  {
+   "source": "/blogs/team-news/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-bei-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-bei-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kuchenreferenzen-regensburg-wie-aus-planung-und-praziser-montage-eine-perfekte-traumkuche-entsteht",
+   "destination": "/presse/kuchenreferenzen-regensburg-wie-aus-planung-und-praziser-montage-eine-perfekte-traumkuche-entsteht"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kuchenreferenzen-regensburg-wie-aus-planung-und-praziser-montage-eine-perfekte-traumkuche-entsteht",
+   "destination": "/en/press/kuchenreferenzen-regensburg-wie-aus-planung-und-praziser-montage-eine-perfekte-traumkuche-entsteht"
+  },
+  {
+   "source": "/blogs/team-news/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/team-news/marketing-trifft-werkstatt-ein-tag-in-der-beer-kuchenmanufaktur",
+   "destination": "/presse/marketing-trifft-werkstatt-ein-tag-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/marketing-trifft-werkstatt-ein-tag-in-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/marketing-trifft-werkstatt-ein-tag-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/mehr-als-eine-kuche-individuelle-mobel-fur-ein-stimmiges-wohnkonzept",
+   "destination": "/presse/mehr-als-eine-kuche-individuelle-mobel-fur-ein-stimmiges-wohnkonzept"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/mehr-als-eine-kuche-individuelle-mobel-fur-ein-stimmiges-wohnkonzept",
+   "destination": "/en/press/mehr-als-eine-kuche-individuelle-mobel-fur-ein-stimmiges-wohnkonzept"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/moderne-edelstahlkuche-mit-schwarzer-hochschrankfront-und-smarten-ausstattungsdetails",
+   "destination": "/presse/moderne-edelstahlkuche-mit-schwarzer-hochschrankfront-und-smarten-ausstattungsdetails"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/moderne-edelstahlkuche-mit-schwarzer-hochschrankfront-und-smarten-ausstattungsdetails",
+   "destination": "/en/press/moderne-edelstahlkuche-mit-schwarzer-hochschrankfront-und-smarten-ausstattungsdetails"
+  },
+  {
+   "source": "/blogs/elektrogerate/dunstabzug",
+   "destination": "/ratgeber/dunstabzug"
+  },
+  {
+   "source": "/en/blogs/elektrogerate/dunstabzug",
+   "destination": "/en/guides/dunstabzug"
+  },
+  {
+   "source": "/blogs/elektrogerate/kochfeld",
+   "destination": "/ratgeber/kochfeld"
+  },
+  {
+   "source": "/en/blogs/elektrogerate/kochfeld",
+   "destination": "/en/guides/kochfeld"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie/tagged/:tag",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie/tagged/:tag",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/kuechenplanung-ergonomie.atom",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/kuechenplanung-ergonomie.atom",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/tagged/:tag",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/tagged/:tag",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik.atom",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik.atom",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung/tagged/:tag",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung/tagged/:tag",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/stauraum-ordnung.atom",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/stauraum-ordnung.atom",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/team-news",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/team-news",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/team-news/tagged/:tag",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/team-news/tagged/:tag",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/team-news.atom",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/team-news.atom",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/tagged/:tag",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/tagged/:tag",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke.atom",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke.atom",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/tagged/:tag",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/tagged/:tag",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen.atom",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen.atom",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/elektrogerate",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/elektrogerate",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/elektrogerate/tagged/:tag",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/elektrogerate/tagged/:tag",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/elektrogerate.atom",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/elektrogerate.atom",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/:blog/:handle",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs/:blog/:handle",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/blogs",
+   "destination": "/en/guides"
+  }
+ ]
+}

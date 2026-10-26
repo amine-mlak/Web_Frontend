@@ -520,14 +520,16 @@ export async function fetchArticles() {
   const items = await loadMapped(
     "/api/articles",
     {
-      sort: "createdAt:desc",
-      "pagination[pageSize]": "50",
+      // Second key keeps the order stable across pages.
+      "sort[0]": "createdAt:desc",
+      "sort[1]": "id:asc",
       "populate[cover]": "true",
       "populate[category]": "true",
       "populate[blocks][populate]": "*",
     },
     mapArticle,
     FALLBACK_ARTICLES,
+    20,
   );
   if (items.some(isPressArticle)) {
     return items;
