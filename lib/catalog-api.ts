@@ -236,7 +236,8 @@ function mapGallery(row: Record<string, unknown> | null): ProjectFrame[] {
     if (!image.src) {
       return [];
     }
-    const alt = text(item, "alternativeText") || text(item, "caption") || text(item, "name");
+    // Never a file name ("grifflose küchen_küchen kaufen.jpg"): the page then uses the project title.
+    const alt = text(item, "alternativeText") || text(item, "caption");
     return [{ src: image.src, srcSet: image.srcSet, alt }];
   });
 }
