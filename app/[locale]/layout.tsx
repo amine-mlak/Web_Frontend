@@ -52,9 +52,10 @@ export const metadata: Metadata = {
       },
 };
 
-// The proxy rewrites every page request to /de/... or /en/..., so only these two exist.
-export const dynamicParams = false;
-
+// The proxy rewrites every page request to /de/... or /en/..., so only these two exist;
+// any other value is refused in the layout below. No `dynamicParams = false` here: it
+// applies to every page under this layout, so CMS entries published after the build
+// (a new project, article, region…) would all return 404.
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
