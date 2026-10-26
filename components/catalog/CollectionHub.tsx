@@ -10,7 +10,7 @@ import RegionenCollection from "@/components/catalog/collections/RegionenCollect
 import type { CollectionExtra } from "@/components/catalog/collections/parts";
 import type { CollectionBranch, CollectionHubId } from "@/lib/collection-hubs";
 import { presentHub } from "@/lib/collection-present";
-import { fetchSitePage } from "@/lib/catalog-api";
+import { fetchProjects, fetchSitePage } from "@/lib/catalog-api";
 import { hubPageSlug } from "@/lib/collection-hubs";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -18,6 +18,9 @@ import type { Locale } from "@/lib/i18n";
 import { photoKey } from "@/lib/utils";
 
 export type { CollectionExtra };
+
+/** Hubs about kitchens show photos of real projects; Möbel and Ratgeber keep their own. */
+const KITCHEN_HUBS = new Set<CollectionHubId>(["kuechen", "material", "geraete", "marken", "projekte", "regionen"]);
 
 /**
  * A branch card never shows the hero photo again: it takes one of its own
@@ -53,8 +56,11 @@ export default async function CollectionHub({
   extrasTitle?: string;
   children?: ReactNode;
 }) {
-  const page = await fetchSitePage(hubPageSlug(id));
-  const hub = withDistinctHero(presentHub(id, locale, branches, page));
+  const [page, projects] = await Promise.all([
+    fetchSitePage(hubPageSlug(id)),
+    KITCHEN_HUBS.has(id) ? fetchProjects() : Promise.resolve([]),
+  ]);
+  const hub = withDistinctHero(presentHub(id, locale, branches, page, projects));
   const resolvedExtras = extras?.map((item, index) => ({
     ...item,
     image: resolveDevImage(item.image, devPhoto(40 + index, 1920)),

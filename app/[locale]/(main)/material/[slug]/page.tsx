@@ -87,6 +87,6 @@ export default async function MaterialDetailPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <SamplePage hub={presentMaterialItem(item, locale, items, houses)} />
+    <SamplePage hub={presentMaterialItem(item, locale, items, houses, projects)} />
   );
 }

@@ -17,6 +17,7 @@ import {
 import type { CollectionFact, PresentedBranch } from "@/lib/collection-present";
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
@@ -27,6 +28,8 @@ export type PresentedTopic = PresentedCluster & {
   toneLine?: string;
   siblingEyebrow: string;
   siblingTitle: string;
+  /** Real projects tagged with this topic; their photos fill the page. */
+  taggedKitchens?: number;
 };
 
 type TopicVoice = {
@@ -1580,7 +1583,13 @@ export function presentTopic(
   const visit = clusterVisit(locale);
   const siblingHead = SIBLING_HEAD[locale][cluster];
   const start = clusterPhotoOffset(cluster) + 90 + Math.floor(topic.order / 10) * 9;
-  const photo = (n: number, width?: number) => devPhoto(start + n, width);
+  // Real kitchens tagged with this topic first, then the other projects.
+  const tagged = projects.filter((project) => project.topics.some((item) => item.slug === topic.slug));
+  const sameCluster = projects.filter(
+    (project) => !tagged.includes(project) && project.topics.some((item) => item.cluster === cluster),
+  );
+  const kitchens = [...tagged, ...sameCluster, ...projects.filter((project) => !tagged.includes(project) && !sameCluster.includes(project))];
+  const photo = kitchenPhotos(tagged, kitchens, (n, width) => devPhoto(start + n, width));
   const hex = topic.hex || undefined;
 
   const branches = chapterBranches(topic, locale, photo);
@@ -1596,11 +1605,15 @@ export function presentTopic(
         href: `/kuechen/${cluster}/${item.slug}`,
         title: copy.name,
         text: copy.intro,
-        image: resolveDevImage(item.image, photo(70 + index, 1100)),
+        // A real kitchen tagged with that topic, else the topic's own image.
+        image: resolveDevImage(
+          coverOf(projects, (project) => project.topics.some((entry) => entry.slug === item.slug)) ?? item.image,
+          photo(70 + index, 1100),
+        ),
       };
     });
 
-  const houses = projects.slice(0, 4).map((project, index) => ({
+  const houses = kitchens.slice(0, 4).map((project, index) => ({
     href: `/projekte/${project.slug}`,
     title: project.title,
     meta: [project.place, project.year].filter(Boolean).join(" · "),
@@ -1615,8 +1628,9 @@ export function presentTopic(
       hex: item.hex,
     }));
 
-  return {
+  const page: PresentedTopic = {
     locale,
+    taggedKitchens: tagged.length,
     ueberschrift: cms?.ueberschrift,
     lesetext: cms?.lesetext,
     eyebrow: locale === "en" ? "Kitchen" : "Küche",
@@ -1625,7 +1639,7 @@ export function presentTopic(
     lede: local.intro,
     statement: cms?.aussage || voice?.statement || local.intro,
     statementNote: cms?.hinweis || voice?.statementNote || "",
-    heroImage: resolveDevImage(topic.image, photo(0)),
+    heroImage: photo.hero(topic.image, 1800),
     heroAlt: local.name,
     indexEyebrow: voice?.indexEyebrow ?? heading.eyebrow,
     quote: cms?.zitat || voice?.quote || "",
@@ -1685,6 +1699,7 @@ export function presentTopic(
     siblingEyebrow: siblingHead.eyebrow,
     siblingTitle: siblingHead.title,
   };
+  return uniquePagePhotos(page, photo);
 }
 
 export async function topicMetadata(topic: KitchenTopic): Promise<Metadata> {

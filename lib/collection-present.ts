@@ -1,4 +1,4 @@
-import type { SitePage } from "@/lib/catalog";
+import type { Project, SitePage } from "@/lib/catalog";
 import {
   collectionHub,
   type CollectionBranch,
@@ -7,6 +7,7 @@ import {
 } from "@/lib/collection-hubs";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, isStockPhoto, resolveDevImage } from "@/lib/dev-images";
+import { kitchenPhotos } from "@/lib/kitchen-photos";
 import type { Locale } from "@/lib/i18n";
 
 export type CollectionFact = {
@@ -345,6 +346,8 @@ export function presentHub(
   locale: Locale,
   branches?: CollectionBranch[],
   page?: SitePage | null,
+  /** Real projects whose photos fill the hub (kitchen hubs); without them the old pool is used. */
+  projects: Project[] = [],
 ): PresentedHub {
   const raw = collectionHub(id, locale);
   const cms = page && (!page.contentLocale || page.contentLocale === locale) ? page : undefined;
@@ -368,7 +371,8 @@ export function presentHub(
     : raw;
   const source = branches && branches.length > 0 ? branches : copy.branches;
   const start = OFFSET[id];
-  const photo = (n: number, width?: number) => devPhoto(start + n, width);
+  const pool = (n: number, width?: number) => devPhoto(start + n, width);
+  const photo = projects.length > 0 ? kitchenPhotos(projects, projects, pool) : pool;
   const captions = lookCaptions(id, locale);
   const visit = VISIT[locale];
 

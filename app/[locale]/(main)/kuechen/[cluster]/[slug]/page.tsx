@@ -5,7 +5,6 @@ import {
   findBySlug,
   isKitchenCluster,
   KITCHEN_CLUSTERS,
-  projectsForTopic,
   topicsInCluster,
 } from "@/lib/catalog";
 import { fetchKitchenTopics, fetchProjects } from "@/lib/catalog-api";
@@ -60,22 +59,14 @@ export default async function KitchenTopicPage({
   }
 
   const inCluster = topicsInCluster(topics, topic.cluster);
-  const related = projectsForTopic(projects, topic.slug);
-  const houses =
-    related.length > 0
-      ? related
-      : projects
-          .filter((project) =>
-            project.topics.some((item) => item.cluster === cluster),
-          )
-          .slice(0, 4);
 
   return (
     <KitchenTopicView
       cluster={clusterMeta}
       topic={topic}
       topics={inCluster}
-      projects={houses}
+      // All projects: the page orders them itself (this topic, then this cluster, then the rest).
+      projects={projects}
       locale={locale}
     />
   );

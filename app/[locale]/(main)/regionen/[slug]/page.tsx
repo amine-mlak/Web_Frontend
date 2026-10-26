@@ -56,6 +56,6 @@ export default async function RegionPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <PlacePage hub={presentRegionItem(item, locale, regions, houses)} />
+    <PlacePage hub={presentRegionItem(item, locale, regions, houses, projects)} />
   );
 }

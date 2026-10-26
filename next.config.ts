@@ -48,6 +48,11 @@ const nextConfig: NextConfig = {
   experimental: {
     // The root layout sits in app/[locale], so unmatched URLs need app/global-not-found.tsx.
     globalNotFound: true,
+    // ~300 pages are prerendered from the CMS in parallel; a page occasionally fails under
+    // that load and used to fail the whole build (staging deploys too). Retry it, and ask the
+    // CMS for fewer pages at once per worker (default 8).
+    staticGenerationRetryCount: 2,
+    staticGenerationMaxConcurrency: 4,
   },
   images: {
     qualities: [75, 90],

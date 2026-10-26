@@ -49,16 +49,13 @@ export default async function KitchenClusterPage({
     fetchSitePage(cluster),
   ]);
   const inCluster = topicsInCluster(topics, cluster);
-  const slugs = new Set(inCluster.map((topic) => topic.slug));
-  const related = projects.filter((project) =>
-    project.topics.some((topic) => slugs.has(topic.slug)),
-  );
 
   return (
     <KitchenClusterView
       cluster={meta}
       topics={inCluster}
-      projects={related}
+      // All projects: the cluster page puts its own kitchens first.
+      projects={projects}
       locale={locale}
       page={page}
     />

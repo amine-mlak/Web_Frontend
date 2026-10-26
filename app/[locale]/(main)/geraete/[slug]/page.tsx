@@ -76,6 +76,6 @@ export default async function AppliancePage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <SpecPage hub={presentApplianceItem(item, locale, items, houses)} />
+    <SpecPage hub={presentApplianceItem(item, locale, items, houses, projects)} />
   );
 }

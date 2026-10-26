@@ -322,6 +322,11 @@ export const PROJECT_BODY_EXTRA: Record<string, string> = {
     "Farbe gegen hohe Fenster, Rahmen ohne Kostüm. Nachhaltigkeit ist für uns keine Mode: Lack statt Folie, Konstruktionen, die Generationen überdauern sollen.",
 };
 
+/** The old example projects whose gallery is assembled here in code (mixed kitchens). */
+export function isCodeGallery(slug: string) {
+  return slug in PROJECT_GALLERIES;
+}
+
 export function projectGalleryFor(
   slug: string,
   existing: ProjectFrame[],

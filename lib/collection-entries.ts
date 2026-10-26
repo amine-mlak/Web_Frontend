@@ -20,6 +20,7 @@ import type { CollectionFact, HubCrumb, PresentedBranch } from "@/lib/collection
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
@@ -1395,7 +1396,7 @@ function assemble(args: {
     ueberschrift: args.ueberschrift,
     lesetext: args.lesetext,
   };
-  return hub;
+  return uniquePagePhotos(hub, photo);
 }
 
 function regionVoice(name: string, locale: Locale): Voice {
@@ -1472,7 +1473,13 @@ export function presentMaterialKind(
   const parent = PARENT.material[locale];
   const voice = voiceFor(slug, locale)!;
   const start = 72 + MATERIAL_KIND_ROUTES.findIndex((item) => item.slug === slug) * 8;
-  const photo = (n: number, width?: number) => devPhoto(start + n, width);
+  const photo = kitchenPhotos(
+    meta.kind
+      ? projects.filter((project) => project.materials.some((material) => material.kind === meta.kind))
+      : projects.filter((project) => project.brands.some((brand) => brand.slug === "quooker")),
+    projects,
+    (n, width) => devPhoto(start + n, width),
+  );
   const related = meta.kind
     ? materials.filter((item) => item.kind === meta.kind)
     : [];
@@ -1560,7 +1567,11 @@ export function presentApplianceKind(
   const parent = PARENT.geraete[locale];
   const voice = voiceFor(slug, locale)!;
   const start = 118 + GERAETE_KIND_ROUTES.findIndex((item) => item.slug === slug) * 8;
-  const photo = (n: number, width?: number) => devPhoto(start + n, width);
+  const photo = kitchenPhotos(
+    projects.filter((project) => project.appliances.some((item) => item.kind === slug)),
+    projects,
+    (n, width) => devPhoto(start + n, width),
+  );
   const related = appliances.filter((item) => item.kind === slug);
   const siblings = GERAETE_KIND_ROUTES.filter((item) => item.slug !== slug).map(
     (item, index) => ({
@@ -1610,12 +1621,16 @@ export function presentMaterialItem(
   locale: Locale,
   materials: Material[],
   projects: Project[],
+  all: Project[] = projects,
 ): PresentedTopic {
   const parent = PARENT.material[locale];
   const kindRoute = MATERIAL_KIND_ROUTES.find((entry) => entry.kind === item.kind);
   const voice = voiceFor(item.slug, locale)!;
-  const photo = (n: number, width?: number) =>
-    devPhoto(100 + item.order + n, width);
+  const photo = kitchenPhotos(
+    all.filter((project) => project.materials.some((material) => material.slug === item.slug)),
+    all,
+    (n, width) => devPhoto(100 + item.order + n, width),
+  );
   const siblings = materials
     .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
     .map((entry, index) => ({
@@ -1663,12 +1678,16 @@ export function presentApplianceItem(
   locale: Locale,
   appliances: Appliance[],
   projects: Project[],
+  all: Project[] = projects,
 ): PresentedTopic {
   const parent = PARENT.geraete[locale];
   const kindRoute = GERAETE_KIND_ROUTES.find((entry) => entry.slug === item.kind);
   const voice = voiceFor(item.slug, locale)!;
-  const photo = (n: number, width?: number) =>
-    devPhoto(140 + item.order + n, width);
+  const photo = kitchenPhotos(
+    all.filter((project) => project.appliances.some((entry) => entry.slug === item.slug)),
+    all,
+    (n, width) => devPhoto(140 + item.order + n, width),
+  );
   const siblings = appliances
     .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
     .map((entry, index) => ({
@@ -1757,11 +1776,15 @@ export function presentBrandItem(
   locale: Locale,
   brands: Brand[],
   projects: Project[],
+  all: Project[] = projects,
 ): PresentedTopic {
   const parent = PARENT.marken[locale];
   const voice = voiceFor(item.slug, locale)!;
-  const photo = (n: number, width?: number) =>
-    devPhoto(186 + item.order + n, width);
+  const photo = kitchenPhotos(
+    all.filter((project) => project.brands.some((brand) => brand.slug === item.slug)),
+    all,
+    (n, width) => devPhoto(186 + item.order + n, width),
+  );
   const siblings = brands
     .filter((entry) => entry.slug !== item.slug)
     .map((entry, index) => ({
@@ -1802,11 +1825,15 @@ export function presentRegionItem(
   locale: Locale,
   regions: Region[],
   projects: Project[],
+  all: Project[] = projects,
 ): PresentedTopic {
   const parent = PARENT.regionen[locale];
   const voice = regionVoice(item.name, locale);
-  const photo = (n: number, width?: number) =>
-    devPhoto(204 + item.order + n, width);
+  const photo = kitchenPhotos(
+    all.filter((project) => project.regions.some((region) => region.slug === item.slug)),
+    all,
+    (n, width) => devPhoto(204 + item.order + n, width),
+  );
   const siblings = regions
     .filter((entry) => entry.slug !== item.slug)
     .slice(0, 4)
@@ -1814,14 +1841,18 @@ export function presentRegionItem(
       href: `/regionen/${entry.slug}`,
       title: entry.name,
       text: entry.intro,
-      image: resolveDevImage(entry.image, photo(70 + index, 1100)),
+      // A real kitchen in that place, else the region's own image.
+      image: resolveDevImage(
+        coverOf(all, (project) => project.regions.some((region) => region.slug === entry.slug)) ?? entry.image,
+        photo(70 + index, 1100),
+      ),
     }));
 
   return assemble({
     locale,
     voice,
     lede: item.intro,
-    heroImage: cmsLarge(resolveDevImage(item.image, photo(0, 3840)), 3840),
+    heroImage: cmsLarge(photo.hero(item.image, 3840), 3840),
     heroAlt:
       locale === "en" ? `Kitchens in ${item.name}` : `Küchen in ${item.name}`,
     parentHref: parent.href,

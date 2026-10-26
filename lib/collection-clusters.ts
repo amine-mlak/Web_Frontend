@@ -15,6 +15,7 @@ import {
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
@@ -715,7 +716,11 @@ export function presentCluster(
   const parent = PARENT[locale];
   const visit = VISIT[locale];
   const start = OFFSET[slug];
-  const photo = (n: number, width?: number) => devPhoto(start + n, width);
+  // Real kitchens tagged with a topic of this cluster first, then the other projects.
+  const clusterTopics = new Set(topics.map((topic) => topic.slug));
+  const tagged = projects.filter((project) => project.topics.some((topic) => clusterTopics.has(topic.slug)));
+  const kitchens = [...tagged, ...projects.filter((project) => !tagged.includes(project))];
+  const photo = kitchenPhotos(tagged, projects, (n, width) => devPhoto(start + n, width));
 
   const branches: PresentedBranch[] = topics.map((topic, index) => {
     const local = topicCopy(topic, locale);
@@ -736,7 +741,7 @@ export function presentCluster(
 
   const filmCaptions = copy.film;
   const lookCaptions = copy.looks;
-  const houses = projects.slice(0, 4).map((project, index) => ({
+  const houses = kitchens.slice(0, 4).map((project, index) => ({
     href: `/projekte/${project.slug}`,
     title: project.title,
     meta: [project.place, project.year].filter(Boolean).join(" · "),
@@ -757,7 +762,7 @@ export function presentCluster(
   const closeImage =
     [3, 20, 21, 22, 23, 24].map((slot) => photo(slot, 2560)).find((src) => !shown.has(photoKey(src))) ?? photo(3, 2560);
 
-  return {
+  const presented: PresentedCluster = {
     locale,
     eyebrow: copy.eyebrow,
     title: copy.title,
@@ -765,7 +770,7 @@ export function presentCluster(
     lede: copy.lede,
     statement: copy.statement,
     statementNote: copy.statementNote,
-    heroImage: cmsLarge(resolveDevImage(topics[0]?.image, photo(0, 3840)), 3840),
+    heroImage: cmsLarge(photo.hero(topics[0]?.image, 3840), 3840),
     heroAlt: topics[0] ? topicCopy(topics[0], locale).name : copy.title,
     indexEyebrow: copy.indexEyebrow,
     quote: copy.quote,
@@ -810,7 +815,9 @@ export function presentCluster(
         href: `/kuechen/${item.slug}`,
         title: COPY[locale][item.slug].title,
         text: SIBLING_TEXT[locale][item.slug],
-        image: photo(70 + index, 1100),
+        image:
+          coverOf(projects, (project) => project.topics.some((topic) => topic.cluster === item.slug)) ??
+          photo(70 + index, 1100),
       }),
     ),
     houses,
@@ -822,6 +829,7 @@ export function presentCluster(
         hex: topic.hex,
       })),
   };
+  return uniquePagePhotos(presented, photo);
 }
 
 export function clusterLookTitle(slug: KitchenClusterSlug, locale: Locale) {

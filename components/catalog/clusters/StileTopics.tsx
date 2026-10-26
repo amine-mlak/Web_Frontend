@@ -42,8 +42,10 @@ const PLATES: Record<string, readonly [string, string, string]> = {
   ],
 };
 
+/** Photos of a kitchen tagged with this style when there is one; the fixed plates only without. */
 function platesFor(slug: string, hub: PresentedTopic) {
-  return PLATES[slug] ?? [hub.heroImage, hub.statementImage, hub.statementImageB];
+  const kitchen = [hub.heroImage, hub.statementImage, hub.statementImageB] as const;
+  return (hub.taggedKitchens ?? 0) > 0 ? kitchen : (PLATES[slug] ?? kitchen);
 }
 
 function OtherStances({ hub }: { hub: PresentedTopic }) {
