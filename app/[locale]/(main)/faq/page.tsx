@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import FaqHub from "@/components/FaqHub";
+import { getRequestLocale } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
 
@@ -15,6 +16,7 @@ export function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FaqPage() {
+  const locale = await getRequestLocale();
   const { themes, items } = await fetchFaqHub();
-  return <FaqHub themes={themes} items={items} />;
+  return <FaqHub themes={themes} items={items} locale={locale} />;
 }

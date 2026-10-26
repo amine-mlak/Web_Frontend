@@ -217,6 +217,7 @@ export type SitePage = {
   ctaLabel: string;
   ctaUrl: string;
   faq: FaqContent | null;
+  updatedAt?: string;
 } & CmsPageFields;
 
 export const KITCHEN_CLUSTERS: KitchenCluster[] = catalog.clusters.map(

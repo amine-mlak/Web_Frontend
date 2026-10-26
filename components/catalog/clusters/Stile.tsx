@@ -8,6 +8,7 @@ import {
 } from "@/components/catalog/clusters/parts";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch } from "@/lib/collection-present";
+import { photoKey } from "@/lib/utils";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Houses with a stance" : "Häuser mit Haltung";
@@ -53,6 +54,9 @@ function Plate({
 
 export function StileCluster({ hub }: { hub: PresentedCluster }) {
   const [first, second, ...rest] = hub.branches;
+  // The first plate already shows the first style; the hero does not repeat it.
+  const hero =
+    first?.image && photoKey(first.image) === photoKey(hub.heroImage) ? hub.statementImage : hub.heroImage;
 
   return (
     <main className="bg-paper">
@@ -62,7 +66,7 @@ export function StileCluster({ hub }: { hub: PresentedCluster }) {
         aria-labelledby="stile-hero"
       >
         <Frame
-          src={hub.heroImage}
+          src={hero}
           alt={hub.heroAlt}
           className="absolute inset-0"
           priority

@@ -13,6 +13,7 @@ import HouseBanner from "@/components/catalog/house/HouseBanner";
 import HouseBody from "@/components/catalog/house/HouseBody";
 import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
+import LegalPage from "@/components/catalog/house/LegalPage";
 import {
   HOUSE_COMPOSITION,
   houseParagraphs,
@@ -46,16 +47,7 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
   const paragraphs = houseParagraphs(house.body);
 
   if (house.kind === "legal" || house.layout === "legal") {
-    return (
-      <main className="bg-paper">
-        <header className="mx-auto max-w-3xl px-6 pt-28 pb-4 md:pt-32">
-          <p className="type-eyebrow">{house.eyebrow || "BEER"}</p>
-          <h1 className="type-h1 mt-3 text-ink">{house.title}</h1>
-          {house.lede ? <p className="type-intro mt-8">{house.lede}</p> : null}
-        </header>
-        <HouseBody paragraphs={paragraphs} />
-      </main>
-    );
+    return <LegalPage house={house} />;
   }
 
   const block: Record<HouseBlock, ReactNode> = {

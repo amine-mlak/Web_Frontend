@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FaqHub from "@/components/FaqHub";
 import { filterFaqItems } from "@/lib/faq";
+import { getRequestLocale } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
 
@@ -43,6 +44,7 @@ export default async function FaqThemePage({
   params: Promise<{ thema: string }>;
 }) {
   const { thema } = await params;
+  const locale = await getRequestLocale();
   const { themes, items } = await fetchFaqHub();
   const activeTheme = themes.find((theme) => theme.slug === thema);
 
@@ -55,6 +57,7 @@ export default async function FaqThemePage({
       themes={themes}
       items={filterFaqItems(items, activeTheme.slug)}
       activeTheme={activeTheme}
+      locale={locale}
     />
   );
 }

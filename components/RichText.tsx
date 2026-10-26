@@ -3,8 +3,9 @@ import LocaleLink from "@/components/LocaleLink";
 import { cn } from "@/lib/utils";
 
 /**
- * Renders the Markdown of a Strapi "richtext" field as React elements (no
- * raw HTML): headings (## / ###), paragraphs, bullet and numbered lists,
+ * Renders the Markdown of a Strapi "richtext" or long "text" field as React
+ * elements (no raw HTML): headings (## / ###), paragraphs (a single newline
+ * is a line break), bullet and numbered lists,
  * block quotes, **bold**, *italic* and [links](/pfad). Anything else stays
  * plain text, so an editor cannot break the page.
  */
@@ -21,7 +22,8 @@ function parse(source: string): Block[] {
   let paragraph: string[] = [];
   const flush = () => {
     if (paragraph.length > 0) {
-      blocks.push({ type: "paragraph", text: paragraph.join(" ") });
+      // A single newline is a line break (addresses, register entries), as editors type it.
+      blocks.push({ type: "paragraph", text: paragraph.join("\n") });
       paragraph = [];
     }
   };
@@ -64,6 +66,30 @@ function parse(source: string): Block[] {
   return blocks;
 }
 
+/** The plain words of a heading, without Markdown marks. */
+function plain(text: string) {
+  return text.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\*\*|\*|_/g, "").trim();
+}
+
+/** A stable anchor for a heading: "4. Vertragspreise & Änderungen" → "4-vertragspreise-aenderungen". */
+function anchor(text: string) {
+  return plain(text)
+    .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/** The h2 headings of a text, for a table of contents that links to RichText's anchors. */
+export function richTextHeadings(source: string) {
+  return parse(source).flatMap((block) =>
+    block.type === "heading" && block.level === 2 ? [{ id: anchor(block.text), label: plain(block.text) }] : [],
+  );
+}
+
 const INLINE = /\*\*(.+?)\*\*|\*(.+?)\*|_(.+?)_|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
 function inline(text: string): ReactNode[] {
@@ -102,21 +128,41 @@ function inline(text: string): ReactNode[] {
   return nodes;
 }
 
-export default function RichText({ source, className }: { source: string; className?: string }) {
+export default function RichText({
+  source,
+  className,
+  anchors = false,
+}: {
+  source: string;
+  className?: string;
+  /** Give h2 headings ids (see richTextHeadings) and leave room under the sticky header. */
+  anchors?: boolean;
+}) {
   const blocks = parse(source);
   return (
     <div className={cn("space-y-6", className)}>
       {blocks.map((block, index) => (
         <Fragment key={index}>
           {block.type === "heading" && block.level === 2 ? (
-            <h2 className="pt-6 font-serif text-[28px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[34px]">
+            <h2
+              id={anchors ? anchor(block.text) : undefined}
+              className="scroll-mt-32 pt-6 font-serif text-[28px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[34px]">
               {inline(block.text)}
             </h2>
           ) : null}
           {block.type === "heading" && block.level === 3 ? (
             <h3 className="pt-2 font-serif text-[22px] leading-snug font-medium text-ink md:text-[26px]">{inline(block.text)}</h3>
           ) : null}
-          {block.type === "paragraph" ? <p className="type-body">{inline(block.text)}</p> : null}
+          {block.type === "paragraph" ? (
+            <p className="type-body">
+              {block.text.split("\n").map((line, lineIndex) => (
+                <Fragment key={lineIndex}>
+                  {lineIndex > 0 ? <br /> : null}
+                  {inline(line)}
+                </Fragment>
+              ))}
+            </p>
+          ) : null}
           {block.type === "list" ? (
             block.ordered ? (
               <ol className="type-body list-decimal space-y-2 pl-6 marker:text-gold">

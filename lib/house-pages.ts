@@ -15,6 +15,7 @@ import {
 } from "@/lib/house-photos";
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
+import { photoKey } from "@/lib/utils";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import type { FaqContent } from "@/lib/strapi";
 
@@ -31,6 +32,8 @@ export type PresentedHouse = PresentedHub & {
   faq: FaqContent | null;
   gallery: HouseShot[];
   people: HousePerson[];
+  /** Last change in the CMS ("Stand" on legal pages). */
+  updatedAt?: string;
 };
 
 type Voice = {
@@ -498,11 +501,6 @@ export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   letter: ["title", "body", "form"],
 };
 
-/** The file name, so one photo matches at any size. */
-function photoKey(src: string) {
-  return src.split("?")[0].split("/").pop() ?? src;
-}
-
 /** Photos each chapter spread shows, by its variant (see ChapterSpread: variant 2 has three, variant 4 two). */
 function spreadPhotoCount(index: number) {
   const variant = index % 5;
@@ -640,6 +638,7 @@ function asHouse(
     showLead: Boolean(voice.showLead),
     siblings: companySiblings(locale, slug),
     faq: page?.faq ?? null,
+    updatedAt: page?.updatedAt,
     gallery,
     people: media?.people ?? [],
     branches: remapBranches(hub, chapters),

@@ -3,8 +3,10 @@ import {
   HouseLine,
   QuoteLine,
   RuledPoints,
+  SiblingCards,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
+import { Frame } from "@/components/catalog/collections/parts";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import { entryReading } from "@/lib/entry-reading";
 import type { PresentedTopic } from "@/lib/collection-topics";
@@ -39,6 +41,18 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         </dl>
       </header>
 
+      {hub.heroImage ? (
+        <figure className="mt-12">
+          <Frame
+            src={hub.heroImage}
+            alt={hub.heroAlt}
+            className="aspect-[2/1] w-full lg:aspect-[21/9]"
+            priority
+            sizes="100vw"
+          />
+        </figure>
+      ) : null}
+
       <HouseLine houses={hub.houses} title={houses} />
 
       <section className="mx-auto grid max-w-[90rem] gap-12 border-t border-line px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
@@ -52,6 +66,7 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
 
       <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
+      <SiblingCards siblings={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
       <SoftClose hub={hub} />
     </main>
   );

@@ -13,9 +13,30 @@ import { presentHub } from "@/lib/collection-present";
 import { fetchSitePage } from "@/lib/catalog-api";
 import { hubPageSlug } from "@/lib/collection-hubs";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import type { PresentedHub } from "@/lib/collection-present";
 import type { Locale } from "@/lib/i18n";
+import { photoKey } from "@/lib/utils";
 
 export type { CollectionExtra };
+
+/**
+ * A branch card never shows the hero photo again: it takes one of its own
+ * spare photos (imageB, imageC) that no other card shows.
+ */
+function withDistinctHero(hub: PresentedHub): PresentedHub {
+  const hero = photoKey(hub.heroImage);
+  const shown = new Set([hero, ...hub.branches.map((branch) => photoKey(branch.image))]);
+  return {
+    ...hub,
+    branches: hub.branches.map((branch) => {
+      if (photoKey(branch.image) !== hero) return branch;
+      const spare = [branch.imageB, branch.imageC].find((src) => src && !shown.has(photoKey(src)));
+      if (!spare) return branch;
+      shown.add(photoKey(spare));
+      return { ...branch, image: spare, srcSet: undefined };
+    }),
+  };
+}
 
 export default async function CollectionHub({
   id,
@@ -33,7 +54,7 @@ export default async function CollectionHub({
   children?: ReactNode;
 }) {
   const page = await fetchSitePage(hubPageSlug(id));
-  const hub = presentHub(id, locale, branches, page);
+  const hub = withDistinctHero(presentHub(id, locale, branches, page));
   const resolvedExtras = extras?.map((item, index) => ({
     ...item,
     image: resolveDevImage(item.image, devPhoto(40 + index, 1920)),

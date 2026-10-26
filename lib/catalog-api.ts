@@ -376,6 +376,7 @@ async function mapPage(entry: unknown): Promise<SitePage | null> {
     srcSet: image.srcSet,
     ctaLabel: text(row, "ctaLabel"),
     ctaUrl: text(row, "ctaUrl"),
+    updatedAt: text(row, "updatedAt") || undefined,
     ...pageFields(row),
     faq: await resolveFaqBlock(row.faq),
   };

@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import type { Project } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
+import { photoKey } from "@/lib/utils";
 
 const COPY = {
   de: {
@@ -39,11 +40,6 @@ const COPY = {
     cta: "Plan something similar",
   },
 } as const;
-
-/** The file name, so the same photo matches at any size or host. */
-function photoKey(src: string) {
-  return src.split("?")[0].split("/").pop() ?? src;
-}
 
 function paragraphs(body: string) {
   return body

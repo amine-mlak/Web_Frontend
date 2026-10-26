@@ -3,10 +3,11 @@ import FaqJsonLd from "@/components/FaqJsonLd";
 import LocaleLink from "@/components/LocaleLink";
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
 import { Frame } from "@/components/catalog/collections/parts";
-import { Crumbs, HouseLine } from "@/components/catalog/clusters/parts";
+import { Crumbs, HouseLine, SiblingCards } from "@/components/catalog/clusters/parts";
 import { filterFaqItems } from "@/lib/faq";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { fetchFaqHub } from "@/lib/strapi";
+import { photoKey } from "@/lib/utils";
 
 /**
  * A category page such as /material/arbeitsplatten or /geraete/backen:
@@ -60,6 +61,21 @@ export default async function CategoryPage({
     (branch): branch is typeof branch & { href: string } => Boolean(branch.title && branch.href),
   );
 
+  // Every option card shows its own photo, so the hero and the sibling cards take photos nobody else shows.
+  const shown = new Set(
+    [...options.map((option) => option.image), ...hub.houses.map((house) => house.image), hub.facts.length > 0 ? hub.ledgerImage : ""]
+      .filter(Boolean)
+      .map((src) => photoKey(src)),
+  );
+  const spare = [hub.heroImage, hub.closeImage, hub.statementImage, hub.statementImageB, hub.visitImage].filter(Boolean);
+  const take = (fallback: string) => {
+    const found = [fallback, ...spare].find((src) => !shown.has(photoKey(src))) ?? fallback;
+    shown.add(photoKey(found));
+    return found;
+  };
+  const heroImage = take(hub.heroImage);
+  const siblings = hub.siblings.map((sibling) => ({ ...sibling, image: take(sibling.image) }));
+
   return (
     <main className="bg-paper">
       <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
@@ -84,7 +100,7 @@ export default async function CategoryPage({
 
       <figure className="mt-10">
         <Frame
-          src={hub.heroImage}
+          src={heroImage}
           alt={hub.heroAlt}
           className="aspect-[2/1] w-full lg:aspect-[21/9]"
           imgClassName="object-[center_35%]"
@@ -180,31 +196,7 @@ export default async function CategoryPage({
         </div>
       </section>
 
-      {hub.siblings.length > 0 ? (
-        <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="category-siblings">
-          <p className="type-eyebrow text-gold">{hub.siblingEyebrow}</p>
-          <h2 id="category-siblings" className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[40px]">
-            {hub.siblingTitle}
-          </h2>
-          <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {hub.siblings.map((sibling) => (
-              <li key={sibling.href}>
-                <LocaleLink href={sibling.href} className="group block">
-                  <Frame
-                    src={sibling.image}
-                    alt=""
-                    className="aspect-[4/5]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <span className="mt-4 block font-serif text-[22px] leading-snug font-medium text-ink">{sibling.title}</span>
-                  {sibling.text ? <span className="mt-1 block font-sans text-[14px] leading-relaxed text-muted">{sibling.text}</span> : null}
-                </LocaleLink>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <SiblingCards siblings={siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
     </main>
   );
 }

@@ -1,3 +1,4 @@
+import { photoKey } from "@/lib/utils";
 import type { Metadata } from "next";
 import {
   KITCHEN_CLUSTERS,
@@ -735,6 +736,26 @@ export function presentCluster(
 
   const filmCaptions = copy.film;
   const lookCaptions = copy.looks;
+  const houses = projects.slice(0, 4).map((project, index) => ({
+    href: `/projekte/${project.slug}`,
+    title: project.title,
+    meta: [project.place, project.year].filter(Boolean).join(" · "),
+    image: resolveDevImage(project.image, photo(80 + index, 1200)),
+  }));
+  // The closing photo is none of the others on the page (houses, film, looks, chapters, hero).
+  const shown = new Set(
+    [
+      topics[0]?.image ?? "",
+      ...houses.map((house) => house.image),
+      ...branches.flatMap((branch) => [branch.image, branch.imageB, branch.imageC]),
+      ...[1, 2, 6, 7, 8, 9].map((slot) => photo(slot, 1920)),
+      ...lookCaptions.map((_, slot) => photo(10 + slot, 1600)),
+    ]
+      .filter(Boolean)
+      .map((src) => photoKey(src)),
+  );
+  const closeImage =
+    [3, 20, 21, 22, 23, 24].map((slot) => photo(slot, 2560)).find((src) => !shown.has(photoKey(src))) ?? photo(3, 2560);
 
   return {
     locale,
@@ -757,7 +778,7 @@ export function presentCluster(
     parentLabel: parent.label,
     statementImage: photo(1, 2560),
     statementImageB: photo(2, 1920),
-    closeImage: photo(3, 2560),
+    closeImage,
     ledgerImage: photo(4, 1920),
     visitImage: photo(5, 1920),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
@@ -792,12 +813,7 @@ export function presentCluster(
         image: photo(70 + index, 1100),
       }),
     ),
-    houses: projects.slice(0, 4).map((project, index) => ({
-      href: `/projekte/${project.slug}`,
-      title: project.title,
-      meta: [project.place, project.year].filter(Boolean).join(" · "),
-      image: resolveDevImage(project.image, photo(80 + index, 1200)),
-    })),
+    houses,
     swatches: topics
       .filter((topic) => topic.hex)
       .map((topic) => ({

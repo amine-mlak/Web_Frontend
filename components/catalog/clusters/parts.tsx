@@ -292,3 +292,46 @@ export function SoftClose({ hub }: { hub: PresentedHub }) {
     </section>
   );
 }
+
+/** Neighbouring pages as photo cards (other places, other categories). */
+export function SiblingCards({
+  siblings,
+  eyebrow,
+  title,
+}: {
+  siblings: ClusterSibling[];
+  eyebrow?: string;
+  title?: string;
+}) {
+  const id = useId();
+  if (siblings.length === 0) {
+    return null;
+  }
+  return (
+    <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby={title ? id : undefined}>
+      {eyebrow ? <p className="type-eyebrow text-gold">{eyebrow}</p> : null}
+      {title ? (
+        <h2 id={id} className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[40px]">
+          {title}
+        </h2>
+      ) : null}
+      <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {siblings.map((sibling) => (
+          <li key={sibling.href}>
+            <LocaleLink href={sibling.href} className="group block">
+              <Frame
+                src={sibling.image}
+                alt=""
+                className="aspect-[4/5]"
+                imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              />
+              <span className="mt-4 block font-serif text-[22px] leading-snug font-medium text-ink">{sibling.title}</span>
+              {sibling.text ? <span className="mt-1 block font-sans text-[14px] leading-relaxed text-muted">{sibling.text}</span> : null}
+            </LocaleLink>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
