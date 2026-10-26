@@ -383,16 +383,39 @@ async function mapPage(entry: unknown): Promise<SitePage | null> {
   };
 }
 
+// Next.js only caches fetch responses up to 2 MB; a bigger response is fetched again on
+// every request and the cache keeps serving an old copy. Collections with heavy media
+// (projects with galleries) are therefore loaded page by page.
+async function loadPages(
+  path: string,
+  query: Record<string, string>,
+  pageSize: number,
+): Promise<unknown[]> {
+  const page = (n: number) =>
+    strapiGet<{ data?: unknown; meta?: { pagination?: { pageCount?: number } } }>(path, {
+      ...query,
+      "pagination[page]": String(n),
+      "pagination[pageSize]": String(pageSize),
+    });
+  const first = await page(1);
+  const pageCount = first?.meta?.pagination?.pageCount ?? 1;
+  const rest = await Promise.all(
+    Array.from({ length: Math.max(0, pageCount - 1) }, (_, i) => page(i + 2)),
+  );
+  return [first, ...rest].flatMap((payload) => flattenCollection(payload?.data));
+}
+
 async function loadMapped<T>(
   path: string,
   query: Record<string, string>,
   map: (entry: unknown) => T | null | Promise<T | null>,
   fallback: T[],
+  pageSize?: number,
 ): Promise<T[]> {
-  const payload = await strapiGet<{ data?: unknown }>(path, query);
-  const mapped = await Promise.all(
-    flattenCollection(payload?.data).map((entry) => map(entry)),
-  );
+  const entries = pageSize
+    ? await loadPages(path, query, pageSize)
+    : flattenCollection((await strapiGet<{ data?: unknown }>(path, query))?.data);
+  const mapped = await Promise.all(entries.map((entry) => map(entry)));
   const items: T[] = [];
   for (const item of mapped) {
     if (item) {
@@ -403,8 +426,9 @@ async function loadMapped<T>(
 }
 
 const PROJECT_POPULATE = {
-  sort: "year:desc",
-  "pagination[pageSize]": "100",
+  // Second key keeps the order stable across pages when years are equal or empty.
+  "sort[0]": "year:desc",
+  "sort[1]": "id:asc",
   "populate[image]": "true",
   "populate[gallery]": "true",
   "populate[specs]": "true",
@@ -443,6 +467,7 @@ export async function fetchProjects() {
     PROJECT_POPULATE,
     mapProject,
     FALLBACK_PROJECTS,
+    20,
   );
 }
 
