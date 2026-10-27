@@ -16,23 +16,52 @@ const OPTIONS: { id: Design; label: string; name?: string }[] = [
   { id: "b", label: "B", name: "Editorial" },
 ];
 
-function subscribe(onChange: () => void) {
-  window.addEventListener(EVENT, onChange);
-  return () => window.removeEventListener(EVENT, onChange);
-}
+const isDesign = (value: string | null | undefined): value is Design =>
+  value === "aktuell" || value === "a" || value === "b";
+
+// The choice lives here and in storage, not only on <html>: when React mounts the page
+// fresh it clears every attribute on <html>, which wiped the one set by the head script.
+let chosen: Design | null = null;
 
 function current(): Design {
-  const design = document.documentElement.dataset.design;
-  return design === "a" || design === "b" ? design : "aktuell";
+  if (chosen === null) {
+    const fromLink = new URLSearchParams(location.search).get("design");
+    let fromStorage: string | null = null;
+    try {
+      fromStorage = localStorage.getItem(KEY);
+    } catch {
+      // Private windows may refuse storage.
+    }
+    chosen = isDesign(fromLink) ? fromLink : isDesign(fromStorage) ? fromStorage : "aktuell";
+  }
+  return chosen;
+}
+
+/** Puts the choice on <html>, and back again whenever something removes it. */
+function apply() {
+  const root = document.documentElement;
+  const design = current();
+  if (design === "aktuell") {
+    if (root.dataset.design) delete root.dataset.design;
+  } else if (root.dataset.design !== design) {
+    root.dataset.design = design;
+  }
+}
+
+function subscribe(onChange: () => void) {
+  apply();
+  const observer = new MutationObserver(apply);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-design"] });
+  window.addEventListener(EVENT, onChange);
+  return () => {
+    observer.disconnect();
+    window.removeEventListener(EVENT, onChange);
+  };
 }
 
 function choose(design: Design) {
-  const root = document.documentElement;
-  if (design === "aktuell") {
-    delete root.dataset.design;
-  } else {
-    root.dataset.design = design;
-  }
+  chosen = design;
+  apply();
   try {
     if (design === "aktuell") {
       localStorage.removeItem(KEY);
