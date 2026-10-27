@@ -2,6 +2,7 @@ import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
+import type { Locale } from "@/lib/i18n";
 import type { KachelTile, KachelnContent } from "@/lib/strapi";
 
 const fallback: KachelnContent = {
@@ -11,7 +12,7 @@ const fallback: KachelnContent = {
     {
       title: "Wenn Kochen und Wohnen zusammenrücken",
       text: "Eine Insel als Mittelpunkt – zum Kochen, Arbeiten, Reden. Für alle, die selten allein in der Küche stehen.",
-      buttonLabel: "Diese Idee merken",
+      buttonLabel: "Weiße Küchen ansehen",
       href: "/kuechen/farben/weiss",
       image: "/kitchens/stile-holz.jpg",
       alt: "Helle Küche mit Insel und Wohnraum",
@@ -20,7 +21,7 @@ const fallback: KachelnContent = {
     {
       title: "Alles da, nichts zu sehen",
       text: "Hinter einer ruhigen Front verschwindet die ganze Technik – und eine begehrte Speisekammer. Für Ordnungsliebende.",
-      buttonLabel: "Diese Idee merken",
+      buttonLabel: "Schwarze Küchen ansehen",
       href: "/kuechen/farben/schwarz",
       image: "/kitchens/stile-design.jpg",
       alt: "Dunkle Küche mit verdeckter Technik",
@@ -29,7 +30,7 @@ const fallback: KachelnContent = {
     {
       title: "Charakter statt Katalog",
       text: "Altes Holz, schwarzer Stein, offene Regale: eine Küche, die nach zehn Jahren besser aussieht als am ersten Tag.",
-      buttonLabel: "Diese Idee merken",
+      buttonLabel: "Salbeigrüne Küchen ansehen",
       href: "/kuechen/farben/salbei",
       image: "/kitchens/stile-landhaus.jpg",
       alt: "Küche mit Holz, Stein und offenen Regalen",
@@ -45,17 +46,17 @@ const fallbackCopy: Record<
   weiss: {
     title: "Wenn Kochen und Wohnen zusammenrücken",
     text: "Eine Insel als Mittelpunkt – zum Kochen, Arbeiten, Reden. Für alle, die selten allein in der Küche stehen.",
-    buttonLabel: "Diese Idee merken",
+    buttonLabel: "Weiße Küchen ansehen",
   },
   schwarz: {
     title: "Alles da, nichts zu sehen",
     text: "Hinter einer ruhigen Front verschwindet die ganze Technik – und eine begehrte Speisekammer. Für Ordnungsliebende.",
-    buttonLabel: "Diese Idee merken",
+    buttonLabel: "Schwarze Küchen ansehen",
   },
   salbei: {
     title: "Charakter statt Katalog",
     text: "Altes Holz, schwarzer Stein, offene Regale: eine Küche, die nach zehn Jahren besser aussieht als am ersten Tag.",
-    buttonLabel: "Diese Idee merken",
+    buttonLabel: "Salbeigrüne Küchen ansehen",
   },
 };
 
@@ -74,10 +75,24 @@ const catalogTitles = new Set([
   "Black kitchens",
 ]);
 
+/** The link names the page it opens; "Diese Idee merken" saved nothing, so it counts as empty. */
+const LINK_LABEL: Record<Locale, Record<string, string>> = {
+  de: { weiss: "Weiße Küchen ansehen", schwarz: "Schwarze Küchen ansehen", salbei: "Salbeigrüne Küchen ansehen" },
+  en: { weiss: "View white kitchens", schwarz: "View black kitchens", salbei: "View sage kitchens" },
+};
+const GENERIC_LABEL: Record<Locale, string> = { de: "Ansehen", en: "View" };
+const EMPTY_LABELS = new Set(["diese idee merken", "save this idea"]);
+
+function linkLabel(tile: KachelTile, slug: string | undefined, locale: Locale) {
+  const own = tile.buttonLabel?.trim() || "";
+  if (own && !EMPTY_LABELS.has(own.toLowerCase())) return own;
+  return (slug && LINK_LABEL[locale][slug]) || GENERIC_LABEL[locale];
+}
+
 function presentTile(
   tile: KachelTile,
-  preset?: { title: string; text: string; buttonLabel: string },
-  saveIdea?: string,
+  preset: { title: string; text: string; buttonLabel: string } | undefined,
+  label: string,
 ): KachelTile {
   const usePresetTitle = Boolean(
     preset && (!tile.title || catalogTitles.has(tile.title)),
@@ -87,11 +102,7 @@ function presentTile(
     ...tile,
     title: usePresetTitle && preset ? preset.title : tile.title,
     text: tile.text?.trim() || preset?.text || "",
-    buttonLabel:
-      tile.buttonLabel?.trim() ||
-      preset?.buttonLabel ||
-      saveIdea ||
-      "Diese Idee merken",
+    buttonLabel: label,
   };
 }
 
@@ -128,14 +139,13 @@ function copyFor(tile: KachelTile) {
   return {
     title: tile.title,
     text: tile.text?.trim() || "",
-    buttonLabel: tile.buttonLabel?.trim() || "Diese Idee merken",
+    buttonLabel: tile.buttonLabel?.trim() || "",
   };
 }
 
 function TileCard({ tile }: { tile: KachelTile }) {
-  // The tile colour from the CMS no longer fills the text half (coloured blocks read as a template).
-  const light = true;
-  void isLightColor;
+  // The text half takes the tile colour from the CMS; text turns light on dark colours.
+  const light = isLightColor(tile.color);
   const { title, text, buttonLabel } = copyFor(tile);
 
   return (
@@ -154,6 +164,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
         </div>
         <div
           className="flex flex-col items-start justify-center px-8 py-12 sm:px-12 lg:px-16"
+          style={{ backgroundColor: tile.color }}
         >
           <h3
             className={`max-w-md font-serif text-[28px] leading-[1.18] font-medium tracking-[-0.02em] md:text-[32px] lg:text-[34px] ${
@@ -174,7 +185,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           <LocaleLink
             href={tile.href}
             aria-label={`${buttonLabel}: ${title}`}
-            className="btn-quiet mt-8 text-ink"
+            className={`btn-quiet mt-8 ${light ? "text-ink" : "text-paper"}`}
           >
             {buttonLabel}
           </LocaleLink>
@@ -198,7 +209,7 @@ export default async function Kacheln({
       return presentTile(
         tile,
         slug ? fallbackCopy[slug] : undefined,
-        copy.saveIdea,
+        linkLabel(tile, slug, locale),
       );
     }),
   );

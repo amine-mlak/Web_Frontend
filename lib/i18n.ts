@@ -31,7 +31,6 @@ export const chromeCopy: Record<
     instagramFollow: string;
     instagramMore: string;
     instagramOpen: string;
-    saveIdea: string;
     discover: string;
   }
 > = {
@@ -48,7 +47,6 @@ export const chromeCopy: Record<
     instagramFollow: "Folgen",
     instagramMore: "Mehr auf\nInstagram",
     instagramOpen: "auf Instagram öffnen",
-    saveIdea: "Diese Idee merken",
     discover: "Küchenwelten entdecken",
   },
   en: {
@@ -64,7 +62,6 @@ export const chromeCopy: Record<
     instagramFollow: "Follow",
     instagramMore: "More on\nInstagram",
     instagramOpen: "Open on Instagram",
-    saveIdea: "Save this idea",
     discover: "Discover kitchen worlds",
   },
 };
