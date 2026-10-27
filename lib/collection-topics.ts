@@ -23,7 +23,7 @@ import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { topicReading } from "@/lib/topic-reading";
-import { photoKey } from "@/lib/utils";
+import { projectFeature, type ProjectFeatureData } from "@/lib/project-features";
 
 export type PresentedTopic = PresentedCluster & {
   lookTitle: string;
@@ -38,26 +38,7 @@ export type PresentedTopic = PresentedCluster & {
   features?: TopicFeature[];
 };
 
-export type TopicFeature = {
-  href: string;
-  title: string;
-  meta: string;
-  intro: string;
-  image: string;
-  srcSet?: string;
-  detail?: { src: string; srcSet?: string; alt: string };
-  /** The pages this kitchen connects to: its region, materials, brands, appliances. */
-  links: { href: string; label: string }[];
-};
-
-/** The project text up to about 320 characters, ending at a sentence. */
-function shortIntro(text: string) {
-  const plain = text.replace(/[#*_>`]/g, "").replace(/\s+/g, " ").trim();
-  if (plain.length <= 320) return plain;
-  const cut = plain.slice(0, 320);
-  const end = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "));
-  return end > 120 ? cut.slice(0, end + 1) : `${cut.slice(0, cut.lastIndexOf(" "))} …`;
-}
+export type TopicFeature = ProjectFeatureData;
 
 type TopicVoice = {
   title: string;
@@ -1690,27 +1671,7 @@ export function presentTopic(
   const features: TopicFeature[] = purestFirst
     .filter((project) => project.image)
     .slice(0, 4)
-    .map((project) => {
-      const detail = project.gallery.find(
-        (item) => item.src && photoKey(item.src) !== photoKey(project.image) && photoKey(item.src) !== photoKey(topic.image ?? ""),
-      );
-      const links = [
-        ...project.regions.slice(0, 1).map((item) => ({ href: `/regionen/${item.slug}`, label: item.name })),
-        ...project.materials.slice(0, 2).map((item) => ({ href: `/material/${item.slug}`, label: item.name })),
-        ...project.brands.slice(0, 2).map((item) => ({ href: `/marken/${item.slug}`, label: item.name })),
-        ...project.appliances.slice(0, 1).map((item) => ({ href: `/geraete/${item.slug}`, label: item.name })),
-      ].slice(0, 5);
-      return {
-        href: `/projekte/${project.slug}`,
-        title: project.title,
-        meta: [project.place, project.year].filter(Boolean).join(" · "),
-        intro: shortIntro(project.intro),
-        image: project.image,
-        srcSet: project.srcSet,
-        detail: detail ? { src: detail.src, srcSet: detail.srcSet, alt: detail.alt || project.title } : undefined,
-        links,
-      };
-    });
+    .map((project) => projectFeature(project, [topic.image ?? ""]));
   const featured = new Set(features.map((feature) => feature.href));
 
   const taggedHouses = tagged

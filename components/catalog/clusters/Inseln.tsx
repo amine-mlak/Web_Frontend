@@ -1,7 +1,6 @@
 import LocaleLink from "@/components/LocaleLink";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
-  ClusterLinks,
   Crumbs,
   HouseLine,
   RuledPoints,
@@ -53,67 +52,6 @@ function Pedestal({
         {text}
       </p>
     </LocaleLink>
-  );
-}
-
-export function InselnCluster({ hub }: { hub: PresentedCluster }) {
-  return (
-    <main className="bg-paper">
-      <header className="px-5 pt-10 pb-10 sm:px-8 lg:px-14 lg:pt-16">
-        <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
-        <div className="mt-6 grid items-end gap-8 lg:grid-cols-12">
-          <h1 className="font-serif text-[52px] leading-[0.9] font-medium tracking-[-0.045em] text-ink sm:text-[80px] lg:col-span-7">
-            {hub.title}
-            <span className="mt-2 block italic">{hub.emphasis}</span>
-          </h1>
-          <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5">
-            {hub.lede}
-          </p>
-        </div>
-        <dl className="mt-12 grid grid-cols-2 border-t border-line sm:grid-cols-4">
-          {hub.facts.map((fact) => (
-            <div key={`${fact.value}-${fact.label}`} className="border-b border-line py-5 sm:border-b-0 sm:border-l sm:px-5 sm:first:border-l-0">
-              <dt className="font-serif text-[26px] leading-none text-ink">{fact.value}</dt>
-              <dd className="type-eyebrow mt-3 text-muted">{fact.label}</dd>
-            </div>
-          ))}
-        </dl>
-      </header>
-
-      <section className="bg-nacht px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="inseln-roles">
-        <h2 id="inseln-roles" className="max-w-3xl font-serif text-[28px] leading-snug font-medium text-paper italic md:text-[36px]">
-          {hub.statement}
-        </h2>
-        <ul className="mt-14 grid gap-12 lg:grid-cols-3">
-          {hub.branches.map((branch) => (
-            <li key={branch.href ?? branch.title}>
-              <Pedestal
-                branch={branch}
-                href={branch.href ?? "/kuechen/inseln"}
-                title={branch.title}
-                text={branch.text}
-                image={branch.image}
-                kicker={branch.kicker}
-              />
-            </li>
-          ))}
-        </ul>
-        {hub.quote ? (
-          <figure className="mt-16 border-t border-paper/15 pt-10">
-            <blockquote className="max-w-2xl font-serif text-[22px] leading-snug text-paper/90 italic">
-              {hub.quote}
-            </blockquote>
-            <figcaption className="mt-4 font-sans text-[11px] tracking-[0.18em] text-messing uppercase">
-              {hub.quoteSource}
-            </figcaption>
-          </figure>
-        ) : null}
-      </section>
-
-      <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
-      <ClusterLinks hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
   );
 }
 

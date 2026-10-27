@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
+import HomeProjects from "@/components/HomeProjects";
 import Kacheln from "@/components/Kacheln";
 import PlannerSection from "@/components/planner/PlannerSection";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
@@ -53,8 +54,9 @@ export default async function Home() {
       <LocalBusinessJsonLd />
       <Hero slides={heroSlides} panel={heroPanel ?? fallbackHeroPanel[locale]} />
       <Kacheln content={kacheln} />
-      <Process content={ablauf} />
       <Entdecken content={entdecken} />
+      <HomeProjects />
+      <Process content={ablauf} />
       <Faq content={faq} />
       <PlannerSection />
     </main>

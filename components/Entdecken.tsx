@@ -1,8 +1,7 @@
-import LocaleLink from "@/components/LocaleLink";
-import CmsImage from "@/components/CmsImage";
+import FullChapter from "@/components/catalog/FullChapter";
 import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
-import type { EntdeckenContent, EntdeckenPanel } from "@/lib/strapi";
+import type { EntdeckenContent } from "@/lib/strapi";
 
 const fallback: EntdeckenContent = {
   panels: [
@@ -41,42 +40,13 @@ const fallback: EntdeckenContent = {
   ],
 };
 
-function PanelCard({ panel }: { panel: EntdeckenPanel }) {
-  return (
-    <li>
-      <article className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-nacht md:aspect-[16/10]">
-        {panel.image ? (
-          <CmsImage
-            src={panel.image}
-            srcSet={panel.srcSet}
-            alt={panel.alt || panel.title}
-            fill
-            loading="lazy"
-            sizes="(max-width: 768px) 100vw, (max-width: 1152px) 50vw, 560px"
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          />
-        ) : null}
-        <div className="absolute inset-0 bg-nacht/45" />
-        <div className="relative z-10 flex max-w-md flex-col items-center px-6 py-10 text-center md:px-8">
-          <h3 className="font-serif text-[28px] leading-[1.12] font-medium tracking-[-0.02em] text-paper md:text-[32px] lg:text-[36px]">
-            {panel.title}
-          </h3>
-          <p className="type-body mt-3 text-paper/90">{panel.subtitle}</p>
-          <LocaleLink href={panel.href} className="pill pill-light mt-6 md:mt-8">
-            {panel.buttonLabel}
-          </LocaleLink>
-        </div>
-      </article>
-    </li>
-  );
-}
-
 export default async function Entdecken({
   content,
 }: {
   content: EntdeckenContent | null;
 }) {
-  const copy = chromeCopy[await getRequestLocale()];
+  const locale = await getRequestLocale();
+  const copy = chromeCopy[locale];
   const data = content ?? fallback;
   const panels = data.panels.length > 0 ? data.panels : fallback.panels;
 
@@ -87,11 +57,25 @@ export default async function Entdecken({
       aria-label={copy.discover}
     >
       <h2 className="sr-only">{copy.discover}</h2>
-      <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-6 py-16 sm:grid-cols-2 md:gap-6 md:py-24">
+      {/* The kitchen worlds as full-screen chapters, like the overview pages. */}
+      <div className="space-y-3 px-3 py-3 sm:space-y-4 sm:px-4 sm:py-4">
         {panels.map((panel, index) => (
-          <PanelCard key={`${panel.title}-${index}`} panel={panel} />
+          <FullChapter
+            key={`${panel.title}-${index}`}
+            id={`entdecken-${index}`}
+            index={index}
+            image={panel.image}
+            srcSet={panel.srcSet}
+            alt={panel.alt || panel.title}
+            title={panel.title}
+            text={panel.subtitle}
+            href={panel.href}
+            linkLabel={panel.buttonLabel}
+            lang={locale}
+            as="h3"
+          />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

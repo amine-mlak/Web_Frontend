@@ -759,6 +759,19 @@ export function presentCluster(
     meta: [project.place, project.year].filter(Boolean).join(" · "),
     image: resolveDevImage(project.image, photo(80 + index, 1200)),
   }));
+  // Each topic shows a real kitchen of its own, none twice and none from the project row.
+  const usedCovers = new Set(houseProjects.map((project) => project.slug));
+  for (const branch of branches) {
+    const slugOfTopic = branch.href?.split("/").pop();
+    const inTopic = projects.filter((project) => project.topics.some((item) => item.slug === slugOfTopic));
+    const cover =
+      inTopic.find((project) => project.image && !usedCovers.has(project.slug)) ?? inTopic.find((project) => project.image);
+    if (cover) usedCovers.add(cover.slug);
+    branch.cover = cover?.image;
+    branch.count = inTopic.length;
+  }
+  // The hero is a whole kitchen of this world too, not a topic's detail shot.
+  const heroProject = tagged.find((project) => project.image && !usedCovers.has(project.slug));
   // The closing photo is none of the others on the page (houses, film, looks, chapters, hero).
   const shown = new Set(
     [
@@ -782,7 +795,7 @@ export function presentCluster(
     lede: copy.lede,
     statement: copy.statement,
     statementNote: copy.statementNote,
-    heroImage: cmsLarge(photo.hero(topics[0]?.image, 3840), 3840),
+    heroImage: cmsLarge(heroProject?.image ?? photo.hero(topics[0]?.image, 3840), 3840),
     heroAlt: topics[0] ? topicCopy(topics[0], locale).name : copy.title,
     indexEyebrow: copy.indexEyebrow,
     quote: copy.quote,

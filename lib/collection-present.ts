@@ -28,6 +28,9 @@ export type PresentedBranch = CollectionBranch & {
   imageB: string;
   imageC: string;
   hex?: string;
+  /** Overview pages: a real project in this topic and how many projects carry it. */
+  cover?: string;
+  count?: number;
 };
 
 export type HubCrumb = {
