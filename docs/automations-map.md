@@ -37,6 +37,7 @@ Start page for the team: **https://n8n.beer.de/webhook/redaktion**
 | **BEER Neue Seite** | chat (link on the start page) | A short brief → draft of a fixed page, topic, material, appliance, brand, furniture or region page in the house style (example: "Weiße Küchen"), with overlap check | page draft |
 | **BEER GEO-Monitor** | `/webhook/geo-monitor` | 12 editable buyer questions answered by Claude with web search as seen from Freising: is BEER named, who instead, which sites are cited, trend, recommendations | – |
 | **BEER Regionen** | `/webhook/beer-regionen` | Town and region per project (form), region texts from the projects there, Business Profile posts for new projects | project and region drafts |
+| **BEER Bewerbungen** | `/webhook/beer-bewerbung` (POST, from the website only) | Receives the Karriere application form (job, name, email, phone, start, message) and answers the website. Where an application goes next is **not decided yet**; until then it is only under Executions | – |
 
 Schedules (built, **off**): Projekttexte every 2 hours, SEO-Vorschläge and Ratgeber monthly,
 GEO-Monitor weekly (Monday 6:00). Switch on in n8n once the first results look right.
@@ -52,7 +53,10 @@ GEO-Monitor weekly (Monday 6:00). Switch on in n8n once the first results look r
      site-pages; upload (for photo descriptions). Value: `Bearer <token>`.
    - *Claude API (BEER)*: an Anthropic API key (console.anthropic.com).
    - *BEER Redaktion (Login)*: username and password for all pages and chats.
-2. **Activate** the nine workflows (BEER Redaktion first).
+   - *BEER Website (Formular-Schlüssel)*: header `x-n8n-webhook-secret`, value = the website's
+     `N8N_WEBHOOK_SECRET` (Coolify → staging app → Environment). Until it is filled in and
+     "BEER Bewerbungen" is active, the Karriere form shows the email and phone instead.
+2. **Activate** the ten workflows (BEER Redaktion first).
 3. Switch off the old, broken **"BEER CMS news chat (draft only)"**; "BEER Meldungen" replaces it.
 
 ## Model and cost
@@ -73,6 +77,9 @@ cheaper for the photo descriptions if quality holds — one constant in `lib-cla
   parked "CMS in git" step).
 - Google Business Profile: posting by API needs Google's approval; until then the Regionen
   page prepares the text and a person posts it.
+- Applications (BEER Bewerbungen): where they go — a mail to Christian Beer, an HR tool, a
+  list — and how long they are kept (n8n keeps executions until they are pruned). CV upload
+  in the form is possible once that is decided.
 - Later (needs data or decisions): review requests after handover (customer emails), Search
   Console data for the Ratgeber topics, CMS backups on a schedule, weekly broken-link scan.
 

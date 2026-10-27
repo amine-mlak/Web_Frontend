@@ -1,0 +1,107 @@
+{
+  "name": "BEER Bewerbungen",
+  "nodes": [
+    {
+      "name": "Bewerbung empfangen",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "3a4b5c6d-7e8f-4a9b-8c0d-2e3f4a5b6c20",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "beer-bewerbung",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7jbt2X5HO54YURlQ",
+          "name": "BEER Website (Formular-Schlüssel)"
+        }
+      }
+    },
+    {
+      "name": "Bewerbung lesen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// One application from the website (Karriere form → /api/bewerbung), made readable.\n// Where it goes next (mail to Christian Beer, an HR tool, a list) is not decided yet:\n// until then each application is kept only in this workflow's executions in n8n.\nconst raw = $input.first().json;\nconst body = raw.body && typeof raw.body === \"object\" && !Array.isArray(raw.body) ? raw.body : {};\nconst applicant = body.applicant || {};\nconst text = (value, max) => String(value ?? \"\").replace(/\\s+/g, \" \").trim().slice(0, max);\n\nconst bewerbung = {\n  eingegangen: text(body.received_at, 40) || new Date().toISOString(),\n  stelle: text(body.job?.title, 120),\n  stelle_slug: text(body.job?.slug, 80),\n  name: text(applicant.name, 80),\n  email: text(applicant.email, 120).toLowerCase(),\n  telefon: text(applicant.phone, 40),\n  start: text(applicant.start, 60),\n  nachricht: String(applicant.message ?? \"\").trim().slice(0, 2000),\n  seite: text(body.page, 200),\n  id: text(body.id, 80),\n};\n\nconst ok =\n  body.form === \"bewerbung\" &&\n  bewerbung.stelle.length > 0 &&\n  bewerbung.name.length >= 2 &&\n  /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(bewerbung.email);\n\nreturn [{ json: { ok, bewerbung } }];\n"
+      }
+    },
+    {
+      "name": "Antwort an die Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: $json.ok } }}",
+        "options": {
+          "responseCode": "={{ $json.ok ? 200 : 400 }}"
+        }
+      }
+    },
+    {
+      "name": "Ziel noch offen",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        960,
+        300
+      ],
+      "notes": "Hier kommt später hin, wohin eine Bewerbung geht (Mail an Christian Beer, HR-Tool, Liste). Bis dahin steht jede Bewerbung nur unter Executions.",
+      "notesInFlow": true,
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Bewerbung empfangen": {
+      "main": [
+        [
+          {
+            "node": "Bewerbung lesen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bewerbung lesen": {
+      "main": [
+        [
+          {
+            "node": "Antwort an die Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Antwort an die Website": {
+      "main": [
+        [
+          {
+            "node": "Ziel noch offen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

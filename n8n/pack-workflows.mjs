@@ -7,7 +7,7 @@
  *
  * Every Code node gets lib-common.js and lib-claude.js pasted in front of its own code,
  * plus lib-seo.js / lib-ratgeber.js / lib-geo.js where named. Deploy reads N8N_API_KEY from
- * .env.local, creates the three credentials with placeholder values if they do not exist yet
+ * .env.local, creates the credentials with placeholder values if they do not exist yet
  * (never overwrites them), keeps each workflow's stored data, sets "BEER Redaktion" as the
  * error workflow of all others, and leaves new workflows inactive.
  */
@@ -22,6 +22,8 @@ const CREDENTIALS = {
   strapi: { name: "BEER Strapi (Token)", type: "httpHeaderAuth", placeholder: { name: "Authorization", value: "Bearer TOKEN-HIER-EINTRAGEN" } },
   claude: { name: "Claude API (BEER)", type: "httpHeaderAuth", placeholder: { name: "x-api-key", value: "KEY-HIER-EINTRAGEN" } },
   login: { name: "BEER Redaktion (Login)", type: "httpBasicAuth", placeholder: () => ({ user: "redaktion", password: randomPassword() }) },
+  // The same value as N8N_WEBHOOK_SECRET of the website (Coolify); the website sends it with each form.
+  form: { name: "BEER Website (Formular-Schlüssel)", type: "httpHeaderAuth", placeholder: { name: "x-n8n-webhook-secret", value: "SCHLUESSEL-HIER-EINTRAGEN" } },
 };
 
 function randomPassword() {
@@ -179,6 +181,14 @@ const merge = (...parts) => {
     }
   return out;
 };
+/** A Code node without the shared libraries (no CMS or Claude calls). */
+const plainCode = (name, file) => ({
+  name,
+  type: "n8n-nodes-base.code",
+  typeVersion: 2,
+  position: pos(),
+  parameters: { mode: "runOnceForAllItems", jsCode: read(file) },
+});
 const workflow = (name, nodes, connections) => ({ name, nodes, connections, settings: { executionOrder: "v1" } });
 
 // ---- workflows -----------------------------------------------------------------------
@@ -480,6 +490,44 @@ const WORKFLOWS = {
         link(["Weg?", 1], "Lesen", "Anfrage", "Claude", "Merken"),
       ),
     );
+  },
+
+  bewerbung: () => {
+    row(0);
+    const nodes = [
+      {
+        name: "Bewerbung empfangen",
+        type: "n8n-nodes-base.webhook",
+        typeVersion: 2,
+        position: pos(),
+        webhookId: "3a4b5c6d-7e8f-4a9b-8c0d-2e3f4a5b6c20",
+        // Only the website knows the key (header x-n8n-webhook-secret).
+        parameters: { httpMethod: "POST", path: "beer-bewerbung", authentication: "headerAuth", responseMode: "responseNode", options: {} },
+        credentials: cred("form"),
+      },
+      plainCode("Bewerbung lesen", "bewerbung-read.js"),
+      {
+        name: "Antwort an die Website",
+        type: "n8n-nodes-base.respondToWebhook",
+        typeVersion: 1.1,
+        position: pos(),
+        parameters: {
+          respondWith: "json",
+          responseBody: "={{ { ok: $json.ok } }}",
+          options: { responseCode: "={{ $json.ok ? 200 : 400 }}" },
+        },
+      },
+      {
+        name: "Ziel noch offen",
+        type: "n8n-nodes-base.noOp",
+        typeVersion: 1,
+        position: pos(),
+        notes: "Hier kommt später hin, wohin eine Bewerbung geht (Mail an Christian Beer, HR-Tool, Liste). Bis dahin steht jede Bewerbung nur unter Executions.",
+        notesInFlow: true,
+        parameters: {},
+      },
+    ];
+    return workflow("BEER Bewerbungen", nodes, link("Bewerbung empfangen", "Bewerbung lesen", "Antwort an die Website", "Ziel noch offen"));
   },
 };
 

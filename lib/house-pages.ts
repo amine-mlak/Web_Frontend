@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { jobsFrom, type Job } from "@/lib/careers";
 import { FALLBACK_PAGES, type SitePage } from "@/lib/catalog";
 import { fetchSitePage } from "@/lib/catalog-api";
 import type { ClusterSibling } from "@/lib/collection-clusters";
@@ -34,6 +35,8 @@ export type PresentedHouse = PresentedHub & {
   people: HousePerson[];
   /** Last change in the CMS ("Stand" on legal pages). */
   updatedAt?: string;
+  /** Job ads (Karriere only), from the page's "punkte" list in the CMS. */
+  jobs: Job[];
 };
 
 type Voice = {
@@ -639,6 +642,7 @@ function asHouse(
     bodyTitle: voice.bodyTitle,
     showLead: Boolean(voice.showLead),
     siblings: companySiblings(locale, slug),
+    jobs: slug === "karriere" ? jobsFrom(page?.punkte) : [],
     faq: page?.faq ?? null,
     updatedAt: page?.updatedAt,
     gallery,

@@ -3,6 +3,7 @@ import {
   articleHref,
   KITCHEN_CLUSTERS,
 } from "@/lib/catalog";
+import { jobsFrom } from "@/lib/careers";
 import { fetchCatalog } from "@/lib/catalog-api";
 import {
   GERAETE_KIND_ROUTES,
@@ -80,6 +81,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   for (const article of catalog.articles) {
     paths.add(articleHref(article));
+  }
+  for (const job of jobsFrom(catalog.pages.find((page) => page.slug === "karriere")?.punkte)) {
+    paths.add(`/karriere/${job.slug}`);
   }
   for (const page of catalog.pages) {
     if (page.slug && page.slug !== "home") {

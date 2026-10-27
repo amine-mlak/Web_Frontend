@@ -2,6 +2,7 @@ import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import { Fragment, type ReactNode } from "react";
 import Faq from "@/components/Faq";
 import PlannerSection from "@/components/planner/PlannerSection";
+import CareersSection from "@/components/careers/CareersSection";
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
 import AtelierVisit from "@/components/catalog/hub/AtelierVisit";
 import ChapterRun from "@/components/catalog/hub/ChapterRun";
@@ -97,7 +98,12 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
     form: (
       <>
         {house.faq ? <Faq content={house.faq} /> : null}
-        <PlannerSection />
+        {/* Karriere gets its job ads and the application form instead of the kitchen planner. */}
+        {house.slug === "karriere" ? (
+          <CareersSection jobs={house.jobs} locale={house.locale === "en" ? "en" : "de"} />
+        ) : (
+          <PlannerSection />
+        )}
       </>
     ),
     close: <CloseAtelier hub={house} />,
