@@ -8,7 +8,7 @@ import {
   RuledPoints,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
-import type { ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
+import type { ClusterHouse, ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 
@@ -25,13 +25,21 @@ function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Colour in the house" : "Farbe im Haus";
 }
 
+function projectCount(count: number, locale: PresentedCluster["locale"]) {
+  if (locale === "en") return `${count} ${count === 1 ? "project" : "projects"}`;
+  return `${count} ${count === 1 ? "Projekt" : "Projekte"}`;
+}
+
+/** One panel per colour: a real kitchen in that colour above, the colour itself below. */
 function SwatchField({
   swatches,
   label,
+  locale,
   tall,
 }: {
   swatches: ClusterSwatch[];
   label: string;
+  locale: PresentedCluster["locale"];
   tall?: boolean;
 }) {
   if (swatches.length === 0) {
@@ -40,42 +48,103 @@ function SwatchField({
 
   return (
     <ul
-      className={`grid sm:grid-cols-2 lg:grid-cols-4 ${tall ? "min-h-[calc(100svh-11rem)]" : ""}`}
+      className={`grid sm:grid-cols-2 ${swatches.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}
       aria-label={label}
     >
       {swatches.map((swatch) => {
         const light = isLight(swatch.hex);
         return (
           <li key={swatch.href}>
-            <LocaleLink href={swatch.href} className="group block h-full">
-              <figure
-                className={`relative flex h-full flex-col justify-end px-6 py-8 ${
-                  tall ? "min-h-[22rem] lg:min-h-full" : "min-h-[14rem]"
-                } ${light ? "border border-line" : ""}`}
+            <LocaleLink href={swatch.href} className="group flex h-full flex-col">
+              {swatch.image ? (
+                <Frame
+                  src={swatch.image}
+                  alt={swatch.title}
+                  className={tall ? "aspect-[4/5] lg:aspect-[3/4]" : "aspect-[4/3]"}
+                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+              ) : null}
+              <div
+                className={`flex flex-1 flex-col justify-end px-6 ${tall ? "py-8" : "py-6"} ${light ? "border-x border-b border-line" : ""}`}
                 style={{ backgroundColor: swatch.hex }}
               >
-                <figcaption>
-                  <span
-                    className={`font-sans text-[11px] tracking-[0.2em] uppercase ${
-                      light ? "text-ink/70" : "text-paper/70"
-                    }`}
-                  >
-                    {swatch.hex}
+                <span className={`font-sans text-[12px] tracking-[0.12em] uppercase ${light ? "text-ink/70" : "text-paper/75"}`}>
+                  {swatch.hex}
+                </span>
+                <span
+                  className={`mt-3 block font-serif leading-none font-medium tracking-[-0.03em] ${tall ? "text-[32px]" : "text-[26px]"} ${
+                    light ? "text-ink" : "text-paper"
+                  }`}
+                >
+                  {swatch.title}
+                </span>
+                {swatch.count ? (
+                  <span className={`mt-3 font-sans text-[14px] ${light ? "text-ink/70" : "text-paper/75"}`}>
+                    {projectCount(swatch.count, locale)}
                   </span>
-                  <span
-                    className={`mt-3 block font-serif text-[32px] leading-none font-medium tracking-[-0.03em] ${
-                      light ? "text-ink" : "text-paper"
-                    }`}
-                  >
-                    {swatch.title}
-                  </span>
-                </figcaption>
-              </figure>
+                ) : null}
+              </div>
             </LocaleLink>
           </li>
         );
       })}
     </ul>
+  );
+}
+
+function HouseCard({ house }: { house: ClusterHouse }) {
+  return (
+    <li>
+      <LocaleLink href={house.href} className="group block">
+        <Frame
+          src={house.image}
+          alt={house.title}
+          className="aspect-[4/3]"
+          imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">{house.title}</p>
+        {house.meta ? <p className="mt-1 font-sans text-[14px] text-muted">{house.meta}</p> : null}
+      </LocaleLink>
+    </li>
+  );
+}
+
+const GRID = "grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3";
+
+/** All projects in this colour: twelve first, the rest one click away on the same page. */
+function ColourProjects({ hub }: { hub: PresentedTopic }) {
+  const houses = hub.taggedHouses?.length ? hub.taggedHouses : hub.houses;
+  if (houses.length === 0) {
+    return null;
+  }
+  const en = hub.locale === "en";
+  const first = houses.slice(0, 12);
+  const rest = houses.slice(12);
+  return (
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="farben-projekte">
+      <h2 id="farben-projekte" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+        {en ? `${hub.heroAlt} from our projects` : `${hub.heroAlt} aus unseren Projekten`}
+      </h2>
+      <ul className={`mt-10 ${GRID}`}>
+        {first.map((house) => (
+          <HouseCard key={house.href} house={house} />
+        ))}
+      </ul>
+      {rest.length ? (
+        <details className="group/more mt-12">
+          <summary className="btn-quiet cursor-pointer list-none text-ink group-open/more:hidden [&::-webkit-details-marker]:hidden">
+            {en ? `Show all ${houses.length} projects` : `Alle ${houses.length} Projekte zeigen`}
+          </summary>
+          <ul className={GRID}>
+            {rest.map((house) => (
+              <HouseCard key={house.href} house={house} />
+            ))}
+          </ul>
+        </details>
+      ) : null}
+    </section>
   );
 }
 
@@ -87,7 +156,7 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
           <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
           <h1 className="mt-4 font-serif text-[56px] leading-[0.9] font-medium tracking-[-0.045em] text-ink sm:text-[88px]">
             {hub.title}
-            <span className="mt-1 block italic">{hub.emphasis}</span>
+            {hub.emphasis ? <span className="mt-1 block">{hub.emphasis}</span> : null}
           </h1>
         </div>
         <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5">
@@ -95,7 +164,7 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
         </p>
       </header>
 
-      <SwatchField swatches={hub.swatches} label={hub.indexEyebrow} tall />
+      <SwatchField swatches={hub.swatches} label={hub.indexEyebrow} locale={hub.locale} tall />
 
       <section className="grid lg:grid-cols-12">
         <div className="flex flex-col justify-center px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
@@ -145,14 +214,16 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
                 light ? "text-ink" : "text-paper"
               }`}
             >
-              {hub.title} <em className="italic">{hub.emphasis}</em>
+              {hub.title}
+              {hub.emphasis ? ` ${hub.emphasis}` : ""}
             </h1>
             <p
-              className={`mt-5 max-w-md font-serif text-[22px] leading-snug italic ${
+              className={`mt-5 max-w-md font-serif text-[22px] leading-snug ${
                 light ? "text-ink/75" : "text-paper/80"
               }`}
             >
-              {hub.toneLine || hub.lede}
+              {/* The CMS intro first; the line in the code is only a fallback. */}
+              {hub.lede || hub.toneLine}
             </p>
           </div>
           <Frame
@@ -175,7 +246,19 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       </section>
 
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
+      <ColourProjects hub={hub} />
+      <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
+        <h2 id="farben-andere" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+          {hub.locale === "en" ? "Other colours" : "Andere Farben"}
+        </h2>
+      </section>
+      <div className="px-5 pt-10 pb-4 sm:px-8 lg:px-14">
+        <SwatchField
+          swatches={hub.swatches.filter((swatch) => !swatch.href.endsWith(`/${slug}`))}
+          label={hub.locale === "en" ? "Other colours" : "Andere Farben"}
+          locale={hub.locale}
+        />
+      </div>
       <SoftClose hub={hub} />
     </main>
   );

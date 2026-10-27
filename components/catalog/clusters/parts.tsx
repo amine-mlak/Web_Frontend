@@ -122,7 +122,7 @@ export function HouseLine({
   houses: ClusterHouse[];
   title: string;
 }) {
-  const shown = houses.slice(0, 3);
+  const shown = houses.slice(0, 4);
   if (shown.length === 0) {
     return null;
   }
@@ -134,7 +134,7 @@ export function HouseLine({
       </h2>
       <ul
         className={`mt-10 grid gap-8 ${
-          shown.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-xl"
+          shown.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : shown.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-xl"
         }`}
       >
         {shown.map((house) => (

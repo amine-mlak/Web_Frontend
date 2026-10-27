@@ -12,6 +12,7 @@ import {
   kitchensParent,
   topicCopy,
   topicPoints,
+  type ClusterHouse,
   type PresentedCluster,
 } from "@/lib/collection-clusters";
 import type { CollectionFact, PresentedBranch } from "@/lib/collection-present";
@@ -30,6 +31,8 @@ export type PresentedTopic = PresentedCluster & {
   siblingTitle: string;
   /** Real projects tagged with this topic; their photos fill the page. */
   taggedKitchens?: number;
+  /** Every project tagged with this topic, newest first as loaded (colour pages list them all). */
+  taggedHouses?: ClusterHouse[];
 };
 
 type TopicVoice = {
@@ -1547,6 +1550,25 @@ function chapterBranches(
   const notes = TOPIC_NOTES[topic.slug] ?? [];
   const texts = topicPoints(topic.slug, locale);
   const looks = voice?.looks ?? [];
+  const photos = (index: number) => ({
+    image: photo(16 + index * 3),
+    imageB: photo(17 + index * 3, 1200),
+    imageC: photo(18 + index * 3, 1200),
+    kicker: String(index + 1).padStart(2, "0"),
+  });
+
+  // Points from the CMS stand on their own: their title and text, nothing from the code next to them.
+  const cmsPoints = (cms?.punkte ?? []).filter((punkt) => punkt.titel?.trim() && punkt.text?.trim());
+  if (cmsPoints.length) {
+    return cmsPoints.map((punkt, index) => ({
+      title: punkt.titel.trim(),
+      text: punkt.text.replace(/\s*\n\s*/g, " ").trim(),
+      ...photos(index),
+      alt: punkt.titel.trim(),
+      points: [],
+      caption: looks[index % looks.length] ?? punkt.titel.trim(),
+    }));
+  }
 
   return notes.map((note, index) => {
     const punkt = cms?.punkte?.[index];
@@ -1622,11 +1644,23 @@ export function presentTopic(
 
   const swatches = clusterTopics
     .filter((item) => item.hex)
-    .map((item) => ({
-      href: `/kuechen/${cluster}/${item.slug}`,
-      title: topicCopy(item, locale).name,
-      hex: item.hex,
-    }));
+    .map((item) => {
+      const inColour = projects.filter((project) => project.topics.some((entry) => entry.slug === item.slug));
+      return {
+        href: `/kuechen/${cluster}/${item.slug}`,
+        title: topicCopy(item, locale).name,
+        hex: item.hex,
+        image: coverOf(inColour, () => true) ?? item.image ?? undefined,
+        count: inColour.length,
+      };
+    });
+
+  const taggedHouses = tagged.map((project, index) => ({
+    href: `/projekte/${project.slug}`,
+    title: project.title,
+    meta: [project.place, project.year].filter(Boolean).join(" · "),
+    image: resolveDevImage(project.image, photo(80 + index, 1200)),
+  }));
 
   const page: PresentedTopic = {
     locale,
@@ -1646,8 +1680,14 @@ export function presentTopic(
     // Quotes come only from the CMS, where someone enters a real one with its real source.
     quote: cms?.zitat || "",
     quoteSource: cms?.zitat ? cms.zitatQuelle || "" : "",
-    ctaLabel: voice?.ctaLabel ?? heading.eyebrow,
-    ctaHref: "/beratung",
+    // Colours are chosen at the samples in the showroom, so that is where the colour pages lead.
+    ctaLabel:
+      cluster === "farben"
+        ? locale === "en"
+          ? "See the samples in the showroom"
+          : "Muster in der Ausstellung ansehen"
+        : voice?.ctaLabel ?? heading.eyebrow,
+    ctaHref: cluster === "farben" ? "/ausstellung" : "/beratung",
     closeTitle: cms?.schlussTitel || voice?.closeTitle || local.name,
     closeText: cms?.schlussText || voice?.closeText || local.intro,
     parentHref: `/kuechen/${cluster}`,
@@ -1695,6 +1735,7 @@ export function presentTopic(
         : "Wolfersdorf · Freising · München",
     siblings,
     houses,
+    taggedHouses,
     swatches,
     lookTitle: voice?.lookTitle ?? local.name,
     toneLine: voice?.toneLine,

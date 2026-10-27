@@ -38,6 +38,9 @@ export type ClusterSwatch = {
   href: string;
   title: string;
   hex: string;
+  /** A real kitchen in this colour, and how many projects carry it. */
+  image?: string;
+  count?: number;
 };
 
 export type PresentedCluster = PresentedHub & {
@@ -743,7 +746,14 @@ export function presentCluster(
 
   const filmCaptions = copy.film;
   const lookCaptions = copy.looks;
-  const houses = kitchens.slice(0, 4).map((project, index) => ({
+  // One kitchen per topic (one white, one black …), then the next real ones, four in all.
+  const picked: Project[] = [];
+  for (const topic of topics) {
+    const first = tagged.find((project) => !picked.includes(project) && project.topics.some((item) => item.slug === topic.slug));
+    if (first) picked.push(first);
+  }
+  const houseProjects = [...picked, ...kitchens.filter((project) => !picked.includes(project))].slice(0, 4);
+  const houses = houseProjects.map((project, index) => ({
     href: `/projekte/${project.slug}`,
     title: project.title,
     meta: [project.place, project.year].filter(Boolean).join(" · "),
@@ -825,11 +835,20 @@ export function presentCluster(
     houses,
     swatches: topics
       .filter((topic) => topic.hex)
-      .map((topic) => ({
-        href: `/kuechen/${slug}/${topic.slug}`,
-        title: topicCopy(topic, locale).name,
-        hex: topic.hex,
-      })),
+      .map((topic) => {
+        const inColour = projects.filter((project) => project.topics.some((item) => item.slug === topic.slug));
+        // A project photo other than the one in the project row below, if there is one.
+        const cover =
+          inColour.find((project) => project.image && !houses.some((house) => house.href === `/projekte/${project.slug}`)) ??
+          inColour.find((project) => project.image);
+        return {
+          href: `/kuechen/${slug}/${topic.slug}`,
+          title: topicCopy(topic, locale).name,
+          hex: topic.hex,
+          image: cover?.image ?? topic.image ?? undefined,
+          count: inColour.length,
+        };
+      }),
   };
   return uniquePagePhotos(presented, photo);
 }
