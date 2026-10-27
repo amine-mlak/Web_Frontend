@@ -370,7 +370,7 @@ export function presentHub(
         closeText: cms.schlussText || raw.closeText,
         heroImage: cms.image ? cmsLarge(cms.image, 3840) : raw.heroImage,
       }
-    : raw;
+    : { ...raw, quote: "", quoteSource: "" };
   const source = branches && branches.length > 0 ? branches : copy.branches;
   const start = OFFSET[id];
   const pool = (n: number, width?: number) => devPhoto(start + n, width);

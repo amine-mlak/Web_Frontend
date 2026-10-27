@@ -73,12 +73,6 @@ body {
 
 /* VI Typografie — only Cormorant Garamond + Figtree */
 @layer components {
-  /* A heading is one sentence: no word set apart in italics (it read as a template trick). */
-  :is(h1, h2, h3, h4) :is(em, i, .italic) {
-    font-style: normal;
-    font-weight: inherit;
-  }
-
   /* A quiet text link instead of a pill: label with a thin line under it. */
   .btn-quiet {
     display: inline-flex;
@@ -373,82 +367,15 @@ body {
   }
 }
 
-/* Design preview: two directions to choose from (switch at the bottom right, or ?design=a|b).
-   They only swap fonts, colours and label style; the one not chosen is deleted. */
-html[data-design] body {
-  font-family: var(--font-sans);
-}
-html[data-design] .type-quote {
+/* A heading is one sentence: no word set apart in italics (it read as a template trick).
+   Outside the layers on purpose, so it wins over the `italic` utility in the components. */
+:is(h1, h2, h3, h4) :is(em, i, .italic) {
   font-style: normal;
+  font-weight: inherit;
 }
 
-/* A Werkstatt: one sans for everything, white, black and grey, brass only where it is wood. */
-html[data-design="a"] {
-  --font-sans: var(--font-albert), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-albert), ui-sans-serif, system-ui, sans-serif;
-  --color-paper: #ffffff;
-  --color-background: #ffffff;
-  --color-popover: #ffffff;
-  --color-karte: #f3f3f1;
-  --color-stone: #f3f3f1;
-  --color-secondary: #f3f3f1;
-  --color-ink: #111111;
-  --color-foreground: #111111;
-  --color-nacht: #151515;
-  --color-espresso: #2b2b29;
-  --color-muted: #55554f;
-  --color-line: #e3e3df;
-  --color-border: #e3e3df;
-  --color-input: #e3e3df;
-  --color-gold: #55554f;
-  --color-bronze: #2b2b29;
-  --color-bronze-dark: #111111;
-  --color-messing: #bcb9b1;
-  --color-gold-soft: #eeeeeb;
-  --color-cream: #eeeeeb;
-  --color-accent: #eeeeeb;
-  --color-bronze-tafel: #d6d3cc;
-  --color-primary: #111111;
-  --color-ring: #111111;
-}
-html[data-design="a"] :is(.font-serif, .type-h1, .type-h2, .type-h3, .type-panel, .type-quote) {
-  font-weight: 500;
-  letter-spacing: -0.035em;
-}
-html[data-design="a"] :is(.uppercase, .type-eyebrow) {
-  letter-spacing: 0.06em;
-}
-
-/* B Editorial: an upright book serif for headings, warm paper, labels in normal case. */
-html[data-design="b"] {
-  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
-  --color-paper: #f6f3ee;
-  --color-background: #f6f3ee;
-  --color-popover: #f6f3ee;
-  --color-karte: #ede8e0;
-  --color-stone: #ede8e0;
-  --color-secondary: #ede8e0;
-  --color-ink: #1c1a17;
-  --color-foreground: #1c1a17;
-  --color-nacht: #1f1c18;
-  --color-espresso: #3a3027;
-  --color-muted: #514c45;
-  --color-line: #ddd6cb;
-  --color-border: #ddd6cb;
-  --color-input: #ddd6cb;
-  --color-gold: #6e4f2e;
-  --color-bronze: #7a5934;
-  --color-bronze-dark: #6e4f2e;
-  --color-messing: #c4a57c;
-}
-html[data-design="b"] :is(.font-serif, .type-h1, .type-h2, .type-h3, .type-panel, .type-quote) {
-  font-weight: 400;
-  letter-spacing: -0.012em;
-}
-html[data-design="b"] :is(.uppercase, .type-eyebrow) {
-  text-transform: none;
-  letter-spacing: 0.01em;
-}
-html[data-design="b"] .type-eyebrow {
-  font-size: 14px;
+/* Cormorant has small letters. Serif text is set at the capital height of the upright serif
+   from the design preview (B Editorial), about 14% larger than Cormorant on its own. */
+:is(.font-serif, .type-h1, .type-h2, .type-h3, .type-panel, .type-quote) {
+  font-size-adjust: cap-height 0.72;
 }

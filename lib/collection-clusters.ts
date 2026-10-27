@@ -714,7 +714,7 @@ export function presentCluster(
           ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
           : base.facts,
       }
-    : base;
+    : { ...base, quote: "", quoteSource: "" };
   const parent = PARENT[locale];
   const visit = VISIT[locale];
   const start = OFFSET[slug];

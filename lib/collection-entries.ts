@@ -1235,7 +1235,7 @@ function cmsMatches(cms: CmsPageFields | undefined, locale: Locale) {
 
 function withCms(voice: Voice, cms?: CmsPageFields): Voice {
   if (!cms) {
-    return voice;
+    return { ...voice, quote: "", quoteSource: "" };
   }
   return {
     ...voice,
