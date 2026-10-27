@@ -47,6 +47,9 @@ export type LeadBody = {
   landing_url?: string;
   click_ids?: ClickIds;
   utm?: Record<string, string>;
+  /** Ticked "newsletter" box: the address also gets the newsletter confirmation mail. */
+  newsletter?: unknown;
+  locale?: unknown;
 };
 
 const runtimeChallengeSecret =

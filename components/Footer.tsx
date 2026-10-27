@@ -1,6 +1,8 @@
 import Image from "next/image";
 import LocaleLink from "@/components/LocaleLink";
 import FooterRegions from "@/components/FooterRegions";
+import NewsletterSignup from "@/components/NewsletterSignup";
+import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
 import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { fetchFooter } from "@/lib/strapi";
@@ -84,6 +86,10 @@ export default async function Footer() {
             ))}
           </ul>
         </section>
+
+        <div className="mt-14 border-t border-white/15 pt-12 md:mt-16 md:pt-14">
+          <NewsletterSignup consent={NEWSLETTER_CONSENT[locale]} headingClass={headingClass} />
+        </div>
       </div>
 
       <div className="border-t border-white/15">

@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { createHash, randomUUID } from "crypto";
+import { isLocale } from "@/lib/i18n";
 import { getKitchenPlanner } from "@/lib/kitchen-planner";
 import {
   clientIp,
@@ -15,6 +16,7 @@ import {
   userAgentBlocked,
   validateLead,
 } from "@/lib/lead-guard";
+import { sendNewsletterSignup } from "@/lib/newsletter";
 
 const GENERIC_ERROR = "invalid";
 
@@ -165,6 +167,16 @@ export async function POST(request: Request) {
   }
 
   console.info(`[lead] sent to n8n event=${eventId}`);
+  if (parsed.body.newsletter === true) {
+    // The lead is in; a newsletter hiccup must not turn it into an error for the visitor.
+    const failed = await sendNewsletterSignup({
+      email: valid.lead.email,
+      vorname: valid.lead.name.split(/\s+/)[0],
+      locale: typeof parsed.body.locale === "string" && isLocale(parsed.body.locale) ? parsed.body.locale : "de",
+      source: "/kueche-planen (Küchenplaner)",
+    });
+    console.info(`[lead] newsletter sign-up ${failed ? `failed: ${failed}` : "sent to n8n"}`);
+  }
   return Response.json({ ok: true, event_id: eventId }, { headers: noStoreHeaders() });
 }
 

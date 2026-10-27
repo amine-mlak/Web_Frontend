@@ -22,6 +22,7 @@ import {
   type PlannerOption,
 } from "@/lib/kitchen-planner-model";
 import { validateLeadFields } from "@/lib/lead-fields";
+import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
 import { cn } from "@/lib/utils";
 
 /**
@@ -45,6 +46,7 @@ const UI: Record<Locale, Record<string, string>> = {
     budgetTitle: "Welchen Rahmen haben Sie sich für Ihre Küche vorgestellt?",
     budgetHint: "Ehrliche Zahlen helfen uns, realistisch zu planen. Alles bleibt unverbindlich.",
     contactTitle: "Wie dürfen wir Sie erreichen?",
+    newsletterOptional: "(Freiwillig; Sie erhalten dazu eine Bestätigungsmail.)",
     contactHint: "Ihre Antworten bereiten das Gespräch vor. Den Termin vereinbaren wir danach direkt mit Ihnen.",
     summary: "Ihre Auswahl",
     change: "Ändern",
@@ -74,6 +76,7 @@ const UI: Record<Locale, Record<string, string>> = {
     budgetTitle: "What budget do you have in mind for your kitchen?",
     budgetHint: "Honest numbers help us plan realistically. Nothing is binding.",
     contactTitle: "How can we reach you?",
+    newsletterOptional: "(Optional; you will get a confirmation e-mail.)",
     contactHint: "Your answers prepare the conversation. We then arrange the appointment with you directly.",
     summary: "Your choices",
     change: "Change",
@@ -154,6 +157,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const [budgetPos, setBudgetPos] = useState(50);
   const [budgetState, setBudgetState] = useState<"untouched" | "set" | "none">("untouched");
   const [contact, setContact] = useState({ name: "", email: "", phone: "", place: "", message: "" });
+  const [newsletter, setNewsletter] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [challenge, setChallenge] = useState("");
@@ -335,6 +339,9 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           answers: selection,
           notes,
           budget: budgetState === "set" ? budgetValue : null,
+          // Only when ticked: n8n then sends the newsletter confirmation mail (double opt-in).
+          newsletter: newsletter || undefined,
+          locale,
           ...conversionContext(),
         }),
       });
@@ -584,6 +591,16 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                           className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none focus:border-ink"
                         />
                       </div>
+                      <label htmlFor={`${baseId}-newsletter`} className="mt-6 flex gap-3 font-sans text-[13px] leading-6 text-muted">
+                        <input
+                          id={`${baseId}-newsletter`}
+                          type="checkbox"
+                          checked={newsletter}
+                          onChange={(event) => setNewsletter(event.target.checked)}
+                          className="mt-1 h-4 w-4 shrink-0 accent-[#1d1d1b]"
+                        />
+                        <span>{NEWSLETTER_CONSENT[locale]} {ui.newsletterOptional}</span>
+                      </label>
                     </div>
                   ) : null}
                 </div>

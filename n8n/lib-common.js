@@ -57,6 +57,7 @@ const NAV = [
   ["Ratgeber", "/webhook/beer-ratgeber"],
   ["GEO-Monitor", "/webhook/geo-monitor"],
   ["Regionen", "/webhook/beer-regionen"],
+  ["Newsletter", "/webhook/beer-newsletter"],
   ["Meldungen", "/webhook/0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d06/chat"],
   ["Neue Seite", "/webhook/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f07/chat"],
 ];

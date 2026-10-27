@@ -24,7 +24,17 @@ const CREDENTIALS = {
   login: { name: "BEER Redaktion (Login)", type: "httpBasicAuth", placeholder: () => ({ user: "redaktion", password: randomPassword() }) },
   // The same value as N8N_WEBHOOK_SECRET of the website (Coolify); the website sends it with each form.
   form: { name: "BEER Website (Formular-Schlüssel)", type: "httpHeaderAuth", placeholder: { name: "x-n8n-webhook-secret", value: "SCHLUESSEL-HIER-EINTRAGEN" } },
+  // The mailbox the newsletter goes out from (newsletter@beer.de or similar, with SPF/DKIM).
+  smtp: { name: "BEER Newsletter (SMTP)", type: "smtp", placeholder: { user: "newsletter@beer.de", password: "PASSWORT-HIER-EINTRAGEN", host: "smtp.HIER-EINTRAGEN.de", port: 465, secure: true } },
 };
+
+// n8n data tables of the newsletter, by name. deploy() creates missing ones and fills in their ids.
+const TABLES = {
+  newsletter_abonnenten: [["email", "string"], ["vorname", "string"], ["sprache", "string"], ["status", "string"], ["token", "string"], ["quelle", "string"], ["einwilligung", "string"], ["angemeldet_am", "date"], ["bestaetigt_am", "date"], ["bestaetigt_ip", "string"], ["abgemeldet_am", "date"]],
+  newsletter_versand: [["betreff", "string"], ["sprache", "string"], ["test", "boolean"], ["empfaenger", "number"], ["gesendet", "number"], ["fehler", "number"], ["gestartet_am", "date"], ["fertig_am", "date"], ["fingerabdruck", "string"]],
+};
+// Ids on n8n.beer.de, so the JSON files are complete without --deploy.
+const tableIds = { newsletter_abonnenten: "ztzqBDW2ejsjKoN3", newsletter_versand: "8DHWL26jIYzKpP8N" };
 
 function randomPassword() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
@@ -43,7 +53,7 @@ const row = (n) => {
   y = 300 + n * 220;
 };
 
-const LIBS = { seo: "lib-seo.js", ratgeber: "lib-ratgeber.js", geo: "lib-geo.js" };
+const LIBS = { seo: "lib-seo.js", ratgeber: "lib-ratgeber.js", geo: "lib-geo.js", newsletter: "lib-newsletter.js" };
 const code = (name, file, { libs = [], prefix = "" } = {}) => ({
   name,
   type: "n8n-nodes-base.code",
@@ -190,6 +200,56 @@ const plainCode = (name, file) => ({
   parameters: { mode: "runOnceForAllItems", jsCode: read(file) },
 });
 const workflow = (name, nodes, connections) => ({ name, nodes, connections, settings: { executionOrder: "v1" } });
+
+// ---- newsletter node builders --------------------------------------------------------
+/** A webhook anyone may call (links in mails); the token in the link is the only key. */
+const publicHook = (name, method, webhookPath, webhookId) => ({
+  name,
+  type: "n8n-nodes-base.webhook",
+  typeVersion: 2,
+  position: pos(),
+  webhookId,
+  parameters: { httpMethod: method, path: webhookPath, responseMode: "responseNode", options: {} },
+});
+const answer = (name, expression) => ({ ...html(name), parameters: { ...html(name).parameters, responseBody: expression } });
+/** A data-table node. Rows go in as the item is (the Code node before it shapes them). */
+const table = (name, tableName, operation, { where, ...extra } = {}) => ({
+  name,
+  type: "n8n-nodes-base.dataTable",
+  typeVersion: 1.1,
+  position: pos(),
+  // An empty result (no row found, nothing to change) must still reach the next node.
+  alwaysOutputData: true,
+  parameters: {
+    resource: "row",
+    operation,
+    dataTableId: { __rl: true, mode: "id", value: tableIds[tableName] },
+    ...(where ? { matchType: "allConditions", filters: { conditions: [{ keyName: where[0], condition: "eq", keyValue: where[1] }] } } : {}),
+    ...(operation === "get" ? { returnAll: true } : {}),
+    ...(["insert", "update", "upsert"].includes(operation) ? { columns: { mappingMode: "autoMapInputData", value: {}, matchingColumns: [], schema: [] } } : {}),
+    options: {},
+    ...extra,
+  },
+});
+/** Sends one mail per item; from, to, subject, html and text come from `source` (an expression path). */
+const mailNode = (name, source) => ({
+  name,
+  type: "n8n-nodes-base.emailSend",
+  typeVersion: 2.1,
+  position: pos(),
+  // A bad address must not stop the rest of the list; the result counts the failures.
+  onError: "continueRegularOutput",
+  parameters: {
+    fromEmail: `={{ ${source}.from }}`,
+    toEmail: `={{ ${source}.to }}`,
+    subject: `={{ ${source}.subject }}`,
+    emailFormat: "both",
+    text: `={{ ${source}.text }}`,
+    html: `={{ ${source}.html }}`,
+    options: { appendAttribution: false, replyTo: `={{ ${source}.replyTo }}` },
+  },
+  credentials: cred("smtp"),
+});
 
 // ---- workflows -----------------------------------------------------------------------
 const WORKFLOWS = {
@@ -529,6 +589,125 @@ const WORKFLOWS = {
     ];
     return workflow("BEER Bewerbungen", nodes, link("Bewerbung empfangen", "Bewerbung lesen", "Antwort an die Website", "Ziel noch offen"));
   },
+
+  newsletter: () => {
+    const nl = (name, file, prefix = "") => code(name, file, { libs: ["newsletter"], prefix });
+    const fromToken = (expression) => `={{ String(${expression} || '').slice(0, 120) || 'kein-schluessel' }}`;
+    const branch = (name, expression) => route(name, expression);
+    // Team page and sending (login "BEER Redaktion").
+    row(0);
+    const nodes = [
+      webhook("Seite aufrufen", "GET", "beer-newsletter", "0118a998-6628-4c93-b83c-e3fc5271719c"),
+      table("Abonnenten lesen", "newsletter_abonnenten", "get"),
+      { ...table("Versand lesen", "newsletter_versand", "get"), executeOnce: true },
+      nl("Seite", "newsletter-admin-page.js"),
+      html("Seite senden"),
+    ];
+    row(1);
+    nodes.push(
+      webhook("Versand starten", "POST", "beer-newsletter/senden", "b266e770-0fad-4cc7-ab7b-bc60ec1b3609"),
+      nl("Ausgabe vorbereiten", "newsletter-prepare.js"),
+      branch("Senden?", "={{ $json.route }}"),
+      answer("Vorschau oder Hinweis", "={{ $json.html }}"),
+      redirect("Zur Übersicht", "={{ $json.redirect }}"),
+      { ...table("Empfänger lesen", "newsletter_abonnenten", "get", { where: ["status", "bestaetigt"] }), executeOnce: true },
+      nl("Empfänger", "newsletter-recipients.js"),
+      { name: "In Paketen", type: "n8n-nodes-base.splitInBatches", typeVersion: 3, position: pos(), parameters: { batchSize: 10, options: {} } },
+      mailNode("Newsletter senden", "$json"),
+      // Ten mails, then a short pause: keeps within what normal mail servers accept.
+      { name: "Pause", type: "n8n-nodes-base.wait", typeVersion: 1.1, position: pos(), webhookId: "a1bd15f9-60e3-460d-ba93-8c7c1bec9ace", parameters: { resume: "timeInterval", amount: 3, unit: "seconds" } },
+      nl("Ergebnis", "newsletter-result.js"),
+      table("Versand merken", "newsletter_versand", "insert"),
+    );
+    // Sign-up from the website (key "BEER Website (Formular-Schlüssel)"), then the confirmation mail.
+    row(2);
+    nodes.push(
+      {
+        name: "Anmeldung empfangen",
+        type: "n8n-nodes-base.webhook",
+        typeVersion: 2,
+        position: pos(),
+        webhookId: "c19540e4-3722-4ec5-ab7b-7318bae884b9",
+        parameters: { httpMethod: "POST", path: "beer-newsletter/anmelden", authentication: "headerAuth", responseMode: "responseNode", options: {} },
+        credentials: cred("form"),
+      },
+      nl("Anmeldung prüfen", "newsletter-signup-read.js"),
+      // 48 random hex characters: the key in the confirm and unsubscribe links.
+      { name: "Schlüssel erzeugen", type: "n8n-nodes-base.crypto", typeVersion: 1, position: pos(), parameters: { action: "generate", dataPropertyName: "token", encodingType: "hex", stringLength: 48 } },
+      table("Abonnent suchen", "newsletter_abonnenten", "get", { where: ["email", "={{ $json.email || 'keine-adresse' }}"] }),
+      nl("Entscheiden", "newsletter-signup-decide.js"),
+      {
+        name: "Antwort an die Website",
+        type: "n8n-nodes-base.respondToWebhook",
+        typeVersion: 1.1,
+        position: pos(),
+        parameters: { respondWith: "json", responseBody: "={{ { ok: $json.ok } }}", options: { responseCode: "={{ $json.ok ? 200 : 400 }}" } },
+      },
+      branch("Mail nötig?", "={{ $json.route }}"),
+      plainCode("Anmeldung: Zeile", "newsletter-row.js"),
+      table("Abonnent speichern", "newsletter_abonnenten", "upsert", { where: ["email", "={{ $json.email }}"] }),
+      mailNode("Bestätigungsmail", "$('Entscheiden').first().json.mail"),
+    );
+    // The links in the mails: a page with a button (GET), the button saves (POST).
+    const linkRows = (n, kind, path, labels, ids) => {
+      const [hookGet, lookGet, pageNode, pageOut, hookPost, lookPost, check, decide, quick, rowNode, save, done] = labels;
+      row(n);
+      nodes.push(
+        publicHook(hookGet, "GET", path, ids[0]),
+        table(lookGet, "newsletter_abonnenten", "get", { where: ["token", fromToken("$json.query?.t")] }),
+        nl(pageNode, "newsletter-link-page.js", `const KIND = "${kind}"; const TRIGGER = "${hookGet}";`),
+        html(pageOut),
+      );
+      row(n + 1);
+      nodes.push(
+        publicHook(hookPost, "POST", path, ids[1]),
+        table(lookPost, "newsletter_abonnenten", "get", { where: ["token", fromToken("$json.body?.t || $json.query?.t")] }),
+        nl(check, "newsletter-link-action.js", `const KIND = "${kind}"; const TRIGGER = "${hookPost}";`),
+        branch(decide, "={{ $json.route }}"),
+        answer(quick, "={{ $json.html }}"),
+        plainCode(rowNode, "newsletter-row.js"),
+        table(save, "newsletter_abonnenten", "update", { where: ["token", `={{ $('${check}').first().json.token }}`] }),
+        answer(done, `={{ $('${check}').first().json.html }}`),
+      );
+      return merge(
+        link(hookGet, lookGet, pageNode, pageOut),
+        link(hookPost, lookPost, check, decide),
+        link([decide, 0], quick),
+        link([decide, 1], rowNode, save, done),
+      );
+    };
+    const confirm = linkRows(3, "bestaetigen", "beer-newsletter/bestaetigen",
+      ["Bestätigungslink", "Abonnent zum Link", "Bestätigungsseite", "Bestätigungsseite senden", "Bestätigen", "Abonnent zur Bestätigung", "Bestätigung prüfen", "Bestätigen?", "Bestätigung beantworten", "Bestätigung: Zeile", "Bestätigung speichern", "Bestätigung senden"],
+      ["7b17e899-0da1-4954-a0d8-6a0c3f6d50e2", "0652b191-4ddb-459f-bc32-75e882c2a05a"]);
+    const unsubscribe = linkRows(5, "abmelden", "beer-newsletter/abmelden",
+      ["Abmeldelink", "Abonnent zum Abmeldelink", "Abmeldeseite", "Abmeldeseite senden", "Abmelden", "Abonnent zur Abmeldung", "Abmeldung prüfen", "Abmelden?", "Abmeldung beantworten", "Abmeldung: Zeile", "Abmeldung speichern", "Abmeldung senden"],
+      ["7d7580a7-d841-41e5-8231-0320950e73d2", "4fe6f9e4-f409-4cf5-8c37-c5b1314a9f3c"]);
+    // Deleting one address for good (only when someone asks for their data to be erased).
+    row(7);
+    nodes.push(
+      webhook("Löschen", "POST", "beer-newsletter/loeschen", "5d2c8a41-9e3b-4f6a-8c1d-2b7e9f0a3c51"),
+      plainCode("Löschen prüfen", "newsletter-delete.js"),
+      table("Eintrag löschen", "newsletter_abonnenten", "deleteRows", { where: ["id", "={{ $json.id }}"] }),
+      redirect("Zurück", "/webhook/beer-newsletter?geloescht=1"),
+    );
+    return workflow(
+      "BEER Newsletter",
+      nodes,
+      merge(
+        link("Seite aufrufen", "Abonnenten lesen", "Versand lesen", "Seite", "Seite senden"),
+        link("Versand starten", "Ausgabe vorbereiten", "Senden?"),
+        link(["Senden?", 0], "Vorschau oder Hinweis"),
+        link(["Senden?", 1], "Zur Übersicht", "Empfänger lesen", "Empfänger", "In Paketen"),
+        link(["In Paketen", 1], "Newsletter senden", "Pause", "In Paketen"),
+        link(["In Paketen", 0], "Ergebnis", "Versand merken"),
+        link("Anmeldung empfangen", "Anmeldung prüfen", "Schlüssel erzeugen", "Abonnent suchen", "Entscheiden", "Antwort an die Website", "Mail nötig?"),
+        link(["Mail nötig?", 1], "Anmeldung: Zeile", "Abonnent speichern", "Bestätigungsmail"),
+        confirm,
+        unsubscribe,
+        link("Löschen", "Löschen prüfen", "Eintrag löschen", "Zurück"),
+      ),
+    );
+  },
 };
 
 // ---- deploy --------------------------------------------------------------------------
@@ -558,6 +737,13 @@ async function deploy() {
     const data = typeof def.placeholder === "function" ? def.placeholder() : def.placeholder;
     ids[key] = (await api("POST", "/credentials", { name: def.name, type: def.type, data })).id;
     console.log(`credential created: ${def.name} (placeholder – fill in in n8n)`);
+  }
+
+  const tables = (await api("GET", "/data-tables?limit=100")).data ?? [];
+  for (const [name, columns] of Object.entries(TABLES)) {
+    const found = tables.find((t) => t.name === name);
+    tableIds[name] = found ? found.id : (await api("POST", "/data-tables", { name, columns: columns.map(([column, type]) => ({ name: column, type })) })).id;
+    if (!found) console.log(`data table created: ${name}`);
   }
 
   const all = (await api("GET", "/workflows?limit=200")).data;
