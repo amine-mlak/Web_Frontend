@@ -191,9 +191,9 @@ export default function MegaMenu({
             className={cn(
               "absolute inset-x-0 top-0 z-0 grid origin-top bg-white transition-[grid-template-rows,box-shadow] duration-500",
               sheetEase,
-              solid
-                ? "pointer-events-auto grid-rows-[1fr] shadow-[0_18px_40px_rgba(17,17,17,0.08)]"
-                : "pointer-events-none grid-rows-[0fr] shadow-none",
+              solid ? "pointer-events-auto grid-rows-[1fr]" : "pointer-events-none grid-rows-[0fr]",
+              // A shadow only under an open menu; under the plain bar it laid a grey band over every hero.
+              solid && panelExpanded ? "shadow-[0_18px_40px_rgba(17,17,17,0.08)]" : "shadow-none",
             )}
           >
             <div className="min-h-0 overflow-hidden">
@@ -246,9 +246,8 @@ export default function MegaMenu({
         className={cn(
           "absolute inset-x-0 top-0 z-0 grid origin-top bg-white transition-[grid-template-rows,box-shadow] duration-500 lg:hidden",
           sheetEase,
-          solid
-            ? "pointer-events-auto grid-rows-[1fr] shadow-[0_18px_40px_rgba(17,17,17,0.08)]"
-            : "pointer-events-none grid-rows-[0fr] shadow-none",
+          solid ? "pointer-events-auto grid-rows-[1fr]" : "pointer-events-none grid-rows-[0fr]",
+          solid && mobileOpen ? "shadow-[0_18px_40px_rgba(17,17,17,0.08)]" : "shadow-none",
         )}
       >
         <div className="min-h-0 overflow-hidden">

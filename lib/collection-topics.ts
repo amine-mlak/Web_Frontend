@@ -34,18 +34,30 @@ export type PresentedTopic = PresentedCluster & {
   taggedKitchens?: number;
   /** Every project tagged with this topic, newest first as loaded (colour pages list them all). */
   taggedHouses?: ClusterHouse[];
-  /** Gallery photos from those projects (not their covers), one per project, for the text part. */
-  shots?: TopicShot[];
+  /** Kitchens shown one by one at the top of a colour page; the grid lists the rest. */
+  features?: TopicFeature[];
 };
 
-export type TopicShot = {
-  src: string;
-  srcSet?: string;
-  alt: string;
+export type TopicFeature = {
   href: string;
   title: string;
-  place: string;
+  meta: string;
+  intro: string;
+  image: string;
+  srcSet?: string;
+  detail?: { src: string; srcSet?: string; alt: string };
+  /** The pages this kitchen connects to: its region, materials, brands, appliances. */
+  links: { href: string; label: string }[];
 };
+
+/** The project text up to about 320 characters, ending at a sentence. */
+function shortIntro(text: string) {
+  const plain = text.replace(/[#*_>`]/g, "").replace(/\s+/g, " ").trim();
+  if (plain.length <= 320) return plain;
+  const cut = plain.slice(0, 320);
+  const end = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf("! "), cut.lastIndexOf("? "));
+  return end > 120 ? cut.slice(0, end + 1) : `${cut.slice(0, cut.lastIndexOf(" "))} …`;
+}
 
 type TopicVoice = {
   title: string;
@@ -1667,39 +1679,48 @@ export function presentTopic(
       };
     });
 
-  // Gallery photos of the tagged kitchens, never a cover (that is on the project card): first one
-  // per kitchen, then a second per kitchen and so on, so a colour with few projects still has
-  // enough. Kitchens with only this topic of the cluster come first: on the white page a white
-  // kitchen, not the black-and-white one.
+  // Kitchens with only this topic of the cluster come first: on the white page a white kitchen,
+  // not the black-and-white one.
   const othersInCluster = (project: Project) =>
     project.topics.filter((item) => item.cluster === cluster && item.slug !== topic.slug).length;
   const purestFirst = [...tagged].sort((a, b) => othersInCluster(a) - othersInCluster(b));
-  const framesOf = purestFirst.map((project) =>
-    project.gallery
-      .filter((item) => item.src && photoKey(item.src) !== photoKey(project.image) && photoKey(item.src) !== photoKey(topic.image ?? ""))
-      .map((frame): TopicShot => ({
-        src: frame.src,
-        srcSet: frame.srcSet,
-        alt: frame.alt || project.title,
+
+  // Up to four kitchens shown one by one (photo, detail, text, links to what they connect to);
+  // the project grid below lists the others.
+  const features: TopicFeature[] = purestFirst
+    .filter((project) => project.image)
+    .slice(0, 4)
+    .map((project) => {
+      const detail = project.gallery.find(
+        (item) => item.src && photoKey(item.src) !== photoKey(project.image) && photoKey(item.src) !== photoKey(topic.image ?? ""),
+      );
+      const links = [
+        ...project.regions.slice(0, 1).map((item) => ({ href: `/regionen/${item.slug}`, label: item.name })),
+        ...project.materials.slice(0, 2).map((item) => ({ href: `/material/${item.slug}`, label: item.name })),
+        ...project.brands.slice(0, 2).map((item) => ({ href: `/marken/${item.slug}`, label: item.name })),
+        ...project.appliances.slice(0, 1).map((item) => ({ href: `/geraete/${item.slug}`, label: item.name })),
+      ].slice(0, 5);
+      return {
         href: `/projekte/${project.slug}`,
         title: project.title,
-        place: project.place,
-      })),
-  );
-  const SHOTS = 8;
-  const shots: TopicShot[] = [];
-  for (let round = 0; shots.length < SHOTS && framesOf.some((frames) => frames.length > round); round++) {
-    for (const frames of framesOf) {
-      if (frames[round] && shots.length < SHOTS) shots.push(frames[round]);
-    }
-  }
+        meta: [project.place, project.year].filter(Boolean).join(" · "),
+        intro: shortIntro(project.intro),
+        image: project.image,
+        srcSet: project.srcSet,
+        detail: detail ? { src: detail.src, srcSet: detail.srcSet, alt: detail.alt || project.title } : undefined,
+        links,
+      };
+    });
+  const featured = new Set(features.map((feature) => feature.href));
 
-  const taggedHouses = tagged.map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: [project.place, project.year].filter(Boolean).join(" · "),
-    image: resolveDevImage(project.image, photo(80 + index, 1200)),
-  }));
+  const taggedHouses = tagged
+    .filter((project) => !featured.has(`/projekte/${project.slug}`))
+    .map((project, index) => ({
+      href: `/projekte/${project.slug}`,
+      title: project.title,
+      meta: [project.place, project.year].filter(Boolean).join(" · "),
+      image: resolveDevImage(project.image, photo(80 + index, 1200)),
+    }));
 
   const page: PresentedTopic = {
     locale,
@@ -1775,7 +1796,7 @@ export function presentTopic(
     siblings,
     houses,
     taggedHouses,
-    shots,
+    features,
     swatches,
     lookTitle: voice?.lookTitle ?? local.name,
     toneLine: voice?.toneLine,

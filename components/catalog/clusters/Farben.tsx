@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
@@ -8,7 +9,7 @@ import {
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import type { ClusterHouse, ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
-import type { PresentedTopic, TopicShot } from "@/lib/collection-topics";
+import type { PresentedTopic, TopicFeature } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function isLight(hex: string) {
@@ -110,18 +111,27 @@ function HouseCard({ house }: { house: ClusterHouse }) {
 const GRID = "grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3";
 
 /** All projects in this colour: twelve first, the rest one click away on the same page. */
-function ColourProjects({ hub }: { hub: PresentedTopic }) {
-  const houses = hub.taggedHouses?.length ? hub.taggedHouses : hub.houses;
+function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) {
+  const houses = hub.taggedHouses ?? hub.houses;
   if (houses.length === 0) {
     return null;
   }
   const en = hub.locale === "en";
   const first = houses.slice(0, 12);
   const rest = houses.slice(12);
+  // "Weiße Küchen" → "Weitere weiße Küchen" after the kitchens shown one by one above.
+  const name = hub.heroAlt.charAt(0).toLowerCase() + hub.heroAlt.slice(1);
+  const heading = more
+    ? en
+      ? `More ${name}`
+      : `Weitere ${name}`
+    : en
+      ? `${hub.heroAlt} from our projects`
+      : `${hub.heroAlt} aus unseren Projekten`;
   return (
     <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="farben-projekte">
       <h2 id="farben-projekte" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
-        {en ? `${hub.heroAlt} from our projects` : `${hub.heroAlt} aus unseren Projekten`}
+        {heading}
       </h2>
       <ul className={`mt-10 ${GRID}`}>
         {first.map((house) => (
@@ -187,41 +197,116 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
   );
 }
 
-/** A photo from a real project, with the project's name under it as a link. */
-function Shot({ shot, className, sizes }: { shot: TopicShot; className: string; sizes: string }) {
+const HOVER = "transition-transform duration-700 group-hover:scale-[1.02]";
+
+/** The words of one kitchen: place and year, name, its text, and the pages it connects to. */
+function FeatureText({ feature, locale, wide }: { feature: TopicFeature; locale: PresentedCluster["locale"]; wide?: boolean }) {
+  const en = locale === "en";
   return (
-    <LocaleLink href={shot.href} className="group block">
-      <Frame
-        src={shot.src}
-        srcSet={shot.srcSet}
-        alt={shot.alt}
-        className={className}
-        imgClassName="transition-transform duration-700 group-hover:scale-[1.02]"
-        sizes={sizes}
-      />
-      <span className="mt-3 block font-sans text-[14px] text-muted transition-colors group-hover:text-ink">
-        {shot.title}
-        {shot.place ? ` · ${shot.place}` : ""}
-      </span>
-    </LocaleLink>
+    <div className={wide ? "grid gap-6 lg:grid-cols-12 lg:gap-16" : ""}>
+      <div className={wide ? "lg:col-span-5" : ""}>
+        {feature.meta ? <p className="font-sans text-[14px] text-muted">{feature.meta}</p> : null}
+        <h2 className="mt-3 font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+          <LocaleLink href={feature.href} className="transition-opacity hover:opacity-70">
+            {feature.title}
+          </LocaleLink>
+        </h2>
+      </div>
+      <div className={wide ? "lg:col-span-6 lg:col-start-7" : ""}>
+        {feature.intro ? (
+          <p className={`${wide ? "" : "mt-5"} max-w-md font-sans text-[17px] leading-relaxed text-muted`}>{feature.intro}</p>
+        ) : null}
+        <LocaleLink href={feature.href} className="btn-quiet mt-7 text-ink">
+          {en ? "View the project" : "Projekt ansehen"}
+        </LocaleLink>
+        {feature.links.length ? (
+          <p className="mt-8 max-w-md font-sans text-[14px] leading-relaxed text-muted">
+            {en ? "In this kitchen: " : "In dieser Küche: "}
+            {feature.links.map((link, index) => (
+              <Fragment key={link.href}>
+                {index ? " · " : ""}
+                <LocaleLink href={link.href} className="text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+                  {link.label}
+                </LocaleLink>
+              </Fragment>
+            ))}
+          </p>
+        ) : null}
+      </div>
+    </div>
   );
 }
 
-/** Shares the project photos out over the page: the points get one each or none at all, never some. */
-function shareShots(shots: TopicShot[], points: number) {
-  const pointsGetPhotos = points > 0 && shots.length >= points;
-  const withStatement = !pointsGetPhotos || shots.length > points;
-  const statementShot: TopicShot | undefined = withStatement ? shots[0] : undefined;
-  const start = withStatement ? 1 : 0;
-  const pointShots = pointsGetPhotos ? shots.slice(start, start + points) : [];
-  const rest = shots.slice(start + pointShots.length);
-  return { statementShot, pointShots, wide: rest[0] as TopicShot | undefined, pair: rest.length >= 3 ? rest.slice(1, 3) : [] };
+/**
+ * One kitchen in this colour, like a page of an exposé. Four arrangements take turns, so each
+ * kitchen looks different: photo and text side by side, text with a photo and a detail, a wide
+ * photo with the text below, two photos with the text under them.
+ */
+function Feature({ feature, variant, locale }: { feature: TopicFeature; variant: number; locale: PresentedCluster["locale"] }) {
+  const photo = (className: string, sizes: string) => (
+    <LocaleLink href={feature.href} className="group block" tabIndex={-1} aria-hidden="true">
+      <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} imgClassName={HOVER} sizes={sizes} />
+    </LocaleLink>
+  );
+  const detail = (className: string, sizes: string) =>
+    feature.detail ? (
+      <Frame src={feature.detail.src} srcSet={feature.detail.srcSet} alt={feature.detail.alt} className={className} sizes={sizes} />
+    ) : null;
+
+  if (variant === 1) {
+    return (
+      <section className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+        <div className="order-2 lg:order-1 lg:col-span-5">
+          <FeatureText feature={feature} locale={locale} />
+        </div>
+        <div className="relative order-1 lg:order-2 lg:col-span-7 lg:pb-16">
+          {photo("aspect-[4/3]", "(max-width: 1024px) 100vw, 58vw")}
+          {feature.detail ? (
+            <div className="absolute bottom-0 -left-6 hidden w-[36%] border-8 border-paper lg:block">
+              {detail("aspect-[4/5]", "20vw")}
+            </div>
+          ) : null}
+        </div>
+      </section>
+    );
+  }
+  if (variant === 2) {
+    return (
+      <section className="py-14 lg:py-24">
+        <div className="px-5 sm:px-8 lg:px-14">{photo("aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]", "100vw")}</div>
+        <div className="mt-10 px-5 sm:px-8 lg:px-14">
+          <FeatureText feature={feature} locale={locale} wide />
+        </div>
+      </section>
+    );
+  }
+  if (variant === 3 && feature.detail) {
+    return (
+      <section className="px-5 py-14 sm:px-8 lg:px-14 lg:py-24">
+        <div className="grid gap-6 sm:grid-cols-2">
+          {photo("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
+          {detail("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
+        </div>
+        <div className="mx-auto mt-10 max-w-2xl">
+          <FeatureText feature={feature} locale={locale} />
+        </div>
+      </section>
+    );
+  }
+  return (
+    <section className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+      <div className="lg:col-span-7">{photo("aspect-[4/3]", "(max-width: 1024px) 100vw, 58vw")}</div>
+      <div className="lg:col-span-5">
+        <FeatureText feature={feature} locale={locale} />
+      </div>
+    </section>
+  );
 }
 
 export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   const hex = hub.hex || "#f4f1ea";
   const light = isLight(hex);
-  const { statementShot, pointShots, wide, pair } = shareShots(hub.shots ?? [], hub.branches.length);
+  const features = hub.features ?? [];
   const reading = (hub.lesetext ?? "")
     .split(/\n{2,}/)
     .map((part) => part.trim())
@@ -261,55 +346,55 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         </div>
       </section>
 
-      {/* Statement next to a kitchen in this colour. */}
-      <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
-        <div className={statementShot ? "lg:col-span-5 lg:self-center" : "lg:col-span-8"}>
-          <h2 className="font-serif text-[30px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[38px]">
-            {hub.statement}
-          </h2>
-          {hub.statementNote ? (
-            <p className="mt-6 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+      {/* Kitchens in this colour, one by one, each shown differently. */}
+      {features.map((feature, index) => (
+        <Feature key={feature.href} feature={feature} variant={index % 4} locale={hub.locale} />
+      ))}
+
+      <ColourProjects hub={hub} more={features.length > 0} />
+      <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
+        <h2 id="farben-andere" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+          {hub.locale === "en" ? "Other colours" : "Andere Farben"}
+        </h2>
+      </section>
+      <div className="px-5 pt-10 pb-16 sm:px-8 lg:px-14">
+        <SwatchField
+          swatches={hub.swatches.filter((swatch) => !swatch.href.endsWith(`/${slug}`))}
+          label={hub.locale === "en" ? "Other colours" : "Andere Farben"}
+          locale={hub.locale}
+        />
+      </div>
+
+      {/* The fixed texts at the end: the statement with its points, then the longer text. */}
+      <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="farben-wissen">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <h2 id="farben-wissen" className="font-serif text-[30px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[36px]">
+              {hub.statement}
+            </h2>
+            {hub.statementNote ? (
+              <p className="mt-6 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+            ) : null}
+          </div>
+          {hub.branches.length ? (
+            <ul className="grid gap-8 sm:grid-cols-3 lg:col-span-7">
+              {hub.branches.map((branch, index) => (
+                <li key={`${branch.title}-${index}`} className="border-t border-line pt-5">
+                  <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{branch.title}</h3>
+                  <p className="mt-3 font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
+                  {branch.points.length ? (
+                    <ul className="mt-2 space-y-1 font-sans text-[15px] leading-relaxed text-ink/80">
+                      {branch.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
           ) : null}
         </div>
-        {statementShot ? (
-          <div className="lg:col-span-7">
-            <Shot shot={statementShot} className="aspect-[4/3]" sizes="(max-width: 1024px) 100vw, 58vw" />
-          </div>
-        ) : null}
       </section>
-
-      {/* The points, each under a photo of a real kitchen in this colour. */}
-      {hub.branches.length ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-          <ul className={`grid gap-12 md:gap-8 ${hub.branches.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-            {hub.branches.map((branch, index) => (
-              <li key={`${branch.title}-${index}`}>
-                {pointShots[index] ? (
-                  <Shot shot={pointShots[index]} className="aspect-[4/5]" sizes="(max-width: 768px) 100vw, 33vw" />
-                ) : null}
-                <h3 className="mt-6 font-serif text-[26px] leading-tight font-medium tracking-[-0.02em] text-ink md:text-[30px]">
-                  {branch.title}
-                </h3>
-                <p className="mt-3 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
-                {branch.points.length ? (
-                  <ul className="mt-3 max-w-sm space-y-1 font-sans text-[15px] leading-relaxed text-ink/80">
-                    {branch.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      {/* A wide kitchen photo, then the longer text. */}
-      {wide ? (
-        <div className="px-5 sm:px-8 lg:px-14">
-          <Shot shot={wide} className="aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]" sizes="100vw" />
-        </div>
-      ) : null}
       {reading.length ? (
         <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24" aria-labelledby="farben-lesen">
           <h2
@@ -329,27 +414,6 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       ) : (
         <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       )}
-      {pair.length === 2 ? (
-        <div className="grid gap-6 px-5 pb-16 sm:grid-cols-2 sm:px-8 lg:px-14 lg:pb-24">
-          {pair.map((shot) => (
-            <Shot key={shot.href} shot={shot} className="aspect-[4/5]" sizes="(max-width: 640px) 100vw, 50vw" />
-          ))}
-        </div>
-      ) : null}
-
-      <ColourProjects hub={hub} />
-      <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
-        <h2 id="farben-andere" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
-          {hub.locale === "en" ? "Other colours" : "Andere Farben"}
-        </h2>
-      </section>
-      <div className="px-5 pt-10 pb-4 sm:px-8 lg:px-14">
-        <SwatchField
-          swatches={hub.swatches.filter((swatch) => !swatch.href.endsWith(`/${slug}`))}
-          label={hub.locale === "en" ? "Other colours" : "Andere Farben"}
-          locale={hub.locale}
-        />
-      </div>
       <SoftClose hub={hub} />
     </main>
   );
