@@ -158,12 +158,14 @@ export default function ProjekteCollection({
             {hub.statementNote}
           </p>
         </div>
-        <blockquote className="flex flex-col justify-center bg-nacht px-5 py-16 sm:px-8 lg:col-span-7 lg:px-16">
-          <p className="font-serif text-[24px] leading-snug font-medium italic text-paper md:text-[30px]">
-            {hub.quote}
-          </p>
-          <footer className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</footer>
-        </blockquote>
+        {hub.quote ? (
+          <blockquote className="flex flex-col justify-center bg-nacht px-5 py-16 sm:px-8 lg:col-span-7 lg:px-16">
+            <p className="font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
+              {hub.quote}
+            </p>
+            <footer className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</footer>
+          </blockquote>
+        ) : null}
       </section>
 
       {extras && extras.length > 0 ? (

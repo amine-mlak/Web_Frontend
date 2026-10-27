@@ -133,7 +133,9 @@ function copyFor(tile: KachelTile) {
 }
 
 function TileCard({ tile }: { tile: KachelTile }) {
-  const light = isLightColor(tile.color);
+  // The tile colour from the CMS no longer fills the text half (coloured blocks read as a template).
+  const light = true;
+  void isLightColor;
   const { title, text, buttonLabel } = copyFor(tile);
 
   return (
@@ -151,8 +153,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           />
         </div>
         <div
-          className="flex flex-col items-center justify-center px-8 py-12 text-center sm:px-12 lg:px-16"
-          style={{ backgroundColor: tile.color }}
+          className="flex flex-col items-start justify-center px-8 py-12 sm:px-12 lg:px-16"
         >
           <h3
             className={`max-w-md font-serif text-[28px] leading-[1.18] font-medium tracking-[-0.02em] md:text-[32px] lg:text-[34px] ${
@@ -173,11 +174,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           <LocaleLink
             href={tile.href}
             aria-label={`${buttonLabel}: ${title}`}
-            className={`mt-8 inline-flex items-center rounded-full border px-4 py-2 font-sans text-[13px] tracking-[0.04em] transition-colors ${
-              light
-                ? "border-ink text-ink hover:bg-ink hover:text-paper"
-                : "border-paper text-paper hover:bg-paper hover:text-ink"
-            }`}
+            className="btn-quiet mt-8 text-ink"
           >
             {buttonLabel}
           </LocaleLink>

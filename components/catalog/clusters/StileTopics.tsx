@@ -469,12 +469,16 @@ function Luxus({
           priority
           sizes="(max-width: 1024px) 100vw, 72rem"
         />
-        <p className="mx-auto mt-12 max-w-3xl text-center font-serif text-[28px] leading-snug font-medium text-paper italic md:text-[36px]">
-          {hub.quote}
-        </p>
-        <p className="mt-5 text-center font-sans text-[11px] tracking-[0.2em] text-messing uppercase">
-          {hub.quoteSource}
-        </p>
+        {hub.quote ? (
+          <>
+            <p className="mx-auto mt-12 max-w-3xl text-center font-serif text-[28px] leading-snug font-medium text-paper md:text-[36px]">
+              {hub.quote}
+            </p>
+            <p className="mt-5 text-center font-sans text-[11px] tracking-[0.2em] text-messing uppercase">
+              {hub.quoteSource}
+            </p>
+          </>
+        ) : null}
         <div className="mx-auto mt-12 max-w-6xl border-t border-paper/15">
           <Facts hub={hub} invert />
         </div>

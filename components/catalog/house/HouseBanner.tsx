@@ -21,7 +21,7 @@ export default function HouseBanner({
             className="font-serif text-[44px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[72px] lg:text-[84px]"
           >
             {house.title}
-            <span className="mt-2 block italic text-espresso">{house.emphasis}</span>
+            {house.emphasis ? <span className="mt-2 block text-espresso">{house.emphasis}</span> : null}
           </h1>
         </div>
         <div className="lg:col-span-5">

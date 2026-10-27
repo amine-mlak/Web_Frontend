@@ -153,12 +153,14 @@ export default function GeraeteCollection({
         </ul>
       </section>
 
-      <section className="border-t border-paper/12 px-5 py-16 text-center sm:px-8 lg:py-20">
-        <p className="mx-auto max-w-3xl font-serif text-[24px] leading-snug font-medium italic text-paper md:text-[30px]">
-          {hub.quote}
-        </p>
-        <p className="mt-5 type-eyebrow text-messing">{hub.quoteSource}</p>
-      </section>
+      {hub.quote ? (
+        <section className="border-t border-paper/12 px-5 py-16 text-center sm:px-8 lg:py-20">
+          <p className="mx-auto max-w-3xl font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
+            {hub.quote}
+          </p>
+          <p className="mt-5 type-eyebrow text-messing">{hub.quoteSource}</p>
+        </section>
+      ) : null}
 
       <div className="bg-paper text-ink">
         <HubEnd hub={hub}>{children}</HubEnd>

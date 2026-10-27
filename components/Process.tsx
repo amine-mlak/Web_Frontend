@@ -1,13 +1,7 @@
-import { Compass, Hammer, MessageCircle, PackageCheck, type LucideIcon } from "lucide-react";
 import Pill from "@/components/Pill";
-import type { ProcessContent, ProcessIcon } from "@/lib/strapi";
+import type { ProcessContent } from "@/lib/strapi";
 
-const icons: Record<ProcessIcon, LucideIcon> = {
-  consult: MessageCircle,
-  plan: Compass,
-  factory: Hammer,
-  handover: PackageCheck,
-};
+// The steps are numbered text; the icons above them were dropped (an icon per step read as a template).
 
 const fallback: ProcessContent = {
   eyebrow: "Der Weg zur Küche",
@@ -75,8 +69,6 @@ export default function Process({
 
         <ol className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {steps.map((item, index) => {
-            const Icon = icons[item.icon];
-
             return (
               <li key={`${item.step}-${item.title}`} className="relative">
                 {index < steps.length - 1 ? (
@@ -85,9 +77,6 @@ export default function Process({
                     aria-hidden="true"
                   />
                 ) : null}
-                <div className="relative mb-5 inline-flex h-10 w-10 items-center justify-center text-ink">
-                  <Icon className="h-6 w-6" strokeWidth={1.35} aria-hidden="true" />
-                </div>
                 <p className="type-eyebrow mb-2">{item.step}</p>
                 <h3 className="type-h3 text-ink">{item.title}</h3>
                 <p className="type-body mt-3 text-muted">{item.description}</p>

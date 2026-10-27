@@ -11,7 +11,7 @@ export const PHONE_HREF = "tel:+498168909910";
 export const PHONE_LABEL = "+49 8168 909910";
 
 const actionClass =
-  "inline-flex h-9 shrink-0 items-center justify-center rounded-full bg-ink text-paper transition-opacity hover:opacity-80";
+  "inline-flex h-9 shrink-0 items-center justify-center text-ink transition-opacity hover:opacity-60";
 
 export default function HeaderActions({
   compact = false,
@@ -45,7 +45,7 @@ export default function HeaderActions({
         aria-label={`${copy.call} ${PHONE_LABEL}`}
         data-umami-event="cta_call"
         data-umami-event-placement="header"
-        className={cn(actionClass, compact ? "w-9" : "gap-2 px-3.5")}
+        className={cn(actionClass, compact ? "w-9" : "gap-2 pl-2")}
       >
         <Phone className="size-4" strokeWidth={2} />
         {compact ? (

@@ -604,8 +604,9 @@ function asHouse(
     title: houseTitle(page, slug, locale) || hub.title,
     eyebrow: page?.eyebrow?.trim() || hub.eyebrow,
     lede: page?.intro?.trim() || hub.lede,
-    emphasis: page && (!page.contentLocale || page.contentLocale === locale) && page.betonung
-      ? page.betonung
+    // With a CMS title the emphasis is the CMS one too, even when it is empty.
+    emphasis: houseTitle(page, slug, locale)
+      ? page?.betonung?.trim() || ""
       : voice.emphasis,
     statement: page && (!page.contentLocale || page.contentLocale === locale) && page.aussage
       ? page.aussage

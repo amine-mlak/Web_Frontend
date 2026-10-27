@@ -465,10 +465,11 @@ function mapHeroPanel(
 
 function mapHeroSlides(slides?: StrapiHeroSlide[]): HeroSlide[] {
   return (slides ?? [])
-    .map((slide) => ({
-      src: strapiMediaUrl(slide.image?.url),
-      alt: slide.alt?.trim() || "",
-    }))
+    .map((slide) => {
+      // Full-screen photos in the sizes the screen needs, not the camera original (7,000 px).
+      const image = strapiResponsiveImage(slide.image, { srcWidth: 1920 });
+      return { src: image.src, srcSet: image.srcSet, alt: slide.alt?.trim() || "" };
+    })
     .filter((slide) => slide.src);
 }
 

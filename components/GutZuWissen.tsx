@@ -8,9 +8,9 @@ export type GutZuWissenContent = {
 
 export const fallbackGutZuWissen: GutZuWissenContent = {
   eyebrow: "Gut zu wissen",
-  quote:
-    "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt – den Rest sortieren wir gemeinsam.",
-  source: "Aus dem ersten Gespräch in unserer Ausstellung Wolfersdorf",
+  // Christian Beer on beer.de (Team page): a real quote with its real source.
+  quote: "Den größten Erfolg hat man dann, wenn man etwas mit echter Leidenschaft macht.",
+  source: "Christian Beer, Geschäftsführer",
 };
 
 export default function GutZuWissen({

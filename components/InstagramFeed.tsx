@@ -56,7 +56,7 @@ export default async function InstagramFeed() {
             href={INSTAGRAM_HREF}
             target="_blank"
             rel="noreferrer"
-            className="mt-1 inline-flex h-10 shrink-0 items-center gap-2 rounded-full bg-ink px-4 text-[14px] tracking-[0.04em] text-paper transition-opacity hover:opacity-80"
+            className="btn-quiet mt-1 shrink-0 text-ink"
             data-umami-event="instagram_follow"
             data-umami-event-handle={INSTAGRAM_HANDLE}
           >

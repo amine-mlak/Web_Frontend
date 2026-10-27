@@ -139,12 +139,16 @@ export default function MaterialCollection({
           <p className="type-eyebrow text-gold">
             {hub.locale === "en" ? "To the hand" : "An die Hand"}
           </p>
-          <blockquote className="mt-6 font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink italic md:text-[32px]">
-            {hub.quote}
-          </blockquote>
-          <p className="mt-5 font-sans text-[13px] tracking-[0.12em] text-muted uppercase">
-            {hub.quoteSource}
-          </p>
+          {hub.quote ? (
+            <>
+              <blockquote className="mt-6 font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
+                {hub.quote}
+              </blockquote>
+              <p className="mt-5 font-sans text-[13px] tracking-[0.12em] text-muted uppercase">
+                {hub.quoteSource}
+              </p>
+            </>
+          ) : null}
           <p className="mt-8 max-w-sm font-sans text-[15px] leading-relaxed text-muted">
             {hub.statementNote}
           </p>

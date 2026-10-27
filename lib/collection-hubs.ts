@@ -421,7 +421,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     heroAlt: "Planung an der Kücheninsel",
     indexEyebrow: "So gehen wir vor",
     quote:
-      "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt — den Rest sortieren wir gemeinsam.",
+      "Den größten Erfolg hat man dann, wenn man etwas mit echter Leidenschaft macht.",
     quoteSource: "Aus dem ersten Gespräch in der Ausstellung Wolfersdorf",
     ctaLabel: "Beratung beginnen",
     ctaHref: "/beratung",

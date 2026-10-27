@@ -25,8 +25,9 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
         className="object-cover object-center"
       />
 
-      <div className="absolute inset-0 z-10 flex items-end px-4 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-28">
-        <div className="w-fit max-w-full bg-transparent px-3 py-3 text-paper backdrop-blur-[12px] sm:px-4 sm:py-3.5">
+      <div className="absolute inset-0 z-10 flex items-end px-5 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
+        <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+        <div className="max-w-3xl text-paper">
           {crumbs.length > 0 || hub.eyebrow ? (
             <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper uppercase">
               {crumbs.map((crumb, index) => (
@@ -60,8 +61,8 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
             id="collection-hero-heading"
             className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px]"
           >
-            {hub.title}{" "}
-            <em className="font-medium italic">{hub.emphasis}</em>
+            {hub.title}
+            {hub.emphasis ? ` ${hub.emphasis}` : ""}
           </h1>
           {hub.hex ? (
             <p className="mt-3 flex items-center gap-3">
@@ -80,7 +81,7 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
           </p>
           <LocaleLink
             href={hub.ctaHref}
-            className="mt-5 inline-flex items-center rounded-full bg-paper px-5 py-2.5 font-sans text-[15px] text-ink transition-colors hover:bg-white"
+            className="btn-quiet mt-7 text-paper"
           >
             {hub.ctaLabel}
           </LocaleLink>

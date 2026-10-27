@@ -356,12 +356,14 @@ export function presentHub(
         ...raw,
         eyebrow: cms.eyebrow || raw.eyebrow,
         title: cms.seitentitel || raw.title,
-        emphasis: cms.betonung || raw.emphasis,
+        // With a CMS title the emphasis is the CMS one too, even when it is empty.
+        emphasis: cms.seitentitel ? cms.betonung || "" : raw.emphasis,
         lede: cms.intro || raw.lede,
         statement: cms.aussage || raw.statement,
         statementNote: cms.hinweis || raw.statementNote,
-        quote: cms.zitat || raw.quote,
-        quoteSource: cms.zitatQuelle || raw.quoteSource,
+        // Quotes come only from the CMS, where someone enters a real one with its real source.
+        quote: cms.zitat || "",
+        quoteSource: cms.zitat ? cms.zitatQuelle || "" : "",
         ctaLabel: cms.ctaLabel || raw.ctaLabel,
         ctaHref: cms.ctaUrl || raw.ctaHref,
         closeTitle: cms.schlussTitel || raw.closeTitle,

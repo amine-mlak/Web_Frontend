@@ -6,6 +6,21 @@ type CmsImageProps = ImageProps & {
   srcSet?: string;
 };
 
+// Widths the /cms-opt route renders (app/cms-opt/[width]/[...path]/route.ts).
+const OPT_WIDTHS = [1280, 1600, 1920, 2560, 3840];
+
+/**
+ * A photo resized by /cms-opt/<width>/<file> also exists in every smaller width, so the
+ * browser can pick the one that fits the screen instead of always loading the largest.
+ */
+function optSrcSet(src: string) {
+  const match = src.match(/^\/cms-opt\/(\d+)\/(.+)$/);
+  if (!match) return undefined;
+  const largest = Number(match[1]);
+  const widths = OPT_WIDTHS.filter((width) => width <= largest);
+  return widths.length > 1 ? widths.map((width) => `/cms-opt/${width}/${match[2]} ${width}w`).join(", ") : undefined;
+}
+
 export default function CmsImage({
   src,
   alt,
@@ -39,7 +54,7 @@ export default function CmsImage({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={srcString}
-        srcSet={remapped ? undefined : srcSet}
+        srcSet={remapped ? undefined : srcSet ?? optSrcSet(srcString)}
         sizes={typeof sizes === "string" ? sizes : undefined}
         alt={alt}
         // Without fill, the size reserves space so the layout does not jump.

@@ -55,7 +55,7 @@ const fallback: FaqContent = {
   eyebrow: "Gut zu wissen",
   title: "Was viele zuerst fragen",
   quote:
-    "Sie müssen nicht wissen, was Sie wollen. Sie müssen nur wissen, was Ihnen gefällt – den Rest sortieren wir gemeinsam.",
+    "Den größten Erfolg hat man dann, wenn man etwas mit echter Leidenschaft macht.",
   quoteSource: "Aus dem ersten Gespräch in unserer Ausstellung Wolfersdorf",
   items: editorialItems,
 };

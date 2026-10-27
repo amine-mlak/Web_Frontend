@@ -112,10 +112,14 @@ export default function MarkenCollection({
       ) : null}
 
       <section className="bg-nacht px-5 py-16 text-center sm:px-8 lg:py-20">
-        <p className="mx-auto max-w-3xl font-serif text-[24px] leading-snug font-medium italic text-paper md:text-[30px]">
-          {hub.quote}
-        </p>
-        <p className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</p>
+        {hub.quote ? (
+          <>
+            <p className="mx-auto max-w-3xl font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
+              {hub.quote}
+            </p>
+            <p className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</p>
+          </>
+        ) : null}
         <LocaleLink href={hub.ctaHref} className="pill pill-light mt-10">
           {hub.ctaLabel}
         </LocaleLink>

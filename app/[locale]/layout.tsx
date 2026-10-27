@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Figtree } from "next/font/google";
+import { Albert_Sans, Cormorant_Garamond, Figtree, Newsreader } from "next/font/google";
 import { notFound } from "next/navigation";
 import ClickIds from "@/components/ClickIds";
+import DesignSwitcher from "@/components/DesignSwitcher";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
+import { DESIGN_SCRIPT } from "@/lib/design-preview";
 import { isLocale, LOCALES } from "@/lib/i18n";
 import { siteUrl } from "@/lib/seo";
 import { allowSearchIndexing } from "@/lib/umami";
@@ -22,6 +24,22 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
   preload: false,
   variable: "--font-cormorant",
+});
+
+// Design preview: A Werkstatt (one sans) and B Editorial (upright serif). The one not chosen goes.
+const albert = Albert_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  variable: "--font-albert",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  axes: ["opsz"],
+  variable: "--font-newsreader",
 });
 
 const indexingOn = allowSearchIndexing();
@@ -72,11 +90,12 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${figtree.variable} ${cormorant.variable}`}
+      className={`${figtree.variable} ${cormorant.variable} ${albert.variable} ${newsreader.variable}`}
       suppressHydrationWarning
     >
       <head>
         <link rel="describedby" href="/llms.txt" />
+        <script dangerouslySetInnerHTML={{ __html: DESIGN_SCRIPT }} />
       </head>
       <body
         className={`${figtree.className} antialiased`}
@@ -87,6 +106,7 @@ export default async function RootLayout({
           <ClickIds />
           <Umami />
           {children}
+          <DesignSwitcher />
         </LocaleProvider>
       </body>
     </html>

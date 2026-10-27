@@ -109,10 +109,14 @@ export default function KuechenCollection({
       </section>
 
       <section className="bg-nacht px-5 py-20 text-center sm:px-8 lg:py-28">
-        <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-paper italic md:text-[36px]">
-          {hub.quote}
-        </p>
-        <p className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</p>
+        {hub.quote ? (
+          <>
+            <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-paper md:text-[36px]">
+              {hub.quote}
+            </p>
+            <p className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</p>
+          </>
+        ) : null}
         <p className="mx-auto mt-10 max-w-md font-sans text-[15px] font-light text-paper/70">
           {hub.priceLine}
         </p>

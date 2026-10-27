@@ -41,7 +41,9 @@ export default function AnnouncementBar({ announcement }: { announcement: Announ
   const locale = useLocale();
   const copy = COPY[locale];
   const [paused, setPaused] = useState(false);
-  const { items, scrolling, tone } = announcement;
+  const { items, tone } = announcement;
+  // The bar stands still, whatever the CMS says: moving text read as cheap next to the photos.
+  const scrolling = false as boolean;
 
   // Enough repeats that one copy of the track is wider than a wide screen.
   const characters = items.reduce((sum, item) => sum + item.text.length, 0);

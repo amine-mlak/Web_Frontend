@@ -1240,11 +1240,13 @@ function withCms(voice: Voice, cms?: CmsPageFields): Voice {
   return {
     ...voice,
     title: cms.seitentitel || voice.title,
-    emphasis: cms.betonung || voice.emphasis,
+    // With a CMS title the emphasis is the CMS one too, even when it is empty.
+    emphasis: cms.seitentitel ? cms.betonung || "" : voice.emphasis,
     statement: cms.aussage || voice.statement,
     statementNote: cms.hinweis || voice.statementNote,
-    quote: cms.zitat || voice.quote,
-    quoteSource: cms.zitatQuelle || voice.quoteSource,
+    // Quotes come only from the CMS, where someone enters a real one with its real source.
+    quote: cms.zitat || "",
+    quoteSource: cms.zitat ? cms.zitatQuelle || "" : "",
     closeTitle: cms.schlussTitel || voice.closeTitle,
     closeText: cms.schlussText || voice.closeText,
     facts: cms.stichworte?.length

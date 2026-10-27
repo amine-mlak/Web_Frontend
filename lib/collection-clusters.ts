@@ -699,12 +699,14 @@ export function presentCluster(
         ...base,
         eyebrow: cms.eyebrow || base.eyebrow,
         title: cms.seitentitel || base.title,
-        emphasis: cms.betonung || base.emphasis,
+        // With a CMS title the emphasis is the CMS one too, even when it is empty.
+        emphasis: cms.seitentitel ? cms.betonung || "" : base.emphasis,
         lede: cms.intro || base.lede,
         statement: cms.aussage || base.statement,
         statementNote: cms.hinweis || base.statementNote,
-        quote: cms.zitat || base.quote,
-        quoteSource: cms.zitatQuelle || base.quoteSource,
+        // Quotes come only from the CMS, where someone enters a real one with its real source.
+        quote: cms.zitat || "",
+        quoteSource: cms.zitat ? cms.zitatQuelle || "" : "",
         ctaLabel: cms.ctaLabel || base.ctaLabel,
         closeTitle: cms.schlussTitel || base.closeTitle,
         closeText: cms.schlussText || base.closeText,
