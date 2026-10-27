@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPage from "@/components/catalog/entries/CategoryPage";
+import InteriorPage, { interiorPoints } from "@/components/catalog/entries/InteriorPage";
 import SamplePage from "@/components/catalog/entries/SamplePage";
 import { cmsValue, findBySlug, projectsForMaterial } from "@/lib/catalog";
 import { fetchMaterials, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
@@ -71,9 +72,14 @@ export default async function MaterialDetailPage({
 
   if (isMaterialKindRoute(slug)) {
     const page = await fetchSitePage(slug);
+    const hub = presentMaterialKind(slug, locale, items, projects, page);
+    // Innenleben shows each CMS point as its own photo section once the points carry photos.
+    if (slug === "innenleben" && page && interiorPoints(page).length >= 2) {
+      return <InteriorPage hub={hub} page={page} faqTheme={MATERIAL_FAQ[slug]} />;
+    }
     return (
       <CategoryPage
-        hub={presentMaterialKind(slug, locale, items, projects, page)}
+        hub={hub}
         faqTheme={MATERIAL_FAQ[slug]}
       />
     );

@@ -67,6 +67,13 @@ function mediaImage(
   };
 }
 
+/** An optional photo inside a page point; undefined when the CMS has none. */
+function pointImage(row: Record<string, unknown>, key: string) {
+  const media = row[key] as (StrapiMedia & { alternativeText?: string | null }) | undefined;
+  const mapped = strapiResponsiveImage(media, { srcWidth: 1600 });
+  return mapped.src ? { src: mapped.src, srcSet: mapped.srcSet, alt: media?.alternativeText?.trim() || "" } : undefined;
+}
+
 function related(row: Record<string, unknown> | null, key: string) {
   return flattenCollection(row?.[key]);
 }
@@ -104,10 +111,16 @@ function pageFields(row: Record<string, unknown> | null) {
       a: text(item, "wert"),
       b: text(item, "zeile"),
     })).map((item) => ({ wert: item.a, zeile: item.b })),
-    punkte: repeaters(row, "punkte", (item) => ({
-      a: text(item, "titel"),
-      b: text(item, "text"),
-    })).map((item) => ({ titel: item.a, text: item.b })),
+    punkte: flattenCollection(row?.punkte)
+      .map((item) => ({
+        titel: text(item, "titel"),
+        text: text(item, "text"),
+        bild: pointImage(item, "bild"),
+        detailbild: pointImage(item, "detailbild"),
+        linkText: text(item, "linkText") || undefined,
+        linkZiel: text(item, "linkZiel") || undefined,
+      }))
+      .filter((item) => item.titel && item.text),
   };
 }
 
@@ -551,7 +564,8 @@ export async function fetchSitePages() {
       "pagination[pageSize]": "50",
       "populate[image]": "true",
       "populate[stichworte]": "true",
-      "populate[punkte]": "true",
+      // Points may carry a photo, a detail photo and a link (Innenleben shows each as a section).
+      "populate[punkte][populate]": "*",
       "populate[faq][populate][theme]": "true",
       "populate[faq][populate][questions][populate]": "item",
     },

@@ -42,7 +42,7 @@ export type KitchenTopic = {
   seoDescription?: string;
   contentLocale?: string;
   stichworte?: { wert: string; zeile: string }[];
-  punkte?: { titel: string; text: string }[];
+  punkte?: PagePoint[];
 };
 
 export function cmsValue(
@@ -59,6 +59,16 @@ export function cmsValue(
   return value;
 }
 
+/** A point of a page: title and text, optionally with a photo, a detail photo and a link (CMS "Punkt"). */
+export type PagePoint = {
+  titel: string;
+  text: string;
+  bild?: { src: string; srcSet?: string; alt: string };
+  detailbild?: { src: string; srcSet?: string; alt: string };
+  linkText?: string;
+  linkZiel?: string;
+};
+
 export type CmsPageFields = {
   contentLocale?: string;
   seitentitel?: string;
@@ -70,7 +80,7 @@ export type CmsPageFields = {
   schlussTitel?: string;
   schlussText?: string;
   stichworte?: { wert: string; zeile: string }[];
-  punkte?: { titel: string; text: string }[];
+  punkte?: PagePoint[];
 };
 
 export type CatalogSpec = { label: string; value: string };
