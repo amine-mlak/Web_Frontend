@@ -23,6 +23,7 @@ import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { topicReading } from "@/lib/topic-reading";
+import { photoKey } from "@/lib/utils";
 
 export type PresentedTopic = PresentedCluster & {
   lookTitle: string;
@@ -33,6 +34,17 @@ export type PresentedTopic = PresentedCluster & {
   taggedKitchens?: number;
   /** Every project tagged with this topic, newest first as loaded (colour pages list them all). */
   taggedHouses?: ClusterHouse[];
+  /** Gallery photos from those projects (not their covers), one per project, for the text part. */
+  shots?: TopicShot[];
+};
+
+export type TopicShot = {
+  src: string;
+  srcSet?: string;
+  alt: string;
+  href: string;
+  title: string;
+  place: string;
 };
 
 type TopicVoice = {
@@ -1655,6 +1667,33 @@ export function presentTopic(
       };
     });
 
+  // Gallery photos of the tagged kitchens, never a cover (that is on the project card): first one
+  // per kitchen, then a second per kitchen and so on, so a colour with few projects still has
+  // enough. Kitchens with only this topic of the cluster come first: on the white page a white
+  // kitchen, not the black-and-white one.
+  const othersInCluster = (project: Project) =>
+    project.topics.filter((item) => item.cluster === cluster && item.slug !== topic.slug).length;
+  const purestFirst = [...tagged].sort((a, b) => othersInCluster(a) - othersInCluster(b));
+  const framesOf = purestFirst.map((project) =>
+    project.gallery
+      .filter((item) => item.src && photoKey(item.src) !== photoKey(project.image) && photoKey(item.src) !== photoKey(topic.image ?? ""))
+      .map((frame): TopicShot => ({
+        src: frame.src,
+        srcSet: frame.srcSet,
+        alt: frame.alt || project.title,
+        href: `/projekte/${project.slug}`,
+        title: project.title,
+        place: project.place,
+      })),
+  );
+  const SHOTS = 8;
+  const shots: TopicShot[] = [];
+  for (let round = 0; shots.length < SHOTS && framesOf.some((frames) => frames.length > round); round++) {
+    for (const frames of framesOf) {
+      if (frames[round] && shots.length < SHOTS) shots.push(frames[round]);
+    }
+  }
+
   const taggedHouses = tagged.map((project, index) => ({
     href: `/projekte/${project.slug}`,
     title: project.title,
@@ -1736,6 +1775,7 @@ export function presentTopic(
     siblings,
     houses,
     taggedHouses,
+    shots,
     swatches,
     lookTitle: voice?.lookTitle ?? local.name,
     toneLine: voice?.toneLine,

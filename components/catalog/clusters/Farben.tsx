@@ -5,11 +5,10 @@ import {
   Crumbs,
   HouseLine,
   QuoteLine,
-  RuledPoints,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import type { ClusterHouse, ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
-import type { PresentedTopic } from "@/lib/collection-topics";
+import type { PresentedTopic, TopicShot } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function isLight(hex: string) {
@@ -69,11 +68,8 @@ function SwatchField({
                 className={`flex flex-1 flex-col justify-end px-6 ${tall ? "py-8" : "py-6"} ${light ? "border-x border-b border-line" : ""}`}
                 style={{ backgroundColor: swatch.hex }}
               >
-                <span className={`font-sans text-[12px] tracking-[0.12em] uppercase ${light ? "text-ink/70" : "text-paper/75"}`}>
-                  {swatch.hex}
-                </span>
                 <span
-                  className={`mt-3 block font-serif leading-none font-medium tracking-[-0.03em] ${tall ? "text-[32px]" : "text-[26px]"} ${
+                  className={`block font-serif leading-none font-medium tracking-[-0.03em] ${tall ? "text-[32px]" : "text-[26px]"} ${
                     light ? "text-ink" : "text-paper"
                   }`}
                 >
@@ -191,9 +187,45 @@ export function FarbenCluster({ hub }: { hub: PresentedCluster }) {
   );
 }
 
+/** A photo from a real project, with the project's name under it as a link. */
+function Shot({ shot, className, sizes }: { shot: TopicShot; className: string; sizes: string }) {
+  return (
+    <LocaleLink href={shot.href} className="group block">
+      <Frame
+        src={shot.src}
+        srcSet={shot.srcSet}
+        alt={shot.alt}
+        className={className}
+        imgClassName="transition-transform duration-700 group-hover:scale-[1.02]"
+        sizes={sizes}
+      />
+      <span className="mt-3 block font-sans text-[14px] text-muted transition-colors group-hover:text-ink">
+        {shot.title}
+        {shot.place ? ` · ${shot.place}` : ""}
+      </span>
+    </LocaleLink>
+  );
+}
+
+/** Shares the project photos out over the page: the points get one each or none at all, never some. */
+function shareShots(shots: TopicShot[], points: number) {
+  const pointsGetPhotos = points > 0 && shots.length >= points;
+  const withStatement = !pointsGetPhotos || shots.length > points;
+  const statementShot: TopicShot | undefined = withStatement ? shots[0] : undefined;
+  const start = withStatement ? 1 : 0;
+  const pointShots = pointsGetPhotos ? shots.slice(start, start + points) : [];
+  const rest = shots.slice(start + pointShots.length);
+  return { statementShot, pointShots, wide: rest[0] as TopicShot | undefined, pair: rest.length >= 3 ? rest.slice(1, 3) : [] };
+}
+
 export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   const hex = hub.hex || "#f4f1ea";
   const light = isLight(hex);
+  const { statementShot, pointShots, wide, pair } = shareShots(hub.shots ?? [], hub.branches.length);
+  const reading = (hub.lesetext ?? "")
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
 
   return (
     <main className="bg-paper">
@@ -201,16 +233,9 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         <div className="grid items-end lg:grid-cols-12">
           <div className="px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
             <Crumbs hub={hub} tone={light ? "ink" : "paper"} />
-            <p
-              className={`mt-8 font-sans text-[11px] tracking-[0.22em] uppercase ${
-                light ? "text-ink/50" : "text-paper/60"
-              }`}
-            >
-              {hex}
-            </p>
             <h1
               id="farben-topic"
-              className={`mt-4 font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] sm:text-[68px] ${
+              className={`mt-10 font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] sm:text-[68px] ${
                 light ? "text-ink" : "text-paper"
               }`}
             >
@@ -236,16 +261,82 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <h2 className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
-          {hub.statement}
-        </h2>
-        <div className="lg:col-span-7">
-          <RuledPoints branches={hub.branches} />
+      {/* Statement next to a kitchen in this colour. */}
+      <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
+        <div className={statementShot ? "lg:col-span-5 lg:self-center" : "lg:col-span-8"}>
+          <h2 className="font-serif text-[30px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[38px]">
+            {hub.statement}
+          </h2>
+          {hub.statementNote ? (
+            <p className="mt-6 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+          ) : null}
         </div>
+        {statementShot ? (
+          <div className="lg:col-span-7">
+            <Shot shot={statementShot} className="aspect-[4/3]" sizes="(max-width: 1024px) 100vw, 58vw" />
+          </div>
+        ) : null}
       </section>
 
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      {/* The points, each under a photo of a real kitchen in this colour. */}
+      {hub.branches.length ? (
+        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+          <ul className={`grid gap-12 md:gap-8 ${hub.branches.length >= 3 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+            {hub.branches.map((branch, index) => (
+              <li key={`${branch.title}-${index}`}>
+                {pointShots[index] ? (
+                  <Shot shot={pointShots[index]} className="aspect-[4/5]" sizes="(max-width: 768px) 100vw, 33vw" />
+                ) : null}
+                <h3 className="mt-6 font-serif text-[26px] leading-tight font-medium tracking-[-0.02em] text-ink md:text-[30px]">
+                  {branch.title}
+                </h3>
+                <p className="mt-3 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
+                {branch.points.length ? (
+                  <ul className="mt-3 max-w-sm space-y-1 font-sans text-[15px] leading-relaxed text-ink/80">
+                    {branch.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {/* A wide kitchen photo, then the longer text. */}
+      {wide ? (
+        <div className="px-5 sm:px-8 lg:px-14">
+          <Shot shot={wide} className="aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]" sizes="100vw" />
+        </div>
+      ) : null}
+      {reading.length ? (
+        <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24" aria-labelledby="farben-lesen">
+          <h2
+            id="farben-lesen"
+            className="font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[44px] lg:col-span-4"
+          >
+            {hub.ueberschrift || hub.heroAlt}
+          </h2>
+          <div className="max-w-2xl space-y-6 lg:col-span-7 lg:col-start-6">
+            {reading.map((paragraph, index) => (
+              <p key={index} className="font-sans text-[17px] leading-[1.7] text-ink/85">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      )}
+      {pair.length === 2 ? (
+        <div className="grid gap-6 px-5 pb-16 sm:grid-cols-2 sm:px-8 lg:px-14 lg:pb-24">
+          {pair.map((shot) => (
+            <Shot key={shot.href} shot={shot} className="aspect-[4/5]" sizes="(max-width: 640px) 100vw, 50vw" />
+          ))}
+        </div>
+      ) : null}
+
       <ColourProjects hub={hub} />
       <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
         <h2 id="farben-andere" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
