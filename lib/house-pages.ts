@@ -236,23 +236,24 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
     },
     karriere: {
       kind: "contact",
-      emphasis: "in der Manufaktur.",
+      // Only used when the CMS page has no text of its own; the CMS fills all of these.
+      emphasis: "bei BEER",
       statement:
-        "Selten eine Stelle. Wenn, dann Handwerk und Planung in Wolfersdorf — kein Vertriebsnetz, keine Motivationslyrik. Wir stellen ein, wenn die Werkstatt es trägt.",
-      statementNote: "Schreiben Sie uns sachlich. Wir lesen in der Manufaktur, nicht in einer Personalabteilung hinter Glas.",
-      closeTitle: "Eine Nachricht, kein Portal.",
-      closeText: "Anfragen an die Manufaktur. Antwort, wenn eine Stelle offen ist — oder wenn sie es bald sein könnte.",
-      bodyTitle: "Handwerk vor Vertrieb.",
+        "Wir sind ein Familienbetrieb mit kurzen Wegen und flachen Hierarchien. Wir bilden Schreiner aus und suchen Verstärkung in Fertigung, Montage und Planung.",
+      statementNote: "Bei Fragen ist Christian Beer persönlich unter +49 8168 99 69 61 erreichbar.",
+      closeTitle: "Bewirb Dich.",
+      closeText: "Über das Formular auf dieser Seite oder per E-Mail an bewerbung@beer.de.",
+      // The CMS text starts with its own heading.
+      bodyTitle: "",
       facts: [
-        { value: "Wolfersdorf", label: "kein Netz" },
-        { value: "Handwerk", label: "und Planung" },
-        { value: "Selten", label: "eine Stelle" },
-        { value: "Gespräch", label: "statt Portal" },
+        { value: "Ausbildung", label: "zum Schreiner" },
+        { value: "Praktikum", label: "ein bis vier Wochen" },
+        { value: "Wolfersdorf", label: "bei Freising" },
+        { value: "Familienbetrieb", label: "seit 1981" },
       ],
-      ledger: "Eine Stelle, wenn die Werkstatt sie trägt.",
+      ledger: "Ausbildung und Arbeit in Wolfersdorf.",
       seed: 70,
       heroFile: "stile-purist.jpg",
-      showLead: true,
     },
   },
   en: {
@@ -399,24 +400,24 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
     },
     karriere: {
       kind: "contact",
-      emphasis: "in the workshop.",
+      // Only used when the CMS page has no text of its own; the CMS fills all of these.
+      emphasis: "at BEER",
       statement:
-        "A post is rare. When there is one, it is craft and planning in Wolfersdorf — not a sales net, not motivational copy. We hire when the workshop can carry it.",
-      statementNote: "Write plainly. We read in the manufactory, not in a glass HR office.",
-      closeTitle: "A note, not a portal.",
-      closeText:
-        "Enquiries to the workshop. An answer if a post is open — or if it soon could be.",
-      bodyTitle: "Craft before sales.",
+        "We are a family business with short paths and flat hierarchies. We train joiners and are looking for people in production, fitting and planning.",
+      statementNote: "Questions? Christian Beer is personally available on +49 8168 99 69 61.",
+      closeTitle: "Apply.",
+      closeText: "Use the form on this page or write to bewerbung@beer.de.",
+      // The CMS text starts with its own heading.
+      bodyTitle: "",
       facts: [
-        { value: "Wolfersdorf", label: "no net" },
-        { value: "Craft", label: "and planning" },
-        { value: "Rare", label: "a post" },
-        { value: "Talk", label: "not a portal" },
+        { value: "Apprenticeship", label: "as a joiner" },
+        { value: "Internship", label: "one to four weeks" },
+        { value: "Wolfersdorf", label: "near Freising" },
+        { value: "Family business", label: "since 1981" },
       ],
-      ledger: "A post, when the workshop can carry it.",
+      ledger: "Training and work in Wolfersdorf.",
       seed: 70,
       heroFile: "stile-purist.jpg",
-      showLead: true,
     },
   },
 };
@@ -577,7 +578,8 @@ function houseTitle(page: SitePage | null, slug: string, locale: Locale) {
     return "";
   }
   const title = page?.seitentitel?.trim();
-  if (!title || title.toLowerCase() === slug.toLowerCase()) {
+  // The old seed stored the bare slug in lower case ("kontakt"); "Karriere" is a real title.
+  if (!title || title === slug) {
     return "";
   }
   return title;
