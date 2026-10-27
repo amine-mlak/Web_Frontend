@@ -1,8 +1,16 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { useLocale } from "@/components/LocaleProvider";
+import {
+  extensionOf,
+  FILE_ACCEPT,
+  formatSize,
+  MAX_FILE_BYTES,
+  MAX_FILES,
+  MAX_TOTAL_BYTES,
+} from "@/lib/application-files";
 import { validateLeadFields } from "@/lib/lead-fields";
 
 export const INITIATIVE = "initiativ";
@@ -18,7 +26,15 @@ const UI = {
     startHint: "z. B. September 2027 oder ab sofort",
     message: "Erzähl kurz von Dir (optional)",
     messageHint: "Was Du bisher gemacht hast und was Dich an der Werkstatt reizt.",
-    papers: "Lebenslauf und Zeugnisse kannst Du danach an bewerbung@beer.de schicken – oder Du bringst sie zum Gespräch mit.",
+    files: "Unterlagen (optional)",
+    filesHint: "Lebenslauf, Zeugnisse oder Ähnliches: bis zu 3 Dateien als PDF, Word, JPG oder PNG, je höchstens 5 MB.",
+    addFiles: "Dateien auswählen",
+    addMore: "Weitere Datei hinzufügen",
+    remove: "Entfernen",
+    errFileType: "Diese Datei können wir nicht annehmen. Bitte als PDF, Word, JPG oder PNG.",
+    errFileSize: "Eine Datei ist größer als 5 MB.",
+    errFileCount: "Höchstens 3 Dateien.",
+    errFileTotal: "Alle Dateien zusammen dürfen höchstens 10 MB groß sein.",
     privacy: "Wir nutzen Deine Angaben nur für Deine Bewerbung. Mehr dazu in der",
     privacyLink: "Datenschutzerklärung",
     submit: "Bewerbung senden",
@@ -40,7 +56,15 @@ const UI = {
     startHint: "e.g. September 2027 or right away",
     message: "Tell us a little about yourself (optional)",
     messageHint: "What you have done so far and what draws you to the workshop.",
-    papers: "You can send your CV and references to bewerbung@beer.de afterwards – or bring them to the interview.",
+    files: "Documents (optional)",
+    filesHint: "CV, references or similar: up to 3 files as PDF, Word, JPG or PNG, 5 MB each at most.",
+    addFiles: "Choose files",
+    addMore: "Add another file",
+    remove: "Remove",
+    errFileType: "We cannot accept this file. Please use PDF, Word, JPG or PNG.",
+    errFileSize: "One file is larger than 5 MB.",
+    errFileCount: "At most 3 files.",
+    errFileTotal: "All files together may be 10 MB at most.",
     privacy: "We only use your details for your application. More in our",
     privacyLink: "privacy policy",
     submit: "Send application",
@@ -85,6 +109,23 @@ export default function ApplicationForm({
   const challenge = useRef<Promise<{ token: string; at: number }> | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [error, setError] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+
+  /** Adds the picked files to the list, checked against the same limits as the server. */
+  function pick(event: ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    const next = [...files];
+    for (const file of picked) {
+      if (!extensionOf(file.name)) return setError(ui.errFileType);
+      if (file.size > MAX_FILE_BYTES) return setError(ui.errFileSize);
+      if (next.length >= MAX_FILES) return setError(ui.errFileCount);
+      next.push(file);
+    }
+    if (next.reduce((sum, file) => sum + file.size, 0) > MAX_TOTAL_BYTES) return setError(ui.errFileTotal);
+    setError("");
+    setFiles(next);
+  }
 
   function started() {
     if (!challenge.current) {
@@ -116,12 +157,11 @@ export default function ApplicationForm({
       const { token, at } = await pending;
       const wait = 1600 - msSince(at);
       if (wait > 0) await new Promise((resolve) => window.setTimeout(resolve, wait));
-      const response = await fetch("/api/bewerbung", {
-        method: "POST",
-        credentials: "same-origin",
-        cache: "no-store",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
+      // One request: the details as JSON in "payload", the documents next to it.
+      const upload = new FormData();
+      upload.append(
+        "payload",
+        JSON.stringify({
           challenge: token,
           company_website: value("company_website"),
           job_slug: job ? job.slug : INITIATIVE,
@@ -133,6 +173,13 @@ export default function ApplicationForm({
           message: fields.message,
           page: window.location.pathname,
         }),
+      );
+      files.forEach((file) => upload.append("dokument", file, file.name));
+      const response = await fetch("/api/bewerbung", {
+        method: "POST",
+        credentials: "same-origin",
+        cache: "no-store",
+        body: upload,
       });
       const payload: unknown = await response.json().catch(() => null);
       const ok = response.ok && payload && typeof payload === "object" && "ok" in payload && payload.ok === true;
@@ -205,13 +252,44 @@ export default function ApplicationForm({
         </label>
         <textarea id={`${baseId}-message`} name="message" rows={4} maxLength={2000} placeholder={ui.messageHint} className={`${FIELD} resize-y`} />
       </div>
+      <div>
+        <p id={`${baseId}-files`} className={LABEL}>
+          {ui.files}
+        </p>
+        <p className="mt-1 font-sans text-[14px] leading-relaxed text-muted">{ui.filesHint}</p>
+        {files.length ? (
+          <ul className="mt-4 border-t border-line" aria-labelledby={`${baseId}-files`}>
+            {files.map((file, index) => (
+              <li key={`${file.name}-${index}`} className="flex items-baseline justify-between gap-4 border-b border-line py-3 font-sans text-[15px] text-ink">
+                <span className="min-w-0 truncate">{file.name}</span>
+                <span className="flex shrink-0 items-baseline gap-4">
+                  <span className="text-[13px] text-muted">{formatSize(file.size, locale)}</span>
+                  <button
+                    type="button"
+                    onClick={() => setFiles(files.filter((_, at) => at !== index))}
+                    className="text-[13px] text-muted underline underline-offset-4 hover:text-ink"
+                  >
+                    {ui.remove}
+                    <span className="sr-only">: {file.name}</span>
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {files.length < MAX_FILES ? (
+          <label className="btn-quiet mt-5 cursor-pointer text-ink focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-ink">
+            {files.length ? ui.addMore : ui.addFiles}
+            <input type="file" multiple accept={FILE_ACCEPT} onChange={pick} className="sr-only" />
+          </label>
+        ) : null}
+      </div>
       {/* Left empty by people; bots fill it in. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label htmlFor={`${baseId}-website`}>Website</label>
         <input id={`${baseId}-website`} name="company_website" tabIndex={-1} autoComplete="off" />
       </div>
       <div className="space-y-2 font-sans text-[14px] leading-relaxed text-muted">
-        <p>{ui.papers}</p>
         <p>
           {ui.privacy}{" "}
           <LocaleLink href="/datenschutz" className="underline underline-offset-4 hover:text-ink">
