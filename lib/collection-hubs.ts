@@ -78,7 +78,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
       {
         href: "/kuechen/stile",
         title: "Küchenstile",
-        text: "Modern, Landhaus, Design, Holz, puristisch. Haltung, die zum Haus passt — ohne Kostüm.",
+        text: "Modern, Landhaus, Design, Holz oder puristisch – immer passend zum Haus.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Landhausküche mit Stein",
       },
@@ -547,7 +547,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
       {
         href: "/kuechen/stile",
         title: "Styles",
-        text: "Modern, country, design, wood, purist. A stance that fits the house — without costume.",
+        text: "Modern, country, design, wood or purist – always to suit the house.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Country kitchen with stone",
       },
