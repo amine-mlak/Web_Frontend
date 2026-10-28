@@ -1,5 +1,5 @@
 {
- "_about": "Old beer.de (Shopify) addresses → new site. Generated from the blog import of 2026-10-27; used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls.",
+ "_about": "Old beer.de (Shopify) addresses → new site: blog articles (import of 2026-10-27), then shop products, collections and pages (2026-10-28; products matched to projects by their photos). Used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls.",
  "redirects": [
   {
    "source": "/blogs/kuechenplanung-ergonomie/neue-kueche-planen",
@@ -888,6 +888,1430 @@
   {
    "source": "/en/blogs",
    "destination": "/en/guides"
+  },
+  {
+   "source": "/products/modern-high-class-landhauskuche",
+   "destination": "/projekte/koenigsblau-landhaus-leder"
+  },
+  {
+   "source": "/en/products/modern-high-class-landhauskuche",
+   "destination": "/en/projects/koenigsblau-landhaus-leder"
+  },
+  {
+   "source": "/collections/:collection/products/modern-high-class-landhauskuche",
+   "destination": "/projekte/koenigsblau-landhaus-leder"
+  },
+  {
+   "source": "/en/collections/:collection/products/modern-high-class-landhauskuche",
+   "destination": "/en/projects/koenigsblau-landhaus-leder"
+  },
+  {
+   "source": "/products/puristische-naturkuche",
+   "destination": "/projekte/graue-insel-weisse-schrankwand"
+  },
+  {
+   "source": "/en/products/puristische-naturkuche",
+   "destination": "/en/projects/graue-insel-weisse-schrankwand"
+  },
+  {
+   "source": "/collections/:collection/products/puristische-naturkuche",
+   "destination": "/projekte/graue-insel-weisse-schrankwand"
+  },
+  {
+   "source": "/en/collections/:collection/products/puristische-naturkuche",
+   "destination": "/en/projects/graue-insel-weisse-schrankwand"
+  },
+  {
+   "source": "/products/miele-dreams-zubehor",
+   "destination": "/marken/miele"
+  },
+  {
+   "source": "/en/products/miele-dreams-zubehor",
+   "destination": "/en/brands/miele"
+  },
+  {
+   "source": "/collections/:collection/products/miele-dreams-zubehor",
+   "destination": "/marken/miele"
+  },
+  {
+   "source": "/en/collections/:collection/products/miele-dreams-zubehor",
+   "destination": "/en/brands/miele"
+  },
+  {
+   "source": "/products/miele-dreams",
+   "destination": "/marken/miele"
+  },
+  {
+   "source": "/en/products/miele-dreams",
+   "destination": "/en/brands/miele"
+  },
+  {
+   "source": "/collections/:collection/products/miele-dreams",
+   "destination": "/marken/miele"
+  },
+  {
+   "source": "/en/collections/:collection/products/miele-dreams",
+   "destination": "/en/brands/miele"
+  },
+  {
+   "source": "/products/naturliches-designstatement",
+   "destination": "/projekte/weiss-eiche-ganzes-haus-insel"
+  },
+  {
+   "source": "/en/products/naturliches-designstatement",
+   "destination": "/en/projects/weiss-eiche-ganzes-haus-insel"
+  },
+  {
+   "source": "/collections/:collection/products/naturliches-designstatement",
+   "destination": "/projekte/weiss-eiche-ganzes-haus-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/naturliches-designstatement",
+   "destination": "/en/projects/weiss-eiche-ganzes-haus-insel"
+  },
+  {
+   "source": "/products/elegante-naturkuche",
+   "destination": "/projekte/runde-insel-eichenstaebe-stein"
+  },
+  {
+   "source": "/en/products/elegante-naturkuche",
+   "destination": "/en/projects/runde-insel-eichenstaebe-stein"
+  },
+  {
+   "source": "/collections/:collection/products/elegante-naturkuche",
+   "destination": "/projekte/runde-insel-eichenstaebe-stein"
+  },
+  {
+   "source": "/en/collections/:collection/products/elegante-naturkuche",
+   "destination": "/en/projects/runde-insel-eichenstaebe-stein"
+  },
+  {
+   "source": "/products/rustikale-designkuche",
+   "destination": "/projekte/natures-harmony-rustikale-eiche"
+  },
+  {
+   "source": "/en/products/rustikale-designkuche",
+   "destination": "/en/projects/natures-harmony-rustikale-eiche"
+  },
+  {
+   "source": "/collections/:collection/products/rustikale-designkuche",
+   "destination": "/projekte/natures-harmony-rustikale-eiche"
+  },
+  {
+   "source": "/en/collections/:collection/products/rustikale-designkuche",
+   "destination": "/en/projects/natures-harmony-rustikale-eiche"
+  },
+  {
+   "source": "/products/designkuche-mit-teakholz",
+   "destination": "/projekte/natures-harmony-holz-stein-haus"
+  },
+  {
+   "source": "/en/products/designkuche-mit-teakholz",
+   "destination": "/en/projects/natures-harmony-holz-stein-haus"
+  },
+  {
+   "source": "/collections/:collection/products/designkuche-mit-teakholz",
+   "destination": "/projekte/natures-harmony-holz-stein-haus"
+  },
+  {
+   "source": "/en/collections/:collection/products/designkuche-mit-teakholz",
+   "destination": "/en/projects/natures-harmony-holz-stein-haus"
+  },
+  {
+   "source": "/products/natuerliche-designkueche",
+   "destination": "/projekte/natures-harmony-fenster-rueckwand"
+  },
+  {
+   "source": "/en/products/natuerliche-designkueche",
+   "destination": "/en/projects/natures-harmony-fenster-rueckwand"
+  },
+  {
+   "source": "/collections/:collection/products/natuerliche-designkueche",
+   "destination": "/projekte/natures-harmony-fenster-rueckwand"
+  },
+  {
+   "source": "/en/collections/:collection/products/natuerliche-designkueche",
+   "destination": "/en/projects/natures-harmony-fenster-rueckwand"
+  },
+  {
+   "source": "/products/offene-luxuskuche",
+   "destination": "/projekte/greige-schwarzer-stein-vorkueche"
+  },
+  {
+   "source": "/en/products/offene-luxuskuche",
+   "destination": "/en/projects/greige-schwarzer-stein-vorkueche"
+  },
+  {
+   "source": "/collections/:collection/products/offene-luxuskuche",
+   "destination": "/projekte/greige-schwarzer-stein-vorkueche"
+  },
+  {
+   "source": "/en/collections/:collection/products/offene-luxuskuche",
+   "destination": "/en/projects/greige-schwarzer-stein-vorkueche"
+  },
+  {
+   "source": "/products/naturraum-kuche",
+   "destination": "/projekte/greige-u-form-holzdecke"
+  },
+  {
+   "source": "/en/products/naturraum-kuche",
+   "destination": "/en/projects/greige-u-form-holzdecke"
+  },
+  {
+   "source": "/collections/:collection/products/naturraum-kuche",
+   "destination": "/projekte/greige-u-form-holzdecke"
+  },
+  {
+   "source": "/en/collections/:collection/products/naturraum-kuche",
+   "destination": "/en/projects/greige-u-form-holzdecke"
+  },
+  {
+   "source": "/products/design-in-glas-und-stein",
+   "destination": "/projekte/simple-elegance-glaswand-marmoroptik"
+  },
+  {
+   "source": "/en/products/design-in-glas-und-stein",
+   "destination": "/en/projects/simple-elegance-glaswand-marmoroptik"
+  },
+  {
+   "source": "/collections/:collection/products/design-in-glas-und-stein",
+   "destination": "/projekte/simple-elegance-glaswand-marmoroptik"
+  },
+  {
+   "source": "/en/collections/:collection/products/design-in-glas-und-stein",
+   "destination": "/en/projects/simple-elegance-glaswand-marmoroptik"
+  },
+  {
+   "source": "/products/warme-steinkuche",
+   "destination": "/projekte/simple-elegance-greige-kueche-bad"
+  },
+  {
+   "source": "/en/products/warme-steinkuche",
+   "destination": "/en/projects/simple-elegance-greige-kueche-bad"
+  },
+  {
+   "source": "/collections/:collection/products/warme-steinkuche",
+   "destination": "/projekte/simple-elegance-greige-kueche-bad"
+  },
+  {
+   "source": "/en/collections/:collection/products/warme-steinkuche",
+   "destination": "/en/projects/simple-elegance-greige-kueche-bad"
+  },
+  {
+   "source": "/products/helle-designkuche",
+   "destination": "/projekte/simple-elegance-weiss-runde-griffe"
+  },
+  {
+   "source": "/en/products/helle-designkuche",
+   "destination": "/en/projects/simple-elegance-weiss-runde-griffe"
+  },
+  {
+   "source": "/collections/:collection/products/helle-designkuche",
+   "destination": "/projekte/simple-elegance-weiss-runde-griffe"
+  },
+  {
+   "source": "/en/collections/:collection/products/helle-designkuche",
+   "destination": "/en/projects/simple-elegance-weiss-runde-griffe"
+  },
+  {
+   "source": "/products/natur-trifft-design",
+   "destination": "/projekte/simple-elegance-taupe-rillen-eiche"
+  },
+  {
+   "source": "/en/products/natur-trifft-design",
+   "destination": "/en/projects/simple-elegance-taupe-rillen-eiche"
+  },
+  {
+   "source": "/collections/:collection/products/natur-trifft-design",
+   "destination": "/projekte/simple-elegance-taupe-rillen-eiche"
+  },
+  {
+   "source": "/en/collections/:collection/products/natur-trifft-design",
+   "destination": "/en/projects/simple-elegance-taupe-rillen-eiche"
+  },
+  {
+   "source": "/products/aquarium-designkuche",
+   "destination": "/projekte/simple-elegance-aquarium-schrankwand"
+  },
+  {
+   "source": "/en/products/aquarium-designkuche",
+   "destination": "/en/projects/simple-elegance-aquarium-schrankwand"
+  },
+  {
+   "source": "/collections/:collection/products/aquarium-designkuche",
+   "destination": "/projekte/simple-elegance-aquarium-schrankwand"
+  },
+  {
+   "source": "/en/collections/:collection/products/aquarium-designkuche",
+   "destination": "/en/projects/simple-elegance-aquarium-schrankwand"
+  },
+  {
+   "source": "/products/graue-mansardenkuche",
+   "destination": "/projekte/simple-elegance-grau-dachschraege"
+  },
+  {
+   "source": "/en/products/graue-mansardenkuche",
+   "destination": "/en/projects/simple-elegance-grau-dachschraege"
+  },
+  {
+   "source": "/collections/:collection/products/graue-mansardenkuche",
+   "destination": "/projekte/simple-elegance-grau-dachschraege"
+  },
+  {
+   "source": "/en/collections/:collection/products/graue-mansardenkuche",
+   "destination": "/en/projects/simple-elegance-grau-dachschraege"
+  },
+  {
+   "source": "/products/moderne-wohnkuche",
+   "destination": "/projekte/simple-elegance-insel-mit-bank"
+  },
+  {
+   "source": "/en/products/moderne-wohnkuche",
+   "destination": "/en/projects/simple-elegance-insel-mit-bank"
+  },
+  {
+   "source": "/collections/:collection/products/moderne-wohnkuche",
+   "destination": "/projekte/simple-elegance-insel-mit-bank"
+  },
+  {
+   "source": "/en/collections/:collection/products/moderne-wohnkuche",
+   "destination": "/en/projects/simple-elegance-insel-mit-bank"
+  },
+  {
+   "source": "/products/eleganz-in-grau-holz",
+   "destination": "/projekte/pure-nature-eichenwand-lange-insel"
+  },
+  {
+   "source": "/en/products/eleganz-in-grau-holz",
+   "destination": "/en/projects/pure-nature-eichenwand-lange-insel"
+  },
+  {
+   "source": "/collections/:collection/products/eleganz-in-grau-holz",
+   "destination": "/projekte/pure-nature-eichenwand-lange-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/eleganz-in-grau-holz",
+   "destination": "/en/projects/pure-nature-eichenwand-lange-insel"
+  },
+  {
+   "source": "/products/design-in-balance",
+   "destination": "/projekte/schwarz-gas-eichenstufen-insel"
+  },
+  {
+   "source": "/en/products/design-in-balance",
+   "destination": "/en/projects/schwarz-gas-eichenstufen-insel"
+  },
+  {
+   "source": "/collections/:collection/products/design-in-balance",
+   "destination": "/projekte/schwarz-gas-eichenstufen-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/design-in-balance",
+   "destination": "/en/projects/schwarz-gas-eichenstufen-insel"
+  },
+  {
+   "source": "/products/schwarze-loftkuche",
+   "destination": "/projekte/schwarz-theke-fensterbank-eiche"
+  },
+  {
+   "source": "/en/products/schwarze-loftkuche",
+   "destination": "/en/projects/schwarz-theke-fensterbank-eiche"
+  },
+  {
+   "source": "/collections/:collection/products/schwarze-loftkuche",
+   "destination": "/projekte/schwarz-theke-fensterbank-eiche"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarze-loftkuche",
+   "destination": "/en/projects/schwarz-theke-fensterbank-eiche"
+  },
+  {
+   "source": "/products/gemutliche-designkuche",
+   "destination": "/projekte/smart-rebellion-weiss-schwarz-baumkante"
+  },
+  {
+   "source": "/en/products/gemutliche-designkuche",
+   "destination": "/en/projects/smart-rebellion-weiss-schwarz-baumkante"
+  },
+  {
+   "source": "/collections/:collection/products/gemutliche-designkuche",
+   "destination": "/projekte/smart-rebellion-weiss-schwarz-baumkante"
+  },
+  {
+   "source": "/en/collections/:collection/products/gemutliche-designkuche",
+   "destination": "/en/projects/smart-rebellion-weiss-schwarz-baumkante"
+  },
+  {
+   "source": "/products/puristische-kuche",
+   "destination": "/projekte/smart-rebellion-schwarz-marmoroptik"
+  },
+  {
+   "source": "/en/products/puristische-kuche",
+   "destination": "/en/projects/smart-rebellion-schwarz-marmoroptik"
+  },
+  {
+   "source": "/collections/:collection/products/puristische-kuche",
+   "destination": "/projekte/smart-rebellion-schwarz-marmoroptik"
+  },
+  {
+   "source": "/en/collections/:collection/products/puristische-kuche",
+   "destination": "/en/projects/smart-rebellion-schwarz-marmoroptik"
+  },
+  {
+   "source": "/products/luxuriose-kontrastkuche",
+   "destination": "/projekte/smart-rebellion-dunkler-stein"
+  },
+  {
+   "source": "/en/products/luxuriose-kontrastkuche",
+   "destination": "/en/projects/smart-rebellion-dunkler-stein"
+  },
+  {
+   "source": "/collections/:collection/products/luxuriose-kontrastkuche",
+   "destination": "/projekte/smart-rebellion-dunkler-stein"
+  },
+  {
+   "source": "/en/collections/:collection/products/luxuriose-kontrastkuche",
+   "destination": "/en/projects/smart-rebellion-dunkler-stein"
+  },
+  {
+   "source": "/products/salbei-stein-landhauskuche",
+   "destination": "/projekte/mintgruen-weisser-stein-u-form"
+  },
+  {
+   "source": "/en/products/salbei-stein-landhauskuche",
+   "destination": "/en/projects/mintgruen-weisser-stein-u-form"
+  },
+  {
+   "source": "/collections/:collection/products/salbei-stein-landhauskuche",
+   "destination": "/projekte/mintgruen-weisser-stein-u-form"
+  },
+  {
+   "source": "/en/collections/:collection/products/salbei-stein-landhauskuche",
+   "destination": "/en/projects/mintgruen-weisser-stein-u-form"
+  },
+  {
+   "source": "/products/industrial-chic-landhauskuche",
+   "destination": "/projekte/taubenblau-messinggriffe-insel"
+  },
+  {
+   "source": "/en/products/industrial-chic-landhauskuche",
+   "destination": "/en/projects/taubenblau-messinggriffe-insel"
+  },
+  {
+   "source": "/collections/:collection/products/industrial-chic-landhauskuche",
+   "destination": "/projekte/taubenblau-messinggriffe-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/industrial-chic-landhauskuche",
+   "destination": "/en/projects/taubenblau-messinggriffe-insel"
+  },
+  {
+   "source": "/products/nordic-lights-landhauskuche",
+   "destination": "/projekte/vintage-love-weiss-mintblau"
+  },
+  {
+   "source": "/en/products/nordic-lights-landhauskuche",
+   "destination": "/en/projects/vintage-love-weiss-mintblau"
+  },
+  {
+   "source": "/collections/:collection/products/nordic-lights-landhauskuche",
+   "destination": "/projekte/vintage-love-weiss-mintblau"
+  },
+  {
+   "source": "/en/collections/:collection/products/nordic-lights-landhauskuche",
+   "destination": "/en/projects/vintage-love-weiss-mintblau"
+  },
+  {
+   "source": "/products/elegante-landhauskuche",
+   "destination": "/projekte/vintage-love-dunkelblau-regalwand"
+  },
+  {
+   "source": "/en/products/elegante-landhauskuche",
+   "destination": "/en/projects/vintage-love-dunkelblau-regalwand"
+  },
+  {
+   "source": "/collections/:collection/products/elegante-landhauskuche",
+   "destination": "/projekte/vintage-love-dunkelblau-regalwand"
+  },
+  {
+   "source": "/en/collections/:collection/products/elegante-landhauskuche",
+   "destination": "/en/projects/vintage-love-dunkelblau-regalwand"
+  },
+  {
+   "source": "/products/rustikale-landhauskuche",
+   "destination": "/projekte/vintage-love-blockhaus"
+  },
+  {
+   "source": "/en/products/rustikale-landhauskuche",
+   "destination": "/en/projects/vintage-love-blockhaus"
+  },
+  {
+   "source": "/collections/:collection/products/rustikale-landhauskuche",
+   "destination": "/projekte/vintage-love-blockhaus"
+  },
+  {
+   "source": "/en/collections/:collection/products/rustikale-landhauskuche",
+   "destination": "/en/projects/vintage-love-blockhaus"
+  },
+  {
+   "source": "/products/terrassen-kueche",
+   "destination": "/kuechen/besondere/nach-mass"
+  },
+  {
+   "source": "/en/products/terrassen-kueche",
+   "destination": "/en/kitchens/special/nach-mass"
+  },
+  {
+   "source": "/collections/:collection/products/terrassen-kueche",
+   "destination": "/kuechen/besondere/nach-mass"
+  },
+  {
+   "source": "/en/collections/:collection/products/terrassen-kueche",
+   "destination": "/en/kitchens/special/nach-mass"
+  },
+  {
+   "source": "/products/eventkueche",
+   "destination": "/kuechen/besondere/nach-mass"
+  },
+  {
+   "source": "/en/products/eventkueche",
+   "destination": "/en/kitchens/special/nach-mass"
+  },
+  {
+   "source": "/collections/:collection/products/eventkueche",
+   "destination": "/kuechen/besondere/nach-mass"
+  },
+  {
+   "source": "/en/collections/:collection/products/eventkueche",
+   "destination": "/en/kitchens/special/nach-mass"
+  },
+  {
+   "source": "/products/kuchenakademie-masterclass",
+   "destination": "/kueche-planen"
+  },
+  {
+   "source": "/en/products/kuchenakademie-masterclass",
+   "destination": "/en/plan-your-kitchen"
+  },
+  {
+   "source": "/collections/:collection/products/kuchenakademie-masterclass",
+   "destination": "/kueche-planen"
+  },
+  {
+   "source": "/en/collections/:collection/products/kuchenakademie-masterclass",
+   "destination": "/en/plan-your-kitchen"
+  },
+  {
+   "source": "/products/badezimmer",
+   "destination": "/moebel"
+  },
+  {
+   "source": "/en/products/badezimmer",
+   "destination": "/en/furniture"
+  },
+  {
+   "source": "/collections/:collection/products/badezimmer",
+   "destination": "/moebel"
+  },
+  {
+   "source": "/en/collections/:collection/products/badezimmer",
+   "destination": "/en/furniture"
+  },
+  {
+   "source": "/products/esstische",
+   "destination": "/moebel/tische-baenke"
+  },
+  {
+   "source": "/en/products/esstische",
+   "destination": "/en/furniture/tische-baenke"
+  },
+  {
+   "source": "/collections/:collection/products/esstische",
+   "destination": "/moebel/tische-baenke"
+  },
+  {
+   "source": "/en/collections/:collection/products/esstische",
+   "destination": "/en/furniture/tische-baenke"
+  },
+  {
+   "source": "/products/einbauschranke",
+   "destination": "/moebel/einbauschraenke"
+  },
+  {
+   "source": "/en/products/einbauschranke",
+   "destination": "/en/furniture/einbauschraenke"
+  },
+  {
+   "source": "/collections/:collection/products/einbauschranke",
+   "destination": "/moebel/einbauschraenke"
+  },
+  {
+   "source": "/en/collections/:collection/products/einbauschranke",
+   "destination": "/en/furniture/einbauschraenke"
+  },
+  {
+   "source": "/products/betonarbeitsplatte",
+   "destination": "/material/arbeitsplatten"
+  },
+  {
+   "source": "/en/products/betonarbeitsplatte",
+   "destination": "/en/materials/worktops"
+  },
+  {
+   "source": "/collections/:collection/products/betonarbeitsplatte",
+   "destination": "/material/arbeitsplatten"
+  },
+  {
+   "source": "/en/collections/:collection/products/betonarbeitsplatte",
+   "destination": "/en/materials/worktops"
+  },
+  {
+   "source": "/products/schwebeblock-kuche",
+   "destination": "/kuechen/farben/schwarz"
+  },
+  {
+   "source": "/en/products/schwebeblock-kuche",
+   "destination": "/en/kitchens/colours/schwarz"
+  },
+  {
+   "source": "/collections/:collection/products/schwebeblock-kuche",
+   "destination": "/kuechen/farben/schwarz"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwebeblock-kuche",
+   "destination": "/en/kitchens/colours/schwarz"
+  },
+  {
+   "source": "/products/hohe-kuche",
+   "destination": "/kuechen/besondere/raumhoch"
+  },
+  {
+   "source": "/en/products/hohe-kuche",
+   "destination": "/en/kitchens/special/raumhoch"
+  },
+  {
+   "source": "/collections/:collection/products/hohe-kuche",
+   "destination": "/kuechen/besondere/raumhoch"
+  },
+  {
+   "source": "/en/collections/:collection/products/hohe-kuche",
+   "destination": "/en/kitchens/special/raumhoch"
+  },
+  {
+   "source": "/products/natursteinarbeitsplatte",
+   "destination": "/material/naturstein"
+  },
+  {
+   "source": "/en/products/natursteinarbeitsplatte",
+   "destination": "/en/materials/naturstein"
+  },
+  {
+   "source": "/collections/:collection/products/natursteinarbeitsplatte",
+   "destination": "/material/naturstein"
+  },
+  {
+   "source": "/en/collections/:collection/products/natursteinarbeitsplatte",
+   "destination": "/en/materials/naturstein"
+  },
+  {
+   "source": "/products/der-schwarze-traum",
+   "destination": "/projekte/anthrazit-insel-lichtregal"
+  },
+  {
+   "source": "/en/products/der-schwarze-traum",
+   "destination": "/en/projects/anthrazit-insel-lichtregal"
+  },
+  {
+   "source": "/collections/:collection/products/der-schwarze-traum",
+   "destination": "/projekte/anthrazit-insel-lichtregal"
+  },
+  {
+   "source": "/en/collections/:collection/products/der-schwarze-traum",
+   "destination": "/en/projects/anthrazit-insel-lichtregal"
+  },
+  {
+   "source": "/products/schwarz-mit-edelstahlplatte",
+   "destination": "/projekte/schwarz-matt-graue-platte-insel"
+  },
+  {
+   "source": "/en/products/schwarz-mit-edelstahlplatte",
+   "destination": "/en/projects/schwarz-matt-graue-platte-insel"
+  },
+  {
+   "source": "/collections/:collection/products/schwarz-mit-edelstahlplatte",
+   "destination": "/projekte/schwarz-matt-graue-platte-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarz-mit-edelstahlplatte",
+   "destination": "/en/projects/schwarz-matt-graue-platte-insel"
+  },
+  {
+   "source": "/products/schwarze-inselkuche",
+   "destination": "/projekte/anthrazit-eiche-baumkante-bank"
+  },
+  {
+   "source": "/en/products/schwarze-inselkuche",
+   "destination": "/en/projects/anthrazit-eiche-baumkante-bank"
+  },
+  {
+   "source": "/collections/:collection/products/schwarze-inselkuche",
+   "destination": "/projekte/anthrazit-eiche-baumkante-bank"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarze-inselkuche",
+   "destination": "/en/projects/anthrazit-eiche-baumkante-bank"
+  },
+  {
+   "source": "/products/blauer-hingucker",
+   "destination": "/projekte/kobaltblau-eichennische"
+  },
+  {
+   "source": "/en/products/blauer-hingucker",
+   "destination": "/en/projects/kobaltblau-eichennische"
+  },
+  {
+   "source": "/collections/:collection/products/blauer-hingucker",
+   "destination": "/projekte/kobaltblau-eichennische"
+  },
+  {
+   "source": "/en/collections/:collection/products/blauer-hingucker",
+   "destination": "/en/projects/kobaltblau-eichennische"
+  },
+  {
+   "source": "/products/dunkelblaue-kuche",
+   "destination": "/kuechen/stile/luxus"
+  },
+  {
+   "source": "/en/products/dunkelblaue-kuche",
+   "destination": "/en/kitchens/styles/luxus"
+  },
+  {
+   "source": "/collections/:collection/products/dunkelblaue-kuche",
+   "destination": "/kuechen/stile/luxus"
+  },
+  {
+   "source": "/en/collections/:collection/products/dunkelblaue-kuche",
+   "destination": "/en/kitchens/styles/luxus"
+  },
+  {
+   "source": "/products/moderne-echtholzkueche",
+   "destination": "/projekte/eiche-schwarzer-granit-halbinsel"
+  },
+  {
+   "source": "/en/products/moderne-echtholzkueche",
+   "destination": "/en/projects/eiche-schwarzer-granit-halbinsel"
+  },
+  {
+   "source": "/collections/:collection/products/moderne-echtholzkueche",
+   "destination": "/projekte/eiche-schwarzer-granit-halbinsel"
+  },
+  {
+   "source": "/en/collections/:collection/products/moderne-echtholzkueche",
+   "destination": "/en/projects/eiche-schwarzer-granit-halbinsel"
+  },
+  {
+   "source": "/products/weisse-kuche-mit-holzspielerei",
+   "destination": "/projekte/weiss-eichenfugen-insel"
+  },
+  {
+   "source": "/en/products/weisse-kuche-mit-holzspielerei",
+   "destination": "/en/projects/weiss-eichenfugen-insel"
+  },
+  {
+   "source": "/collections/:collection/products/weisse-kuche-mit-holzspielerei",
+   "destination": "/projekte/weiss-eichenfugen-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/weisse-kuche-mit-holzspielerei",
+   "destination": "/en/projects/weiss-eichenfugen-insel"
+  },
+  {
+   "source": "/products/moderne-naturkuche",
+   "destination": "/projekte/weiss-schwarze-insel-eiche"
+  },
+  {
+   "source": "/en/products/moderne-naturkuche",
+   "destination": "/en/projects/weiss-schwarze-insel-eiche"
+  },
+  {
+   "source": "/collections/:collection/products/moderne-naturkuche",
+   "destination": "/projekte/weiss-schwarze-insel-eiche"
+  },
+  {
+   "source": "/en/collections/:collection/products/moderne-naturkuche",
+   "destination": "/en/projects/weiss-schwarze-insel-eiche"
+  },
+  {
+   "source": "/products/schwarze-designkuche",
+   "destination": "/projekte/schwarz-sichtbeton-eichenlamellen"
+  },
+  {
+   "source": "/en/products/schwarze-designkuche",
+   "destination": "/en/projects/schwarz-sichtbeton-eichenlamellen"
+  },
+  {
+   "source": "/collections/:collection/products/schwarze-designkuche",
+   "destination": "/projekte/schwarz-sichtbeton-eichenlamellen"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarze-designkuche",
+   "destination": "/en/projects/schwarz-sichtbeton-eichenlamellen"
+  },
+  {
+   "source": "/products/raumwunder-mit-massivholz",
+   "destination": "/projekte/astige-eiche-fensterband-u-form"
+  },
+  {
+   "source": "/en/products/raumwunder-mit-massivholz",
+   "destination": "/en/projects/astige-eiche-fensterband-u-form"
+  },
+  {
+   "source": "/collections/:collection/products/raumwunder-mit-massivholz",
+   "destination": "/projekte/astige-eiche-fensterband-u-form"
+  },
+  {
+   "source": "/en/collections/:collection/products/raumwunder-mit-massivholz",
+   "destination": "/en/projects/astige-eiche-fensterband-u-form"
+  },
+  {
+   "source": "/products/holzveredelte-schwarze-kueche",
+   "destination": "/projekte/eichenlamellen-ziegelgewoelbe"
+  },
+  {
+   "source": "/en/products/holzveredelte-schwarze-kueche",
+   "destination": "/en/projects/eichenlamellen-ziegelgewoelbe"
+  },
+  {
+   "source": "/collections/:collection/products/holzveredelte-schwarze-kueche",
+   "destination": "/projekte/eichenlamellen-ziegelgewoelbe"
+  },
+  {
+   "source": "/en/collections/:collection/products/holzveredelte-schwarze-kueche",
+   "destination": "/en/projects/eichenlamellen-ziegelgewoelbe"
+  },
+  {
+   "source": "/products/schwarzer-holztraum",
+   "destination": "/projekte/anthrazit-hellholz-rahmen"
+  },
+  {
+   "source": "/en/products/schwarzer-holztraum",
+   "destination": "/en/projects/anthrazit-hellholz-rahmen"
+  },
+  {
+   "source": "/collections/:collection/products/schwarzer-holztraum",
+   "destination": "/projekte/anthrazit-hellholz-rahmen"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarzer-holztraum",
+   "destination": "/en/projects/anthrazit-hellholz-rahmen"
+  },
+  {
+   "source": "/products/naturkuche",
+   "destination": "/projekte/insel-bruchraue-steinplatte-holz"
+  },
+  {
+   "source": "/en/products/naturkuche",
+   "destination": "/en/projects/insel-bruchraue-steinplatte-holz"
+  },
+  {
+   "source": "/collections/:collection/products/naturkuche",
+   "destination": "/projekte/insel-bruchraue-steinplatte-holz"
+  },
+  {
+   "source": "/en/collections/:collection/products/naturkuche",
+   "destination": "/en/projects/insel-bruchraue-steinplatte-holz"
+  },
+  {
+   "source": "/products/cottage-landhauskuche",
+   "destination": "/projekte/landhaus-weiss-gruener-herd"
+  },
+  {
+   "source": "/en/products/cottage-landhauskuche",
+   "destination": "/en/projects/landhaus-weiss-gruener-herd"
+  },
+  {
+   "source": "/collections/:collection/products/cottage-landhauskuche",
+   "destination": "/projekte/landhaus-weiss-gruener-herd"
+  },
+  {
+   "source": "/en/collections/:collection/products/cottage-landhauskuche",
+   "destination": "/en/projects/landhaus-weiss-gruener-herd"
+  },
+  {
+   "source": "/products/die-offene-landhauskuche",
+   "destination": "/projekte/landhaus-creme-eichenplatte"
+  },
+  {
+   "source": "/en/products/die-offene-landhauskuche",
+   "destination": "/en/projects/landhaus-creme-eichenplatte"
+  },
+  {
+   "source": "/collections/:collection/products/die-offene-landhauskuche",
+   "destination": "/projekte/landhaus-creme-eichenplatte"
+  },
+  {
+   "source": "/en/collections/:collection/products/die-offene-landhauskuche",
+   "destination": "/en/projects/landhaus-creme-eichenplatte"
+  },
+  {
+   "source": "/products/feine-englische-landhauskuche",
+   "destination": "/projekte/gruen-rahmenfronten-altholz"
+  },
+  {
+   "source": "/en/products/feine-englische-landhauskuche",
+   "destination": "/en/projects/gruen-rahmenfronten-altholz"
+  },
+  {
+   "source": "/collections/:collection/products/feine-englische-landhauskuche",
+   "destination": "/projekte/gruen-rahmenfronten-altholz"
+  },
+  {
+   "source": "/en/collections/:collection/products/feine-englische-landhauskuche",
+   "destination": "/en/projects/gruen-rahmenfronten-altholz"
+  },
+  {
+   "source": "/products/mediterrane-landhauskuche",
+   "destination": "/kuechen/stile/landhaus"
+  },
+  {
+   "source": "/en/products/mediterrane-landhauskuche",
+   "destination": "/en/kitchens/styles/landhaus"
+  },
+  {
+   "source": "/collections/:collection/products/mediterrane-landhauskuche",
+   "destination": "/kuechen/stile/landhaus"
+  },
+  {
+   "source": "/en/collections/:collection/products/mediterrane-landhauskuche",
+   "destination": "/en/kitchens/styles/landhaus"
+  },
+  {
+   "source": "/products/romantische-landhauskuche",
+   "destination": "/projekte/landhaus-romantisch-weiss"
+  },
+  {
+   "source": "/en/products/romantische-landhauskuche",
+   "destination": "/en/projects/landhaus-romantisch-weiss"
+  },
+  {
+   "source": "/collections/:collection/products/romantische-landhauskuche",
+   "destination": "/projekte/landhaus-romantisch-weiss"
+  },
+  {
+   "source": "/en/collections/:collection/products/romantische-landhauskuche",
+   "destination": "/en/projects/landhaus-romantisch-weiss"
+  },
+  {
+   "source": "/products/schwarze-landhauskuche",
+   "destination": "/projekte/weiss-dunkelblau-marmoroptik"
+  },
+  {
+   "source": "/en/products/schwarze-landhauskuche",
+   "destination": "/en/projects/weiss-dunkelblau-marmoroptik"
+  },
+  {
+   "source": "/collections/:collection/products/schwarze-landhauskuche",
+   "destination": "/projekte/weiss-dunkelblau-marmoroptik"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarze-landhauskuche",
+   "destination": "/en/projects/weiss-dunkelblau-marmoroptik"
+  },
+  {
+   "source": "/products/schwarze-mansardenkuche",
+   "destination": "/projekte/dachgeschoss-anthrazit"
+  },
+  {
+   "source": "/en/products/schwarze-mansardenkuche",
+   "destination": "/en/projects/dachgeschoss-anthrazit"
+  },
+  {
+   "source": "/collections/:collection/products/schwarze-mansardenkuche",
+   "destination": "/projekte/dachgeschoss-anthrazit"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarze-mansardenkuche",
+   "destination": "/en/projects/dachgeschoss-anthrazit"
+  },
+  {
+   "source": "/products/schwarz-matte-kuche",
+   "destination": "/projekte/salbei-schrankwand-lange-insel"
+  },
+  {
+   "source": "/en/products/schwarz-matte-kuche",
+   "destination": "/en/projects/salbei-schrankwand-lange-insel"
+  },
+  {
+   "source": "/collections/:collection/products/schwarz-matte-kuche",
+   "destination": "/projekte/salbei-schrankwand-lange-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarz-matte-kuche",
+   "destination": "/en/projects/salbei-schrankwand-lange-insel"
+  },
+  {
+   "source": "/products/schwarz-weiss-komposition",
+   "destination": "/projekte/pfoerring-schwarz-weiss"
+  },
+  {
+   "source": "/en/products/schwarz-weiss-komposition",
+   "destination": "/en/projects/pfoerring-schwarz-weiss"
+  },
+  {
+   "source": "/collections/:collection/products/schwarz-weiss-komposition",
+   "destination": "/projekte/pfoerring-schwarz-weiss"
+  },
+  {
+   "source": "/en/collections/:collection/products/schwarz-weiss-komposition",
+   "destination": "/en/projects/pfoerring-schwarz-weiss"
+  },
+  {
+   "source": "/products/designerkuche-in-weiss",
+   "destination": "/projekte/weiss-grifflos-schwarze-griffleiste"
+  },
+  {
+   "source": "/en/products/designerkuche-in-weiss",
+   "destination": "/en/projects/weiss-grifflos-schwarze-griffleiste"
+  },
+  {
+   "source": "/collections/:collection/products/designerkuche-in-weiss",
+   "destination": "/projekte/weiss-grifflos-schwarze-griffleiste"
+  },
+  {
+   "source": "/en/collections/:collection/products/designerkuche-in-weiss",
+   "destination": "/en/projects/weiss-grifflos-schwarze-griffleiste"
+  },
+  {
+   "source": "/products/skandinavische-frische",
+   "destination": "/kuechen/farben/weiss"
+  },
+  {
+   "source": "/en/products/skandinavische-frische",
+   "destination": "/en/kitchens/colours/weiss"
+  },
+  {
+   "source": "/collections/:collection/products/skandinavische-frische",
+   "destination": "/kuechen/farben/weiss"
+  },
+  {
+   "source": "/en/collections/:collection/products/skandinavische-frische",
+   "destination": "/en/kitchens/colours/weiss"
+  },
+  {
+   "source": "/products/panorama-kochinsel",
+   "destination": "/projekte/scheyern-kochinsel-aussicht"
+  },
+  {
+   "source": "/en/products/panorama-kochinsel",
+   "destination": "/en/projects/scheyern-kochinsel-aussicht"
+  },
+  {
+   "source": "/collections/:collection/products/panorama-kochinsel",
+   "destination": "/projekte/scheyern-kochinsel-aussicht"
+  },
+  {
+   "source": "/en/collections/:collection/products/panorama-kochinsel",
+   "destination": "/en/projects/scheyern-kochinsel-aussicht"
+  },
+  {
+   "source": "/products/edelstahlkuche",
+   "destination": "/material/edelstahl"
+  },
+  {
+   "source": "/en/products/edelstahlkuche",
+   "destination": "/en/materials/edelstahl"
+  },
+  {
+   "source": "/collections/:collection/products/edelstahlkuche",
+   "destination": "/material/edelstahl"
+  },
+  {
+   "source": "/en/collections/:collection/products/edelstahlkuche",
+   "destination": "/en/materials/edelstahl"
+  },
+  {
+   "source": "/products/kaschmirgraue-kueche",
+   "destination": "/projekte/weiss-marmoroptik-nische-insel"
+  },
+  {
+   "source": "/en/products/kaschmirgraue-kueche",
+   "destination": "/en/projects/weiss-marmoroptik-nische-insel"
+  },
+  {
+   "source": "/collections/:collection/products/kaschmirgraue-kueche",
+   "destination": "/projekte/weiss-marmoroptik-nische-insel"
+  },
+  {
+   "source": "/en/collections/:collection/products/kaschmirgraue-kueche",
+   "destination": "/en/projects/weiss-marmoroptik-nische-insel"
+  },
+  {
+   "source": "/collections/vintage-love",
+   "destination": "/kuechen/stile/landhaus"
+  },
+  {
+   "source": "/en/collections/vintage-love",
+   "destination": "/en/kitchens/styles/landhaus"
+  },
+  {
+   "source": "/collections/natures-harmony",
+   "destination": "/kuechen/stile/holz"
+  },
+  {
+   "source": "/en/collections/natures-harmony",
+   "destination": "/en/kitchens/styles/holz"
+  },
+  {
+   "source": "/collections/simple-elegance",
+   "destination": "/kuechen/stile/modern"
+  },
+  {
+   "source": "/en/collections/simple-elegance",
+   "destination": "/en/kitchens/styles/modern"
+  },
+  {
+   "source": "/collections/smart-rebellion",
+   "destination": "/kuechen/stile/design"
+  },
+  {
+   "source": "/en/collections/smart-rebellion",
+   "destination": "/en/kitchens/styles/design"
+  },
+  {
+   "source": "/collections/outdoor",
+   "destination": "/kuechen/besondere/nach-mass"
+  },
+  {
+   "source": "/en/collections/outdoor",
+   "destination": "/en/kitchens/special/nach-mass"
+  },
+  {
+   "source": "/collections/more-beer",
+   "destination": "/moebel"
+  },
+  {
+   "source": "/en/collections/more-beer",
+   "destination": "/en/furniture"
+  },
+  {
+   "source": "/collections/kalkulator",
+   "destination": "/kueche-planen"
+  },
+  {
+   "source": "/en/collections/kalkulator",
+   "destination": "/en/plan-your-kitchen"
+  },
+  {
+   "source": "/collections/all",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/collections/all",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/pages/7-geheimnisse",
+   "destination": "/kueche-planen"
+  },
+  {
+   "source": "/en/pages/7-geheimnisse",
+   "destination": "/en/plan-your-kitchen"
+  },
+  {
+   "source": "/pages/agbs",
+   "destination": "/agb"
+  },
+  {
+   "source": "/en/pages/agbs",
+   "destination": "/en/agb"
+  },
+  {
+   "source": "/pages/blog",
+   "destination": "/ratgeber"
+  },
+  {
+   "source": "/en/pages/blog",
+   "destination": "/en/guides"
+  },
+  {
+   "source": "/pages/contact",
+   "destination": "/kontakt"
+  },
+  {
+   "source": "/en/pages/contact",
+   "destination": "/en/contact"
+  },
+  {
+   "source": "/pages/datenschutzerklarung",
+   "destination": "/datenschutz"
+  },
+  {
+   "source": "/en/pages/datenschutzerklarung",
+   "destination": "/en/datenschutz"
+  },
+  {
+   "source": "/pages/faqs",
+   "destination": "/faq"
+  },
+  {
+   "source": "/en/pages/faqs",
+   "destination": "/en/faq"
+  },
+  {
+   "source": "/pages/impressum",
+   "destination": "/impressum"
+  },
+  {
+   "source": "/en/pages/impressum",
+   "destination": "/en/impressum"
+  },
+  {
+   "source": "/pages/karriere",
+   "destination": "/karriere"
+  },
+  {
+   "source": "/en/pages/karriere",
+   "destination": "/en/careers"
+  },
+  {
+   "source": "/pages/kuechen",
+   "destination": "/kuechen"
+  },
+  {
+   "source": "/en/pages/kuechen",
+   "destination": "/en/kitchens"
+  },
+  {
+   "source": "/pages/kuechenkonzept",
+   "destination": "/kuechen"
+  },
+  {
+   "source": "/en/pages/kuechenkonzept",
+   "destination": "/en/kitchens"
+  },
+  {
+   "source": "/pages/materialien",
+   "destination": "/material"
+  },
+  {
+   "source": "/en/pages/materialien",
+   "destination": "/en/materials"
+  },
+  {
+   "source": "/pages/partner",
+   "destination": "/marken"
+  },
+  {
+   "source": "/en/pages/partner",
+   "destination": "/en/brands"
+  },
+  {
+   "source": "/pages/presse",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/pages/presse",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/pages/produktion",
+   "destination": "/ueber"
+  },
+  {
+   "source": "/en/pages/produktion",
+   "destination": "/en/about"
+  },
+  {
+   "source": "/pages/team",
+   "destination": "/team"
+  },
+  {
+   "source": "/en/pages/team",
+   "destination": "/en/team"
+  },
+  {
+   "source": "/pages/teamaction",
+   "destination": "/team"
+  },
+  {
+   "source": "/en/pages/teamaction",
+   "destination": "/en/team"
+  },
+  {
+   "source": "/pages/termin-buchen",
+   "destination": "/beratung"
+  },
+  {
+   "source": "/en/pages/termin-buchen",
+   "destination": "/en/consultation"
+  },
+  {
+   "source": "/pages/werte",
+   "destination": "/ueber"
+  },
+  {
+   "source": "/en/pages/werte",
+   "destination": "/en/about"
+  },
+  {
+   "source": "/pages/bora-brandpage",
+   "destination": "/marken/bora"
+  },
+  {
+   "source": "/en/pages/bora-brandpage",
+   "destination": "/en/brands/bora"
+  },
+  {
+   "source": "/pages/gaggenau-brandpage",
+   "destination": "/marken/gaggenau"
+  },
+  {
+   "source": "/en/pages/gaggenau-brandpage",
+   "destination": "/en/brands/gaggenau"
+  },
+  {
+   "source": "/pages/miele-brandpage",
+   "destination": "/marken/miele"
+  },
+  {
+   "source": "/en/pages/miele-brandpage",
+   "destination": "/en/brands/miele"
+  },
+  {
+   "source": "/pages/quooker-brandpage",
+   "destination": "/marken/quooker"
+  },
+  {
+   "source": "/en/pages/quooker-brandpage",
+   "destination": "/en/brands/quooker"
+  },
+  {
+   "source": "/pages/siemens-brandpage",
+   "destination": "/marken/siemens"
+  },
+  {
+   "source": "/en/pages/siemens-brandpage",
+   "destination": "/en/brands/siemens"
+  },
+  {
+   "source": "/pages/empfehlen",
+   "destination": "/kontakt"
+  },
+  {
+   "source": "/en/pages/empfehlen",
+   "destination": "/en/contact"
+  },
+  {
+   "source": "/pages/beer-empfehlen-als-mitarbeiter",
+   "destination": "/kontakt"
+  },
+  {
+   "source": "/en/pages/beer-empfehlen-als-mitarbeiter",
+   "destination": "/en/contact"
+  },
+  {
+   "source": "/policies/privacy-policy",
+   "destination": "/datenschutz"
+  },
+  {
+   "source": "/en/policies/privacy-policy",
+   "destination": "/en/datenschutz"
+  },
+  {
+   "source": "/policies/terms-of-service",
+   "destination": "/agb"
+  },
+  {
+   "source": "/en/policies/terms-of-service",
+   "destination": "/en/agb"
+  },
+  {
+   "source": "/policies/legal-notice",
+   "destination": "/impressum"
+  },
+  {
+   "source": "/en/policies/legal-notice",
+   "destination": "/en/impressum"
+  },
+  {
+   "source": "/pages/empfehlung_:name",
+   "destination": "/beratung"
+  },
+  {
+   "source": "/en/pages/empfehlung_:name",
+   "destination": "/en/consultation"
+  },
+  {
+   "source": "/collections/:collection/products/:handle",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/collections/:collection/products/:handle",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/products/:handle",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/products/:handle",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/collections/:collection",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/collections/:collection",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/collections",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/collections",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/pages/:handle",
+   "destination": "/"
+  },
+  {
+   "source": "/en/pages/:handle",
+   "destination": "/en"
+  },
+  {
+   "source": "/policies/:policy",
+   "destination": "/datenschutz"
+  },
+  {
+   "source": "/en/policies/:policy",
+   "destination": "/en/datenschutz"
+  },
+  {
+   "source": "/cart",
+   "destination": "/"
+  },
+  {
+   "source": "/en/cart",
+   "destination": "/en"
+  },
+  {
+   "source": "/account/:path*",
+   "destination": "/"
+  },
+  {
+   "source": "/en/account/:path*",
+   "destination": "/en"
+  },
+  {
+   "source": "/account",
+   "destination": "/"
+  },
+  {
+   "source": "/en/account",
+   "destination": "/en"
   }
  ]
 }
