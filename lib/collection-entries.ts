@@ -1182,6 +1182,31 @@ function voiceFor(slug: string, locale: Locale): Voice | undefined {
   return VOICE[locale][slug] ?? VOICE.de[slug];
 }
 
+/** For a furniture page that has no copy in the code: its texts come from the CMS. */
+function furnitureVoice(item: Furniture, locale: Locale): Voice {
+  const en = locale === "en";
+  return {
+    title: item.name,
+    emphasis: "",
+    statement: item.intro,
+    statementNote: "",
+    quote: "",
+    quoteSource: "",
+    closeTitle: en ? "Plan it with us" : "Mit uns planen",
+    closeText: en
+      ? "Show us the room and what should fit in it. We plan the furniture to the millimetre."
+      : "Zeigen Sie uns den Raum und was darin Platz finden soll. Wir planen das Möbel auf den Millimeter.",
+    ledgerLine: item.intro,
+    lookTitle: item.name,
+    indexEyebrow: en ? "Three points" : "Drei Punkte",
+    ctaLabel: en ? "Book an appointment" : "Termin vereinbaren",
+    film: [],
+    looks: [],
+    facts: [],
+    extras: [],
+  };
+}
+
 function housesFrom(projects: Project[], photo: (n: number, w?: number) => string): ClusterHouse[] {
   return projects.slice(0, 4).map((project, index) => ({
     href: `/projekte/${project.slug}`,
@@ -1748,9 +1773,16 @@ export function presentFurnitureItem(
   projects: Project[],
 ): PresentedTopic {
   const parent = PARENT.moebel[locale];
-  const voice = voiceFor(item.slug, locale)!;
+  const voice = voiceFor(item.slug, locale) ?? furnitureVoice(item, locale);
   const photo = (n: number, width?: number) =>
     devPhoto(168 + item.order + n, width);
+  // The houses its points link to (a wardrobe in the Pförring house, ...), in the order of the points.
+  const linked = (item.punkte ?? [])
+    .map((point) => point.linkZiel?.match(/^\/projekte\/([^/?#]+)/)?.[1])
+    .filter((slug): slug is string => Boolean(slug));
+  const houses = [...new Set(linked)]
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project): project is Project => Boolean(project));
   const siblings = furniture
     .filter((entry) => entry.slug !== item.slug)
     .map((entry, index) => ({
@@ -1771,7 +1803,7 @@ export function presentFurnitureItem(
     photo,
     branches: pointBranches(voice, photo),
     siblings,
-    houses: housesFrom(projects.slice(0, 4), photo),
+    houses: housesFrom(houses, photo),
     siblingEyebrow: locale === "en" ? "Further furniture" : "Weitere Möbel",
     siblingTitle:
       locale === "en" ? "Other pieces from the workshop." : "Andere Stücke aus der Werkstatt.",

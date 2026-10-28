@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import InteriorPage, { interiorPoints } from "@/components/catalog/entries/InteriorPage";
 import SamplePage from "@/components/catalog/entries/SamplePage";
 import { cmsValue, findBySlug } from "@/lib/catalog";
 import { fetchFurniture, fetchProjects } from "@/lib/catalog-api";
@@ -48,7 +49,33 @@ export default async function FurniturePage({
   if (!item) {
     notFound();
   }
-  return (
-    <SamplePage hub={presentFurnitureItem(item, locale, items, projects)} />
-  );
+  const hub = presentFurnitureItem(item, locale, items, projects);
+  // With CMS points that carry photos (in this language), each point is a room with its photos.
+  const source = {
+    intro: item.intro,
+    body: item.lesetext ?? "",
+    image: item.image,
+    srcSet: item.srcSet,
+    ctaLabel: locale === "en" ? "Book an appointment" : "Termin vereinbaren",
+    ctaUrl: "/beratung",
+    punkte: item.punkte,
+  };
+  if ((!item.contentLocale || item.contentLocale === locale) && interiorPoints(source).length >= 2) {
+    const en = locale === "en";
+    return (
+      <InteriorPage
+        hub={hub}
+        page={source}
+        faqTheme="moebel"
+        labels={{
+          houses: en ? "From these houses" : "Aus diesen Häusern",
+          more: en ? "More furniture from the workshop" : "Weitere Möbel aus der Werkstatt",
+          faqAll: en ? "All questions on furniture" : "Alle Fragen zu Möbeln",
+          secondaryHref: "/ausstellung",
+          secondaryLabel: en ? "Visit the showroom" : "Ausstellung besuchen",
+        }}
+      />
+    );
+  }
+  return <SamplePage hub={hub} />;
 }

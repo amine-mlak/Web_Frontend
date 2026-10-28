@@ -1403,19 +1403,19 @@
   },
   {
    "source": "/products/badezimmer",
-   "destination": "/moebel"
+   "destination": "/moebel/badmoebel"
   },
   {
    "source": "/en/products/badezimmer",
-   "destination": "/en/furniture"
+   "destination": "/en/furniture/badmoebel"
   },
   {
    "source": "/collections/:collection/products/badezimmer",
-   "destination": "/moebel"
+   "destination": "/moebel/badmoebel"
   },
   {
    "source": "/en/collections/:collection/products/badezimmer",
-   "destination": "/en/furniture"
+   "destination": "/en/furniture/badmoebel"
   },
   {
    "source": "/products/esstische",

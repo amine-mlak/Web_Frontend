@@ -10,9 +10,9 @@ import { filterFaqItems } from "@/lib/faq";
 import { fetchFaqHub } from "@/lib/strapi";
 
 /**
- * /material/innenleben: what sits behind the fronts. Each CMS point is its own section with a
- * large photo, a detail photo, the text and a link to the page it belongs to. The sections
- * change sides, so the page reads like a walk through the cupboards.
+ * A page told in photo sections: each CMS point is its own section with a large photo, a detail
+ * photo, the text and a link to the page it belongs to. The sections change sides, so the page
+ * reads like a walk through the rooms. Used by /material/innenleben and the furniture pages.
  */
 
 const COPY = {
@@ -23,6 +23,8 @@ const COPY = {
     faqAll: "Alle Fragen zum Innenleben",
     houses: "Küchen mit diesem Innenleben",
     more: "Weitere Ebenen der Küche",
+    secondaryHref: "/kueche-planen#planer",
+    secondaryLabel: "Küche planen",
   },
   en: {
     contents: "On this page",
@@ -31,13 +33,20 @@ const COPY = {
     faqAll: "All questions on interiors",
     houses: "Kitchens with this interior",
     more: "Other planes of the kitchen",
+    secondaryHref: "/kueche-planen#planer",
+    secondaryLabel: "Plan your kitchen",
   },
-} as const;
+};
+
+type Labels = (typeof COPY)["de"];
+
+/** What the page needs from its CMS entry (a site page or a furniture item). */
+export type PointsSource = Pick<SitePage, "intro" | "body" | "image" | "srcSet" | "ctaLabel" | "ctaUrl" | "punkte">;
 
 type ShownPoint = PagePoint & { bild: NonNullable<PagePoint["bild"]> };
 
 /** Points with a photo get a section; the page only uses this layout when at least two have one. */
-export function interiorPoints(page?: SitePage | null): ShownPoint[] {
+export function interiorPoints(page?: PointsSource | null): ShownPoint[] {
   return (page?.punkte ?? []).filter((point): point is ShownPoint => Boolean(point.bild?.src));
 }
 
@@ -129,13 +138,15 @@ export default async function InteriorPage({
   hub,
   page,
   faqTheme,
+  labels,
 }: {
   hub: PresentedTopic;
-  page: SitePage;
+  page: PointsSource;
   faqTheme?: string;
+  labels?: Partial<Labels>;
 }) {
   const locale = hub.locale === "en" ? "en" : "de";
-  const copy = COPY[locale];
+  const copy = { ...COPY[locale], ...labels };
   const points = interiorPoints(page);
   const faq = faqTheme ? await fetchFaqHub() : null;
   const questions = faq ? filterFaqItems(faq.items, faqTheme).slice(0, 6) : [];
@@ -165,8 +176,8 @@ export default async function InteriorPage({
             <LocaleLink href={page.ctaUrl || "/beratung"} className="pill pill-primary">
               {page.ctaLabel || (locale === "en" ? "Book an appointment" : "Termin vereinbaren")}
             </LocaleLink>
-            <LocaleLink href="/kueche-planen#planer" className="pill pill-secondary">
-              {locale === "en" ? "Plan your kitchen" : "Küche planen"}
+            <LocaleLink href={copy.secondaryHref} className="pill pill-secondary">
+              {copy.secondaryLabel}
             </LocaleLink>
           </div>
         </div>

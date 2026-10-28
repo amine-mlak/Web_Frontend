@@ -503,9 +503,13 @@ export async function fetchAppliances() {
 }
 
 export async function fetchFurniture() {
+  // Points carry a photo, a detail photo and a link: each one is a room on the furniture page.
+  const query: Record<string, string> = { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" };
+  delete query["populate[punkte]"];
+  query["populate[punkte][populate]"] = "*";
   return loadMapped(
     "/api/furniture-items",
-    { ...LIST_QUERY, ...SEO_QUERY, "populate[image]": "true" },
+    query,
     mapFurniture,
     FALLBACK_FURNITURE,
   );
