@@ -923,35 +923,35 @@
   },
   {
    "source": "/products/miele-dreams-zubehor",
-   "destination": "/marken/miele"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/products/miele-dreams-zubehor",
-   "destination": "/en/brands/miele"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/collections/:collection/products/miele-dreams-zubehor",
-   "destination": "/marken/miele"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/collections/:collection/products/miele-dreams-zubehor",
-   "destination": "/en/brands/miele"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/products/miele-dreams",
-   "destination": "/marken/miele"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/products/miele-dreams",
-   "destination": "/en/brands/miele"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/collections/:collection/products/miele-dreams",
-   "destination": "/marken/miele"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/collections/:collection/products/miele-dreams",
-   "destination": "/en/brands/miele"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/products/naturliches-designstatement",
@@ -1355,35 +1355,35 @@
   },
   {
    "source": "/products/terrassen-kueche",
-   "destination": "/kuechen/besondere/nach-mass"
+   "destination": "/projekte/terrassenkueche-eiche-edelstahl"
   },
   {
    "source": "/en/products/terrassen-kueche",
-   "destination": "/en/kitchens/special/nach-mass"
+   "destination": "/en/projects/terrassenkueche-eiche-edelstahl"
   },
   {
    "source": "/collections/:collection/products/terrassen-kueche",
-   "destination": "/kuechen/besondere/nach-mass"
+   "destination": "/projekte/terrassenkueche-eiche-edelstahl"
   },
   {
    "source": "/en/collections/:collection/products/terrassen-kueche",
-   "destination": "/en/kitchens/special/nach-mass"
+   "destination": "/en/projects/terrassenkueche-eiche-edelstahl"
   },
   {
    "source": "/products/eventkueche",
-   "destination": "/kuechen/besondere/nach-mass"
+   "destination": "/projekte/outdoorkueche-naturstein"
   },
   {
    "source": "/en/products/eventkueche",
-   "destination": "/en/kitchens/special/nach-mass"
+   "destination": "/en/projects/outdoorkueche-naturstein"
   },
   {
    "source": "/collections/:collection/products/eventkueche",
-   "destination": "/kuechen/besondere/nach-mass"
+   "destination": "/projekte/outdoorkueche-naturstein"
   },
   {
    "source": "/en/collections/:collection/products/eventkueche",
-   "destination": "/en/kitchens/special/nach-mass"
+   "destination": "/en/projects/outdoorkueche-naturstein"
   },
   {
    "source": "/products/kuchenakademie-masterclass",
@@ -1979,11 +1979,11 @@
   },
   {
    "source": "/collections/outdoor",
-   "destination": "/kuechen/besondere/nach-mass"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/collections/outdoor",
-   "destination": "/en/kitchens/special/nach-mass"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/collections/more-beer",

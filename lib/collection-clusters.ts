@@ -513,6 +513,10 @@ const TOPIC_EN: Record<string, { name: string; intro: string }> = {
     name: "Full-height kitchens",
     intro: "Store to the ceiling, without a dust shelf. Upper cupboards must stay reachable.",
   },
+  outdoor: {
+    name: "Outdoor kitchens",
+    intro: "A kitchen for the terrace and the garden: built for the weather, with grill, sink and storage, planned like a kitchen in the house.",
+  },
 };
 
 const POINTS_EN: Record<string, string[]> = {
@@ -625,6 +629,11 @@ const POINTS_EN: Record<string, string[]> = {
     "To the ceiling, without a dust shelf.",
     "Upper cupboards stay usable, or they are rare goods.",
     "Ceiling, wall and front have to meet.",
+  ],
+  outdoor: [
+    "Stainless steel, natural stone and oak that take rain, sun and frost.",
+    "Grill, sink, cooling and storage, as much as the space and the parties need.",
+    "Water, power and gas are fixed before the terrace is built.",
   ],
 };
 

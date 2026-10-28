@@ -27,8 +27,8 @@ Claude does not copy keys or passwords between systems, so these need a person.
 - [ ] **Datenschutz**: add a newsletter section (double opt-in, what is stored, how to unsubscribe).
       A legal text, best checked by whoever advises BEER.
 - [x] **Shop**: all 66 Shopify products, 7 collections and 43 pages redirect to the new site (2026-10-28).
-      Still missing as pages (they redirect to the closest topic for now): an **outdoor kitchen** page
-      (Terrassen Küche, Eventküche, Miele Dreams), a **bathroom** page, the **referral programme**
+      Outdoor kitchens are built as drafts (see 4.). Still missing as pages (they redirect to the closest
+      topic for now): a **bathroom** page, the **referral programme**
       (Empfehlen and the 19 personal voucher pages), and four kitchens without a project:
       Schwebeblock Küche, Mediterrane Landhausküche, Skandinavische Frische, Dunkelblauer Luxus.
 - [ ] **Canonical domain and contact email** (`www.beer.de`? `info@beer.de`?), so they can be set
@@ -50,6 +50,10 @@ Claude does not copy keys or passwords between systems, so these need a person.
 
 - [ ] **Innenleben**: the draft with 9 photo sections. Check it with the CMS preview, then publish.
 - [ ] **Küchenplaner page**: draft in German and English.
+- [ ] **Outdoorküchen**: three drafts, published in this order: the kitchen topic "Outdoorküchen"
+      (`/kuechen/besondere/outdoor`), then the projects "Terrassenküche mit Eiche und Edelstahl" and
+      "Outdoorküche mit Naturstein". The old shop addresses (Terrassen Küche, Eventküche, Miele Dreams,
+      collection Outdoor) redirect there once the site change is deployed.
 - [ ] **86 blog articles** from beer.de are drafts: publish before launch, set the original dates
       (in `D:/Beer/.cache/blog/import-map.json`), review the 32 kept Shopify SEO titles.
 - [ ] **Project pages as stories** (design idea): each project told like an exposé, as on the

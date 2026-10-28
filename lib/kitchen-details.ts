@@ -114,4 +114,9 @@ export const TOPIC_NOTES: Record<string, KitchenNote[]> = {
     { label: "Erreichbarkeit", text: "Obere Fächer bleiben nutzbar, oder sie sind seltenes Gut." },
     { label: "Fuge", text: "Decke, Wand und Front müssen zusammenpassen." },
   ],
+  outdoor: [
+    { label: "Material", text: "Edelstahl, Naturstein und Eiche, die Regen, Sonne und Frost vertragen." },
+    { label: "Ausstattung", text: "Grill, Spüle, Kühlung und Stauraum, so viel der Platz und die Feste brauchen." },
+    { label: "Anschlüsse", text: "Wasser, Strom und Gas legen wir fest, bevor die Terrasse gebaut wird." },
+  ],
 };

@@ -359,6 +359,17 @@ const EN: Record<string, TopicReadingCopy> = {
       "Discussed in the showroom at Wolfersdorf near Freising. Built in the workshop there. Fitted by us in the radius around Munich, including Erding, Dachau and Pfaffenhofen.",
     ],
   },
+  outdoor: {
+    title: "Outdoor kitchens made to measure",
+    description:
+      "Outdoor kitchens for terrace and garden: stainless steel, natural stone and oak, with grill and sink. Miele Dreams too. From Wolfersdorf near Freising.",
+    heading: "Cooking outside",
+    paragraphs: [
+      "An outdoor kitchen stays outside all year. Worktop, fronts and appliances have to take rain, sun and frost. That is why we plan them with materials such as stainless steel, natural stone and oak, which may age outdoors without coming to harm.",
+      "As with a kitchen in the house, planning starts with the place: where does the grill stand, where does the smoke go, where are water, power and gas? Size and shape follow from that, from a compact grill station on a roof terrace to a long kitchen for parties in the garden.",
+      "As a sales partner we also plan Miele Dreams, the modular outdoor system by Miele with the Fire Pro IQ gas grill. The modules for grill, sink, cooling and storage can be combined freely and fitted to terrace and garden.",
+    ],
+  },
 };
 
 export function topicReading(slug: string, locale: Locale): TopicReadingCopy | null {

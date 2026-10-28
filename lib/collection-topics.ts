@@ -97,6 +97,8 @@ const LABEL_EN: Record<string, string> = {
   Füllung: "Fill",
   Aufmaß: "Survey",
   Erreichbarkeit: "Reach",
+  Ausstattung: "Equipment",
+  Anschlüsse: "Services",
 };
 
 const SIBLING_HEAD: Record<
@@ -1494,6 +1496,31 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
         ["Rare goods above, the day below.", "A ladder in the plan, or the cupboards stay empty."],
         ["Ceiling, wall and front in one line.", "A jog in the ceiling is drawn, not boxed in."],
       ],
+    },
+    outdoor: {
+      title: "Outdoor kitchens",
+      emphasis: "",
+      statement:
+        "An outdoor kitchen extends the living space into the garden. So that it can stand outside for many years, we choose materials and appliances that take the weather.",
+      statementNote: "Plan water, power and gas before the terrace is built.",
+      quote: "",
+      quoteSource: "",
+      closeTitle: "Plan your outdoor kitchen",
+      closeText:
+        "Tell us about your terrace or garden. We come by, measure and plan the kitchen for the place.",
+      ledgerLine: "Built for rain, sun and frost.",
+      lookTitle: "Grill, sink, stone.",
+      indexEyebrow: "Three points",
+      ctaLabel: "Plan an outdoor kitchen",
+      film: ["Terrace", "Garden", "Grill", "Stone"],
+      looks: ["Grill", "Sink", "Natural stone", "Stainless steel", "Oak", "Storage"],
+      facts: [
+        { value: "Weatherproof", label: "steel, stone, oak" },
+        { value: "Grill", label: "with sink and storage" },
+        { value: "Miele Dreams", label: "as sales partner" },
+        { value: "Services", label: "water, power, gas" },
+      ],
+      extras: [],
     },
   },
 };
