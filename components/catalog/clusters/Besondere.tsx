@@ -1,8 +1,7 @@
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
-import ProjectFeature from "@/components/catalog/ProjectFeature";
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import {
   Crumbs,
-  HouseLine,
   IndexRows,
   RuledPoints,
   SoftClose,
@@ -16,7 +15,6 @@ function housesTitle(locale: PresentedCluster["locale"]) {
 }
 
 export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
-  const features = hub.features ?? [];
   return (
     <main className="bg-paper">
       <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
@@ -59,14 +57,9 @@ export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: strin
         </div>
       </section>
 
-      {/* Kitchens with this topic, one by one; the line below lists the further ones. */}
-      {features.map((feature, index) => (
-        <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={hub.locale} />
-      ))}
-
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
-      <HouseLine houses={features.length ? hub.taggedHouses ?? [] : hub.houses} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>
   );

@@ -4,7 +4,7 @@ import NextSteps from "@/components/catalog/NextSteps";
 import { Frame } from "@/components/catalog/collections/parts";
 import { chromeCopy } from "@/lib/i18n";
 import { absoluteUrl } from "@/lib/seo";
-import type { ClusterHouse, ClusterSibling, PresentedCluster } from "@/lib/collection-clusters";
+import type { ClusterHouse, ClusterSibling } from "@/lib/collection-clusters";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 
 export function Crumbs({
@@ -253,32 +253,6 @@ export function IndexRows({
     </section>
   );
 }
-
-export function ClusterLinks({ hub }: { hub: PresentedCluster }) {
-  if (hub.siblings.length === 0) {
-    return null;
-  }
-  const label = hub.locale === "en" ? "Other rooms" : "Andere Bereiche";
-
-  return (
-    <nav aria-label={label} className="border-t border-line px-5 py-8 sm:px-8 lg:px-14">
-      <p className="type-eyebrow text-muted">{label}</p>
-      <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
-        {hub.siblings.map((item) => (
-          <li key={item.href}>
-            <LocaleLink
-              href={item.href}
-              className="font-serif text-[22px] text-ink transition-opacity hover:opacity-60"
-            >
-              {item.title}
-            </LocaleLink>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
 export function SoftClose({ hub }: { hub: PresentedHub }) {
   return (
     <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24">

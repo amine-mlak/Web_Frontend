@@ -21,6 +21,7 @@ import type { PresentedTopic } from "@/lib/collection-topics";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { projectFeature } from "@/lib/project-features";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
@@ -1330,6 +1331,8 @@ function assemble(args: {
   branches: PresentedBranch[];
   siblings: ClusterSibling[];
   houses: ClusterHouse[];
+  /** Real kitchens linked to this entry: up to four are shown one by one, the next ones in a line. */
+  featured?: Project[];
   siblingEyebrow: string;
   siblingTitle: string;
   ueberschrift?: string;
@@ -1337,6 +1340,8 @@ function assemble(args: {
   cms?: CmsPageFields;
 }): PresentedTopic {
   const { locale, photo } = args;
+  const withPhoto = (args.featured ?? []).filter((project) => project.image);
+  const features = withPhoto.slice(0, 4).map((project) => projectFeature(project, [args.heroImage]));
   const voice = withCms(args.voice, cmsMatches(args.cms, locale));
   const branches = withPunkte(args.branches, cmsMatches(args.cms, locale)?.punkte);
   const visit = clusterVisit(locale);
@@ -1391,6 +1396,8 @@ function assemble(args: {
         : "Wolfersdorf · Freising · München",
     siblings: args.siblings,
     houses: args.houses,
+    features,
+    taggedHouses: housesFrom(withPhoto.slice(4), photo),
     swatches: [],
     lookTitle: voice.lookTitle,
     siblingEyebrow: args.siblingEyebrow,
@@ -1662,6 +1669,7 @@ export function presentMaterialItem(
     photo,
     branches: pointBranches(voice, photo),
     siblings,
+    featured: projects.filter((project) => project.materials.some((material) => material.slug === item.slug)),
     houses: housesFrom(projects.filter((project) =>
       project.materials.some((material) => material.slug === item.slug),
     ), photo),
@@ -1807,6 +1815,7 @@ export function presentBrandItem(
     photo,
     branches: pointBranches(voice, photo),
     siblings,
+    featured: projects.filter((project) => project.brands.some((brand) => brand.slug === item.slug)),
     houses: housesFrom(
       projects.filter((project) =>
         project.brands.some((brand) => brand.slug === item.slug),
@@ -1862,6 +1871,7 @@ export function presentRegionItem(
     photo,
     branches: pointBranches(voice, photo),
     siblings,
+    featured: projects.filter((project) => project.regions.some((region) => region.slug === item.slug)),
     houses: housesFrom(
       projects.filter((project) =>
         project.regions.some((region) => region.slug === item.slug),

@@ -1,4 +1,5 @@
 import LocaleLink from "@/components/LocaleLink";
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import { Frame } from "@/components/catalog/collections/parts";
 import { Crumbs, QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
 import { cmsSrc } from "@/lib/beer-photos";
@@ -72,37 +73,8 @@ function OtherStances({ hub }: { hub: PresentedTopic }) {
   );
 }
 
-function OneHouse({ hub }: { hub: PresentedTopic }) {
-  const house = hub.houses[0];
-  if (!house) {
-    return null;
-  }
-  const label = hub.locale === "en" ? "A house with this stance" : "Ein Haus mit dieser Haltung";
-
-  return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14">
-      <p className="type-eyebrow text-gold">{label}</p>
-      <LocaleLink href={house.href} className="group mt-6 grid items-end gap-6 lg:grid-cols-12">
-        <Frame
-          src={house.image}
-          alt={house.title}
-          className="aspect-[16/9] lg:col-span-8"
-          imgClassName="transition-transform duration-700 group-hover:scale-[1.02]"
-          sizes="(max-width: 1024px) 100vw, 66vw"
-        />
-        <span className="lg:col-span-4 lg:pb-2">
-          <span className="block font-serif text-[32px] leading-tight font-medium text-ink">
-            {house.title}
-          </span>
-          {house.meta ? (
-            <span className="mt-3 block font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-              {house.meta}
-            </span>
-          ) : null}
-        </span>
-      </LocaleLink>
-    </section>
-  );
+function housesTitle(locale: PresentedTopic["locale"]) {
+  return locale === "en" ? "Further kitchens with this stance" : "Weitere Küchen mit dieser Haltung";
 }
 
 function Facts({ hub, invert }: { hub: PresentedTopic; invert?: boolean }) {
@@ -191,8 +163,8 @@ function Modern({
       </div>
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );
@@ -253,8 +225,8 @@ function Landhaus({
       </div>
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );
@@ -314,8 +286,8 @@ function Design({
       </div>
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );
@@ -382,8 +354,8 @@ function Holz({
       <Facts hub={hub} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );
@@ -435,8 +407,8 @@ function Purist({
       </div>
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );
@@ -505,8 +477,8 @@ function Luxus({
         <Frame src={photos[2]} alt="" className="aspect-[4/5]" sizes="50vw" />
       </div>
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <OtherStances hub={hub} />
-      <OneHouse hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );

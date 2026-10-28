@@ -1,8 +1,8 @@
 import LocaleLink from "@/components/LocaleLink";
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
   Crumbs,
-  HouseLine,
   RuledPoints,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
@@ -111,7 +111,7 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       ) : null}
 
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>
   );

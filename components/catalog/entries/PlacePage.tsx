@@ -1,6 +1,6 @@
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import {
   Crumbs,
-  HouseLine,
   QuoteLine,
   RuledPoints,
   SiblingCards,
@@ -53,7 +53,7 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         </figure>
       ) : null}
 
-      <HouseLine houses={hub.houses} title={houses} />
+      <KitchenShowcase hub={hub} title={houses} />
 
       <section className="mx-auto grid max-w-[90rem] gap-12 border-t border-line px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
         <h2 className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink italic lg:col-span-5 md:text-[34px]">

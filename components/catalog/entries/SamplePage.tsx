@@ -1,10 +1,10 @@
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import { entryReading } from "@/lib/entry-reading";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
   Crumbs,
-  HouseLine,
   QuoteLine,
   RuledPoints,
   SoftClose,
@@ -71,7 +71,7 @@ export default function SamplePage({ hub }: { hub: PresentedTopic }) {
 
       <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <HouseLine houses={hub.houses} title={houses} />
+      <KitchenShowcase hub={hub} title={houses} />
       <SoftClose hub={hub} />
     </main>
   );

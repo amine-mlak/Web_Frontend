@@ -1,7 +1,7 @@
 import { Frame } from "@/components/catalog/collections/parts";
+import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import {
   Crumbs,
-  HouseLine,
   IndexRows,
   RuledPoints,
   SoftClose,
@@ -52,7 +52,7 @@ export function FormenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
 
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
-      <HouseLine houses={hub.houses} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <SoftClose hub={hub} />
     </main>
   );
