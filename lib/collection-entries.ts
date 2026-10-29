@@ -23,6 +23,7 @@ import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { projectFeature } from "@/lib/project-features";
 import type { Locale } from "@/lib/i18n";
+import { cmsPageText } from "@/lib/page-text";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export type MaterialKindRoute = "fronten" | "arbeitsplatten" | "innenleben" | "spuele";
@@ -1572,7 +1573,8 @@ export function presentMaterialKind(
   return assemble({
     locale,
     voice,
-    lede: voice.statementNote,
+    // The CMS intro is what people read first, and what search results show.
+    lede: (page && cmsMatches(page, locale) && page.intro) || voice.statementNote,
     heroImage: cmsLarge(resolveDevImage(related[0]?.image, photo(0, 3840)), 3840),
     heroAlt: voice.title,
     parentHref: parent.href,
@@ -1619,7 +1621,8 @@ export function presentApplianceKind(
   return assemble({
     locale,
     voice,
-    lede: voice.statementNote,
+    // The CMS intro is what people read first, and what search results show.
+    lede: (page && cmsMatches(page, locale) && page.intro) || voice.statementNote,
     heroImage: cmsLarge(resolveDevImage(related[0]?.image, photo(0, 3840)), 3840),
     heroAlt: voice.title,
     parentHref: parent.href,
@@ -1933,23 +1936,27 @@ export function entryMetadata(
   });
 }
 
-export function materialKindMetadata(
+export async function materialKindMetadata(
   slug: MaterialKindRoute,
   locale: Locale,
 ): Promise<Metadata> {
   const voice = voiceFor(slug, locale)!;
+  // The CMS intro people read on the page; the code line only without one.
+  const cms = await cmsPageText(slug, locale);
   return entryMetadata(
-    locale === "en" ? voice.title : KIND_LABEL.de[slug].title,
-    voice.statement,
+    cms.title || cms.fullHeading || (locale === "en" ? voice.title : KIND_LABEL.de[slug].title),
+    cms.description || voice.statement,
     `/material/${slug}`,
+    cms.image,
   );
 }
 
-export function applianceKindMetadata(
+export async function applianceKindMetadata(
   slug: ApplianceKind,
   locale: Locale,
 ): Promise<Metadata> {
   const voice = voiceFor(slug, locale)!;
-  return entryMetadata(voice.title, voice.statement, `/geraete/${slug}`);
+  const cms = await cmsPageText(slug, locale);
+  return entryMetadata(cms.title || cms.fullHeading || voice.title, cms.description || voice.statement, `/geraete/${slug}`, cms.image);
 }
 

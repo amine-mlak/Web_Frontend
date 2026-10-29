@@ -302,7 +302,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
     },
     ausstellung: {
       kind: "house",
-      emphasis: "not a furniture hall.",
+      emphasis: "in Wolfersdorf",
       statement:
         "In Wolfersdorf, materials, edges and built details stand in daylight. Not a hall of runs. A studio where the conversation starts with the house.",
       statementNote: "Drop-ins are possible. A quiet conversation without an appointment is not always.",
@@ -834,7 +834,14 @@ export async function houseMetadata(slug: string): Promise<Metadata> {
     return { title: "BEER Küchenmanufaktur" };
   }
   return pageMetadata({
-    title: brandedTitle(house.title),
+    // The heading as the page prints it: the banner shows title and emphasis ("Ausstellung in
+    // Wolfersdorf"), the dark hero ("night") the title alone.
+    title: brandedTitle(
+      (HOUSE_COMPOSITION[house.layout][0] === "night"
+        ? house.title
+        : [house.title, house.emphasis].filter(Boolean).join(" ")
+      ).replace(/\.$/, ""),
+    ),
     description: house.lede,
     path: `/${slug}`,
     image: house.heroImage,

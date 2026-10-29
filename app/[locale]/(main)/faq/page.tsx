@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import FaqHub from "@/components/FaqHub";
+import FaqHub, { faqHubText } from "@/components/FaqHub";
 import { getRequestLocale } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
 
 export const revalidate = 120;
 
-export function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
+  // The heading and intro on the page, so the search result says what the page says.
+  const text = faqHubText(await getRequestLocale());
   return pageMetadata({
-    title: "FAQ | BEER Küchenmanufaktur",
-    description:
-      "Fragen zur Küche nach Thema: Farben, Formen, Stile, Kosten, Geräte, Ausstellung und Planung.",
+    title: `FAQ: ${text.title} | BEER Küchenmanufaktur`,
+    description: text.intro,
     path: "/faq",
   });
 }

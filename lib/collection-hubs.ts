@@ -3,6 +3,7 @@ import { APPLIANCE_PHOTOS } from "@/lib/appliance-media";
 import { cmsLarge } from "@/lib/beer-photos";
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
+import { cmsPageText } from "@/lib/page-text";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export type CollectionBranch = {
@@ -1083,11 +1084,14 @@ const HUB_PATH: Record<CollectionHubId, string> = {
 export async function collectionHubMetadata(
   id: CollectionHubId,
 ): Promise<Metadata> {
-  const content = collectionHub(id, await getRequestLocale());
+  const locale = await getRequestLocale();
+  const content = collectionHub(id, locale);
+  // The words on the page: the CMS heading and intro, not the copy kept here as a fallback.
+  const cms = await cmsPageText(hubPageSlug(id), locale);
   return pageMetadata({
-    title: brandedTitle(content.title),
-    description: content.lede,
+    title: brandedTitle(cms.title || cms.heading || content.title),
+    description: cms.description || content.lede,
     path: HUB_PATH[id],
-    image: content.heroImage,
+    image: cms.image || content.heroImage,
   });
 }

@@ -18,7 +18,8 @@ import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
-import { pageMetadata } from "@/lib/seo";
+import { cmsPageText } from "@/lib/page-text";
+import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export type ClusterHouse = {
   href: string;
@@ -899,10 +900,13 @@ export function clusterPhotoOffset(slug: KitchenClusterSlug) {
 export async function clusterMetadata(
   slug: KitchenClusterSlug,
 ): Promise<Metadata> {
-  const copy = COPY[await getRequestLocale()][slug];
+  const locale = await getRequestLocale();
+  const copy = COPY[locale][slug];
+  // The intro on the page (CMS) first; the line here only when the CMS has none.
+  const cms = await cmsPageText(slug, locale);
   return pageMetadata({
-    title: copy.seoTitle,
-    description: copy.seoDescription,
+    title: cms.title ? brandedTitle(cms.title) : copy.seoTitle,
+    description: cms.description || copy.seoDescription,
     path: `/kuechen/${slug}`,
   });
 }

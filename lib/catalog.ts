@@ -81,6 +81,9 @@ export type CmsPageFields = {
   schlussText?: string;
   stichworte?: { wert: string; zeile: string }[];
   punkte?: PagePoint[];
+  /** The CMS "SEO" component: written for search results, may differ from the intro. */
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type CatalogSpec = { label: string; value: string };

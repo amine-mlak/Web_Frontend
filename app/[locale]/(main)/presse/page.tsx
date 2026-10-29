@@ -10,23 +10,24 @@ import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 120;
 
+// One sentence for the page and for search results.
+const COPY = {
+  de: { title: "Aktuelles", intro: "Termine, Presseberichte und Neues aus der Manufaktur und der Ausstellung in Wolfersdorf." },
+  en: { title: "News", intro: "Dates, press and news from the workshop and the showroom in Wolfersdorf." },
+} as const;
+
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getRequestLocale();
-  return locale === "en"
-    ? pageMetadata({
-        title: "News | BEER Küchenmanufaktur",
-        description: "Dates and notes from the workshop in Wolfersdorf.",
-        path: "/presse",
-      })
-    : pageMetadata({
-        title: "Aktuelles | BEER Küchenmanufaktur",
-        description: "Termine und Meldungen aus der Manufaktur in Wolfersdorf.",
-        path: "/presse",
-      });
+  const copy = COPY[(await getRequestLocale()) === "en" ? "en" : "de"];
+  return pageMetadata({
+    title: `${copy.title} | BEER Küchenmanufaktur`,
+    description: copy.intro,
+    path: "/presse",
+  });
 }
 
 export default async function PressePage() {
   const locale = await getRequestLocale();
+  const copy = COPY[locale === "en" ? "en" : "de"];
   const articles = await fetchArticles();
   const items = articleCards(articles.filter(isPressArticle));
   const guides = articleCards(articles.filter((item) => !isPressArticle(item)).slice(0, 3));
@@ -34,21 +35,10 @@ export default async function PressePage() {
   return (
     <main className="bg-paper">
       <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-        <p className="type-eyebrow text-muted">
-          {locale === "en" ? "Workshop" : "Manufaktur"}
-        </p>
-        <h1 className="mt-3 font-serif text-[40px] leading-[0.95] font-medium tracking-[-0.03em] text-ink md:text-[56px]">
-          {locale === "en" ? "News" : "Aktuelles"}
-          <br />
-          <em className="font-medium italic">
-            {locale === "en" ? "when there is something to say." : "wenn es etwas zu sagen gibt."}
-          </em>
+        <h1 className="font-serif text-[40px] leading-[0.95] font-medium tracking-[-0.03em] text-ink md:text-[56px]">
+          {copy.title}
         </h1>
-        <p className="type-intro mt-8 max-w-2xl">
-          {locale === "en"
-            ? "Not a feed. Dates, press, the showroom. Drafts stay in the CMS until someone publishes."
-            : "Kein Nachrichtenstrom. Termine, Presse, die Ausstellung. Entwürfe bleiben im CMS, bis jemand veröffentlicht."}
-        </p>
+        <p className="type-intro mt-8 max-w-2xl">{copy.intro}</p>
         <div className="mt-16">
           <EntryGrid items={items} />
         </div>

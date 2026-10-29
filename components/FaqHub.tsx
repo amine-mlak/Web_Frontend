@@ -10,7 +10,7 @@ import type { Locale } from "@/lib/i18n";
 const COPY = {
   de: {
     hubTitle: "Fragen vor dem Gespräch",
-    hubIntro: "Nach Thema filtern – Farben, Formen, Kosten, Geräte und was sonst zur Küche gehört.",
+    hubIntro: "Antworten auf die häufigsten Fragen zur Küche, nach Thema: Farben, Formen, Stile, Kosten, Geräte, Ausstellung und Planung.",
     themeTitle: (name: string) => `Fragen zu ${name}`,
     count: (n: number) => (n === 1 ? "1 Frage" : `${n} Fragen`),
     empty: "Zu diesem Thema liegen noch keine Fragen vor.",
@@ -21,7 +21,7 @@ const COPY = {
   },
   en: {
     hubTitle: "Questions before the conversation",
-    hubIntro: "Filter by topic – colours, shapes, cost, appliances and everything else that belongs to a kitchen.",
+    hubIntro: "Answers to the most common questions about a kitchen, by topic: colours, shapes, styles, cost, appliances, the showroom and planning.",
     themeTitle: (name: string) => `Questions on ${name}`,
     count: (n: number) => (n === 1 ? "1 question" : `${n} questions`),
     empty: "There are no questions on this topic yet.",
@@ -53,6 +53,12 @@ const THEME_PAGE: Record<string, { href: string; de: string; en: string }> = {
   nachhaltigkeit: { href: "/nachhaltigkeit", de: "Nachhaltigkeit", en: "Sustainability" },
   allgemein: { href: "/ueber", de: "Über BEER", en: "About BEER" },
 };
+
+/** The heading and intro of the question overview, also used for its search result. */
+export function faqHubText(locale: Locale) {
+  const copy = COPY[locale === "en" ? "en" : "de"];
+  return { title: copy.hubTitle, intro: copy.hubIntro };
+}
 
 export default function FaqHub({
   themes,

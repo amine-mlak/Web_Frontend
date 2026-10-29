@@ -567,6 +567,7 @@ export async function fetchSitePages() {
       sort: "title:asc",
       "pagination[pageSize]": "50",
       "populate[image]": "true",
+      "populate[seo]": "true",
       "populate[stichworte]": "true",
       // Points may carry a photo, a detail photo and a link (Innenleben shows each as a section).
       "populate[punkte][populate]": "*",
