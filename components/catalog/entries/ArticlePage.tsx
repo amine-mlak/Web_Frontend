@@ -190,7 +190,7 @@ export default async function ArticlePage({
     at < 0
       ? []
       : [1, -1, 2, -2, 3, -3]
-          .map((step) => sameCategory[(at + step + sameCategory.length) % sameCategory.length])
+          .map((step) => sameCategory[(((at + step) % sameCategory.length) + sameCategory.length) % sameCategory.length])
           .filter((other) => other.slug !== item.slug);
   const related = [...new Set([...neighbours, ...pool])].slice(0, 3);
 
