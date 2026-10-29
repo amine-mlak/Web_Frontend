@@ -134,6 +134,51 @@ function PointSection({ point, index, lang, detailLabel }: { point: ShownPoint; 
   );
 }
 
+/**
+ * The photo sections on their own, with an optional list of jump links above them. The showroom
+ * page uses this between its text and the visit block.
+ */
+export function PointSections({
+  points,
+  lang,
+  detailLabel,
+  navLabel,
+}: {
+  points: PagePoint[];
+  lang: string;
+  detailLabel: string;
+  navLabel?: string;
+}) {
+  const shown = points.filter((point): point is ShownPoint => Boolean(point.bild?.src));
+  if (shown.length === 0) {
+    return null;
+  }
+  return (
+    <>
+      {navLabel ? (
+        <nav className="border-t border-line px-5 py-8 sm:px-8 lg:px-14" aria-label={navLabel}>
+          <p className="font-sans text-[14px] text-muted">{navLabel}</p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {shown.map((point, index) => (
+              <li key={point.titel}>
+                <a
+                  href={`#${anchor(point.titel) || index}`}
+                  className="inline-flex min-h-10 items-center rounded-full border border-line px-4 font-sans text-[14px] text-ink transition-colors hover:border-ink"
+                >
+                  {point.titel}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
+      {shown.map((point, index) => (
+        <PointSection key={point.titel} point={point} index={index} lang={lang} detailLabel={detailLabel} />
+      ))}
+    </>
+  );
+}
+
 export default async function InteriorPage({
   hub,
   page,
@@ -231,9 +276,7 @@ export default async function InteriorPage({
         </section>
       ) : null}
 
-      {points.map((point, index) => (
-        <PointSection key={point.titel} point={point} index={index} lang={locale} detailLabel={copy.detail} />
-      ))}
+      <PointSections points={points} lang={locale} detailLabel={copy.detail} />
 
       <HouseLine houses={hub.houses} title={copy.houses} />
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { jobsFrom, type Job } from "@/lib/careers";
-import { FALLBACK_PAGES, type SitePage } from "@/lib/catalog";
+import { FALLBACK_PAGES, type PagePoint, type SitePage } from "@/lib/catalog";
 import { fetchSitePage } from "@/lib/catalog-api";
 import type { ClusterSibling } from "@/lib/collection-clusters";
 import { presentHub, type CollectionFact, type PresentedHub } from "@/lib/collection-present";
@@ -37,6 +37,8 @@ export type PresentedHouse = PresentedHub & {
   updatedAt?: string;
   /** Job ads (Karriere only), from the page's "punkte" list in the CMS. */
   jobs: Job[];
+  /** CMS points with a photo: on the showroom, each one is an area with its photos. */
+  rooms: PagePoint[];
 };
 
 type Voice = {
@@ -149,7 +151,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
         { value: "Termin", label: "macht Zeit" },
         { value: "Keine", label: "Filiale" },
       ],
-      ledger: "Ein Studio unter Tageslicht. Keine Halle.",
+      ledger: "Ganze Küchen, Muster und Geräte zum Anfassen.",
       seed: 8,
       heroFile: "stile-landhaus.jpg",
     },
@@ -314,7 +316,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
         { value: "Appointment", label: "makes time" },
         { value: "Not", label: "a branch" },
       ],
-      ledger: "A studio in daylight. Not a hall.",
+      ledger: "Whole kitchens, samples and appliances to try.",
       seed: 8,
       heroFile: "stile-landhaus.jpg",
     },
@@ -484,6 +486,7 @@ export type HouseBlock =
   | "price"
   | "body"
   | "gallery"
+  | "rooms"
   | "people"
   | "chapters"
   | "visit"
@@ -495,8 +498,8 @@ export type HouseBlock =
 export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   legal: [],
   manufactory: ["night", "body", "chapters", "siblings", "close"],
-  // Ausstellung: what is there (text, photos, facts), how to visit, then the questions people ask.
-  showroom: ["plate", "body", "gallery", "ledger", "visit", "form"],
+  // Ausstellung: what is there (text, then each area with its photos), facts, how to visit, questions.
+  showroom: ["plate", "body", "rooms", "ledger", "visit", "form"],
   people: ["film", "people", "body", "close"],
   lasting: ["title", "ledger", "body"],
   place: ["night", "ledger", "body", "visit", "form"],
@@ -593,6 +596,7 @@ function asHouse(
   page: SitePage | null,
 ): PresentedHouse {
   const media = sizedMedia(slug);
+  const cmsHere = Boolean(page && (!page.contentLocale || page.contentLocale === locale));
   const cmsHero =
     page?.image && !isStockPhoto(page.image) ? page.image : undefined;
   const body = page?.body?.trim() || "";
@@ -634,7 +638,10 @@ function asHouse(
     closeImage: media?.close || hub.closeImage,
     ledgerImage: media?.ledger || hub.ledgerImage,
     visitImage: media?.visit || hub.visitImage,
-    facts: voice.facts,
+    // Keywords from the CMS when the page has them in this language.
+    facts: cmsHere && page?.stichworte?.length
+      ? page.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
+      : voice.facts,
     ledgerLine: voice.ledger || hub.ledgerLine,
     visitNote:
       locale === "en"
@@ -645,6 +652,7 @@ function asHouse(
     showLead: Boolean(voice.showLead),
     siblings: companySiblings(locale, slug),
     jobs: slug === "karriere" ? jobsFrom(page?.punkte) : [],
+    rooms: slug === "karriere" || !cmsHere ? [] : (page?.punkte ?? []).filter((point) => Boolean(point.bild?.src)),
     faq: page?.faq ?? null,
     updatedAt: page?.updatedAt,
     gallery,

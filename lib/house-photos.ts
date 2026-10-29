@@ -49,6 +49,16 @@ const WORKSHOP = {
   two: u("Werkstatt2_563e1191ad.JPG"),
 };
 
+// Werk 2: the showroom building (wood ceilings, lounge, kitchens, sample wall, meeting rooms).
+const WERK2 = {
+  hall: u("076_Showroom_9551399c54.jpg"),
+  kitchens: u("077_Showroom_dd2f36d39f.jpg"),
+  table: u("018_Showroom_bc9448e1b5.jpg"),
+  samples: u("082_Showroom_fd03396871.jpg"),
+  lounge: u("004_Showroom_13654adf97.jpg"),
+  meeting: u("117_Showroom_4bcb8435f7.jpg"),
+};
+
 const ROOM = {
   r0002: u("Ausstellung_0002_198946b6fd.jpg"),
   r0003: u("Ausstellung_0003_bcf7bea1a4.jpg"),
@@ -125,12 +135,12 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
   },
   ausstellung: {
     layout: "showroom",
-    hero: ROOM.r0002,
-    statement: ROOM.r0004,
-    statementB: ROOM.r0048,
-    close: ROOM.r0075,
-    ledger: ROOM.r0058,
-    visit: ROOM.r0060,
+    hero: WERK2.hall,
+    statement: WERK2.kitchens,
+    statementB: WERK2.table,
+    close: WERK2.meeting,
+    ledger: WERK2.samples,
+    visit: WERK2.lounge,
     gallery: [
       shot(ROOM.r0003, "Ausstellung, Blick ins Studio"),
       shot(ROOM.r0004, "Muster und gebaute Details"),

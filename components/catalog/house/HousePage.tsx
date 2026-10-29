@@ -15,6 +15,7 @@ import HouseBody from "@/components/catalog/house/HouseBody";
 import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
 import LegalPage from "@/components/catalog/house/LegalPage";
+import { PointSections } from "@/components/catalog/entries/InteriorPage";
 import {
   HOUSE_COMPOSITION,
   houseParagraphs,
@@ -31,6 +32,8 @@ const COPY = {
     peopleTitle: "Wer aufmisst, fertigt, montiert.",
     galleryEyebrow: "Das Studio",
     galleryTitle: "Muster, Kanten, Licht.",
+    roomsNav: "In der Ausstellung",
+    detail: "Detail",
   },
   en: {
     siblingEyebrow: "The manufactory",
@@ -39,6 +42,8 @@ const COPY = {
     peopleTitle: "Who surveys, makes, fits.",
     galleryEyebrow: "The studio",
     galleryTitle: "Samples, edges, daylight.",
+    roomsNav: "In the showroom",
+    detail: "Detail",
   },
 } as const;
 
@@ -78,6 +83,17 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
         title={copy.galleryTitle}
         shots={house.gallery}
       />
+    ),
+    // Each CMS point with a photo as its own section; without them the small gallery.
+    rooms: house.rooms.length ? (
+      <PointSections
+        points={house.rooms}
+        lang={house.locale === "en" ? "en" : "de"}
+        detailLabel={copy.detail}
+        navLabel={copy.roomsNav}
+      />
+    ) : (
+      <HouseGallery eyebrow={copy.galleryEyebrow} title={copy.galleryTitle} shots={house.gallery} />
     ),
     people: (
       <HousePeople
