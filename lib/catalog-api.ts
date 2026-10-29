@@ -367,6 +367,7 @@ function mapArticle(entry: unknown): Article | null {
     // "Erschienen am" when set (the beer.de posts keep their original date), else the publish time.
     publishedAt: text(row, "erschienenAm") || text(row, "publishedAt") || undefined,
     updatedAt: text(row, "updatedAt") || undefined,
+    originalDate: Boolean(text(row, "erschienenAm")),
   };
 }
 

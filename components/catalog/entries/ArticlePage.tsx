@@ -217,7 +217,8 @@ export default async function ArticlePage({
             {published ? <time dateTime={item.publishedAt}>{published}</time> : null}
             {published ? <span aria-hidden="true">·</span> : null}
             <span>{copy.minutes(minutes)}</span>
-            {updated && updated !== published ? (
+            {/* Imported texts carry their original date; re-dating them is not an update. */}
+            {updated && updated !== published && !item.originalDate ? (
               <>
                 <span aria-hidden="true">·</span>
                 <span>

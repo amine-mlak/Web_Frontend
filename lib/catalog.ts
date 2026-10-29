@@ -207,6 +207,8 @@ export type Article = {
   blocks?: ArticleBlock[];
   publishedAt?: string;
   updatedAt?: string;
+  /** True when the date is the original one ("Erschienen am"); the CMS update time then says nothing. */
+  originalDate?: boolean;
 };
 
 export const PRESS_CATEGORY_SLUG = "presse";
