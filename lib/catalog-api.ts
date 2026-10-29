@@ -8,6 +8,7 @@ import {
   FALLBACK_PROJECTS,
   FALLBACK_REGIONS,
   FALLBACK_TOPICS,
+  articleHref,
   isPressArticle,
   type Appliance,
   type ApplianceKind,
@@ -39,6 +40,10 @@ import {
   strapiResponsiveImage,
   type StrapiMedia,
 } from "@/lib/strapi";
+import legacyRedirects from "@/lib/legacy-redirects.json";
+
+/** Addresses that redirect elsewhere (next.config.ts); an article living at one is never listed. */
+const REDIRECTED = new Set(legacyRedirects.redirects.map((redirect) => redirect.source));
 
 function stile(file: string) {
   return CMS_NAMED[file] || `/kitchens/${file}`;
@@ -549,7 +554,7 @@ export async function fetchArticles() {
     mapArticle,
     FALLBACK_ARTICLES,
     20,
-  );
+  ).then((all) => all.filter((item) => !REDIRECTED.has(articleHref(item))));
   // Newest first by the date the text appeared, not by when it was entered into the CMS.
   items.sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
   if (items.some(isPressArticle)) {
