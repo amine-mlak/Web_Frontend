@@ -364,7 +364,8 @@ function mapArticle(entry: unknown): Article | null {
     srcSet: image.srcSet,
     category: mapCategory(row?.category) ?? undefined,
     blocks,
-    publishedAt: text(row, "publishedAt") || undefined,
+    // "Erschienen am" when set (the beer.de posts keep their original date), else the publish time.
+    publishedAt: text(row, "erschienenAm") || text(row, "publishedAt") || undefined,
     updatedAt: text(row, "updatedAt") || undefined,
   };
 }
@@ -548,6 +549,8 @@ export async function fetchArticles() {
     FALLBACK_ARTICLES,
     20,
   );
+  // Newest first by the date the text appeared, not by when it was entered into the CMS.
+  items.sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
   if (items.some(isPressArticle)) {
     return items;
   }
