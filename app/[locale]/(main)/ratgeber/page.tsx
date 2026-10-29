@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
+import ArticleIndex from "@/components/catalog/hub/ArticleIndex";
 import { isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
 import {
@@ -33,6 +34,8 @@ export default async function RatgeberPage() {
       id="ratgeber"
       locale={locale}
       branches={overlayBranchImages(collectionHub("ratgeber", locale).branches, images)}
-    />
+    >
+      <ArticleIndex articles={articles.filter((article) => !isPressArticle(article))} locale={locale} />
+    </CollectionHub>
   );
 }

@@ -176,12 +176,23 @@ export default async function ArticlePage({
   const topicLinks = TOPIC_LINKS[locale][category] ?? [];
 
   // Same kind (guide or news), same category first; a lone news item points to the guides.
+  // The pick is this article's neighbours in date order (next older, next newer, ...), not the
+  // newest three, so every article is linked from the ones next to it.
   const others = articles.filter((other) => other.slug !== item.slug);
   const sameKind = others.filter((other) => isPressArticle(other) === press);
   const moreIsPress = press && sameKind.length > 0;
-  const related = (sameKind.length > 0 ? sameKind : others.filter((other) => !isPressArticle(other)))
-    .sort((a, b) => Number(b.category?.slug === category) - Number(a.category?.slug === category))
-    .slice(0, 3);
+  const pool = sameKind.length > 0 ? sameKind : others.filter((other) => !isPressArticle(other));
+  const sameCategory = articles.filter(
+    (other) => isPressArticle(other) === press && other.category?.slug === category,
+  );
+  const at = sameCategory.findIndex((other) => other.slug === item.slug);
+  const neighbours =
+    at < 0
+      ? []
+      : [1, -1, 2, -2, 3, -3]
+          .map((step) => sameCategory[(at + step + sameCategory.length) % sameCategory.length])
+          .filter((other) => other.slug !== item.slug);
+  const related = [...new Set([...neighbours, ...pool])].slice(0, 3);
 
   const jsonLd = {
     "@context": "https://schema.org",
