@@ -14,6 +14,8 @@ export type CollectionBranch = {
   alt: string;
   meta?: string;
   brands?: string[];
+  /** Entries inside this branch (the materials of "Fronten"), listed with a small photo. */
+  items?: { href: string; title: string; text: string; image?: string }[];
 };
 
 export type CollectionHubCopy = {
@@ -115,7 +117,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     statementNote: "Ausstellung Wolfersdorf: Muster, Kanten, Licht. Kein Folienmuster aus dem Ordner.",
     heroImage: "/kitchens/stile-holz.jpg",
     heroAlt: "Holz und Naturstein in einer Küche",
-    indexEyebrow: "Vier Schichten",
+    indexEyebrow: "Die vier Bereiche",
     quote:
       "Die Front ist das, was Sie jeden Morgen anfassen. Deshalb mustern wir, bevor irgendetwas bestellt wird.",
     quoteSource: "Aus dem Materialgespräch in der Ausstellung",
@@ -128,28 +130,28 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
       {
         href: "/material/fronten",
         title: "Fronten",
-        text: "Lack, Furnier, Fenix. Matt, seidenmatt, Holzsicht. Die Fläche, die den Raum hält.",
+        text: "Lack, Holz und Fenix, matt, seidenmatt oder mit Holzsicht. Die Front bestimmt, wie die Küche aussieht und wie sie sich anfühlt.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Ruhige Küchenfronten",
       },
       {
         href: "/material/arbeitsplatten",
         title: "Arbeitsplatten",
-        text: "Naturstein, Keramik, Edelstahl, Holz. Die Fläche, auf der gearbeitet wird — nicht nur fotografiert.",
+        text: "Naturstein, Keramik, Edelstahl und Holz. Jede Platte verhält sich anders bei Hitze, Kratzern und in der Pflege.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Naturstein-Arbeitsplatte",
       },
       {
         href: "/material/innenleben",
         title: "Innenleben",
-        text: "Vollauszüge, Ecken, Vorrat. Was man nicht sieht, entscheidet den Tag öfter als die Farbe.",
+        text: "Auszüge, Eckschränke und Vorrat. Was hinter den Fronten liegt, entscheidet, wie gut die Küche im Alltag funktioniert.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Präzises Innenleben",
       },
       {
         href: "/material/spuele",
         title: "Spüle & Armatur",
-        text: "Unterbau, Stein, Quooker. Mit der Platte gezeichnet, nicht als Nachtrag in den Unterschrank geschoben.",
+        text: "Spülbecken aus Edelstahl, Keramik oder Stein, dazu die Armatur und der Quooker für kochendes Wasser.",
         image: "/kitchens/stile-insel.jpg",
         alt: "Spüle in der Arbeitsplatte",
       },
@@ -584,47 +586,47 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     eyebrow: "Touch",
     title: "Material",
     emphasis: "in the hand.",
-    lede: "Front, worktop, interior — what you touch every day. We sample before the order, not after the rendering.",
+    lede: "Fronts, worktops and interiors – the surfaces you touch every day.",
     statement:
-      "In a kitchen of this class the surface decides the day. Lacquer you do not polish until it shines. Stone that stays a one-off. Drawers quieter than the front.",
-    statementNote: "Wolfersdorf showroom: samples, edges, light. Not a foil chip from a binder.",
+      "Lacquer, wood, Fenix, natural stone, ceramic and stainless steel each behave differently in daily use. We show you the differences on real samples and explain care and durability.",
+    statementNote: "The samples are in our showroom in Wolfersdorf.",
     heroImage: "/kitchens/stile-holz.jpg",
     heroAlt: "Wood and natural stone in a kitchen",
-    indexEyebrow: "Four layers",
+    indexEyebrow: "The four areas",
     quote:
       "The front is what you touch every morning. That is why we sample before anything is ordered.",
     quoteSource: "From the material conversation in the showroom",
     ctaLabel: "Sample materials",
     ctaHref: "/ausstellung",
-    closeTitle: "In daylight.",
+    closeTitle: "See the samples in daylight",
     closeText:
-      "Stone, lacquer and wood change with the weather. The samples sit in Wolfersdorf, not only on a screen.",
+      "Colours and surfaces look different in daylight than on a screen. That is why we like to choose materials with you on site.",
     branches: [
       {
         href: "/material/fronten",
         title: "Fronts",
-        text: "Lacquer, veneer, Fenix. Matt, silk, visible wood. The plane that holds the room.",
+        text: "Lacquer, wood and Fenix, matt, silk or with the grain showing. The front decides how the kitchen looks and feels.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Quiet kitchen fronts",
       },
       {
         href: "/material/arbeitsplatten",
         title: "Worktops",
-        text: "Natural stone, ceramic, steel, wood. The plane you work on — not only photograph.",
+        text: "Natural stone, ceramic, stainless steel and wood. Each worktop behaves differently with heat, scratches and care.",
         image: "/kitchens/stile-landhaus.jpg",
         alt: "Natural stone worktop",
       },
       {
         href: "/material/innenleben",
         title: "Interiors",
-        text: "Full-extension drawers, corners, stores. What you do not see decides the day more often than the colour.",
+        text: "Drawers, corner cupboards and storage. What sits behind the fronts decides how well the kitchen works every day.",
         image: "/kitchens/stile-purist.jpg",
         alt: "Precise interiors",
       },
       {
         href: "/material/spuele",
         title: "Sink & tap",
-        text: "Undermount, stone, Quooker. Drawn with the top, not pushed into the cupboard afterwards.",
+        text: "Sinks in stainless steel, ceramic or stone, with the tap and the Quooker for boiling water.",
         image: "/kitchens/stile-insel.jpg",
         alt: "Sink in the worktop",
       },

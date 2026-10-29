@@ -59,6 +59,12 @@ const WERK2 = {
   meeting: u("117_Showroom_4bcb8435f7.jpg"),
 };
 
+/** The sample wall in Werk 2: fronts and worktops side by side (material overview). */
+export const SHOWROOM_SAMPLES = {
+  wall: u("084_Showroom_67e66b0449.jpg"),
+  detail: u("085_Showroom_cc551702ba.jpg"),
+};
+
 const ROOM = {
   r0002: u("Ausstellung_0002_198946b6fd.jpg"),
   r0003: u("Ausstellung_0003_bcf7bea1a4.jpg"),

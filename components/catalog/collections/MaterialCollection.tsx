@@ -1,8 +1,77 @@
 import type { ReactNode } from "react";
+import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
-import type { PresentedHub } from "@/lib/collection-present";
+import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { SHOWROOM_SAMPLES } from "@/lib/house-photos";
 
+function areaId(branch: PresentedBranch, index: number) {
+  return branch.href?.split("/").pop() || `bereich-${index + 1}`;
+}
+
+/** One area (Fronten, Arbeitsplatten, ...): a large photo, its text and the materials in it. */
+function Area({ branch, index, en }: { branch: PresentedBranch; index: number; en: boolean }) {
+  const id = areaId(branch, index);
+  const flip = index % 2 === 1;
+  const items = branch.items ?? [];
+
+  return (
+    <section id={id} className="scroll-mt-24 border-t border-line" aria-labelledby={`${id}-title`}>
+      <div className="grid lg:grid-cols-12">
+        <Frame
+          src={branch.image}
+          srcSet={branch.srcSet}
+          alt={branch.alt}
+          className={`aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:min-h-[80svh] ${flip ? "lg:order-2" : ""}`}
+          sizes="(max-width: 1024px) 100vw, 58vw"
+        />
+        <div className={`flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20 ${flip ? "lg:order-1" : ""}`}>
+          <h2
+            id={`${id}-title`}
+            className="font-serif text-[40px] leading-[1] font-medium tracking-[-0.035em] text-ink md:text-[52px]"
+          >
+            {branch.title}
+          </h2>
+          <p className="mt-5 max-w-md font-sans text-[17px] leading-relaxed text-muted">{branch.text}</p>
+          {items.length > 0 ? (
+            <ul className="mt-10 border-t border-line">
+              {items.map((item) => (
+                <li key={item.href} className="border-b border-line">
+                  <LocaleLink href={item.href} className="group flex items-center gap-4 py-4">
+                    {item.image ? (
+                      <span className="relative size-16 shrink-0 overflow-hidden bg-karte">
+                        <CmsImage src={item.image} alt="" fill sizes="64px" className="object-cover" />
+                      </span>
+                    ) : null}
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-serif text-[21px] leading-tight text-ink">{item.title}</span>
+                      {item.text ? (
+                        <span className="mt-1 block font-sans text-[14px] leading-snug text-muted">{item.text}</span>
+                      ) : null}
+                    </span>
+                    <span aria-hidden="true" className="shrink-0 text-muted transition-colors group-hover:text-ink">
+                      →
+                    </span>
+                  </LocaleLink>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {branch.href ? (
+            <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit text-ink">
+              {en ? `${branch.title}: the overview` : `${branch.title} im Überblick`}
+            </LocaleLink>
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * /material: the name and one sentence over the sample wall, a row to jump to the four areas,
+ * one statement, then each area with its photo and its materials. One ending (the showroom).
+ */
 export default function MaterialCollection({
   hub,
   children,
@@ -10,124 +79,71 @@ export default function MaterialCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
+  const en = hub.locale === "en";
+  const count = (n: number) => (en ? `${n} ${n === 1 ? "material" : "materials"}` : `${n} ${n === 1 ? "Material" : "Materialien"}`);
+
   return (
     <main className="bg-paper">
-      <section className="px-5 pt-10 pb-6 sm:px-8 lg:px-14 lg:pt-16" aria-labelledby="material-hero">
-        <div className="grid items-end gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <h1
-              id="material-hero"
-              className="font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[80px] lg:text-[96px]"
-            >
-              {hub.title}
-            </h1>
+      <section className="px-5 pt-12 sm:px-8 lg:px-14 lg:pt-20" aria-labelledby="material-hero">
+        <div className="grid items-end gap-8 lg:grid-cols-12">
+          <h1
+            id="material-hero"
+            className="font-serif text-[64px] leading-[0.88] font-medium tracking-[-0.05em] text-ink sm:text-[104px] lg:col-span-7 lg:text-[136px]"
+          >
+            {hub.title}
+          </h1>
+          <div className="lg:col-span-5 lg:pb-5">
+            <p className="max-w-md font-sans text-[18px] leading-relaxed text-muted">{hub.lede}</p>
+            <LocaleLink href={hub.ctaHref} className="btn-quiet mt-6 text-ink">
+              {hub.ctaLabel}
+            </LocaleLink>
           </div>
-          <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5 lg:justify-self-end">
-            {hub.lede}
-          </p>
         </div>
-        <Frame
-          src={hub.heroImage}
-          alt={hub.heroAlt}
-          className="mt-12 h-[28vh] min-h-[12rem] w-full lg:h-[34vh]"
-          imgClassName="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
       </section>
 
-      <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="material-board">
-        <h2 id="material-board" className="type-h2">
-          {hub.indexEyebrow}
-        </h2>
-        <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-12">
-          {hub.branches.map((branch, index) => {
-            const span =
-              index === 0
-                ? "lg:col-span-7 lg:row-span-2"
-                : index === 3
-                  ? "lg:col-span-12"
-                  : "lg:col-span-5";
-            return (
-              <li key={branch.title} className={span}>
-                <LocaleLink href={branch.href ?? "/ausstellung"} className="group block">
-                  <div className="border border-line bg-karte p-3 sm:p-4">
-                    <Frame
-                      src={branch.image}
-                      alt={branch.alt}
-                      srcSet={branch.srcSet}
-                      className={
-                        index === 0
-                          ? "aspect-[4/5]"
-                          : index === 3
-                            ? "aspect-[21/8]"
-                            : "aspect-[16/10]"
-                      }
-                      sizes={index === 0 ? "(max-width: 1024px) 100vw, 58vw" : "(max-width: 1024px) 100vw, 42vw"}
-                    />
-                    <div className="mt-4 flex items-start justify-between gap-4 px-1 pb-1">
-                      <div>
-                        <h3 className="font-serif text-[26px] leading-tight font-medium text-ink">
-                          {branch.title}
-                        </h3>
-                        <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">
-                          {branch.text}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </LocaleLink>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
+      <Frame
+        src={SHOWROOM_SAMPLES.wall}
+        alt={en ? "Sample wall with fronts and worktops in the Wolfersdorf showroom" : "Musterwand mit Fronten und Arbeitsplatten in der Ausstellung Wolfersdorf"}
+        className="mt-10 aspect-[4/3] w-full sm:aspect-[16/9] lg:mt-14 lg:aspect-[21/9]"
+        priority
+        sizes="100vw"
+      />
 
-      <section className="border-y border-line bg-karte">
+      <nav aria-label={hub.indexEyebrow} className="border-b border-line">
         <ul className="grid grid-cols-2 lg:grid-cols-4">
-          {hub.looks.slice(0, 4).map((look) => (
+          {hub.branches.map((branch, index) => (
             <li
-              key={look.caption}
-              className="border-line border-b even:border-l lg:border-b-0 lg:border-l-0 lg:not-last:border-r"
+              key={branch.title}
+              className={`border-line ${index % 2 === 1 ? "border-l" : ""} ${index >= 2 ? "border-t lg:border-t-0" : ""} ${index === 2 ? "lg:border-l" : ""}`}
             >
-              <Frame
-                src={look.src}
-                alt={look.alt}
-                className="aspect-square"
-                sizes="(max-width: 1024px) 50vw, 25vw"
-              />
-              <p className="px-4 py-3 font-sans text-[14px] text-muted">{look.caption}</p>
+              <a href={`#${areaId(branch, index)}`} className="group flex h-full flex-col justify-between gap-6 px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
+                <span className="font-serif text-[24px] leading-tight text-ink md:text-[28px]">{branch.title}</span>
+                <span className="flex items-center justify-between font-sans text-[14px] text-muted">
+                  {branch.items?.length ? count(branch.items.length) : en ? "Overview" : "Überblick"}
+                  <span aria-hidden="true" className="transition-colors group-hover:text-ink">↓</span>
+                </span>
+              </a>
             </li>
           ))}
         </ul>
-      </section>
+      </nav>
 
-      <section className="grid lg:grid-cols-12">
-        <div className="flex flex-col justify-center px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
-          {hub.quote ? (
-            <>
-              <blockquote className="font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
-                {hub.quote}
-              </blockquote>
-              <p className="mt-5 font-sans text-[14px] text-muted">{hub.quoteSource}</p>
-            </>
-          ) : null}
-          <p className={`max-w-sm font-sans text-[15px] leading-relaxed text-muted ${hub.quote ? "mt-8" : ""}`}>
+      <section className="px-5 py-20 sm:px-8 lg:px-14 lg:py-28">
+        <p className="mx-auto max-w-4xl text-center font-serif text-[28px] leading-snug font-medium tracking-[-0.025em] text-ink md:text-[40px]">
+          {hub.statement}
+        </p>
+        {hub.statementNote ? (
+          <p className="mx-auto mt-6 max-w-xl text-center font-sans text-[16px] leading-relaxed text-muted">
             {hub.statementNote}
           </p>
-          <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 w-fit text-ink">
-            {hub.ctaLabel}
-          </LocaleLink>
-        </div>
-        <Frame
-          src={hub.statementImage}
-          alt={hub.heroAlt}
-          className="min-h-[22rem] lg:col-span-7 lg:min-h-[36rem]"
-          sizes="(max-width: 1024px) 100vw, 58vw"
-        />
+        ) : null}
       </section>
 
-      <HubEnd hub={hub}>{children}</HubEnd>
+      {hub.branches.map((branch, index) => (
+        <Area key={branch.title} branch={branch} index={index} en={en} />
+      ))}
+
+      <HubEnd hub={{ ...hub, visitImage: SHOWROOM_SAMPLES.detail }}>{children}</HubEnd>
     </main>
   );
 }
