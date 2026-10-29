@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
 const STEPS: Record<Locale, { href: string; label: string }[]> = {
   de: [
     { href: "/beratung", label: "Termin vereinbaren" },
-    { href: "/kueche-planen#planer", label: "Küche planen" },
+    { href: "/beratung", label: "Küche planen" },
     { href: "tel:+498168909910", label: "08168 909910" },
   ],
   en: [
     { href: "/beratung", label: "Book an appointment" },
-    { href: "/kueche-planen#planer", label: "Plan your kitchen" },
+    { href: "/beratung", label: "Plan your kitchen" },
     { href: "tel:+498168909910", label: "+49 8168 909910" },
   ],
 };

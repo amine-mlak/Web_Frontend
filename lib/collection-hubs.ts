@@ -1074,7 +1074,7 @@ const HUB_PATH: Record<CollectionHubId, string> = {
   regionen: "/regionen",
   marken: "/marken",
   ratgeber: "/ratgeber",
-  planen: "/kueche-planen",
+  planen: "/beratung",
   ueber: "/ueber",
 };
 

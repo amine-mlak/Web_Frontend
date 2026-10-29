@@ -23,7 +23,6 @@ const HUBS = [
   "/regionen",
   "/marken",
   "/ratgeber",
-  "/kueche-planen",
   "/ueber",
   "/team",
   "/nachhaltigkeit",

@@ -23,7 +23,7 @@ const COPY = {
     faqAll: "Alle Fragen zum Innenleben",
     houses: "Küchen mit diesem Innenleben",
     more: "Weitere Ebenen der Küche",
-    secondaryHref: "/kueche-planen#planer",
+    secondaryHref: "/beratung",
     secondaryLabel: "Küche planen",
   },
   en: {
@@ -33,7 +33,7 @@ const COPY = {
     faqAll: "All questions on interiors",
     houses: "Kitchens with this interior",
     more: "Other planes of the kitchen",
-    secondaryHref: "/kueche-planen#planer",
+    secondaryHref: "/beratung",
     secondaryLabel: "Plan your kitchen",
   },
 };

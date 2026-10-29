@@ -90,7 +90,7 @@ export default async function CategoryPage({
               <LocaleLink href="/ausstellung" className="pill pill-primary">
                 {copy.visit}
               </LocaleLink>
-              <LocaleLink href="/kueche-planen#planer" className="pill pill-secondary">
+              <LocaleLink href="/beratung" className="pill pill-secondary">
                 {copy.plan}
               </LocaleLink>
             </div>
@@ -189,7 +189,7 @@ export default async function CategoryPage({
             <LocaleLink href="/beratung" className="pill pill-light">
               {copy.book}
             </LocaleLink>
-            <LocaleLink href="/kueche-planen#planer" className="pill pill-ghost-dark">
+            <LocaleLink href="/beratung" className="pill pill-ghost-dark">
               {copy.plan}
             </LocaleLink>
           </div>

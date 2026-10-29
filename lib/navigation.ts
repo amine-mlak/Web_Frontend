@@ -112,13 +112,12 @@ export const menuPanels: MenuPanel[] = [
     id: "planen",
     label: "Küche planen",
     title: "Küche planen",
-    href: "/kueche-planen",
+    href: "/beratung",
     variant: "guide",
     intro: "Vom ersten Gespräch bis zur Ausstellung – der Weg zu Ihrer Küche.",
     groups: [
       {
         links: [
-          { href: "/kueche-planen", label: "So entsteht Ihre Küche" },
           { href: "/ausstellung", label: "Ausstellung Wolfersdorf" },
           {
             href: "/beratung",
@@ -139,7 +138,7 @@ export const menuPanels: MenuPanel[] = [
     ],
     teasers: [
       {
-        href: "/kueche-planen",
+        href: "/beratung",
         image: houseSrc(HOUSE_MEDIA["kueche-planen"].hero, 1400),
         caption: "Küche planen",
         alt: "Erstes Gespräch in der Ausstellung Wolfersdorf",

@@ -1387,19 +1387,19 @@
   },
   {
    "source": "/products/kuchenakademie-masterclass",
-   "destination": "/kueche-planen"
+   "destination": "/beratung"
   },
   {
    "source": "/en/products/kuchenakademie-masterclass",
-   "destination": "/en/plan-your-kitchen"
+   "destination": "/en/consultation"
   },
   {
    "source": "/collections/:collection/products/kuchenakademie-masterclass",
-   "destination": "/kueche-planen"
+   "destination": "/beratung"
   },
   {
    "source": "/en/collections/:collection/products/kuchenakademie-masterclass",
-   "destination": "/en/plan-your-kitchen"
+   "destination": "/en/consultation"
   },
   {
    "source": "/products/badezimmer",
@@ -1995,11 +1995,11 @@
   },
   {
    "source": "/collections/kalkulator",
-   "destination": "/kueche-planen"
+   "destination": "/beratung"
   },
   {
    "source": "/en/collections/kalkulator",
-   "destination": "/en/plan-your-kitchen"
+   "destination": "/en/consultation"
   },
   {
    "source": "/collections/all",
@@ -2011,11 +2011,11 @@
   },
   {
    "source": "/pages/7-geheimnisse",
-   "destination": "/kueche-planen"
+   "destination": "/beratung"
   },
   {
    "source": "/en/pages/7-geheimnisse",
-   "destination": "/en/plan-your-kitchen"
+   "destination": "/en/consultation"
   },
   {
    "source": "/pages/agbs",

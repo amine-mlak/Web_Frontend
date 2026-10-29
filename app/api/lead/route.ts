@@ -173,7 +173,7 @@ export async function POST(request: Request) {
       email: valid.lead.email,
       vorname: valid.lead.name.split(/\s+/)[0],
       locale: typeof parsed.body.locale === "string" && isLocale(parsed.body.locale) ? parsed.body.locale : "de",
-      source: "/kueche-planen (Küchenplaner)",
+      source: "/beratung (Küchenplaner)",
     });
     console.info(`[lead] newsletter sign-up ${failed ? `failed: ${failed}` : "sent to n8n"}`);
   }

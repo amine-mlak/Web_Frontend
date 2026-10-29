@@ -183,7 +183,13 @@ const nextConfig: NextConfig = {
   // Old beer.de (Shopify) addresses keep their search rankings: permanent (308) redirects to
   // the new pages. They run before proxy.ts, on the address as requested.
   async redirects() {
-    return legacyRedirects.redirects.map((redirect) => ({ ...redirect, permanent: true }));
+    return [
+      ...legacyRedirects.redirects.map((redirect) => ({ ...redirect, permanent: true })),
+      // "Küche planen" is the planner form alone, on /beratung. Temporary while the page settles.
+      { source: "/kueche-planen", destination: "/beratung", permanent: false },
+      { source: "/en/plan-your-kitchen", destination: "/en/consultation", permanent: false },
+      { source: "/en/kueche-planen", destination: "/en/consultation", permanent: false },
+    ];
   },
   async rewrites() {
     return [

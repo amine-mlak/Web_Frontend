@@ -51,7 +51,6 @@ export const footerColumns: FooterColumn[] = [
     title: "KÜCHE PLANEN",
     links: [
       { href: "/ratgeber", label: "Inspiration" },
-      { href: "/kueche-planen", label: "So läuft es ab" },
       { href: "/ausstellung", label: "Ausstellung Wolfersdorf" },
       { href: "/beratung", label: "Küchenplaner" },
       { href: "/katalog", label: "Katalog bestellen" },
@@ -173,7 +172,6 @@ const englishFooter: FooterContent = {
       title: "PLAN A KITCHEN",
       links: [
         { href: "/ratgeber", label: "Inspiration" },
-        { href: "/kueche-planen", label: "How it works" },
         { href: "/ausstellung", label: "Wolfersdorf showroom" },
         { href: "/beratung", label: "Kitchen planner" },
         { href: "/katalog", label: "Order a catalogue" },

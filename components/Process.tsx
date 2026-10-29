@@ -6,8 +6,8 @@ import type { ProcessContent } from "@/lib/strapi";
 const fallback: ProcessContent = {
   eyebrow: "Der Weg zur Küche",
   title: "Von der ersten Idee bis zur Übergabe",
-  buttonLabel: "Ablauf lesen",
-  buttonHref: "/kueche-planen",
+  buttonLabel: "Küche planen",
+  buttonHref: "/beratung",
   steps: [
     {
       step: "01",

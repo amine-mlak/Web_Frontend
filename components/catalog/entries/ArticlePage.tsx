@@ -69,12 +69,12 @@ const FAQ_THEME: Record<string, string> = {
 const TOPIC_LINKS: Record<Locale, Record<string, { href: string; label: string }[]>> = {
   de: {
     kosten: [
-      { href: "/kueche-planen", label: "Küche planen" },
+      { href: "/beratung", label: "Küche planen" },
       { href: "/faq/kosten", label: "Fragen zu Kosten" },
       { href: "/projekte", label: "Projekte" },
     ],
     planung: [
-      { href: "/kueche-planen", label: "Küche planen" },
+      { href: "/beratung", label: "Küche planen" },
       { href: "/ausstellung", label: "Ausstellung" },
       { href: "/kuechen", label: "Küchen" },
     ],
@@ -96,12 +96,12 @@ const TOPIC_LINKS: Record<Locale, Record<string, { href: string; label: string }
   },
   en: {
     kosten: [
-      { href: "/kueche-planen", label: "Plan your kitchen" },
+      { href: "/beratung", label: "Plan your kitchen" },
       { href: "/faq/kosten", label: "Questions on cost" },
       { href: "/projekte", label: "Projects" },
     ],
     planung: [
-      { href: "/kueche-planen", label: "Plan your kitchen" },
+      { href: "/beratung", label: "Plan your kitchen" },
       { href: "/ausstellung", label: "Showroom" },
       { href: "/kuechen", label: "Kitchens" },
     ],
