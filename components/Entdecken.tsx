@@ -57,8 +57,8 @@ export default async function Entdecken({
       aria-label={copy.discover}
     >
       <h2 className="sr-only">{copy.discover}</h2>
-      {/* The kitchen worlds as full-screen chapters, like the overview pages. */}
-      <div className="space-y-3 px-3 py-3 sm:space-y-4 sm:px-4 sm:py-4">
+      {/* The kitchen worlds as photo cards, two by two; each card opens its page. */}
+      <div className="grid gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4 md:grid-cols-2">
         {panels.map((panel, index) => (
           <FullChapter
             key={`${panel.title}-${index}`}
@@ -73,6 +73,7 @@ export default async function Entdecken({
             linkLabel={panel.buttonLabel}
             lang={locale}
             as="h3"
+            size="card"
           />
         ))}
       </div>
