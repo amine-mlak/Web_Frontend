@@ -11,7 +11,7 @@ export default function Interlude({
         <p className="font-serif text-[26px] leading-[1.3] font-medium tracking-[-0.02em] text-ink italic md:text-[34px]">
           „{quote}“
         </p>
-        <footer className="type-eyebrow mt-8 text-muted">{source}</footer>
+        <footer className="mt-8 font-sans text-[14px] text-muted">{source}</footer>
       </blockquote>
     </section>
   );

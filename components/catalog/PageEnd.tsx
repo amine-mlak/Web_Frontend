@@ -48,7 +48,6 @@ export default function PageEnd({
                     src={tile.image!}
                     alt=""
                     className="aspect-[4/5]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                   <span className="hero-scrim absolute inset-0" aria-hidden />

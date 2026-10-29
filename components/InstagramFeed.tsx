@@ -82,7 +82,7 @@ export default async function InstagramFeed() {
                   fill
                   loading="lazy"
                   sizes="(max-width: 768px) 50vw, 25vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="object-cover"
                 />
               </a>
             </li>

@@ -3,11 +3,9 @@ import type { CollectionLook } from "@/lib/collection-present";
 
 export default function LookRail({
   looks,
-  eyebrow,
   title,
 }: {
   looks: CollectionLook[];
-  eyebrow: string;
   title: string;
 }) {
   const [hero, ...rest] = looks;
@@ -18,10 +16,9 @@ export default function LookRail({
   return (
     <section className="border-y border-line bg-paper" aria-labelledby="look-rail-heading">
       <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-        <p className="type-eyebrow text-muted">{eyebrow}</p>
         <h2
           id="look-rail-heading"
-          className="mt-3 max-w-2xl font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
+          className="max-w-2xl font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
         >
           {title}
         </h2>
@@ -38,7 +35,7 @@ export default function LookRail({
               className="absolute inset-0 bg-gradient-to-t from-nacht/55 via-transparent to-transparent"
               aria-hidden="true"
             />
-            <figcaption className="absolute bottom-5 left-5 z-10 font-sans text-[11px] tracking-[0.18em] text-paper uppercase">
+            <figcaption className="absolute bottom-5 left-5 z-10 font-sans text-[14px] text-paper">
               {hero.caption}
             </figcaption>
           </figure>
@@ -58,7 +55,7 @@ export default function LookRail({
                 className="absolute inset-0 bg-gradient-to-t from-nacht/50 via-transparent to-transparent"
                 aria-hidden="true"
               />
-              <figcaption className="absolute right-4 bottom-4 z-10 font-sans text-[11px] tracking-[0.16em] text-paper uppercase">
+              <figcaption className="absolute right-4 bottom-4 z-10 font-sans text-[14px] text-paper">
                 {look.caption}
               </figcaption>
             </figure>
@@ -80,7 +77,7 @@ export default function LookRail({
                     className="absolute inset-0 bg-gradient-to-t from-nacht/50 via-transparent to-transparent"
                     aria-hidden="true"
                   />
-                  <figcaption className="absolute bottom-4 left-4 z-10 font-sans text-[11px] tracking-[0.16em] text-paper uppercase">
+                  <figcaption className="absolute bottom-4 left-4 z-10 font-sans text-[14px] text-paper">
                     {look.caption}
                   </figcaption>
                 </figure>

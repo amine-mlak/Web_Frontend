@@ -14,46 +14,22 @@ export default function ProjekteCollection({
   extrasTitle?: string;
   children?: ReactNode;
 }) {
-  const dossier = hub.locale === "en" ? "House file" : "Hausakte";
-  const open = hub.locale === "en" ? "Open the house" : "Haus öffnen";
   const [lead, ...rest] = hub.branches;
 
   return (
     <main className="bg-paper">
       <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-14 lg:pt-16" aria-labelledby="projekte-hero">
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
-          <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
-          <p className="font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
-            {dossier}
-          </p>
-        </div>
-        <div className="mt-10 grid items-end gap-10 lg:grid-cols-12">
+        <div className="grid items-end gap-10 lg:grid-cols-12">
           <h1
             id="projekte-hero"
             className="font-serif text-[48px] leading-[0.9] font-medium tracking-[-0.045em] text-ink sm:text-[76px] lg:col-span-7 lg:text-[88px]"
           >
             {hub.title}
-            <span className="mt-2 block italic text-espresso">{hub.emphasis}</span>
           </h1>
           <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5">
             {hub.lede}
           </p>
         </div>
-        <ul className="mt-12 grid grid-cols-2 border-y border-line sm:grid-cols-4">
-          {hub.facts.map((fact) => (
-            <li
-              key={`${fact.value}-${fact.label}`}
-              className="border-line px-4 py-5 not-first:border-l sm:px-5"
-            >
-              <p className="font-serif text-[22px] leading-none font-medium text-ink">
-                {fact.value}
-              </p>
-              <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-                {fact.label}
-              </p>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {lead ? (
@@ -64,20 +40,14 @@ export default function ProjekteCollection({
               alt={lead.alt}
               srcSet={lead.srcSet}
               className="aspect-[16/9] w-full lg:aspect-[21/9]"
-              imgClassName="transition-transform duration-700 group-hover:scale-[1.02]"
               priority
               sizes="100vw"
             />
             <div className="grid gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-14">
-              <div className="lg:col-span-3">
-                <p className="type-eyebrow text-gold">{lead.kicker}</p>
-                {lead.meta ? (
-                  <p className="mt-4 font-sans text-[13px] tracking-[0.16em] text-muted uppercase">
-                    {lead.meta}
-                  </p>
-                ) : null}
-              </div>
-              <div className="lg:col-span-7">
+              {lead.meta ? (
+                <p className="font-sans text-[14px] text-muted lg:col-span-3">{lead.meta}</p>
+              ) : null}
+              <div className="lg:col-span-9">
                 <h2
                   id="projekte-lead"
                   className="font-serif text-[36px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[48px]"
@@ -88,9 +58,6 @@ export default function ProjekteCollection({
                   {lead.text}
                 </p>
               </div>
-              <p className="self-end font-sans text-[11px] tracking-[0.22em] text-gold uppercase lg:col-span-2 lg:text-right">
-                {open}
-              </p>
             </div>
           </LocaleLink>
         </section>
@@ -121,23 +88,16 @@ export default function ProjekteCollection({
                     alt={branch.alt}
                     srcSet={branch.srcSet}
                     className="aspect-[16/10] lg:col-span-6 lg:aspect-[16/9]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <div className="flex flex-col justify-center px-5 py-10 sm:px-8 lg:col-span-6 lg:px-14">
-                    <p className="font-serif text-[18px] text-gold">{branch.kicker}</p>
-                    {branch.meta ? (
-                      <p className="mt-3 font-sans text-[12px] tracking-[0.18em] text-muted uppercase">
-                        {branch.meta}
-                      </p>
-                    ) : null}
-                    <h3 className="mt-4 font-serif text-[30px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[36px]">
+                    {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
+                    <h3 className="font-serif text-[30px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[36px]">
                       {branch.title}
                     </h3>
                     <p className="mt-4 max-w-md font-sans text-[15px] leading-relaxed text-muted">
                       {branch.text}
                     </p>
-                    <span className="mt-8 type-eyebrow text-gold">{open}</span>
                   </div>
                 </LocaleLink>
               </li>
@@ -148,10 +108,7 @@ export default function ProjekteCollection({
 
       <section className="grid lg:grid-cols-12">
         <div className="flex flex-col justify-center bg-karte px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
-          <p className="type-eyebrow text-gold">
-            {hub.locale === "en" ? "What we show" : "Was wir zeigen"}
-          </p>
-          <p className="mt-6 font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
+          <p className="font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
             {hub.statement}
           </p>
           <p className="mt-6 max-w-sm font-sans text-[15px] leading-relaxed text-muted">
@@ -163,7 +120,7 @@ export default function ProjekteCollection({
             <p className="font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
               {hub.quote}
             </p>
-            <footer className="mt-6 type-eyebrow text-messing">{hub.quoteSource}</footer>
+            <footer className="mt-6 font-sans text-[14px] text-paper/70">{hub.quoteSource}</footer>
           </blockquote>
         ) : null}
       </section>
@@ -187,7 +144,6 @@ export default function ProjekteCollection({
                       src={item.image}
                       alt={item.title}
                       className="aspect-[4/5]"
-                      imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
                   ) : null}
@@ -195,9 +151,7 @@ export default function ProjekteCollection({
                     {item.title}
                   </p>
                   {item.meta ? (
-                    <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-                      {item.meta}
-                    </p>
+                    <p className="mt-2 font-sans text-[14px] text-muted">{item.meta}</p>
                   ) : null}
                 </LocaleLink>
               </li>

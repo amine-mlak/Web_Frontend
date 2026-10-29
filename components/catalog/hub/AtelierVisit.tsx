@@ -5,15 +5,24 @@ import { formatOpeningHours } from "@/lib/opening-hours";
 import { getSiteSettings } from "@/lib/site-settings";
 
 const COPY = {
-  de: { eyebrow: "Mit Termin", hours: "Öffnungszeiten", contact: "Kontakt", route: "Route planen", book: "Termin vereinbaren", call: "Anrufen" },
-  en: { eyebrow: "By appointment", hours: "Opening hours", contact: "Contact", route: "Get directions", book: "Book an appointment", call: "Call" },
+  de: { hours: "Öffnungszeiten", contact: "Kontakt", route: "Route planen", book: "Termin vereinbaren", call: "Anrufen" },
+  en: { hours: "Opening hours", contact: "Contact", route: "Get directions", book: "Book an appointment", call: "Call" },
 } as const;
 
 /**
  * The showroom block: photo, place, opening hours, phone, email, directions
  * and booking. Facts come from the CMS site settings ("Einstellungen").
+ * With `title` and `text` it closes a page: the page's own last words above the visit facts.
  */
-export default async function AtelierVisit({ hub }: { hub: PresentedHub }) {
+export default async function AtelierVisit({
+  hub,
+  title,
+  text,
+}: {
+  hub: PresentedHub;
+  title?: string;
+  text?: string;
+}) {
   const copy = COPY[hub.locale === "en" ? "en" : "de"];
   const settings = await getSiteSettings();
   const hours = formatOpeningHours(settings.openingHours, hub.locale);
@@ -34,18 +43,17 @@ export default async function AtelierVisit({ hub }: { hub: PresentedHub }) {
           />
         </figure>
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-5 lg:px-14 lg:py-20">
-          <p className="type-eyebrow text-gold">{copy.eyebrow}</p>
           <h2
             id="atelier-visit-heading"
-            className="mt-4 font-serif text-[32px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
+            className="font-serif text-[32px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
           >
-            {hub.visitPlace}
+            {title || hub.visitPlace}
           </h2>
-          <p className="type-intro mt-5">{hub.visitNote}</p>
+          <p className="type-intro mt-5">{text || hub.visitNote}</p>
 
           <dl className="mt-8 grid gap-6 border-t border-line pt-6 font-sans text-[15px] leading-relaxed text-ink sm:grid-cols-2">
             <div>
-              <dt className="type-eyebrow text-muted">{copy.hours}</dt>
+              <dt className="font-sans text-[14px] text-muted">{copy.hours}</dt>
               <dd className="mt-2">
                 {hours.map((line) => (
                   <span key={line} className="block">
@@ -55,7 +63,7 @@ export default async function AtelierVisit({ hub }: { hub: PresentedHub }) {
               </dd>
             </div>
             <div>
-              <dt className="type-eyebrow text-muted">{copy.contact}</dt>
+              <dt className="font-sans text-[14px] text-muted">{copy.contact}</dt>
               <dd className="mt-2">
                 <address className="not-italic">
                   <span className="block">{settings.street}</span>
@@ -74,11 +82,11 @@ export default async function AtelierVisit({ hub }: { hub: PresentedHub }) {
             </div>
           </dl>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <LocaleLink href="/beratung" className="pill pill-primary">
+          <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+            <LocaleLink href="/beratung" className="btn-quiet text-ink">
               {copy.book}
             </LocaleLink>
-            <a href={maps} target="_blank" rel="noopener noreferrer" className="pill pill-secondary">
+            <a href={maps} target="_blank" rel="noopener noreferrer" className="btn-quiet text-ink">
               {copy.route}
               <span className="sr-only"> (Google Maps)</span>
             </a>

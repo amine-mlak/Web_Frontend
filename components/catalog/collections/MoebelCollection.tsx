@@ -10,24 +10,20 @@ export default function MoebelCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
-  const joinery = hub.locale === "en" ? "Same workshop" : "Dieselbe Werkstatt";
-
   return (
     <main className="bg-karte">
       <section className="grid min-h-[88svh] lg:grid-cols-12" aria-labelledby="moebel-hero">
         <div className="flex flex-col justify-end px-5 py-16 sm:px-8 lg:col-span-5 lg:px-12 lg:py-24">
-          <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
           <h1
             id="moebel-hero"
-            className="mt-6 font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px]"
+            className="font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px]"
           >
             {hub.title}
-            <span className="mt-2 block italic text-espresso">{hub.emphasis}</span>
           </h1>
           <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-muted">
             {hub.lede}
           </p>
-          <LocaleLink href={hub.ctaHref} className="pill pill-primary mt-10 w-fit">
+          <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 w-fit text-ink">
             {hub.ctaLabel}
           </LocaleLink>
         </div>
@@ -42,8 +38,7 @@ export default function MoebelCollection({
       </section>
 
       <section className="border-y border-line bg-paper px-5 py-14 sm:px-8 lg:px-14">
-        <p className="type-eyebrow text-gold">{joinery}</p>
-        <p className="mt-5 max-w-3xl font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[34px]">
+        <p className="max-w-3xl font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[34px]">
           {hub.statement}
         </p>
       </section>
@@ -70,8 +65,7 @@ export default function MoebelCollection({
                 <div
                   className={`flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 lg:px-12 ${reverse ? "lg:order-1" : ""}`}
                 >
-                  <p className="font-serif text-[18px] text-gold">{branch.kicker}</p>
-                  <h3 className="mt-3 font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink">
+                  <h3 className="font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink">
                     {branch.title}
                   </h3>
                   <p className="mt-4 font-sans text-[16px] leading-relaxed text-muted">
@@ -90,8 +84,8 @@ export default function MoebelCollection({
                     </ul>
                   ) : null}
                   {branch.href ? (
-                    <LocaleLink href={branch.href} className="pill pill-secondary mt-8 w-fit">
-                      {hub.locale === "en" ? "This line" : "Diese Linie"}
+                    <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit text-ink">
+                      {hub.locale === "en" ? `Open ${branch.title}` : `${branch.title} ansehen`}
                     </LocaleLink>
                   ) : null}
                 </div>

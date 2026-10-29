@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import CmsImage from "@/components/CmsImage";
-import GutZuWissen from "@/components/GutZuWissen";
 import AtelierVisit from "@/components/catalog/hub/AtelierVisit";
-import CloseAtelier from "@/components/catalog/hub/CloseAtelier";
 import type { PresentedHub } from "@/lib/collection-present";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +43,10 @@ export function Frame({
   );
 }
 
+/**
+ * One ending for every collection: the showroom with the page's closing words, opening hours,
+ * contact and the way there. No second quote, no second closing block.
+ */
 export function HubEnd({
   hub,
   children,
@@ -52,20 +54,10 @@ export function HubEnd({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
-  const asideEyebrow = hub.locale === "en" ? "Worth knowing" : "Gut zu wissen";
-
   return (
     <>
       {children}
-      <AtelierVisit hub={hub} />
-      <GutZuWissen
-        content={{
-          eyebrow: asideEyebrow,
-          quote: hub.quote,
-          source: hub.quoteSource,
-        }}
-      />
-      <CloseAtelier hub={hub} />
+      <AtelierVisit hub={hub} title={hub.closeTitle} text={hub.closeText} />
     </>
   );
 }

@@ -35,7 +35,7 @@ export default function CollectionSiblings({
                     alt={item.title}
                     fill
                     sizes="(max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="object-cover"
                   />
                   <div
                     className="absolute inset-0 bg-gradient-to-t from-nacht/70 via-transparent to-transparent"

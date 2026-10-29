@@ -51,7 +51,6 @@ function SwatchField({
                   src={swatch.image}
                   alt={swatch.title}
                   className={tall ? "aspect-[4/5] lg:aspect-[3/4]" : "aspect-[4/3]"}
-                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
               ) : null}
@@ -88,7 +87,6 @@ function HouseCard({ house }: { house: ClusterHouse }) {
           src={house.image}
           alt={house.title}
           className="aspect-[4/3]"
-          imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">{house.title}</p>

@@ -47,7 +47,6 @@ export default function FullChapter({
         srcSet={srcSet}
         alt={alt}
         className="absolute inset-0"
-        imgClassName={card ? "transition-transform duration-700 group-hover:scale-[1.03]" : undefined}
         sizes={card ? "(max-width: 768px) 100vw, 50vw" : "100vw"}
       />
       <div className="hero-scrim absolute inset-0" aria-hidden />

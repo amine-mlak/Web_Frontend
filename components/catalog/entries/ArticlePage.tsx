@@ -324,7 +324,6 @@ export default async function ArticlePage({
                       src={other.image}
                       alt=""
                       className="aspect-[4/3]"
-                      imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     {other.category?.name ? <p className="type-eyebrow mt-5 text-muted">{other.category.name}</p> : null}

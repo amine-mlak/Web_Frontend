@@ -68,7 +68,7 @@ function TeaserStrip({
                     ? "(max-width: 1024px) 80vw, 40vw"
                     : "(max-width: 1024px) 60vw, 33vw"
                 }
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                className="object-cover"
                 style={{ objectPosition: teaser.objectPosition ?? "center" }}
               />
             </div>

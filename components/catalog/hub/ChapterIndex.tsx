@@ -38,15 +38,11 @@ export default function ChapterIndex({
             sizes="(max-width: 1024px) 100vw, 42vw"
             className="object-cover"
           />
-          <figcaption className="absolute bottom-6 left-6 font-sans text-[11px] tracking-[0.22em] text-paper uppercase">
-            {eyebrow}
-          </figcaption>
         </figure>
         <div className="px-5 py-12 sm:px-8 lg:col-span-7 lg:px-14 lg:py-16">
-          <p className="type-eyebrow text-gold">{eyebrow}</p>
           <h2
             id="collection-index-heading"
-            className="mt-3 font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
+            className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
           >
             {hint}
           </h2>

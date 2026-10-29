@@ -248,7 +248,6 @@ export default function ReferenzPage({
                     alt={item.title}
                     srcSet={item.srcSet}
                     className="aspect-[4/5]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                     sizes="(max-width: 1024px) 100vw, 33vw"
                   />
                   <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">

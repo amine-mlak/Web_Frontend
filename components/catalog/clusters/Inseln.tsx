@@ -37,7 +37,6 @@ function Pedestal({
         alt={branch?.alt || title}
         srcSet={branch?.srcSet}
         className="aspect-[3/4]"
-        imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
         sizes="(max-width: 1024px) 100vw, 33vw"
       />
       {kicker ? (

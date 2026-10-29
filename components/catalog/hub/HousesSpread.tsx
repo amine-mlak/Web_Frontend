@@ -38,7 +38,7 @@ export default function HousesSpread({
                     alt={item.title}
                     fill
                     sizes={index === 0 ? "(max-width: 1024px) 100vw, 66vw" : "33vw"}
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="object-cover"
                   />
                 </figure>
                 <div className="mt-4 flex items-baseline justify-between gap-4">
@@ -46,9 +46,7 @@ export default function HousesSpread({
                     {item.title}
                   </span>
                   {item.meta ? (
-                    <span className="type-eyebrow shrink-0 text-muted">
-                      {item.meta}
-                    </span>
+                    <span className="shrink-0 font-sans text-[14px] text-muted">{item.meta}</span>
                   ) : null}
                 </div>
               </LocaleLink>

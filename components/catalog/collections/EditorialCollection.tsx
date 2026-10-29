@@ -34,7 +34,6 @@ export default function EditorialCollection({
       <ChapterRun hub={hub} />
       <LookRail
         looks={hub.looks}
-        eyebrow={hub.locale === "en" ? "To the hand" : "An die Hand"}
         title={lookTitle}
       />
       <HousesSpread houses={cards} title={extrasTitle} />

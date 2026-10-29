@@ -10,21 +10,16 @@ export default function MaterialCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
-  const sample = hub.locale === "en" ? "Sample" : "Muster";
-  const daylight = hub.locale === "en" ? "In daylight" : "Unter Tageslicht";
-
   return (
     <main className="bg-paper">
       <section className="px-5 pt-10 pb-6 sm:px-8 lg:px-14 lg:pt-16" aria-labelledby="material-hero">
-        <p className="type-eyebrow text-gold">{hub.eyebrow}</p>
-        <div className="mt-6 grid items-end gap-10 lg:grid-cols-12">
+        <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <h1
               id="material-hero"
               className="font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[80px] lg:text-[96px]"
             >
               {hub.title}
-              <span className="mt-2 block italic text-espresso">{hub.emphasis}</span>
             </h1>
           </div>
           <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5 lg:justify-self-end">
@@ -39,33 +34,12 @@ export default function MaterialCollection({
           priority
           sizes="100vw"
         />
-        <p className="mt-3 font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
-          {daylight}
-        </p>
-        <ul className="mt-10 grid grid-cols-2 border-y border-line sm:grid-cols-4">
-          {hub.facts.map((fact) => (
-            <li
-              key={`${fact.value}-${fact.label}`}
-              className="border-line px-4 py-5 even:border-l sm:border-l sm:first:border-l-0"
-            >
-              <p className="font-serif text-[22px] leading-none font-medium text-ink">
-                {fact.value}
-              </p>
-              <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-                {fact.label}
-              </p>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="material-board">
-        <div className="flex items-baseline justify-between gap-6">
-          <h2 id="material-board" className="type-h2">
-            {hub.indexEyebrow}
-          </h2>
-          <p className="type-eyebrow text-gold">{sample}</p>
-        </div>
+        <h2 id="material-board" className="type-h2">
+          {hub.indexEyebrow}
+        </h2>
         <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-12">
           {hub.branches.map((branch, index) => {
             const span =
@@ -89,15 +63,11 @@ export default function MaterialCollection({
                             ? "aspect-[21/8]"
                             : "aspect-[16/10]"
                       }
-                      imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                       sizes={index === 0 ? "(max-width: 1024px) 100vw, 58vw" : "(max-width: 1024px) 100vw, 42vw"}
                     />
                     <div className="mt-4 flex items-start justify-between gap-4 px-1 pb-1">
                       <div>
-                        <p className="font-sans text-[11px] tracking-[0.22em] text-gold uppercase">
-                          {branch.kicker} · {sample}
-                        </p>
-                        <h3 className="mt-2 font-serif text-[26px] leading-tight font-medium text-ink">
+                        <h3 className="font-serif text-[26px] leading-tight font-medium text-ink">
                           {branch.title}
                         </h3>
                         <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">
@@ -126,9 +96,7 @@ export default function MaterialCollection({
                 className="aspect-square"
                 sizes="(max-width: 1024px) 50vw, 25vw"
               />
-              <p className="px-4 py-3 font-sans text-[11px] tracking-[0.2em] text-muted uppercase">
-                {look.caption}
-              </p>
+              <p className="px-4 py-3 font-sans text-[14px] text-muted">{look.caption}</p>
             </li>
           ))}
         </ul>
@@ -136,23 +104,18 @@ export default function MaterialCollection({
 
       <section className="grid lg:grid-cols-12">
         <div className="flex flex-col justify-center px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
-          <p className="type-eyebrow text-gold">
-            {hub.locale === "en" ? "To the hand" : "An die Hand"}
-          </p>
           {hub.quote ? (
             <>
-              <blockquote className="mt-6 font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
+              <blockquote className="font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
                 {hub.quote}
               </blockquote>
-              <p className="mt-5 font-sans text-[13px] tracking-[0.12em] text-muted uppercase">
-                {hub.quoteSource}
-              </p>
+              <p className="mt-5 font-sans text-[14px] text-muted">{hub.quoteSource}</p>
             </>
           ) : null}
-          <p className="mt-8 max-w-sm font-sans text-[15px] leading-relaxed text-muted">
+          <p className={`max-w-sm font-sans text-[15px] leading-relaxed text-muted ${hub.quote ? "mt-8" : ""}`}>
             {hub.statementNote}
           </p>
-          <LocaleLink href={hub.ctaHref} className="pill pill-secondary mt-10 w-fit">
+          <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 w-fit text-ink">
             {hub.ctaLabel}
           </LocaleLink>
         </div>

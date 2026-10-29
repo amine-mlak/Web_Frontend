@@ -53,10 +53,9 @@ export default async function MoebelPage() {
       {houses.length > 0 ? (
         <section aria-labelledby="moebel-houses">
           <div className="border-b border-line bg-paper px-5 pt-16 pb-4 sm:px-8 lg:px-14 lg:pt-24">
-            <p className="type-eyebrow text-gold">{en ? "Whole houses" : "Ganze Häuser"}</p>
             <h2
               id="moebel-houses"
-              className="mt-4 max-w-3xl font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[44px]"
+              className="max-w-3xl font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[44px]"
             >
               {en ? "The kitchen and the rest of the house from one workshop" : "Küche und Haus aus einer Werkstatt"}
             </h2>

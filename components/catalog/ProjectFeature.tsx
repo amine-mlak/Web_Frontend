@@ -4,8 +4,6 @@ import { Frame } from "@/components/catalog/collections/parts";
 import type { Locale } from "@/lib/i18n";
 import type { ProjectFeatureData } from "@/lib/project-features";
 
-const HOVER = "transition-transform duration-700 group-hover:scale-[1.02]";
-
 /** The words of one kitchen: place and year, name, its text, and the pages it connects to. */
 function FeatureText({ feature, locale, wide }: { feature: ProjectFeatureData; locale: Locale; wide?: boolean }) {
   const en = locale === "en";
@@ -52,7 +50,7 @@ function FeatureText({ feature, locale, wide }: { feature: ProjectFeatureData; l
 export default function ProjectFeature({ feature, variant, locale }: { feature: ProjectFeatureData; variant: number; locale: Locale }) {
   const photo = (className: string, sizes: string) => (
     <LocaleLink href={feature.href} className="group block" tabIndex={-1} aria-hidden="true">
-      <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} imgClassName={HOVER} sizes={sizes} />
+      <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} sizes={sizes} />
     </LocaleLink>
   );
   const detail = (className: string, sizes: string) =>

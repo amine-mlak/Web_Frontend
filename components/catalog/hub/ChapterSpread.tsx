@@ -26,7 +26,7 @@ function Continue({
   return (
     <LocaleLink
       href={href}
-      className={invert ? "pill pill-ghost-dark mt-10" : "pill pill-secondary mt-10"}
+      className={`btn-quiet mt-10 ${invert ? "text-paper" : "text-ink"}`}
     >
       {label}
     </LocaleLink>
@@ -45,9 +45,7 @@ function Swatch({ hex, invert }: { hex?: string; invert?: boolean }) {
         style={{ backgroundColor: hex }}
         aria-hidden
       />
-      <span className={`type-eyebrow ${invert ? "text-paper/70" : "text-muted"}`}>
-        {hex}
-      </span>
+      <span className={`font-sans text-[14px] ${invert ? "text-paper/70" : "text-muted"}`}>{hex}</span>
     </p>
   );
 }
@@ -73,7 +71,7 @@ function Points({
           }`}
         >
           <span
-            className={`type-eyebrow shrink-0 ${invert ? "text-messing" : "text-gold"}`}
+            className={`shrink-0 font-serif ${invert ? "text-messing" : "text-gold"}`}
           >
             {String(index + 1).padStart(2, "0")}
           </span>
@@ -96,7 +94,6 @@ export default function ChapterSpread({
 }) {
   const variant = index % 5;
   const id = hashId(branch.href) ?? `thema-${index + 1}`;
-  const kicker = branch.kicker;
 
   if (variant === 0) {
     return (
@@ -111,15 +108,11 @@ export default function ChapterSpread({
               sizes="(max-width: 768px) 100vw, 70vw"
               className="object-cover"
             />
-            <figcaption className="absolute bottom-6 left-6 font-sans text-[11px] tracking-[0.18em] text-paper/85 uppercase">
-              {branch.caption}
-            </figcaption>
           </figure>
           <div className="relative z-10 -mt-16 border border-line bg-paper px-8 py-10 shadow-[0_30px_80px_rgba(20,20,20,0.08)] md:absolute md:top-1/2 md:right-0 md:mt-0 md:w-[min(36rem,44%)] md:-translate-y-1/2 md:px-12 md:py-16">
             <p className="font-serif text-[72px] leading-none font-medium text-ink/[0.06] md:text-[96px]">
               {branch.kicker}
             </p>
-            <p className="type-eyebrow -mt-8 text-gold">{kicker}</p>
             <Swatch hex={branch.hex} />
             <h2 className="mt-4 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
               {branch.href ? (
@@ -155,9 +148,8 @@ export default function ChapterSpread({
         <div className="relative z-10 flex min-h-[92vh] flex-col justify-end">
           <div className="grid gap-8 bg-paper px-5 py-10 sm:px-8 md:grid-cols-12 md:items-end lg:px-14 lg:py-14">
             <div className="md:col-span-5">
-              <p className="type-eyebrow text-gold">{kicker}</p>
               <Swatch hex={branch.hex} />
-              <h2 className="mt-3 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+              <h2 className="font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
                 {branch.href ? (
                   <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
                 ) : (
@@ -210,16 +202,12 @@ export default function ChapterSpread({
               sizes="(max-width: 768px) 50vw, 28vw"
               className="object-cover"
             />
-            <figcaption className="absolute right-3 bottom-3 font-sans text-[10px] tracking-[0.16em] text-paper uppercase">
-              {branch.caption}
-            </figcaption>
           </figure>
         </div>
         <div className="md:col-span-5 md:pl-4 lg:pl-8">
           <p className="font-serif text-[80px] leading-none font-medium text-ink/[0.07] md:text-[128px]">
             {branch.kicker}
           </p>
-          <p className="type-eyebrow -mt-8 text-gold md:-mt-14">{kicker}</p>
           <Swatch hex={branch.hex} />
           <h2 className="mt-4 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
             {branch.href ? (
@@ -253,9 +241,8 @@ export default function ChapterSpread({
           />
         </figure>
         <div className="flex flex-col justify-center px-8 py-16 sm:px-12 lg:px-16">
-          <p className="type-eyebrow text-messing">{kicker}</p>
           <Swatch hex={branch.hex} invert />
-          <h2 className="mt-5 font-serif text-[34px] leading-[1.06] font-medium tracking-[-0.03em] text-paper italic md:text-[48px]">
+          <h2 className="font-serif text-[34px] leading-[1.06] font-medium tracking-[-0.03em] text-paper italic md:text-[48px]">
             {branch.href ? (
               <LocaleLink href={branch.href} className="hover:opacity-80">
                 {branch.title}
@@ -280,9 +267,8 @@ export default function ChapterSpread({
       className="grid items-center gap-10 bg-paper px-5 py-16 sm:px-8 md:grid-cols-12 lg:px-14 lg:py-28"
     >
       <div className="md:col-span-5 lg:pr-8">
-        <p className="type-eyebrow text-gold">{kicker}</p>
         <Swatch hex={branch.hex} />
-        <h2 className="mt-4 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+        <h2 className="font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
           {branch.href ? (
             <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
           ) : (
@@ -312,9 +298,6 @@ export default function ChapterSpread({
             sizes="(max-width: 768px) 50vw, 30vw"
             className="object-cover"
           />
-          <figcaption className="absolute bottom-3 left-3 font-sans text-[10px] tracking-[0.16em] text-paper uppercase">
-            {branch.caption}
-          </figcaption>
         </figure>
       </div>
     </article>

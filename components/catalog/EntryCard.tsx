@@ -23,7 +23,7 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
                 alt={item.title}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1152px) 50vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                className="object-cover"
               />
             ) : (
               <div className="absolute inset-0 bg-karte" />

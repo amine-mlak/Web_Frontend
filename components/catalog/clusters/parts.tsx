@@ -144,7 +144,6 @@ export function HouseLine({
                 src={house.image}
                 alt={house.title}
                 className="aspect-[4/5]"
-                imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
               <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">
@@ -297,7 +296,6 @@ export function SiblingCards({
                 src={sibling.image}
                 alt=""
                 className="aspect-[4/5]"
-                imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
               <span className="mt-4 block font-serif text-[22px] leading-snug font-medium text-ink">{sibling.title}</span>

@@ -301,7 +301,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     lede: "Ausstellung in Wolfersdorf bei Freising. Aufmaß und Montage bei Ihnen — im Radius, den die Manufaktur ehrlich bedienen kann.",
     statement:
       "Eine Küche dieser Art fährt nicht durch die Republik. Sie entsteht hier und wird gesetzt, wo der Weg zur Werkstatt und zum Service noch Sinn hat.",
-    statementNote: "Rund 200 Kilometer um München. Weiteres klären wir im Gespräch — ohne Verkaufsdruck auf die Distanz.",
+    statementNote: "Ob wir auch zu Ihnen kommen, klären wir im ersten Gespräch.",
     heroImage: "/kitchens/stile-modern.jpg",
     heroAlt: "Küche im Einzugsgebiet München",
     indexEyebrow: "Orte",
@@ -776,7 +776,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     lede: "Showroom in Wolfersdorf near Freising. Survey and fitting at your house — in a radius the workshop can honestly serve.",
     statement:
       "A kitchen of this kind does not tour the country. It is made here and set where the road back to the workshop and to service still makes sense.",
-    statementNote: "About 200 kilometres around Munich. Further afield we settle in conversation — without sales pressure on the distance.",
+    statementNote: "Whether we can come to you as well, we settle in the first conversation.",
     heroImage: "/kitchens/stile-modern.jpg",
     heroAlt: "Kitchen in the Munich catchment",
     indexEyebrow: "Places",

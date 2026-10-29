@@ -2,9 +2,6 @@ import CmsImage from "@/components/CmsImage";
 import type { PresentedHub } from "@/lib/collection-present";
 
 export default function StatementSpread({ hub }: { hub: PresentedHub }) {
-  const caption =
-    hub.locale === "en" ? "Showroom, Wolfersdorf" : "Ausstellung, Wolfersdorf";
-
   return (
     <section
       className="overflow-hidden bg-karte"
@@ -29,9 +26,6 @@ export default function StatementSpread({ hub }: { hub: PresentedHub }) {
               sizes="(max-width: 1024px) 60vw, 28vw"
               className="object-cover"
             />
-            <figcaption className="absolute bottom-4 left-4 font-sans text-[10px] tracking-[0.2em] text-paper uppercase">
-              {caption}
-            </figcaption>
           </figure>
         </div>
 

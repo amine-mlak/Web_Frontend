@@ -123,7 +123,6 @@ export default async function CategoryPage({
                     src={option.image}
                     alt={option.alt || option.title}
                     className="aspect-[4/3]"
-                    imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <h3 className="mt-5 font-serif text-[26px] leading-snug font-medium text-ink">{option.title}</h3>
