@@ -1,6 +1,46 @@
 {
- "_about": "Old beer.de (Shopify) addresses → new site: blog articles (import of 2026-10-27), then shop products, collections and pages (2026-10-28; products matched to projects by their photos). Used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls.",
+ "_about": "Old beer.de (Shopify) addresses → new site: blog articles (import of 2026-10-27), then shop products, collections and pages (2026-10-28; products matched to projects by their photos). Used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls. On 2026-10-29 five posts announcing the same open day redirect to the one kept.",
  "redirects": [
+  {
+   "source": "/presse/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/press/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/ratgeber/tag-der-offenen-tuer-wolfersdorf",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/guides/tag-der-offenen-tuer-wolfersdorf",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/presse/tag-der-offenen-tuer-wolfersdorf",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/press/tag-der-offenen-tuer-wolfersdorf",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
   {
    "source": "/blogs/kuechenplanung-ergonomie/neue-kueche-planen",
    "destination": "/ratgeber/neue-kueche-planen"
@@ -627,11 +667,11 @@
   },
   {
    "source": "/blogs/team-news/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
-   "destination": "/presse/tag-der-offenen-tur-bei-beer-kuchenmanufaktur"
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/en/blogs/team-news/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
-   "destination": "/en/press/tag-der-offenen-tur-bei-beer-kuchenmanufaktur"
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/blogs/kundenkuechen-referenzen/kuchenreferenzen-regensburg-wie-aus-planung-und-praziser-montage-eine-perfekte-traumkuche-entsteht",
@@ -643,11 +683,11 @@
   },
   {
    "source": "/blogs/team-news/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
-   "destination": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur"
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/en/blogs/team-news/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
-   "destination": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur"
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/blogs/team-news/marketing-trifft-werkstatt-ein-tag-in-der-beer-kuchenmanufaktur",
@@ -659,11 +699,11 @@
   },
   {
    "source": "/blogs/manufaktur-einblicke/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
-   "destination": "/presse/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2"
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/en/blogs/manufaktur-einblicke/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur",
-   "destination": "/en/press/tag-der-offenen-tur-2026-bei-der-beer-kuchenmanufaktur-2"
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
   },
   {
    "source": "/blogs/manufaktur-einblicke/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur",
