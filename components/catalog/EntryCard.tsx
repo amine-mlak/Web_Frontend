@@ -8,6 +8,8 @@ export type CatalogCardItem = {
   srcSet?: string;
   meta?: string;
   excerpt?: string;
+  /** Upright photo: the crop keeps its top, where a poster's headline or a face sits. */
+  portrait?: boolean;
 };
 
 export default function EntryCard({ item }: { item: CatalogCardItem }) {
@@ -23,7 +25,7 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
                 alt={item.title}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1152px) 50vw, 33vw"
-                className="object-cover"
+                className={item.portrait ? "object-cover object-top" : "object-cover"}
               />
             ) : (
               <div className="absolute inset-0 bg-karte" />

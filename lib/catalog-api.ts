@@ -357,6 +357,7 @@ function mapArticle(entry: unknown): Article | null {
   }
   const image = mediaImage(row, "cover", stile("stile-holz.jpg"));
   const blocks = mapArticleBlocks(row, title);
+  const cover = row?.cover as { width?: number; height?: number } | null | undefined;
   const bodyFromBlocks = blocks
     .flatMap((block) => (block.kind === "text" ? [block.body] : []))
     .join("\n\n");
@@ -367,6 +368,7 @@ function mapArticle(entry: unknown): Article | null {
     body: bodyFromBlocks || text(row, "description"),
     image: image.src,
     srcSet: image.srcSet,
+    portrait: Boolean(cover?.width && cover?.height && cover.height > cover.width),
     category: mapCategory(row?.category) ?? undefined,
     blocks,
     // "Erschienen am" when set (the beer.de posts keep their original date), else the publish time.

@@ -58,7 +58,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
                     <LocaleLink href={articleHref(item)} className="group flex items-center gap-4 py-4">
                       {item.image ? (
                         <span className="relative size-16 shrink-0 overflow-hidden bg-karte">
-                          <CmsImage src={item.image} alt="" fill sizes="64px" className="object-cover" />
+                          <CmsImage src={item.image} alt="" fill sizes="64px" className={item.portrait ? "object-cover object-top" : "object-cover"} />
                         </span>
                       ) : null}
                       <span className="min-w-0 flex-1">

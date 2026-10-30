@@ -241,9 +241,17 @@ export default async function ArticlePage({
         </header>
 
         {item.image ? (
-          <figure className="mx-auto mt-10 max-w-6xl px-5 sm:px-8">
-            <div className="relative aspect-[16/9] overflow-hidden bg-karte">
-              <CmsImage src={item.image} srcSet={item.srcSet} alt={item.title} fill priority sizes="(max-width: 1200px) 100vw, 1150px" className="object-cover" />
+          <figure className={`mx-auto mt-10 px-5 sm:px-8 ${item.portrait ? "max-w-xl" : "max-w-6xl"}`}>
+            <div className={`relative overflow-hidden bg-karte ${item.portrait ? "aspect-[4/5]" : "aspect-[16/9]"}`}>
+              <CmsImage
+                src={item.image}
+                srcSet={item.srcSet}
+                alt={item.title}
+                fill
+                priority
+                sizes={item.portrait ? "(max-width: 576px) 100vw, 576px" : "(max-width: 1200px) 100vw, 1150px"}
+                className="object-cover"
+              />
             </div>
           </figure>
         ) : null}
@@ -336,6 +344,7 @@ export default async function ArticlePage({
                       src={other.image}
                       alt=""
                       className="aspect-[4/3]"
+                      imgClassName={other.portrait ? "object-top" : undefined}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     {other.category?.name ? <p className="type-eyebrow mt-5 text-muted">{other.category.name}</p> : null}

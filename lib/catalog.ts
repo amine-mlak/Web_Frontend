@@ -209,6 +209,8 @@ export type Article = {
   updatedAt?: string;
   /** True when the date is the original one ("Erschienen am"); the CMS update time then says nothing. */
   originalDate?: boolean;
+  /** An upright cover (poster, portrait): shown whole on the article, cropped from the top on cards. */
+  portrait?: boolean;
 };
 
 export const PRESS_CATEGORY_SLUG = "presse";

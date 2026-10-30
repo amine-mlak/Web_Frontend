@@ -98,5 +98,6 @@ export function articleCards(items: Article[]): CatalogCardItem[] {
     srcSet: item.srcSet,
     meta: item.category?.name,
     excerpt: item.description,
+    portrait: item.portrait,
   }));
 }
