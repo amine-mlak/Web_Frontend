@@ -30,6 +30,7 @@ export default function SmoothScroll() {
         smoothWheel: true,
         wheelMultiplier: 0.9,
         touchMultiplier: 1.1,
+        stopInertiaOnNavigate: true,
         anchors: {
           offset: -96,
         },
