@@ -23,19 +23,27 @@ import { strapiGet, strapiMediaUrl } from "@/lib/strapi";
  * plannerFallback() only fills in while the CMS has no entry yet.
  */
 
-function srcSetOf(sizes: readonly { url: string; width: number }[]) {
-  return sizes.length > 0
-    ? sizes.map((size) => `${strapiMediaUrl(size.url)} ${size.width}w`).join(", ")
-    : undefined;
+const PHOTO_WIDTHS = [320, 480, 640, 960];
+
+/**
+ * The tiles show photos at most about 480 px wide, but the CMS versions vary a lot: one "small"
+ * is 9 KB, another 330 KB. So the site resizes them itself, from the CMS's largest web version
+ * rather than the 2–16 MB original. Icons have no web versions and stay as they are.
+ */
+function tileImage(file: string, sizes: readonly { url: string }[]) {
+  const largest = sizes.at(-1)?.url;
+  if (!largest) return { src: strapiMediaUrl(file) };
+  const name = largest.replace(/^.*\/uploads\//, "");
+  return {
+    src: `/cms-opt/640/${name}`,
+    srcSet: PHOTO_WIDTHS.map((width) => `/cms-opt/${width}/${name} ${width}w`).join(", "),
+  };
 }
 
 function media(name: PlannerMediaName, alt: string): PlannerImage {
   const file: PlannerMediaFile = PLANNER_MEDIA[name];
-  // Photos load a web size (500–1000 px), never the 2–16 MB original.
-  const smallest = file.sizes[0]?.url ?? file.url;
   return {
-    src: strapiMediaUrl(file.sizes.length ? smallest : file.url),
-    srcSet: srcSetOf(file.sizes),
+    ...tileImage(file.url, file.sizes),
     width: file.width,
     height: file.height,
     alt,
@@ -49,8 +57,7 @@ function cmsImage(image: NonNullable<StrapiMediaRef>, alt: string): PlannerImage
     .map((key) => image.formats?.[key])
     .filter((size): size is { url: string; width: number } => Boolean(size?.url && size.width));
   return {
-    src: strapiMediaUrl(sizes[0]?.url ?? image.url),
-    srcSet: srcSetOf(sizes),
+    ...tileImage(image.url ?? "", sizes),
     width: image.width,
     height: image.height,
     alt: image.alternativeText?.trim() || alt,

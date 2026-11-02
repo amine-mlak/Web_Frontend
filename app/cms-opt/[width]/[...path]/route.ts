@@ -5,7 +5,8 @@ import { STRAPI_URL } from "@/lib/strapi";
 
 export const runtime = "nodejs";
 
-const ALLOWED_WIDTHS = new Set([1280, 1600, 1920, 2560, 3840]);
+// The small widths are for tiles such as the kitchen planner's photos.
+const ALLOWED_WIDTHS = new Set([320, 480, 640, 960, 1280, 1600, 1920, 2560, 3840]);
 const SAFE_PATH = /^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/;
 const CACHE_DIR = path.join(process.cwd(), ".next", "cache", "cms-opt");
 
@@ -54,7 +55,7 @@ export async function GET(
     })
       .rotate()
       .resize({ width, withoutEnlargement: true })
-      .webp({ quality: 90, effort: 4 })
+      .webp({ quality: width < 1280 ? 75 : 90, effort: 4 })
       .toBuffer();
 
     try {

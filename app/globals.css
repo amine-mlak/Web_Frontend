@@ -336,6 +336,43 @@ body {
   }
 }
 
+/* Kitchen planner: the next question slides in from the side the visitor is moving towards. */
+@keyframes planner-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--planner-from));
+  }
+}
+
+.planner-screen[data-direction] {
+  --planner-from: 14px;
+  animation: planner-in 240ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+.planner-screen[data-direction="back"] {
+  --planner-from: -14px;
+}
+
+.planner-photo {
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.planner-photo[data-loaded] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-screen[data-direction] {
+    animation: none;
+  }
+
+  .planner-photo {
+    opacity: 1;
+    transition: none;
+  }
+}
+
 /* Announcement bar: seamless loop of two identical tracks (components/AnnouncementBar.tsx). */
 @keyframes announce-scroll {
   to {

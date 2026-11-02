@@ -14,11 +14,11 @@ Design source: `D:\downloads\OneDrive_2026-10-23\Küche planen` (readme, `Küche
 | UI | `components/planner/KitchenPlanner.tsx`, loaded by `PlannerSection` |
 | Lead check and lead mail text | `lib/planner-lead.ts`, used by `app/api/lead/route.ts` |
 
-The planner appears on `/kueche-planen` (`#planer`), `/beratung`, the homepage and the house pages with a form.
+The planner appears on `/beratung` (where `/kueche-planen` forwards), the homepage and the house pages with a form.
 
 ## Rules from the design readme
 
-- Photos are 4:3 with `object-fit: cover`. The site loads Strapi's 500–1000 px versions, never the original.
+- Photos are 4:3 with `object-fit: cover`. The site resizes them itself to 320–960 px WebP through `/cms-opt`, because the size of Strapi's versions varies too much, and never loads the original.
 - Icons are 2× PNGs with deliberate whitespace. Show them whole at the size in their name (98, 118, 124, 144 px; "über 25 m²" is bigger on purpose). Never crop.
 - A selected tile gets a black border. The icon itself stays unchanged.
 

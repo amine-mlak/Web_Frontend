@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import CmsImage from "@/components/CmsImage";
+import { useLenis } from "lenis/react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { conversionContext } from "@/lib/conversion";
 import {
@@ -104,6 +104,25 @@ const SHORT: Record<Locale, Record<PlannerGroupKey, string>> = {
   en: { style: "Style", front: "Fronts", top: "Worktop", griffe: "Handles", appliances: "Appliances", wishes: "Wishes", project: "Project", raum: "Room", size: "Room size", form: "Kitchen shape" },
 };
 
+// Tile width per grid. It has to be the same when preloading, so the browser picks the same file.
+const PHOTO_SIZES = "(max-width: 639px) calc(50vw - 40px), (max-width: 1023px) 33vw, 300px";
+
+/** Fetches a question's pictures ahead of time, so its tiles are full the moment it opens. */
+function preloadScreen(item: Screen, done: Set<string>) {
+  if (item.kind !== "group" || done.has(item.group.group)) return;
+  done.add(item.group.group);
+  for (const option of item.group.options) {
+    if (!option.image) continue;
+    const image = new Image();
+    image.fetchPriority = "low";
+    if (option.image.srcSet) {
+      image.sizes = PHOTO_SIZES;
+      image.srcset = option.image.srcSet;
+    }
+    image.src = option.image.src;
+  }
+}
+
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", { method: "GET", credentials: "same-origin", cache: "no-store" });
   if (!response.ok) return "";
@@ -142,16 +161,23 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const tracked = useRef(new Set<string>());
   const moved = useRef(false);
   const advanceTimer = useRef(0);
+  const preloaded = useRef(new Set<string>());
+  const lenis = useLenis();
 
   // Wishes are an optional note on the appliance screen, not a screen of their own.
-  const screens: Screen[] = [
-    ...content.groups.filter((group) => group.group !== "wishes" && group.options.length > 0).map((group) => ({ kind: "group" as const, group })),
-    { kind: "budget" },
-    { kind: "contact" },
-  ];
+  const screens = useMemo<Screen[]>(
+    () => [
+      ...content.groups.filter((group) => group.group !== "wishes" && group.options.length > 0).map((group) => ({ kind: "group" as const, group })),
+      { kind: "budget" },
+      { kind: "contact" },
+    ],
+    [content.groups],
+  );
   const wishes = content.groups.find((group) => group.group === "wishes");
 
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<"forward" | "back">();
+  const [near, setNear] = useState(false);
   const [selection, setSelection] = useState<Selection>({});
   const [notes, setNotes] = useState<{ style: string; form: string; wishes: string }>({ style: "", form: "", wishes: "" });
   const [budgetPos, setBudgetPos] = useState(50);
@@ -198,13 +224,48 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     return () => observer.disconnect();
   }, []);
 
-  // After moving on, bring the question into view and move focus to it.
+  // The planner also sits far down the homepage: nothing loads until it comes close.
   useEffect(() => {
+    const node = formRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setNear(true);
+        observer.disconnect();
+      },
+      { rootMargin: "800px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  // Always have the next two questions ready, unless the visitor asked to save data.
+  useEffect(() => {
+    if (!near) return;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    if (connection?.saveData) return;
+    const timer = window.setTimeout(() => {
+      for (const item of screens.slice(index + 1, index + 3)) preloadScreen(item, preloaded.current);
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [near, index, screens]);
+
+  // After moving on, put the question in view before it paints and move focus to it. A smooth
+  // scroll here would run while the content changes height, which reads as the page jumping.
+  useLayoutEffect(() => {
     if (!moved.current) return;
+    moved.current = false;
     screenHeading.current?.focus({ preventScroll: true });
     const top = (formRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 96;
-    if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: "smooth" });
-  }, [index, status]);
+    if (Math.abs(window.scrollY - top) <= 40) return;
+    if (lenis) {
+      lenis.resize();
+      lenis.scrollTo(top, { immediate: true, force: true });
+    } else {
+      window.scrollTo({ top, behavior: "instant" });
+    }
+  }, [index, status, lenis]);
 
   function screenKey(item: Screen) {
     return item.kind === "group" ? item.group.group : item.kind;
@@ -238,6 +299,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     moved.current = true;
     setError("");
     setStatus((current) => (current === "error" ? "idle" : current));
+    setDirection(next < index ? "back" : "forward");
     setIndex(Math.max(0, Math.min(next, screens.length - 1)));
   }
 
@@ -260,8 +322,9 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           tracked.current.add(group.group);
           trackFormWizardStep(group.group);
         }
+        setDirection("forward");
         setIndex((current) => Math.min(current + 1, screens.length - 1));
-      }, 320);
+      }, 240);
     }
   }
 
@@ -375,9 +438,12 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     screen.kind === "group" ? (PLANNER_GROUPS[screen.group.group].multi ? screen.group.hint : undefined) : screen.kind === "budget" ? ui.budgetHint : ui.contactHint;
   const needsNext =
     screen.kind !== "group" || PLANNER_GROUPS[screen.group.group].multi || screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value));
+  // On a phone the tiles are taller than the screen, so "Weiter" stays in reach at the bottom.
+  // Not on the contact screen: there it would cover the fields while typing.
+  const stickyNext = needsNext && !last;
 
   return (
-    <section id="planer" className="scroll-mt-24 bg-karte px-5 py-20 sm:px-8 md:py-28 lg:px-12" aria-labelledby={`${baseId}-title`}>
+    <section id="planer" className="scroll-mt-24 bg-karte px-5 py-14 sm:px-8 md:py-28 lg:px-12" aria-labelledby={`${baseId}-title`}>
       <div className="mx-auto max-w-[70rem]">
         <div className="mx-auto max-w-2xl text-center">
           <p className="type-eyebrow text-gold">{content.eyebrow}</p>
@@ -387,7 +453,8 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           <p className="mt-4 font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
         </div>
 
-        <form ref={formRef} onSubmit={submit} noValidate className="relative mt-12 bg-paper md:mt-14">
+        {/* At least a screen high, so a short question does not pull the footer up and back. */}
+        <form ref={formRef} onSubmit={submit} noValidate className="relative mt-10 min-h-[calc(100svh-6rem)] bg-paper md:mt-14">
           {/* Honeypot for bots; hidden from people and screen readers. */}
           <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
             <label>
@@ -412,7 +479,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           ) : (
             <>
               {/* Back + thin progress bar across the full width, as at SieMatic. */}
-              <div className="flex min-h-14 items-center justify-between px-6 pt-4 sm:px-10">
+              <div className="flex min-h-12 items-center justify-between px-6 pt-2 sm:min-h-14 sm:px-10 sm:pt-4">
                 {index > 0 ? (
                   <button type="button" onClick={() => goTo(index - 1)} className="inline-flex min-h-10 items-center gap-2 font-sans text-[14px] text-ink hover:opacity-70">
                     <span aria-hidden="true">←</span> {ui.back}
@@ -435,7 +502,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                 <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
               </div>
 
-              <div className="px-6 pt-12 pb-10 sm:px-10 md:pt-16 md:pb-14">
+              <div key={screenKey(screen)} data-direction={direction} className="planner-screen px-6 pt-8 pb-10 sm:px-10 sm:pt-12 md:pt-16 md:pb-14">
                 <div className="mx-auto max-w-3xl text-center">
                   <p className="type-eyebrow text-gold">{eyebrow}</p>
                   <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[30px] leading-[1.15] font-medium text-ink outline-none md:text-[40px]">
@@ -444,7 +511,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   {hint ? <p className="mt-3 font-sans text-[14px] leading-relaxed text-muted">{hint}</p> : null}
                 </div>
 
-                <div className="mx-auto mt-10 max-w-[58rem] md:mt-12">
+                <div className="mx-auto mt-8 max-w-[58rem] md:mt-12">
                   {screen.kind === "group" ? (
                     <>
                       <PlannerChoices
@@ -452,6 +519,10 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                         selected={selection[screen.group.group] ?? []}
                         onChoose={(option) => choose(screen.group, option)}
                         labelledBy={`${baseId}-screen`}
+                        // The first question is already in the page: it waits until it is near on
+                        // the homepage, and shows at once without a fade. Later ones are on screen.
+                        first={index === 0}
+                        lazy={index === 0 && headingLevel === "h2"}
                       />
                       {screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value)) ? (
                         <div className="mx-auto mt-10 max-w-xl">
@@ -551,7 +622,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               <dt className="text-muted">{row.label}</dt>
                               <dd className="col-start-1 text-ink sm:col-start-2">{row.value}</dd>
                               <dd className="col-start-2 row-span-2 row-start-1 self-center sm:col-start-3 sm:row-span-1">
-                                <button type="button" onClick={() => goTo(row.at)} className="min-h-6 text-[13px] text-muted underline underline-offset-4 hover:text-ink">
+                                <button type="button" onClick={() => goTo(row.at)} className="min-h-10 text-[13px] text-muted underline underline-offset-4 hover:text-ink sm:min-h-6">
                                   {ui.change}
                                   <span className="sr-only">: {row.label}</span>
                                 </button>
@@ -605,29 +676,36 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   ) : null}
                 </div>
 
-                <p role="alert" className="mt-8 min-h-5 text-center font-sans text-[14px] text-destructive">
-                  {error}
-                </p>
+                <div
+                  className={cn(
+                    "mt-8",
+                    stickyNext && "sticky bottom-0 z-10 -mx-6 border-t border-line bg-paper px-6 py-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0",
+                  )}
+                >
+                  <p role="alert" className={cn("text-center font-sans text-[14px] text-destructive", stickyNext ? "empty:hidden sm:min-h-5 sm:empty:block" : "min-h-5")}>
+                    {error}
+                  </p>
 
-                {needsNext ? (
-                  <div className="mt-6 flex justify-center">
-                    <button
-                      type="submit"
-                      aria-disabled={!answered(screen)}
-                      disabled={status === "sending"}
-                      className={cn("pill pill-primary inline-flex items-center gap-2.5", !answered(screen) && "opacity-40")}
-                    >
-                      {last ? (
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
-                          <rect x="3.5" y="5.5" width="17" height="15" rx="3" stroke="currentColor" strokeWidth="1.4" />
-                          <path d="M3.5 9.75H20.5M8 3.5V6.5M16 3.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                          <path d="M8.25 13.25L10.6 15.6L15.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      ) : null}
-                      <span>{last ? (status === "sending" ? ui.sending : ui.submit) : ui.next}</span>
-                    </button>
-                  </div>
-                ) : null}
+                  {needsNext ? (
+                    <div className={cn("flex justify-center", stickyNext ? "mt-2 sm:mt-6" : "mt-6")}>
+                      <button
+                        type="submit"
+                        aria-disabled={!answered(screen)}
+                        disabled={status === "sending"}
+                        className={cn("pill pill-primary inline-flex items-center justify-center gap-2.5", stickyNext && "w-full sm:w-auto", !answered(screen) && "opacity-40")}
+                      >
+                        {last ? (
+                          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-[18px] w-[18px] shrink-0">
+                            <rect x="3.5" y="5.5" width="17" height="15" rx="3" stroke="currentColor" strokeWidth="1.4" />
+                            <path d="M3.5 9.75H20.5M8 3.5V6.5M16 3.5V6.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                            <path d="M8.25 13.25L10.6 15.6L15.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        ) : null}
+                        <span>{last ? (status === "sending" ? ui.sending : ui.submit) : ui.next}</span>
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </>
           )}
@@ -645,11 +723,15 @@ function PlannerChoices({
   selected,
   onChoose,
   labelledBy,
+  first,
+  lazy,
 }: {
   group: PlannerGroup;
   selected: string[];
   onChoose: (option: PlannerOption) => void;
   labelledBy: string;
+  first: boolean;
+  lazy: boolean;
 }) {
   const { kind, multi } = PLANNER_GROUPS[group.group];
   // Few answers sit centred in a narrower row, like SieMatic's three-up grid.
@@ -663,7 +745,7 @@ function PlannerChoices({
         "mx-auto grid gap-3 sm:gap-5",
         kind === "images" && cn("grid-cols-2", columns),
         kind === "icons" && cn("auto-rows-fr grid-cols-2", columns),
-        kind === "chips" && "auto-rows-fr grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3",
+        kind === "chips" && "auto-rows-fr grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:grid-cols-3",
       )}
     >
       {group.options.map((option) => {
@@ -679,23 +761,12 @@ function PlannerChoices({
               type="button"
               {...state}
               onClick={() => onChoose(option)}
-              className={cn(tile, kind === "images" ? "flex-col" : kind === "icons" ? "flex-col items-center px-3 py-7" : "min-h-[4.5rem] items-center justify-center px-5 py-3.5")}
+              className={cn(tile, kind === "images" ? "flex-col" : kind === "icons" ? "flex-col items-center px-3 py-7" : "min-h-14 items-center justify-center px-5 py-3 sm:min-h-[4.5rem] sm:py-3.5")}
             >
               {kind === "images" ? (
                 <>
                   <span className="relative block aspect-[4/3] w-full overflow-hidden bg-karte">
-                    {option.image ? (
-                      <CmsImage
-                        src={option.image.src}
-                        srcSet={option.image.srcSet}
-                        alt=""
-                        fill
-                        // Only the current question is rendered, so load its images straight away.
-                        loading="eager"
-                        sizes="(max-width: 640px) 50vw, 300px"
-                        className="object-cover"
-                      />
-                    ) : null}
+                    {option.image ? <PlannerPhoto image={option.image} fade={!first} lazy={lazy} /> : null}
                   </span>
                   <span className="flex flex-col gap-1.5 px-3 pt-3 pb-4 sm:px-4 sm:pt-4 sm:pb-5">
                     <span className="font-serif text-[18px] leading-snug font-medium text-ink sm:text-[21px]">{option.label}</span>
@@ -714,7 +785,7 @@ function PlannerChoices({
                       alt=""
                       width={option.iconSize ?? 120}
                       height={option.iconSize ?? 120}
-                      loading="eager"
+                      loading={lazy ? "lazy" : "eager"}
                       decoding="async"
                       className="max-w-full object-contain"
                       style={{ width: option.iconSize ?? 120, height: option.iconSize ?? 120 }}
@@ -733,6 +804,30 @@ function PlannerChoices({
         );
       })}
     </ul>
+  );
+}
+
+/** A photo that fades in when it arrives; one already loaded (preloaded, cached) just shows. */
+function PlannerPhoto({ image, fade, lazy }: { image: NonNullable<PlannerOption["image"]>; fade: boolean; lazy: boolean }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={image.src}
+      srcSet={image.srcSet}
+      sizes={image.srcSet ? PHOTO_SIZES : undefined}
+      alt=""
+      decoding="async"
+      loading={lazy ? "lazy" : "eager"}
+      fetchPriority={lazy ? "auto" : "high"}
+      // Marked on the element itself, so twenty tiles do not re-render for one fade.
+      ref={(node) => {
+        if (node?.complete && node.naturalWidth) node.dataset.loaded = "";
+      }}
+      onLoad={(event) => {
+        event.currentTarget.dataset.loaded = "";
+      }}
+      className={cn("absolute inset-0 h-full w-full object-cover", fade && "planner-photo")}
+    />
   );
 }
 
