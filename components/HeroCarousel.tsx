@@ -19,8 +19,10 @@ const ROLL_MS = 1200;
 
 function HeroIntro({ panel }: { panel: HeroPanel }) {
   return (
-    <div className="absolute inset-0 z-10 flex items-end px-5 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
+    <div className="absolute inset-0 z-10 flex items-end px-5 pb-10 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
       <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+      {/* Below laptop size the text fills most of the shorter picture, so more of it needs the shade. */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/40 via-black/25 to-black/5 lg:hidden" aria-hidden="true" />
       <div className="max-w-3xl text-paper">
         <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper uppercase">
           {panel.eyebrow}
@@ -105,7 +107,9 @@ export default function HeroCarousel({
       data-site-hero=""
       className={
         panel
-          ? "relative isolate -mt-14 h-[100svh] min-h-[100svh] w-full overflow-hidden bg-nacht"
+          ? // A wide picture rather than a full screen, so the next section already shows (16:9 on a laptop).
+            // Phones and tablets stay taller than that, because the text sits on the photo.
+            "relative isolate -mt-14 h-[max(115vw,30rem)] w-full overflow-hidden bg-nacht sm:h-[max(min(72vw,calc(100svh-3.5rem)),26rem)] lg:h-[max(min(56.25vw,calc(100svh-6rem)),32rem)]"
           : "relative isolate h-[320px] w-full overflow-hidden bg-nacht sm:h-[48vh] lg:h-dvh"
       }
       aria-roledescription="carousel"
