@@ -12,9 +12,6 @@ const COPY = {
     eyebrow: "Referenzküche",
     projects: "Projekte",
     file: "Hausakte",
-    equipment: "In dieser Küche",
-    equipmentLead: "Was diese Küche ausmacht. Jedes Bild führt zu weiteren Küchen dieser Art.",
-    here: "Hier",
     material: "Material",
     appliance: "Gerät",
     brand: "Marke",
@@ -30,9 +27,6 @@ const COPY = {
     eyebrow: "Reference kitchen",
     projects: "Projects",
     file: "House file",
-    equipment: "In this kitchen",
-    equipmentLead: "What defines this kitchen. Each picture leads to more kitchens of the kind.",
-    here: "Here",
     material: "Material",
     appliance: "Appliance",
     brand: "Brand",
@@ -64,10 +58,6 @@ function describes(alt: string) {
   );
 }
 
-function firstSentence(text: string) {
-  return (text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text).trim();
-}
-
 const SPEC_COLUMNS: Record<number, string> = {
   1: "lg:grid-cols-1",
   2: "lg:grid-cols-2",
@@ -86,57 +76,48 @@ const CLUSTER_SPEC: Partial<Record<KitchenClusterSlug, RegExp>> = {
   inseln: /^(Insel|Form)$/i,
 };
 
-type Feature = { kind: string; name: string; href: string; image?: string; srcSet?: string; line: string };
+type FactLink = { name: string; href: string };
+type Fact = { label: string; value?: string; links: FactLink[] };
 
-/** One card per theme, material, appliance, brand and region of the project, each with a picture. */
-function projectFeatures(project: Project, copy: (typeof COPY)["de" | "en"]): Feature[] {
-  const here = (value: string) => `${copy.here}: ${value}`;
-  const specWhere = (match: (label: string, value: string) => boolean) =>
-    project.specs.find((spec) => match(spec.label, spec.value))?.value;
-  const naming = (name: string) => {
-    const words = [name, ...name.split(/[\s-]+/).filter((word) => word.length >= 4)].map((word) => word.toLowerCase());
-    return specWhere((_, value) => words.some((word) => value.toLowerCase().includes(word)));
+/**
+ * The project's facts, each with links to the themes, materials, appliances, brands and regions it
+ * shows: "Form: Eckküche mit Halbinsel" carries the link to L-Form. A link with no matching fact
+ * becomes its own fact, named once ("Stil: Landhausküchen").
+ */
+function projectFacts(project: Project, copy: (typeof COPY)["de" | "en"]): Fact[] {
+  const facts: Fact[] = project.specs.map((spec) => ({ label: spec.label, value: spec.value, links: [] }));
+  const attach = (link: FactLink, kind: string, match: (fact: Fact) => boolean) => {
+    const fact = facts.find((item) => item.value && match(item));
+    if (fact) {
+      fact.links.push(link);
+      return;
+    }
+    const own = facts.find((item) => !item.value && item.label === kind);
+    if (own) own.links.push(link);
+    else facts.push({ label: kind, links: [link] });
   };
-  const line = (spec: string | undefined, intro: string) => (spec ? here(spec) : firstSentence(intro));
+  const mentions = (name: string) => {
+    const words = [name, ...name.split(/[\s-]+/).filter((word) => word.length >= 4)].map((word) => word.toLowerCase());
+    return (fact: Fact) => words.some((word) => fact.value!.toLowerCase().includes(word));
+  };
 
-  const topics = [...project.topics]
-    .sort((a, b) => CLUSTER_ORDER.indexOf(a.cluster) - CLUSTER_ORDER.indexOf(b.cluster))
-    .map((topic) => {
-      const label = CLUSTER_SPEC[topic.cluster];
-      return {
-        kind: copy.cluster[topic.cluster],
-        name: topic.name,
-        href: `/kuechen/${topic.cluster}/${topic.slug}`,
-        image: topic.image,
-        line: line(label ? specWhere((specLabel) => label.test(specLabel)) : undefined, topic.intro),
-      };
-    });
-  const named = <T extends { slug: string; name: string; image?: string; srcSet?: string; intro: string }>(
-    items: T[],
-    kind: string,
-    path: string,
-  ) =>
-    items.map((item) => ({
-      kind,
-      name: item.name,
-      href: `${path}/${item.slug}`,
-      image: item.image,
-      srcSet: item.srcSet,
-      line: line(naming(item.name), item.intro),
-    }));
-  return [
-    ...topics,
-    ...named(project.materials, copy.material, "/material"),
-    ...named(project.appliances, copy.appliance, "/geraete"),
-    ...named(project.brands, copy.brand, "/marken"),
-    ...project.regions.map((region) => ({
-      kind: copy.region,
-      name: region.name,
-      href: `/regionen/${region.slug}`,
-      image: region.image,
-      line: line(project.place || undefined, region.intro),
-    })),
-  ];
+  for (const topic of [...project.topics].sort((a, b) => CLUSTER_ORDER.indexOf(a.cluster) - CLUSTER_ORDER.indexOf(b.cluster))) {
+    const label = CLUSTER_SPEC[topic.cluster];
+    attach({ name: topic.name, href: `/kuechen/${topic.cluster}/${topic.slug}` }, copy.cluster[topic.cluster], (fact) =>
+      Boolean(label?.test(fact.label)),
+    );
+  }
+  for (const [items, kind, path] of [
+    [project.materials, copy.material, "/material"],
+    [project.appliances, copy.appliance, "/geraete"],
+    [project.brands, copy.brand, "/marken"],
+  ] as const) {
+    for (const item of items) attach({ name: item.name, href: `${path}/${item.slug}` }, kind, mentions(item.name));
+  }
+  for (const region of project.regions) {
+    attach({ name: region.name, href: `/regionen/${region.slug}` }, copy.region, (fact) => /^Ort$/i.test(fact.label));
+  }
+  return facts;
 }
 
 export default function ReferenzPage({
@@ -166,7 +147,7 @@ export default function ReferenzPage({
   const story = texts.slice(0, gallery.length).map((item, index) => ({ ...item, frame: gallery[index] }));
   const moreText = texts.slice(story.length);
   const rest = gallery.slice(story.length);
-  const features = projectFeatures(project, copy).filter((feature) => feature.image);
+  const facts = projectFacts(project, copy);
 
   return (
     <main className="bg-paper">
@@ -201,17 +182,40 @@ export default function ReferenzPage({
         ) : null}
 
         {/* The facts read as the caption of the title photo. */}
-        {project.specs.length > 0 ? (
+        {facts.length > 0 ? (
           <dl
             className={cn(
               "grid grid-cols-2 gap-x-6 border-b border-line px-5 sm:grid-cols-3 sm:px-8 lg:px-14",
-              SPEC_COLUMNS[Math.min(project.specs.length, 5)],
+              SPEC_COLUMNS[Math.min(facts.length, 5)],
             )}
           >
-            {project.specs.map((spec) => (
-              <div key={`${spec.label}-${spec.value}`} className="border-t border-line py-5 lg:border-t-0 lg:py-7">
-                <dt className="font-sans text-[13px] text-muted">{spec.label}</dt>
-                <dd className="mt-1.5 font-serif text-[19px] leading-snug text-ink">{spec.value}</dd>
+            {facts.map((fact) => (
+              <div
+                key={`${fact.label}-${fact.value ?? fact.links[0]?.href}`}
+                className="border-t border-line py-5 lg:border-t-0 lg:py-7 lg:[&:nth-child(n+6)]:border-t"
+              >
+                <dt className="font-sans text-[13px] text-muted">{fact.label}</dt>
+                <dd className="mt-1.5">
+                  {fact.value ? <span className="block font-serif text-[19px] leading-snug text-ink">{fact.value}</span> : null}
+                  {fact.links.length > 0 ? (
+                    <span className={cn("flex flex-wrap gap-x-3", fact.value && "mt-2")}>
+                      {fact.links.map((link) => (
+                        <LocaleLink
+                          key={link.href}
+                          href={link.href}
+                          className={cn(
+                            "underline decoration-line underline-offset-4 transition-colors hover:decoration-ink",
+                            fact.value
+                              ? "font-sans text-[14px] text-muted hover:text-ink"
+                              : "font-serif text-[19px] leading-snug text-ink",
+                          )}
+                        >
+                          {link.name}
+                        </LocaleLink>
+                      ))}
+                    </span>
+                  ) : null}
+                </dd>
               </div>
             ))}
           </dl>
@@ -284,50 +288,6 @@ export default function ReferenzPage({
               </li>
             ))}
           </ul>
-        ) : null}
-
-        {features.length > 0 ? (
-          <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="referenz-features">
-            <h2
-              id="referenz-features"
-              className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
-            >
-              {copy.equipment}
-            </h2>
-            <p className="mt-3 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{copy.equipmentLead}</p>
-            <ul
-              className={cn(
-                "mt-10 grid gap-x-6 gap-y-8 sm:grid-cols-2 sm:gap-y-12",
-                features.length === 1 && "max-w-md sm:grid-cols-1",
-                features.length === 4 && "lg:grid-cols-4",
-                features.length !== 4 && features.length > 2 && "lg:grid-cols-3",
-              )}
-            >
-              {features.map((feature) => (
-                <li key={feature.href}>
-                  {/* Photo beside the text on phones, so four cards don't become four screens. */}
-                  <LocaleLink href={feature.href} className="group grid grid-cols-[7.5rem_minmax(0,1fr)] items-center gap-5 sm:block">
-                    <Frame
-                      src={feature.image!}
-                      srcSet={feature.srcSet}
-                      alt={feature.name}
-                      className="aspect-[4/5]"
-                      sizes="(max-width: 640px) 120px, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    <div>
-                      <p className="font-sans text-[13px] text-muted sm:mt-5">{feature.kind}</p>
-                      <p className="mt-1 font-serif text-[22px] leading-snug font-medium tracking-[-0.02em] text-ink underline decoration-transparent underline-offset-4 transition-colors group-hover:decoration-ink sm:text-[26px]">
-                        {feature.name}
-                      </p>
-                      {feature.line ? (
-                        <p className="mt-2 max-w-sm font-sans text-[15px] leading-relaxed text-muted">{feature.line}</p>
-                      ) : null}
-                    </div>
-                  </LocaleLink>
-                </li>
-              ))}
-            </ul>
-          </section>
         ) : null}
       </article>
 
