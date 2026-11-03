@@ -27,7 +27,7 @@ function HeroIntro({ panel }: { panel: HeroPanel }) {
         <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper uppercase">
           {panel.eyebrow}
         </p>
-        <h1 className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px] lg:whitespace-nowrap">
+        <h1 className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px] min-[1400px]:whitespace-nowrap">
           {panel.title}{panel.emphasis ? ` ${panel.emphasis}` : ""}
         </h1>
         <p className="mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]">
