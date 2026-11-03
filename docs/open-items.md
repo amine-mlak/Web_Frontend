@@ -37,6 +37,19 @@ Claude does not copy keys or passwords between systems, so these need a person.
       Landhausküche, Skandinavische Frische, Dunkelblauer Luxus. They redirect to the closest topic
       for now.
 
+## Security (first)
+
+- [ ] **Strapi 5.33.4 is out of date**: `npm audit` reports 12 critical and 36 high issues; 5.60.0 is
+      current. Test the update on a restored copy, then deploy.
+- [ ] **Public drafts and open CORS on the CMS**: anyone can read unpublished drafts with
+      `?status=draft`. The fix is tested and on the branch `stellen-collection`; it needs a database
+      backup, then a merge into `schema-v2`.
+- [ ] **Next.js 16.4.4, security headers, tighter form checks**: on `cms-central`, not on staging yet.
+      The Content Security Policy runs in report-only mode until checked on staging.
+- [ ] **Personal data in n8n**: delete leads and applications after delivery, and stop storing
+      successful runs for those workflows.
+- [ ] **Logins**: least-rights tokens, new keys, and limit access to the CMS, n8n and Coolify admin areas.
+
 ## 2. Ready for Claude, needs a yes
 
 - [ ] **Stellen (jobs) as their own CMS collection**: on the CMS branch `stellen-collection` and the
