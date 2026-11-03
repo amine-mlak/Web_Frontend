@@ -1,9 +1,10 @@
 import type { Locale } from "@/lib/i18n";
 
 /**
- * Job ads live in the CMS on the Karriere page, as items of its "punkte" list: the item's
- * title is the job title, its text the ad in Markdown. The first paragraph is the teaser in
- * the list. A new item is a new job at /karriere/<slug>; deleting the item ends the ad.
+ * Job ads live in the CMS collection "Stellen": a published entry is an open position at
+ * /karriere/<slug>, and unpublishing it ends the ad. While no entry is published, the older
+ * ads in the "punkte" list of the Karriere page still show (jobsFrom), so the page never
+ * loses its jobs during the move.
  */
 export type Job = {
   slug: string;
@@ -11,6 +12,7 @@ export type Job = {
   teaser: string;
   body: string;
   kind: JobKind;
+  postedAt?: string;
 };
 
 export type JobKind = "ausbildung" | "praktikum" | "teilzeit" | "vollzeit";
@@ -75,6 +77,24 @@ function bodyOf(text: string, teaser: string) {
   const blocks = text.split(/\n\s*\n/);
   const index = blocks.findIndex((block) => teaserOf(block) === teaser && teaser);
   return (index === 0 ? blocks.slice(1) : blocks).join("\n\n").trim();
+}
+
+/** One entry of the CMS collection "Stellen". */
+export function jobFromEntry(entry: {
+  title?: string;
+  slug?: string;
+  art?: string;
+  teaser?: string;
+  text?: string;
+  createdAt?: string;
+}): Job | null {
+  const title = entry.title?.trim();
+  const text = entry.text?.trim() ?? "";
+  const slug = entry.slug?.trim() || (title ? jobSlug(title) : "");
+  if (!title || !slug) return null;
+  const teaser = entry.teaser?.trim() || teaserOf(text);
+  const kind = Object.keys(EMPLOYMENT_TYPE).includes(entry.art ?? "") ? (entry.art as JobKind) : kindOf(title, text);
+  return { slug, title, teaser, body: bodyOf(text, teaser), kind, postedAt: entry.createdAt };
 }
 
 export function jobsFrom(points: { titel: string; text: string }[] | undefined): Job[] {

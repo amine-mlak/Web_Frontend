@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { jobsFrom, type Job } from "@/lib/careers";
+import type { Job } from "@/lib/careers";
 import { FALLBACK_PAGES, type PagePoint, type SitePage } from "@/lib/catalog";
-import { fetchSitePage } from "@/lib/catalog-api";
+import { fetchOpenJobs, fetchSitePage } from "@/lib/catalog-api";
 import type { ClusterSibling } from "@/lib/collection-clusters";
 import { presentHub, type CollectionFact, type PresentedHub } from "@/lib/collection-present";
 import { cmsLarge } from "@/lib/beer-photos";
@@ -35,7 +35,7 @@ export type PresentedHouse = PresentedHub & {
   people: HousePerson[];
   /** Last change in the CMS ("Stand" on legal pages). */
   updatedAt?: string;
-  /** Job ads (Karriere only), from the page's "punkte" list in the CMS. */
+  /** Job ads (Karriere only), from the CMS collection "Stellen". */
   jobs: Job[];
   /** CMS points with a photo: on the showroom, each one is an area with its photos. */
   rooms: PagePoint[];
@@ -651,7 +651,7 @@ function asHouse(
     bodyTitle: voice.bodyTitle,
     showLead: Boolean(voice.showLead),
     siblings: companySiblings(locale, slug),
-    jobs: slug === "karriere" ? jobsFrom(page?.punkte) : [],
+    jobs: [],
     rooms: slug === "karriere" || !cmsHere ? [] : (page?.punkte ?? []).filter((point) => Boolean(point.bild?.src)),
     faq: page?.faq ?? null,
     updatedAt: page?.updatedAt,
@@ -824,7 +824,8 @@ export async function presentHouse(
     ? presentHub(hubId, locale)
     : emptyHub(locale, slug, resolved, page);
 
-  return asHouse(slug, locale, hub, resolved, page);
+  const house = asHouse(slug, locale, hub, resolved, page);
+  return slug === "karriere" ? { ...house, jobs: await fetchOpenJobs(page) } : house;
 }
 
 export async function houseMetadata(slug: string): Promise<Metadata> {

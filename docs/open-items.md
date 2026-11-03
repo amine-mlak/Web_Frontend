@@ -36,6 +36,9 @@ Claude does not copy keys or passwords between systems, so these need a person.
 
 ## 3. Ready for Claude, needs a yes
 
+- [ ] **Stellen (jobs) as their own CMS collection**: built and tested locally, waits for a yes to deploy
+      the CMS. Then the two current jobs move over as drafts, a person publishes them, and the old
+      list on the Karriere page gets emptied.
 - [ ] **Nightly backup of the CMS database** as a Coolify scheduled task (a one-off dump exists from
       the switch on 2026-10-27).
 - [ ] **Instant updates after publishing**: let `/api/revalidate` through the staging password, so

@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import ApplicationForm from "@/components/careers/ApplicationForm";
 import LocaleLink from "@/components/LocaleLink";
 import RichText from "@/components/RichText";
-import { employmentType, jobKindLabel, jobsFrom, type Job } from "@/lib/careers";
-import { fetchSitePage } from "@/lib/catalog-api";
+import { employmentType, jobKindLabel, type Job } from "@/lib/careers";
+import { fetchOpenJobs, fetchSitePage } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
@@ -19,7 +19,7 @@ const COPY = {
 
 async function loadJobs() {
   const page = await fetchSitePage("karriere");
-  return { jobs: jobsFrom(page?.punkte), updatedAt: page?.updatedAt };
+  return { jobs: await fetchOpenJobs(page), updatedAt: page?.updatedAt };
 }
 
 export async function generateStaticParams() {
@@ -81,7 +81,7 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
     "@type": "JobPosting",
     title: job.title,
     description: adHtml(job),
-    datePosted: (updatedAt ?? new Date().toISOString()).slice(0, 10),
+    datePosted: (job.postedAt ?? updatedAt ?? new Date().toISOString()).slice(0, 10),
     employmentType: employmentType(job.kind),
     directApply: true,
     hiringOrganization: {

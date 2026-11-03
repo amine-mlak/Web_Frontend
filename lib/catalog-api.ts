@@ -27,6 +27,7 @@ import {
   type Region,
   type SitePage,
 } from "@/lib/catalog";
+import { jobFromEntry, jobsFrom } from "@/lib/careers";
 import { CMS_NAMED } from "@/lib/cms-photos";
 import {
   enrichProjectBody,
@@ -593,6 +594,17 @@ export async function fetchSitePages() {
 export async function fetchSitePage(slug: string) {
   const pages = await fetchSitePages();
   return pages.find((page) => page.slug === slug) ?? null;
+}
+
+/** Open positions from "Stellen"; the Karriere page's old list only while none is published. */
+export async function fetchOpenJobs(page?: SitePage | null) {
+  const jobs = await loadMapped(
+    "/api/jobs",
+    { "sort[0]": "reihenfolge:asc", "sort[1]": "title:asc", "pagination[pageSize]": "100" },
+    (entry) => jobFromEntry(entry as Parameters<typeof jobFromEntry>[0]),
+    [],
+  );
+  return jobs.length ? jobs : jobsFrom(page?.punkte);
 }
 
 export async function fetchCatalog() {
