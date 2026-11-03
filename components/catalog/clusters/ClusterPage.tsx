@@ -38,7 +38,7 @@ export default function ClusterPage({ hub }: { hub: PresentedCluster }) {
         <div className="hero-scrim absolute inset-0" aria-hidden />
         <div className="relative z-10 flex min-h-[88svh] items-end px-5 pb-12 sm:px-8 lg:px-14 lg:pb-16">
           <div className="max-w-2xl">
-            <Crumbs hub={hub} tone="paper" />
+            <Crumbs hub={hub} />
             <h1
               id="cluster-hero"
               className="mt-6 font-serif text-[56px] leading-[0.92] font-medium tracking-[-0.045em] text-paper sm:text-[88px]"

@@ -7,13 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 import type { ClusterHouse, ClusterSibling } from "@/lib/collection-clusters";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 
-export function Crumbs({
-  hub,
-  tone = "ink",
-}: {
-  hub: PresentedHub;
-  tone?: "ink" | "paper";
-}) {
+export function Crumbs({ hub }: { hub: PresentedHub }) {
   const crumbs = hub.crumbs ?? [];
   if (crumbs.length === 0 && !hub.parentHref) {
     return null;
@@ -23,20 +17,22 @@ export function Crumbs({
       ? crumbs
       : [{ href: hub.parentHref ?? "/kuechen", label: hub.parentLabel ?? "" }];
 
-  return <Breadcrumbs items={items} current={hub.title} locale={hub.locale} tone={tone} />;
+  return <Breadcrumbs items={items} current={hub.title} locale={hub.locale} />;
 }
 
-/** The visible parent links plus the BreadcrumbList JSON-LD (Home → parents → this page). */
+/**
+ * The parent links plus the BreadcrumbList JSON-LD (Home → parents → this page). Not shown on
+ * screen, by design: Google reads the structured data and the links, and screen readers still
+ * announce the trail. Sighted visitors have the menu and the links at the end of each page.
+ */
 export function Breadcrumbs({
   items,
   current,
   locale,
-  tone = "ink",
 }: {
   items: { href: string; label: string }[];
   current?: string;
   locale: PresentedHub["locale"];
-  tone?: "ink" | "paper";
 }) {
   // The last item (this page) has no URL.
   const trail = {
@@ -55,36 +51,15 @@ export function Breadcrumbs({
   };
 
   return (
-    <nav aria-label={locale === "en" ? "Breadcrumb" : "Brotkrumen"}>
+    <nav aria-label={locale === "en" ? "Breadcrumb" : "Brotkrumen"} className="sr-only">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trail) }}
       />
-      <ol
-        className={`flex flex-wrap items-center font-sans text-[11px] tracking-[0.22em] uppercase ${
-          tone === "paper" ? "text-paper/75" : "text-muted"
-        }`}
-      >
-        {items.map((crumb, index) => (
-          <li key={`${crumb.href}-${crumb.label}`} className="flex items-center">
-            {index > 0 ? (
-              <span
-                className={`mx-2 ${tone === "paper" ? "text-paper/40" : "text-line"}`}
-                aria-hidden="true"
-              >
-                /
-              </span>
-            ) : null}
-            <LocaleLink
-              href={crumb.href}
-              className={`inline-flex min-h-6 items-center ${
-                tone === "paper"
-                  ? "text-paper transition-opacity hover:opacity-70"
-                  : "transition-opacity hover:opacity-60"
-              }`}
-            >
-              {crumb.label}
-            </LocaleLink>
+      <ol>
+        {items.map((crumb) => (
+          <li key={`${crumb.href}-${crumb.label}`}>
+            <LocaleLink href={crumb.href}>{crumb.label}</LocaleLink>
           </li>
         ))}
       </ol>

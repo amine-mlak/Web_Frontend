@@ -156,7 +156,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <section style={{ backgroundColor: hex }} aria-labelledby="farben-topic">
         <div className="grid items-end lg:grid-cols-12">
           <div className="px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
-            <Crumbs hub={hub} tone={light ? "ink" : "paper"} />
+            <Crumbs hub={hub} />
             <h1
               id="farben-topic"
               className={`mt-10 font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] sm:text-[68px] ${
