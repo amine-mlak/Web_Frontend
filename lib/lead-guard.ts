@@ -149,11 +149,13 @@ export function extraAllowedOrigins() {
   extras.add("https://staging.beer.de");
   extras.add("https://www.beer.de");
   extras.add("https://beer.de");
-  extras.add("http://localhost:3000");
-  extras.add("https://localhost:3000");
-  extras.add("http://127.0.0.1:3000");
-  extras.add("http://localhost:3001");
-  extras.add("http://127.0.0.1:3001");
+  if (process.env.NODE_ENV !== "production") {
+    extras.add("http://localhost:3000");
+    extras.add("https://localhost:3000");
+    extras.add("http://127.0.0.1:3000");
+    extras.add("http://localhost:3001");
+    extras.add("http://127.0.0.1:3001");
+  }
   return extras;
 }
 

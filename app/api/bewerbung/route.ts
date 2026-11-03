@@ -62,8 +62,13 @@ export async function POST(request: Request) {
   if (request.headers.get("content-type")?.split(";")[0]?.trim() !== "multipart/form-data") {
     return reject(415, "content_type");
   }
-  // Refuse oversized uploads before reading them (room for the text fields on top).
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_TOTAL_BYTES + 256 * 1024) {
+  // Refuse oversized uploads before reading them (room for the text fields on top). Browsers
+  // always state the size of a form, so a request without one can't get around this check.
+  const length = Number(request.headers.get("content-length") ?? 0);
+  if (!length) {
+    return reject(411, "length_required");
+  }
+  if (length > MAX_TOTAL_BYTES + 256 * 1024) {
     return reject(413, "too_large", "too_large");
   }
   if (!originAllowed(request)) {

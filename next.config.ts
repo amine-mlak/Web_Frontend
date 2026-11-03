@@ -44,6 +44,42 @@ const robotsHeaders = allowIndexing
       },
     ];
 
+function originOf(raw: string | undefined) {
+  try {
+    return raw ? new URL(raw).origin : "";
+  } catch {
+    return "";
+  }
+}
+
+// Report-only until a browser check shows nothing needed is refused; then it can be enforced.
+function contentSecurityPolicyReport() {
+  const strapi = originOf(strapiUrl);
+  const umami = originOf(process.env.NEXT_PUBLIC_UMAMI_URL);
+  return [
+    "default-src 'self'",
+    `img-src 'self' data: blob: ${strapi}`,
+    `script-src 'self' 'unsafe-inline' ${umami}`,
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
+    `connect-src 'self' ${umami}`,
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+  ].join("; ");
+}
+
+// No X-Frame-Options: the CMS shows the site in its preview frame (see frameAncestorsCsp).
+// HSTS without includeSubDomains, so it never reaches other beer.de hosts.
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: frameAncestorsCsp() },
+  { key: "Content-Security-Policy-Report-Only", value: contentSecurityPolicyReport() },
+  { key: "Strict-Transport-Security", value: "max-age=31536000" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
@@ -73,26 +109,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.shopify.com",
         pathname: "/s/files/**",
-      },
-      {
-        protocol: "https",
-        hostname: "images.pexels.com",
-        pathname: "/photos/**",
-      },
-      {
-        protocol: "https",
-        hostname: "commons.wikimedia.org",
-        pathname: "/wiki/**",
-      },
-      {
-        protocol: "https",
-        hostname: "upload.wikimedia.org",
-        pathname: "/wikipedia/**",
-      },
-      {
-        protocol: "https",
-        hostname: "thumb.wikimedia.org",
-        pathname: "/wikipedia/**",
       },
     ],
   },
@@ -160,23 +176,11 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value: frameAncestorsCsp(),
-          },
-          ...robotsHeaders,
-        ],
+        headers: [...securityHeaders, ...robotsHeaders],
       },
       {
         source: "/:path*",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value: frameAncestorsCsp(),
-          },
-          ...robotsHeaders,
-        ],
+        headers: [...securityHeaders, ...robotsHeaders],
       },
     ];
   },
