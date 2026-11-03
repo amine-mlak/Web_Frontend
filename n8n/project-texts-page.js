@@ -20,15 +20,15 @@ const card = (p) => {
   return `<section class="card"><h2 style="margin:0"><a href="${esc(adminUrl("projects", p.documentId))}" target="_blank">${esc(p.title)}</a></h2>
 <div class="small">Vorschlag vom ${esc(when(p.createdAt))}${p.slug ? ` · <a href="${esc(`${SITE}/projekte/${p.slug}`)}" target="_blank">/projekte/${esc(p.slug)}</a>` : ""}</div>
 ${p.errors?.length ? `<p class="fehler">${p.errors.map(esc).join("<br>")}</p>` : ""}
-${photos.length ? `<h3>Fotobeschreibungen (${photos.length})</h3><table>${photos
-    .map((f) => `<tr><td style="width:170px"><img src="${esc(f.thumb)}" alt="" width="156"></td><td>${esc(f.text)}<div class="small">bisher: ${esc(f.old || "leer")}</div></td></tr>`)
+${p.status === "offen" ? `<form method="post" action="${BASE}/aktion"><input type="hidden" name="documentId" value="${esc(p.documentId)}">` : ""}${photos.length ? `<h3>Fotobeschreibungen (${photos.length})</h3><p class="small">Jeden Text mit dem Foto vergleichen. Falsches direkt korrigieren. Ein leeres Feld wird nicht übernommen; das Foto kommt beim nächsten Lauf wieder.</p><table>${photos
+    .map((f) => `<tr><td style="width:260px"><a href="${esc(f.full ?? f.thumb)}" target="_blank"><img src="${esc(f.thumb)}" alt="" width="245"></a></td><td>${p.status === "offen" ? `<textarea name="alt_${esc(f.id)}" style="min-height:64px">${esc(f.warnings?.length ? "" : f.text)}</textarea>` : esc(f.text)}${f.warnings?.length ? `<p class="hinweis">Feld leer gelassen, bitte prüfen: ${f.warnings.map(esc).join("; ")}<br>Vorschlag der KI: ${esc(f.text)}</p>` : ""}<div class="small">erkannt (${esc(f.bildart)}): ${esc((f.sichtbar ?? []).join(", "))}</div><div class="small">bisher: ${esc(f.old || "leer")}</div></td></tr>`)
     .join("")}</table>` : `<p class="small">Noch keine Fotobeschreibungen – sie entstehen nach dem Start in etwa einer Minute.</p>`}
 ${en ? `<h3>Englische Fassung (wird als Entwurf angelegt)</h3>${en.warnings?.length ? `<p class="hinweis">${en.warnings.map(esc).join("<br>")}</p>` : ""}
 <dl><dt>Title</dt><dd>${esc(en.title)}</dd><dt>Place</dt><dd>${esc(en.place)}</dd><dt>Intro</dt><dd>${esc(en.intro)}</dd>
 <dt>Text</dt><dd class="pre">${esc(en.body)}</dd>${en.ueberschrift ? `<dt>Heading</dt><dd>${esc(en.ueberschrift)}</dd>` : ""}${en.lesetext ? `<dt>Reading text</dt><dd class="pre">${esc(en.lesetext)}</dd>` : ""}
 <dt>Details</dt><dd>${en.specs.map((s) => `${esc(s.label)}: ${esc(s.value)}`).join("<br>")}</dd>
 <dt>Meta title</dt><dd>${esc(en.metaTitle)} <span class="small">(${en.metaTitle.length})</span></dd><dt>Meta description</dt><dd>${esc(en.metaDescription)} <span class="small">(${en.metaDescription.length})</span></dd></dl>` : ""}
-${p.status === "offen" ? `<div class="actions">${button(`${BASE}/aktion`, { documentId: p.documentId, aktion: "uebernehmen" }, "Übernehmen", true)}${button(`${BASE}/aktion`, { documentId: p.documentId, aktion: "verwerfen" }, "Verwerfen")}</div>` : ""}
+${p.status === "offen" ? `<div class="actions"><button class="primary" name="aktion" value="uebernehmen">Übernehmen</button> <button name="aktion" value="verwerfen">Verwerfen</button></div></form>` : ""}
 </section>`;
 };
 
@@ -41,7 +41,7 @@ const notice = query.gestartet
 const html = page(
   "Projekttexte",
   "Projekttexte",
-  `<p class="small">Fotobeschreibungen (Alt-Texte) für Projekte, vorgeschlagen von Claude. Erst „Übernehmen“ schreibt in Strapi; Fotobeschreibungen gelten dann sofort. Sie helfen Google-Bildersuche, KI-Suche und blinden Besuchern – und ersetzen alte Dateinamen, in denen teils Kundennamen stehen.</p>
+  `<p class="small">Fotobeschreibungen (Alt-Texte) für Projekte, vorgeschlagen von der KI, die jedes Foto ansieht. Erst „Übernehmen“ schreibt in Strapi; Fotobeschreibungen gelten dann sofort. Sie helfen Google-Bildersuche, KI-Suche und blinden Besuchern – und ersetzen alte Dateinamen, in denen teils Kundennamen stehen.</p>
 <section class="card"><form method="post" action="${BASE}/vorschlaege">Neue Vorschläge für
 <select name="limit"><option>1</option><option selected>3</option><option>5</option></select> Projekte
 <input name="documentId" placeholder="oder Strapi-ID eines Projekts" size="28"><button class="primary">Erstellen</button></form></section>

@@ -43,10 +43,18 @@ const adminUrl = (api, documentId, locale = "de") =>
 
 const when = (iso) => (iso ? new Date(iso).toLocaleString("de-DE", { timeZone: "Europe/Berlin", dateStyle: "medium", timeStyle: "short" }) : "");
 
-// Same words as the website uses for a "useful" photo description.
+// Not a real photo description: empty, a file name, a camera or numbered copy ("410 001",
+// "Landhausküche (13)"), or one of the old keyword lists ("küchen schwarz küchen kaufen").
 const weakAlt = (alt) => {
-  const text = String(alt ?? "").trim();
-  return text.length < 30 || !text.includes(" ") || /\.(jpe?g|png|webp|gif)$/i.test(text);
+  const text = String(alt ?? "").normalize("NFC").trim();
+  return (
+    text.length < 30 ||
+    !text.includes(" ") ||
+    /\.(jpe?g|png|webp|gif)$/i.test(text) ||
+    /^[a-zäöü\d]/.test(text) ||
+    /\(\d+\)$|\d{3,}/.test(text) ||
+    /\b(kaufen|küchenstudio|küchen ?profi|nach maß)\b/i.test(text)
+  );
 };
 
 const NAV = [

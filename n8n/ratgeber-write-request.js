@@ -32,7 +32,7 @@ Fakten:
 - Links nur auf die Seiten der Liste, als Markdown-Link mit der Adresse genau wie angegeben.
 
 Ausgabe:
-- title: höchstens 70 Zeichen. description: Teaser, höchstens 80 Zeichen.
+- title: höchstens 70 Zeichen. description: Teaser, höchstens 160 Zeichen.
 - slug: a–z, 0–9, Bindestriche, ä→ae, ö→oe, ü→ue, ß→ss, höchstens 60 Zeichen.
 - category: ${RATGEBER_CATEGORIES.join(", ")}.
 - body: der Artikel in Markdown.

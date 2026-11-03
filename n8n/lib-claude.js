@@ -1,11 +1,38 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- shared helpers, pasted in front of the Code nodes that use them */
 /**
- * Shared by the n8n Code nodes that talk to Claude (pasted in by pack-workflows.mjs).
- * claudeRequest() builds a Messages API body; the HTTP node "… Claude" sends it with the
- * credential "Claude API (BEER)". claudeAnswer() reads the JSON answer back.
+ * Shared by the n8n Code nodes that talk to the AI (pasted in by pack-workflows.mjs, which
+ * also sets AI_PROVIDER). claudeRequest() builds the request body; the HTTP node "… Claude"
+ * sends it with the credential "Claude API (BEER)". claudeAnswer() reads the JSON answer back.
+ * Callers always use the Claude format; kimiRequest() translates it.
  */
 
 const MODEL = "claude-opus-5-5";
+const KIMI_MODEL = "kimi-k3.1-pro";
+
+function kimiRequest({ system, user, schema, effort, maxTokens, webSearch }) {
+  // Better a clear failure than a report that looks researched but was never searched.
+  if (webSearch) throw new Error("Websuche gibt es nur mit Claude: bitte Claude-Schlüssel eintragen und AI_PROVIDER umstellen.");
+  const parts = (blocks) =>
+    typeof blocks === "string"
+      ? blocks
+      : blocks.map((block) =>
+          block.type === "image"
+            ? { type: "image_url", image_url: { url: `data:${block.source.media_type};base64,${block.source.data}` } }
+            : { type: "text", text: block.text },
+        );
+  const request = {
+    model: KIMI_MODEL,
+    max_completion_tokens: maxTokens,
+    // Kimi's scale is low, high and max; left out, it defaults to max.
+    reasoning_effort: effort === "low" ? "low" : "high",
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: parts(user) },
+    ],
+  };
+  if (schema) request.response_format = { type: "json_schema", json_schema: { name: "antwort", schema } };
+  return request;
+}
 
 /**
  * schema: JSON schema for structured output (strict JSON back).
@@ -13,6 +40,7 @@ const MODEL = "claude-opus-5-5";
  * text instead, since search results come back with citations.
  */
 function claudeRequest({ system, user, schema, effort = "medium", maxTokens = 16000, webSearch = 0 }) {
+  if (AI_PROVIDER === "kimi") return kimiRequest({ system, user, schema, effort, maxTokens, webSearch });
   const request = {
     model: MODEL,
     max_tokens: maxTokens,
@@ -46,12 +74,16 @@ function claudeAnswer(response) {
     // After retries the HTTP node passes the failure on as { error: "…" } or { error: { message } }.
     const error = response?.error;
     const message = typeof error === "string" ? error : error?.message ?? response?.message ?? "keine Antwort";
-    return { error: `Claude: ${message}` };
+    return { error: `KI: ${message}` };
   }
   if (response.stop_reason === "refusal") return { error: "Claude hat abgelehnt." };
   if (response.stop_reason === "max_tokens") return { error: "Antwort abgeschnitten (max_tokens)." };
   if (response.stop_reason === "pause_turn") return { error: "Suche nicht fertig geworden – bitte erneut starten." };
-  const text = (response.content ?? []).filter((block) => block.type === "text").map((block) => block.text).join("");
+  const choice = response.choices?.[0];
+  if (choice?.finish_reason === "length") return { error: "Antwort abgeschnitten (max_tokens)." };
+  const text = choice
+    ? String(choice.message?.content ?? "")
+    : (response.content ?? []).filter((block) => block.type === "text").map((block) => block.text).join("");
   for (const candidate of [text, text.match(/```(?:json)?\s*([\s\S]*?)```/)?.[1], text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)]) {
     if (!candidate) continue;
     try {

@@ -25,7 +25,7 @@ if (more.length) blocks.push({ __component: "shared.slider", files: more.map((p)
 
 const data = {
   title: plan.title.slice(0, 120),
-  description: plan.description.slice(0, 80),
+  description: plan.description.slice(0, 160),
   slug,
   blocks,
   ...(cover ? { cover: cover.id } : {}),

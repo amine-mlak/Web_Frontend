@@ -51,7 +51,9 @@ GEO-Monitor weekly (Monday 6:00). Switch on in n8n once the first results look r
      site-pages, kitchen-topics, materials, appliances, brands, furniture-items, regions; update
      on projects, regions, kitchen-topics, materials, appliances, brands, furniture-items,
      site-pages; upload (for photo descriptions). Value: `Bearer <token>`.
-   - *Claude API (BEER)*: an Anthropic API key (console.anthropic.com).
+   - *Claude API (BEER)*: the AI key. For Claude: name `x-api-key`, value the Anthropic key
+     (console.anthropic.com). For testing with Kimi: name `Authorization`, value `Bearer <key>`.
+     The switch is `AI_PROVIDER` in `n8n/pack-workflows.mjs`; deploy after changing it.
    - *BEER Redaktion (Login)*: username and password for all pages and chats.
    - *BEER Website (Formular-Schlüssel)*: header `x-n8n-webhook-secret`, value = the website's
      `N8N_WEBHOOK_SECRET` (Coolify → staging app → Environment). Until it is filled in and
@@ -66,6 +68,25 @@ medium for snippets and news, high for articles, topic research and recommendati
 cost: all 1,353 photo descriptions about $10; one Ratgeber article well under $1; one
 GEO-Monitor run (12 searches) a few dollars. Claude Haiku 5.5 (`claude-haiku-5-5`) would be far
 cheaper for the photo descriptions if quality holds — one constant in `lib-claude.js`.
+
+Testing runs on Kimi (`kimi-k3.1-pro`, `AI_PROVIDER = "kimi"`). Web search exists only with Claude:
+on Kimi, GEO-Monitor and the Ratgeber topic ideas stop with a clear error instead of reporting
+research that never happened.
+
+## Photo descriptions
+
+The prompt is in `n8n/project-texts-ask.js`. Each photo goes to the AI as image data with the
+project's title and specs, without its place or intro. The AI first names the kind of photo and
+what it sees, then writes the text from that list, so the review page shows what was recognised.
+
+`n8n/project-texts-alt-store.js` checks every answer. Refused, listed as an error: under 40 or
+over 140 characters, a lowercase start, search words, the company name, praise, the place.
+Shown with a warning and an empty field: the AI is unsure, no furniture or room recognised, the
+same text as another photo, a brand not in the project's specs.
+
+The checker cannot see a wrong fact in a sentence that reads well, such as a dark worktop called
+light. A person compares each text with its photo: the review page has an editable field per
+photo, "Übernehmen" writes what stands in the fields, and an empty field is skipped.
 
 ## Open decisions for the team
 

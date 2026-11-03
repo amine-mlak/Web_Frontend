@@ -52,7 +52,7 @@ return [
       payload: JSON.stringify({
         data: {
           title: article.title.slice(0, 120),
-          description: article.description.slice(0, 80),
+          description: article.description.slice(0, 160),
           slug,
           blocks,
           ...(cover ? { cover: cover.id } : {}),

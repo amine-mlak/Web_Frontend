@@ -43,8 +43,11 @@ for (const project of projects) {
   if (documentId ? project.documentId !== documentId : !current(project) || earlier === "offen" || earlier === "verworfen") continue;
   const media = [project.image, ...(project.gallery ?? [])].filter(Boolean);
   const unique = [...new Map(media.map((m) => [m.id, m])).values()];
+  // The same text on several photos of a project cannot describe each of them.
+  const uses = new Map();
+  for (const m of unique) uses.set(m.alternativeText, (uses.get(m.alternativeText) ?? 0) + 1);
   const photos = unique
-    .filter((m) => weakAlt(m.alternativeText))
+    .filter((m) => weakAlt(m.alternativeText) || uses.get(m.alternativeText) > 1)
     .map((m) => ({ id: m.id, url: photoUrl(m), thumb: thumbUrl(m), old: m.alternativeText ?? "" }));
   const needsEnglish = ENGLISH && !english.has(project.documentId);
   if (!documentId && !photos.length && !needsEnglish) continue;

@@ -4,6 +4,7 @@
  *
  *   node n8n/pack-workflows.mjs            write the JSON files only
  *   node n8n/pack-workflows.mjs --deploy   also create or update them on n8n.beer.de
+ *   node n8n/pack-workflows.mjs --deploy --only=project-texts   deploy just that one
  *
  * Every Code node gets lib-common.js and lib-claude.js pasted in front of its own code,
  * plus lib-seo.js / lib-ratgeber.js / lib-geo.js where named. Deploy reads N8N_API_KEY from
@@ -17,6 +18,24 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const read = (file) => fs.readFileSync(path.join(here, file), "utf8");
+
+// Who answers: "kimi" for testing, "claude" once BEER's key is in the credential "Claude API (BEER)".
+// That credential's header differs: Kimi "Authorization" = "Bearer <key>", Claude "x-api-key" = "<key>".
+const AI_PROVIDER = "kimi";
+const AI_API = {
+  // The Kimi account allows 3 requests a minute (more after a bigger top-up). n8n starts the next
+  // request without waiting for the last one, and kimi-k3.1-pro can take over 21 seconds to answer.
+  kimi: { url: "https://api.moonshot.ai/v1/chat/completions", headers: [], batch: { batchSize: 1, batchInterval: 45000 } },
+  claude: {
+    url: "https://api.anthropic.com/v1/messages",
+    batch: { batchSize: 2, batchInterval: 1500 },
+    headers: [
+      { name: "anthropic-version", value: "2026-10-21" },
+      // Lets the API answer with a fallback model when a request is declined.
+      { name: "anthropic-beta", value: "server-side-fallback-2026-07-01" },
+    ],
+  },
+}[AI_PROVIDER];
 
 const CREDENTIALS = {
   strapi: { name: "BEER Strapi (Token)", type: "httpHeaderAuth", placeholder: { name: "Authorization", value: "Bearer TOKEN-HIER-EINTRAGEN" } },
@@ -61,7 +80,7 @@ const code = (name, file, { libs = [], prefix = "" } = {}) => ({
   position: pos(),
   parameters: {
     mode: "runOnceForAllItems",
-    jsCode: [prefix, read("lib-common.js"), read("lib-claude.js"), ...libs.map((l) => read(LIBS[l])), read(file)].join("\n"),
+    jsCode: [prefix, `const AI_PROVIDER = "${AI_PROVIDER}";`, read("lib-common.js"), read("lib-claude.js"), ...libs.map((l) => read(LIBS[l])), read(file)].join("\n"),
   },
 });
 const webhook = (name, method, webhookPath, webhookId) => ({
@@ -152,23 +171,34 @@ const claude = (name) => ({
   onError: "continueRegularOutput",
   parameters: {
     method: "POST",
-    url: "https://api.anthropic.com/v1/messages",
+    url: AI_API.url,
     authentication: "genericCredentialType",
     genericAuthType: "httpHeaderAuth",
-    sendHeaders: true,
-    headerParameters: {
-      parameters: [
-        { name: "anthropic-version", value: "2026-10-21" },
-        // Lets the API answer with a fallback model when a request is declined.
-        { name: "anthropic-beta", value: "server-side-fallback-2026-07-01" },
-      ],
-    },
+    sendHeaders: AI_API.headers.length > 0,
+    headerParameters: { parameters: AI_API.headers },
     sendBody: true,
     specifyBody: "json",
     jsonBody: "={{ JSON.stringify($json.request) }}",
-    options: { timeout: 300000, batching: { batch: { batchSize: 2, batchInterval: 1500 } } },
+    options: { timeout: 300000, batching: { batch: AI_API.batch } },
   },
   credentials: cred("claude"),
+});
+
+// Downloads a CMS photo (public address, no login) as binary "foto"; one item out per item in.
+const download = (name) => ({
+  name,
+  type: "n8n-nodes-base.httpRequest",
+  typeVersion: 4.2,
+  position: pos(),
+  retryOnFail: true,
+  maxTries: 3,
+  waitBetweenTries: 2000,
+  onError: "continueRegularOutput",
+  parameters: {
+    method: "GET",
+    url: "={{ $json.photo.url }}",
+    options: { timeout: 60000, response: { response: { responseFormat: "file", outputPropertyName: "foto" } } },
+  },
 });
 
 // ---- connections ---------------------------------------------------------------------
@@ -325,6 +355,8 @@ const WORKFLOWS = {
       strapi("Projekte lesen"),
       code("Auswahl", "project-texts-select.js"),
       code("Fotos", "project-texts-photos.js"),
+      download("Foto laden"),
+      code("Anfrage bauen", "project-texts-ask.js"),
       claude("Alt-Text Claude"),
       code("Alt-Text merken", "project-texts-alt-store.js"),
     );
@@ -357,7 +389,7 @@ const WORKFLOWS = {
       merge(
         link("Seite aufrufen", "Seite", "Seite senden"),
         link("Vorschläge anfordern", "Zur Seite (gestartet)", "Auftrag"),
-        link("Zeitplan", "Auftrag", "Projekte lesen", "Auswahl", "Fotos", "Alt-Text Claude", "Alt-Text merken"),
+        link("Zeitplan", "Auftrag", "Projekte lesen", "Auswahl", "Fotos", "Foto laden", "Anfrage bauen", "Alt-Text Claude", "Alt-Text merken"),
         link("Auswahl", "Übersetzung vorbereiten", "Englisch Claude", "Englisch merken"),
         link("Übernehmen oder verwerfen", "Zur Seite (gespeichert)", "Aktion", "Verteilen"),
         link(["Verteilen", 0], "Alt-Text speichern", "Alt-Text gespeichert"),
@@ -761,9 +793,10 @@ async function deploy() {
     return found.id;
   };
 
-  const hubId = await upsert(WORKFLOWS.hub());
+  const only = process.argv.find((arg) => arg.startsWith("--only="))?.slice("--only=".length);
+  const hubId = only ? all.find((w) => w.name === WORKFLOWS.hub().name).id : await upsert(WORKFLOWS.hub());
   for (const [key, build] of Object.entries(WORKFLOWS)) {
-    if (key === "hub") continue;
+    if (key === "hub" || (only && key !== only)) continue;
     const definition = build();
     definition.settings.errorWorkflow = hubId;
     await upsert(definition);
