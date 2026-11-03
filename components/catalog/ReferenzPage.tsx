@@ -68,7 +68,15 @@ function firstSentence(text: string) {
   return (text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text).trim();
 }
 
-const CLUSTER_ORDER: KitchenClusterSlug[] = ["farben", "stile", "formen", "inseln", "besondere"];
+const SPEC_COLUMNS: Record<number, string> = {
+  1: "lg:grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+};
+
+const CLUSTER_ORDER: KitchenClusterSlug[] =["farben", "stile", "formen", "inseln", "besondere"];
 
 // The spec line that shows how a theme looks in this kitchen.
 const CLUSTER_SPEC: Partial<Record<KitchenClusterSlug, RegExp>> = {
@@ -153,6 +161,11 @@ export default function ReferenzPage({
   });
   // The last frame moves to the closing band instead of being shown twice.
   const closePhoto = gallery.length > 3 ? gallery.pop()! : null;
+  // The intro and each paragraph stand beside a gallery photo, in gallery order; the rest follow below.
+  const texts = [...(project.intro ? [{ lead: true, text: project.intro }] : []), ...body.map((text) => ({ lead: false, text }))];
+  const story = texts.slice(0, gallery.length).map((item, index) => ({ ...item, frame: gallery[index] }));
+  const moreText = texts.slice(story.length);
+  const rest = gallery.slice(story.length);
   const features = projectFeatures(project, copy).filter((feature) => feature.image);
 
   return (
@@ -187,43 +200,66 @@ export default function ReferenzPage({
           />
         ) : null}
 
-        <div className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
-          <div className="lg:col-span-5">
-            {project.specs.length > 0 ? (
-              <dl className="border-t border-line">
-                {project.specs.map((spec) => (
-                  <div
-                    key={`${spec.label}-${spec.value}`}
-                    className="grid grid-cols-[7.5rem_minmax(0,1fr)] gap-4 border-b border-line py-4"
-                  >
-                    <dt className="type-eyebrow text-muted">{spec.label}</dt>
-                    <dd className="font-serif text-[18px] leading-snug text-ink">{spec.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
-          </div>
-          <div className="lg:col-span-7">
-            {project.intro ? (
-              <p className="font-serif text-[28px] leading-[1.2] font-medium tracking-[-0.03em] text-ink md:text-[36px]">
-                {project.intro}
-              </p>
-            ) : null}
-            {body.length > 0 ? (
-              <div className="mt-8 max-w-xl space-y-5">
-                {body.map((paragraph) => (
-                  <p key={paragraph.slice(0, 48)} className="type-body text-muted">
-                    {paragraph}
-                  </p>
-                ))}
+        {/* The facts read as the caption of the title photo. */}
+        {project.specs.length > 0 ? (
+          <dl
+            className={cn(
+              "grid grid-cols-2 gap-x-6 border-b border-line px-5 sm:grid-cols-3 sm:px-8 lg:px-14",
+              SPEC_COLUMNS[Math.min(project.specs.length, 5)],
+            )}
+          >
+            {project.specs.map((spec) => (
+              <div key={`${spec.label}-${spec.value}`} className="border-t border-line py-5 lg:border-t-0 lg:py-7">
+                <dt className="font-sans text-[13px] text-muted">{spec.label}</dt>
+                <dd className="mt-1.5 font-serif text-[19px] leading-snug text-ink">{spec.value}</dd>
               </div>
-            ) : null}
-          </div>
-        </div>
+            ))}
+          </dl>
+        ) : null}
 
-        {gallery.length > 0 ? (
-          <ul className="grid gap-3 px-5 pb-8 sm:px-8 lg:grid-cols-12 lg:px-14">
-            {gallery.map((frame, index) => (
+        {story.length > 0 ? (
+          <div className="space-y-3 py-3 lg:space-y-0 lg:py-0">
+            {story.map((item, index) => (
+              <section key={item.frame.src} className="grid items-center lg:grid-cols-12">
+                <Frame
+                  src={item.frame.src}
+                  srcSet={item.frame.srcSet}
+                  alt={describes(item.frame.alt) ? item.frame.alt : project.title}
+                  className={cn("aspect-[4/3] lg:col-span-7", index % 2 === 1 && "lg:order-2")}
+                  sizes="(max-width: 1024px) 100vw, 58vw"
+                />
+                <div className={cn("px-5 py-10 sm:px-8 lg:col-span-5 lg:px-14 lg:py-16", index % 2 === 1 && "lg:order-1")}>
+                  <p
+                    className={
+                      item.lead
+                        ? "max-w-lg font-serif text-[28px] leading-[1.2] font-medium tracking-[-0.03em] text-ink md:text-[34px]"
+                        : "max-w-md font-sans text-[17px] leading-[1.75] text-ink/80"
+                    }
+                  >
+                    {item.text}
+                  </p>
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : null}
+
+        {moreText.length > 0 ? (
+          <div className="mx-auto max-w-2xl space-y-5 px-5 py-16 sm:px-8">
+            {moreText.map((item) => (
+              <p
+                key={item.text.slice(0, 48)}
+                className={item.lead ? "font-serif text-[28px] leading-[1.2] font-medium text-ink md:text-[34px]" : "type-body text-muted"}
+              >
+                {item.text}
+              </p>
+            ))}
+          </div>
+        ) : null}
+
+        {rest.length > 0 ? (
+          <ul className="grid gap-3 px-5 pt-3 pb-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:pt-14">
+            {rest.map((frame, index) => (
               <li
                 key={`${frame.src}-${index}`}
                 className={index % 3 === 0 ? "lg:col-span-7" : "lg:col-span-5"}
