@@ -41,27 +41,22 @@ Claude does not copy keys or passwords between systems, so these need a person.
 
 - [ ] **Strapi 5.33.4 is out of date**: `npm audit` reports 12 critical and 36 high issues; 5.60.0 is
       current. Test the update on a restored copy, then deploy.
-- [ ] **Public drafts and open CORS on the CMS**: anyone can read unpublished drafts with
-      `?status=draft`. The fix is tested and on the branch `stellen-collection`; it needs a database
-      backup, then a merge into `schema-v2`.
-- [ ] **Next.js 16.4.4, security headers, tighter form checks**: on `cms-central`, not on staging yet.
-      The Content Security Policy runs in report-only mode until checked on staging.
+- [x] **Public drafts and open CORS on the CMS**: closed on 2026-11-03. Drafts need an API token, and
+      only BEER's own sites may read the API from a browser.
+- [x] **Next.js 16.4.4, security headers, tighter form checks**: on staging since 2026-11-03.
+- [ ] **Content Security Policy**: runs in report-only mode. Check it on staging, then enforce it.
 - [ ] **Personal data in n8n**: delete leads and applications after delivery, and stop storing
       successful runs for those workflows.
 - [ ] **Logins**: least-rights tokens, new keys, and limit access to the CMS, n8n and Coolify admin areas.
 
 ## 2. Ready for Claude, needs a yes
 
-- [ ] **Stellen (jobs) as their own CMS collection**: on the CMS branch `stellen-collection` and the
-      website branch `cms-central`. Back up the CMS database, merge into `schema-v2` (this deploys the
-      live CMS by itself), then move the two jobs over as drafts. A person publishes them. Then remove
+- [ ] **Publish the two jobs in the CMS ("Stellen")**: both are drafts, for Amine to publish. Then remove
       the fallback in `fetchOpenJobs` and empty the old list on the Karriere page.
-- [ ] **Website branch `cms-central` into `main`** (this deploys staging): jobs code, hidden breadcrumbs.
-- [ ] **Open-day announcement in the header**: set its end date, so it goes away by itself after
-      8 November. The header has no drafts: saving publishes at once.
 - [ ] **Delete the 4 leftover open-day article drafts**; one published article covers it.
 - [ ] **Nightly backup of the CMS database** as a Coolify scheduled task, with one tested restore. No
-      backup task is active; the last one-off dump is from the switch on 2026-10-27.
+      backup task is active. The last dump is from 2026-11-03, on the server and in
+      `D:\Beer\backups\cms-20261103`, without media files.
 - [ ] **Delete the old, stopped CMS service** only after that restore works. Remove the `LEGACY_PG_*`
       variables from the new CMS app then too.
 - [ ] **Customer names in image addresses**: about 92 images on 6 project pages. Show the list of old
@@ -112,6 +107,8 @@ Never publish the 6 sample project drafts (invented places and years).
 
 ## Done recently
 
+- 2026-11-03 Security deploys on staging and the CMS, jobs collection live with two drafts, breadcrumbs
+  hidden, German open-day announcement ends by itself at midnight after 8 November.
 - 2026-11-02 Header menu images from the CMS, wider homepage hero, planner speed fixes (on staging).
 - 2026-10-30 All 86 published articles have their own cover.
 - 2026-10-28 All 66 Shopify products, 7 collections and 43 pages redirect to the new site.
