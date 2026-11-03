@@ -107,6 +107,10 @@ Never publish the 6 sample project drafts (invented places and years).
 
 ## Done recently
 
+- 2026-11-03 Project pages tell the story beside the photos, with picture cards for each theme, brand and
+  material. The CMS project form explains Titelbild and Galerie. 20 kitchen topics got photos that show the
+  topic (old photos listed in `D:\Beer\backups\topic-photos-before-20261103`).
+
 - 2026-11-03 Security deploys on staging and the CMS, jobs collection live with two drafts, breadcrumbs
   hidden, German open-day announcement ends by itself at midnight after 8 November.
 - 2026-11-02 Header menu images from the CMS, wider homepage hero, planner speed fixes (on staging).
