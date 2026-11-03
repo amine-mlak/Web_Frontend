@@ -459,7 +459,7 @@ const PROJECT_POPULATE = {
   "populate[brands][populate]": "image",
   "populate[materials][populate]": "image",
   "populate[appliances][populate]": "image",
-  "populate[regions]": "true",
+  "populate[regions][populate]": "image",
   "populate[seo]": "true",
 };
 
