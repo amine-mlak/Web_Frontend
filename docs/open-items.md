@@ -1,9 +1,12 @@
 # Open items
 
-Status 2026-10-28. What is still open across the website (staging.beer.de), the CMS (cms.beer.de)
+Status 2026-11-03. What is still open across the website (staging.beer.de), the CMS (cms.beer.de)
 and n8n (n8n.beer.de). Tick items off here when they are done.
 
-## 1. Waiting on Amine: logins and accounts
+The new site only runs on staging; www.beer.de is still the old site. Order of work: deploy what is
+ready, protect data and privacy, launch requirements, content, go live.
+
+## 1. Waiting on Amine or Christian: logins, accounts and decisions
 
 Claude does not copy keys or passwords between systems, so these need a person.
 
@@ -12,67 +15,93 @@ Claude does not copy keys or passwords between systems, so these need a person.
       sign-ups and Karriere applications from the website (403).
 - [ ] **n8n credential "BEER Newsletter (SMTP)"**: login of the mailbox the newsletter is sent from,
       and confirm the sender address (set to newsletter@beer.de in `n8n/lib-newsletter.js`).
-- [ ] **n8n credentials "BEER Strapi (Token)" and "Claude API (BEER)"**: the nine editorial
-      workflows (SEO, Ratgeber, Projekttexte, GEO, Regionen, Meldungen, Neue Seite) stay off until
-      these are filled in. The Strapi token is also needed to test the drafts-only guard.
+- [ ] **n8n credential "BEER Strapi (Token)"**: it works but is read-only, so saving drafts and photo
+      descriptions gets 403. Enter a token with the rights listed in `docs/automations-map.md`.
+- [ ] **n8n credential "Claude API (BEER)"**: holds a personal Kimi key for testing. Replace that key,
+      since it was pasted in a chat, and enter BEER's Claude key before launch.
 - [ ] **Where leads and applications go**: planner leads ("Lead demo (dry-run)") and applications
-      ("BEER Bewerbungen") are only kept under n8n Executions. Decide on a recipient (mail to whom,
-      CRM?) and add the mail login.
+      ("BEER Bewerbungen", switched off) reach nobody. Decide on a recipient (mail to whom, CRM?) and
+      add the mail login.
 - [ ] **Tracking accounts**: Christian creates GTM (web + server), Stape and the consent tool
       (Usercentrics or Cookiebot). See `docs/tracking-and-consent.md`.
-- [ ] **Change the staging password**: it showed up once in a session log.
-
-## 2. Decisions
-
-- [ ] **Datenschutz**: add a newsletter section (double opt-in, what is stored, how to unsubscribe).
-      A legal text, best checked by whoever advises BEER.
-- [x] **Shop**: all 66 Shopify products, 7 collections and 43 pages redirect to the new site (2026-10-28).
-      Outdoor kitchens are built as drafts (see 4.). Still missing as pages (they redirect to the closest
-      topic for now): a **bathroom** page, the **referral programme**
-      (Empfehlen and the 19 personal voucher pages), and four kitchens without a project:
-      Schwebeblock Küche, Mediterrane Landhausküche, Skandinavische Frische, Dunkelblauer Luxus.
 - [ ] **Canonical domain and contact email** (`www.beer.de`? `info@beer.de`?), so they can be set
       in the CMS site settings.
+- [ ] **Datenschutz**: add a newsletter section (double opt-in, what is stored, how to unsubscribe).
+      A legal text, best checked by whoever advises BEER.
+- [ ] **English**: launch in German only and translate afterwards? (Recommended.) Almost nothing is
+      published in English, and each content type has to go live all at once.
+- [ ] **Change the staging password**: it showed up once in a session log.
+- [ ] **Real photos** for the Regensburg and Neue Azubis articles, which still show stand-ins.
+- [ ] **Missing pages**: a bathroom page, the referral programme (Empfehlen and the 19 personal
+      voucher pages), and four kitchens without a project: Schwebeblock Küche, Mediterrane
+      Landhausküche, Skandinavische Frische, Dunkelblauer Luxus. They redirect to the closest topic
+      for now.
 
-## 3. Ready for Claude, needs a yes
+## 2. Ready for Claude, needs a yes
 
-- [ ] **Stellen (jobs) as their own CMS collection**: built and tested locally, waits for a yes to deploy
-      the CMS. Then the two current jobs move over as drafts, a person publishes them, and the old
-      list on the Karriere page gets emptied.
-- [ ] **Nightly backup of the CMS database** as a Coolify scheduled task (a one-off dump exists from
-      the switch on 2026-10-27).
+- [ ] **Stellen (jobs) as their own CMS collection**: on the CMS branch `stellen-collection` and the
+      website branch `cms-central`. Back up the CMS database, merge into `schema-v2` (this deploys the
+      live CMS by itself), then move the two jobs over as drafts. A person publishes them. Then remove
+      the fallback in `fetchOpenJobs` and empty the old list on the Karriere page.
+- [ ] **Website branch `cms-central` into `main`** (this deploys staging): jobs code, hidden breadcrumbs.
+- [ ] **Open-day announcement in the header**: set its end date, so it goes away by itself after
+      8 November. The header has no drafts: saving publishes at once.
+- [ ] **Delete the 4 leftover open-day article drafts**; one published article covers it.
+- [ ] **Nightly backup of the CMS database** as a Coolify scheduled task, with one tested restore. No
+      backup task is active; the last one-off dump is from the switch on 2026-10-27.
+- [ ] **Delete the old, stopped CMS service** only after that restore works. Remove the `LEGACY_PG_*`
+      variables from the new CMS app then too.
+- [ ] **Customer names in image addresses**: about 92 images on 6 project pages. Show the list of old
+      and new addresses first.
 - [ ] **Instant updates after publishing**: let `/api/revalidate` through the staging password, so
       CMS changes show at once instead of within about 2 minutes.
 - [ ] **Switch on "BEER Bewerbungen"** once the website key is in n8n.
-- [ ] **Fix `/documentation` on cms.beer.de** (the API description file is missing).
-- [ ] **Tidy the CMS server**: remove the `LEGACY_PG_*` variables from the new CMS app; delete the
-      old, stopped CMS service after 3 November.
-- [ ] **Free space on C:** (about 1.6 GB left); builds and caches can fail when it fills up.
+- [ ] **Fix `/documentation` on cms.beer.de** (404: the API description file is missing).
+- [ ] **Free space on C:** (about 2 GB left); builds and caches can fail when it fills up.
+- [ ] **Phones at 320 px**: the header pushes the menu button off screen.
 
-## 4. Content to check and publish (in the CMS)
+## 3. Content
 
-- [ ] **Innenleben**: the draft with 9 photo sections. Check it with the CMS preview, then publish.
-- [ ] **Küchenplaner page**: draft in German and English.
-- [ ] **Outdoorküchen**: three drafts, published in this order: the kitchen topic "Outdoorküchen"
-      (`/kuechen/besondere/outdoor`), then the projects "Terrassenküche mit Eiche und Edelstahl" and
-      "Outdoorküche mit Naturstein". The old shop addresses (Terrassen Küche, Eventküche, Miele Dreams,
-      collection Outdoor) redirect there once the site change is deployed.
-- [ ] **86 blog articles** from beer.de are drafts: publish before launch, set the original dates
-      (in `D:/Beer/.cache/blog/import-map.json`), review the 32 kept Shopify SEO titles.
-- [ ] **Project pages as stories** (design idea): each project told like an exposé, as on the
-      colour pages.
+Everything goes in as drafts, and a person publishes.
 
-## 5. Before beer.de points at the new site
+- [ ] **Three nearly empty guides** (about 27 words each): Was kostet eine Küche?, So entsteht Ihre
+      Küche, Kochfeldabzug oder Esse?
+- [ ] **Appliance and category pages**: real text, and remove the template sentence about daylight and
+      samples, which doesn't fit them.
+- [ ] **11 region pages** are near-duplicates: keep areas with real projects and local details BEER
+      confirms, redirect the rest.
+- [ ] **Über BEER**: expand with Christian's story. Check "den kostspieligsten im Land" and "Badendorf"
+      on the contact page against Wolfersdorf elsewhere.
+- [ ] **Project pages as stories**: about 190 words on average today. Each project told like an exposé,
+      as on the colour pages.
+- [ ] **Photo descriptions**: nearly all 1,462 project photos have poor alt text, some with customer
+      names. "BEER Projekttexte" proposes new ones and a person reviews them. Needs the Strapi token.
+- [ ] **Duplicate short addresses**: `/formen`, `/stile`, `/farben`, `/inseln` and `/innenleben` share
+      text with their twins. Nine more still need checking.
+- [ ] **Outdoor projects**: "Terrassenküche mit Eiche und Edelstahl" and "Outdoorküche mit Naturstein"
+      are not in the CMS under those names or under matching addresses. Check whether they still exist.
+- [ ] **32 kept Shopify SEO titles** on the imported articles: review them.
+- [x] Innenleben, the Küchenplaner page and the 86 blog articles: published, with original dates.
 
-- [ ] All drafts that belong on the site are published (blog, planner page, Innenleben).
-- [x] Redirects for the Shopify shop and pages (356) on top of the 222 blog redirects.
-- [ ] Consent banner and tracking built (the footer link "Cookie-Einstellungen" opens it).
+Never publish the 6 sample project drafts (invented places and years).
+
+## 4. Before beer.de points at the new site
+
+- [ ] Production app in Coolify from `main`, tested on a temporary address. Today only staging exists.
+- [ ] Consent banner and tracking built (the footer link "Cookie-Einstellungen" only opens
+      `/datenschutz` so far). Also: click IDs are stored before consent (`lib/conversion.ts`), and the
+      Umami session recorder runs without it.
+- [ ] Spam protection on the forms, and keys rotated.
 - [ ] Links in newsletter mails point to `www.beer.de/impressum` and `/datenschutz`: check that they
       work after the switch.
 - [ ] Structured data and sitemap checked (Rich Results test, `xhtml:link` alternates).
+- [x] Redirects for the Shopify shop and pages (356) on top of the 222 blog redirects.
 
 ## Done recently
 
+- 2026-11-02 Header menu images from the CMS, wider homepage hero, planner speed fixes (on staging).
+- 2026-10-30 All 86 published articles have their own cover.
+- 2026-10-28 All 66 Shopify products, 7 collections and 43 pages redirect to the new site.
 - 2026-10-28 Newsletter: sign-up in the footer and the planner, double opt-in, team page to send
   (`n8n.beer.de/webhook/beer-newsletter`), workflow on, website live on staging.
 - 2026-10-27 Innenleben page layout (photo sections from the CMS), CMS fields for photos and links.
