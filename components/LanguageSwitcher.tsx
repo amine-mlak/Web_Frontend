@@ -9,8 +9,8 @@ import {
   LOCALE_NAMES,
   chromeCopy,
   stripLocalePrefix,
-  withLocale,
 } from "@/lib/i18n";
+import { localizePath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 export default function LanguageSwitcher({
@@ -50,7 +50,9 @@ export default function LanguageSwitcher({
               </span>
             ) : null}
             <a
-              href={withLocale(path, item)}
+              // localizePath, not withLocale: an English page path like /kitchens/… or /brands/…
+              // shares its first segment with a public image folder, which withLocale leaves alone.
+              href={localizePath(path, item)}
               onClick={(event) => followAlternate(event, item)}
               hrefLang={item}
               lang={item}
