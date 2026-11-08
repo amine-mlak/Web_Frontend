@@ -22,8 +22,8 @@ Dienste in Ihrem Browser.
 Um nachweisen zu können, dass Sie eingewilligt haben (Art. 7 Abs. 1 DSGVO), speichern wir zu
 jeder Auswahl: eine zufällige Kennung (die auch im Cookie steht), die gewählten Kategorien,
 die Version des Banners, die Sprache, den Zeitpunkt und die aufgerufene Seite. Wir speichern
-dabei keine IP-Adresse. Speicherdauer: 3 Jahre **[prüfen]**, danach gelöscht. Speicherort: unser
-eigener Automatisierungsserver (n8n) bei **[Hoster prüfen]** in der EU.
+dabei keine IP-Adresse. Speicherdauer: 3 Jahre **[prüfen]**, danach automatisch gelöscht. Speicherort:
+unser eigenes Redaktionssystem (cms.beer.de) bei **[Hoster prüfen]** in der EU.
 
 Rechtsgrundlage für Dienste, die eine Einwilligung brauchen: Art. 6 Abs. 1 lit. a DSGVO und
 § 25 Abs. 1 TDDDG. Für das Speichern Ihrer Auswahl: § 25 Abs. 2 Nr. 2 TDDDG und Art. 6 Abs. 1
@@ -100,7 +100,7 @@ services' cookies are then deleted from your browser.
 
 To prove consent (Art. 7(1) GDPR) we store per choice: a random ID (also in the cookie), the
 chosen categories, the banner version, the language, the time and the page, but no IP address.
-Kept for 3 years **[check]**, on our own automation server (n8n) in the EU **[check host]**.
+Kept for 3 years **[check]**, then deleted automatically, in our own content system (cms.beer.de) in the EU **[check host]**.
 
 Legal basis for services that need consent: Art. 6(1)(a) GDPR and § 25(1) TDDDG. For storing
 your choice: § 25(2) no. 2 TDDDG and Art. 6(1)(c) GDPR.
@@ -134,7 +134,7 @@ close the window and saved with your enquiry. Legal basis: Art. 6(1)(a) GDPR, §
 
 ## Open points for the legal check
 
-1. Retention of the consent log (3 years proposed) and where n8n is hosted.
+1. Retention of the consent log (3 years proposed) and where cms.beer.de is hosted.
 2. Umami: version, hosting location, whether the recorder masks form fields.
 3. TikTok: transfer basis outside the EU.
 4. Joint controllership (Art. 26) for Google Ads and Meta: link the vendors' terms.

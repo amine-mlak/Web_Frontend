@@ -11,9 +11,9 @@ Package C from `docs/tracking-options.html`, browser first:
 | Layer | What | Status |
 |---|---|---|
 | Banner | Open source, in our code: vanilla-cookieconsent 3.1.0 (MIT). Categories Notwendig / Statistik / Marketing, "Alle ablehnen" next to "Alle akzeptieren" with the same weight, DE/EN | built |
-| Consent log | `/api/consent` → n8n "Consent log" (data table). No IP, no user agent | site built; n8n workflow open, until then the server log |
+| Consent log | `/api/consent` → CMS collection "Einwilligungen (Cookie-Banner)" (beer-cms `api::consent-log`). No IP, no user agent; entries can't be changed, deleted after 3 years; the website's token may only create | built; CMS deploy + token open |
 | Consent Mode v2 | **basic**: defaults all denied; GTM itself loads only after a "yes" to Statistik or Marketing (VG Hannover 2025: GTM needs consent under § 25 TDDDG) | built |
-| Tag manager | Google Tag Manager, web container as import file (`gtm/web-container.json`) | built, waits for accounts |
+| Tag manager | Google Tag Manager, web container as import file (`gtm/web-container.json`) | built; accounts exist on today's beer.de, connected ~1 month before launch |
 | Platforms | GA4, Google Ads (+ enhanced conversions), Meta, Pinterest, Microsoft Ads, TikTok, LinkedIn. A platform stays paused until its ID is set | prepared |
 | Umami | Cookieless counting stays without consent; the session recorder only with Statistik | built |
 | Server-side | Phase 2: own server GTM on Coolify at `sgtm.beer.de`; no site change needed (`event_id` is already on every lead) | later |
@@ -70,14 +70,14 @@ never enter the dataLayer.
 | `NEXT_PUBLIC_GTM_AUTH`, `NEXT_PUBLIC_GTM_PREVIEW` | staging only (GTM environment) | from GTM → Environments |
 | `NEXT_PUBLIC_GTM_SERVER_URL` | phase 2 | `https://sgtm.beer.de` |
 | `NEXT_PUBLIC_LEAD_VALUE` | optional | `150` (EUR per lead, for value bidding) |
-| `N8N_CONSENT_WEBHOOK_URL` | optional; default `/webhook/beer-consent/log` on the lead webhook's host | |
+| `STRAPI_CONSENT_TOKEN` | staging + production (server only) | CMS API token "Website: Einwilligungen", custom, only Consent-log → create |
 
 `NEXT_PUBLIC_` values are read at build time: change them, then redeploy.
 
 ## Still open
 
-- n8n workflow "Consent log" (data table) and its deploy (needs a yes).
+- Consent log live: deploy beer-cms `schema-v2` (collection), create the token in the CMS admin, put it in Coolify as `STRAPI_CONSENT_TOKEN`. Until then each answer goes to the server log.
 - Datenschutzerklärung text for all services, legal check, then into the CMS.
-- Accounts (see `docs/gtm-setup.md`), GTM import tested in Tag Assistant.
+- Connect the existing accounts of today's beer.de about a month before launch (see `docs/gtm-setup.md`), GTM import tested in Tag Assistant.
 - Phase 2: server GTM on Coolify; n8n Meta CAPI dry-run node removed; offline
   conversions from signed orders.

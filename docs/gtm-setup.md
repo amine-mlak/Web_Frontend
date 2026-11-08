@@ -10,6 +10,16 @@ in GTM's preview before publishing.
 
 ## 1. Accounts (Christian, as owner)
 
+**Status 2026-11-08:** GA4, Google Ads, Meta and the other platforms already run on today's
+beer.de (the Shopify shop). We connect them here about a month before launch. **Reuse
+those accounts, don't create new ones**: the same GA4 property, the same Google Ads
+conversion actions (or new ones in the same account) and the same Meta pixel keep the
+history and the audiences, so bidding doesn't start from zero. If today's site already
+has a GTM container, create a **new** container for the new site and import ours there;
+switch on launch day, when the domain moves.
+
+The table below is for anything that is still missing.
+
 | Platform | Create | What we need from it |
 |---|---|---|
 | Google Tag Manager | tagmanager.google.com → account "BEER Küchen", container "beer.de", type **Web** | Container ID `GTM-…` |
