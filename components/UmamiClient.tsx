@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { subscribeConsent } from "@/lib/consent-state";
 
 function injectScript(src: string, websiteId: string, domains?: string) {
   if (document.querySelector(`script[src="${src}"]`)) {
@@ -30,10 +31,15 @@ export default function UmamiClient({
 }) {
   useEffect(() => {
     injectScript(src, websiteId, domains);
-    if (recorderSrc) {
-      injectScript(recorderSrc, websiteId, domains);
-    }
-  }, [src, recorderSrc, websiteId, domains]);
+  }, [src, websiteId, domains]);
+
+  // The recorder (clicks and scrolling) needs Statistik consent; a withdrawal reloads the page.
+  useEffect(() => {
+    if (!recorderSrc) return;
+    return subscribeConsent((consent) => {
+      if (consent.analytics) injectScript(recorderSrc, websiteId, domains);
+    });
+  }, [recorderSrc, websiteId, domains]);
 
   return null;
 }

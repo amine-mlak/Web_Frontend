@@ -22,8 +22,9 @@ Claude does not copy keys or passwords between systems, so these need a person.
 - [ ] **Where leads and applications go**: planner leads ("Lead demo (dry-run)") and applications
       ("BEER Bewerbungen", switched off) reach nobody. Decide on a recipient (mail to whom, CRM?) and
       add the mail login.
-- [ ] **Tracking accounts**: Christian creates GTM (web + server), Stape and the consent tool
-      (Usercentrics or Cookiebot). See `docs/tracking-and-consent.md`.
+- [ ] **Tracking accounts** (decided 2026-11-08: own banner + GTM, browser first): Christian creates
+      GTM (web), GA4, Google Ads and the ad platforms he will use (Meta, Pinterest, Microsoft, TikTok,
+      LinkedIn). Steps and what to send us: `docs/gtm-setup.md`.
 - [ ] **Canonical domain and contact email** (`www.beer.de`? `info@beer.de`?), so they can be set
       in the CMS site settings.
 - [ ] **Datenschutz**: add a newsletter section (double opt-in, what is stored, how to unsubscribe).
@@ -96,9 +97,11 @@ Never publish the 6 sample project drafts (invented places and years).
 ## 4. Before beer.de points at the new site
 
 - [ ] Production app in Coolify from `main`, tested on a temporary address. Today only staging exists.
-- [ ] Consent banner and tracking built (the footer link "Cookie-Einstellungen" only opens
-      `/datenschutz` so far). Also: click IDs are stored before consent (`lib/conversion.ts`), and the
-      Umami session recorder runs without it.
+- [x] Consent banner and tracking built on `cms-central` (2026-11-08): own banner, GTM only after a yes,
+      click IDs and the Umami recorder only with consent, footer link opens the settings. See
+      `docs/tracking-and-consent.md`.
+- [ ] Tracking still open: n8n workflow "Consent log", the Datenschutz text for all tracking services
+      (legal check, then CMS), GTM IDs in Coolify, GTM container imported and tested in Tag Assistant.
 - [ ] Spam protection on the forms, and keys rotated.
 - [ ] Links in newsletter mails point to `www.beer.de/impressum` and `/datenschutz`: check that they
       work after the switch.

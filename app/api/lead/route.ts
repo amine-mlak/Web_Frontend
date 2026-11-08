@@ -126,6 +126,8 @@ export async function POST(request: Request) {
     landing_url: valid.lead.landingUrl,
     click_ids: valid.lead.clickIds,
     utm: valid.lead.utm,
+    // The visitor's banner choice; any later server-side send to an ad platform must respect it.
+    consent: valid.lead.consent,
     user: {
       name: valid.lead.name,
       email: valid.lead.email,

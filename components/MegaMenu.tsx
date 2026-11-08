@@ -17,7 +17,7 @@ import {
   NavigationMenuViewport,
   NavigationMenuIndicator,
 } from "@/components/ui/navigation-menu";
-import { trackEvent } from "@/lib/umami";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { chromeCopy } from "@/lib/i18n";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
@@ -102,7 +102,7 @@ export default function MegaMenu({
     setMenuValue(next);
     setDropdownOpen(true);
     setMenuOpen(true);
-    trackEvent("menu_open", { panel: next, placement: "desktop" });
+    track("menu_open", { panel: next, placement: "desktop" });
   }, []);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function MegaMenu({
     window.clearTimeout(closeMobileTimer.current);
     setMobileOpen(true);
     setMobileVisible(true);
-    trackEvent("menu_open", { placement: "mobile" });
+    track("menu_open", { placement: "mobile" });
   }, []);
 
   const closeMobile = useCallback(() => {

@@ -53,16 +53,51 @@ function originOf(raw: string | undefined) {
 }
 
 // Report-only until a browser check shows nothing needed is refused; then it can be enforced.
+// Hosts GTM loads after consent: Google (GA4, Ads), Meta, Pinterest, Microsoft UET,
+// TikTok, LinkedIn. See docs/tracking-and-consent.md.
+const TAG_SCRIPT_HOSTS = [
+  "https://www.googletagmanager.com",
+  "https://*.googletagmanager.com",
+  "https://www.google-analytics.com",
+  "https://*.googleadservices.com",
+  "https://googleads.g.doubleclick.net",
+  "https://www.google.com",
+  "https://connect.facebook.net",
+  "https://s.pinimg.com",
+  "https://bat.bing.com",
+  "https://analytics.tiktok.com",
+  "https://snap.licdn.com",
+];
+const TAG_CONNECT_HOSTS = [
+  "https://*.google-analytics.com",
+  "https://*.analytics.google.com",
+  "https://*.googletagmanager.com",
+  "https://*.g.doubleclick.net",
+  "https://www.google.com",
+  "https://*.googleadservices.com",
+  "https://www.facebook.com",
+  "https://connect.facebook.net",
+  "https://ct.pinterest.com",
+  "https://bat.bing.com",
+  "https://*.tiktok.com",
+  "https://px.ads.linkedin.com",
+];
+const TAG_IMG_HOSTS = [...TAG_CONNECT_HOSTS, "https://www.google.de", "https://*.linkedin.com"];
+const TAG_FRAME_HOSTS = ["https://www.googletagmanager.com", "https://td.doubleclick.net", "https://*.doubleclick.net"];
+
 function contentSecurityPolicyReport() {
   const strapi = originOf(strapiUrl);
   const umami = originOf(process.env.NEXT_PUBLIC_UMAMI_URL);
+  // Phase 2: GTM and its hits from our own server-side container (sgtm.beer.de).
+  const sgtm = originOf(process.env.NEXT_PUBLIC_GTM_SERVER_URL);
   return [
     "default-src 'self'",
-    `img-src 'self' data: blob: ${strapi}`,
-    `script-src 'self' 'unsafe-inline' ${umami}`,
+    `img-src 'self' data: blob: ${strapi} ${TAG_IMG_HOSTS.join(" ")} ${sgtm}`,
+    `script-src 'self' 'unsafe-inline' ${umami} ${TAG_SCRIPT_HOSTS.join(" ")} ${sgtm}`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self' data:",
-    `connect-src 'self' ${umami}`,
+    `connect-src 'self' ${umami} ${TAG_CONNECT_HOSTS.join(" ")} ${sgtm}`,
+    `frame-src 'self' ${TAG_FRAME_HOSTS.join(" ")}`,
     "base-uri 'self'",
     "form-action 'self'",
     "object-src 'none'",

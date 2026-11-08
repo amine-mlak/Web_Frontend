@@ -416,3 +416,70 @@ body {
 :is(.font-serif, .type-h1, .type-h2, .type-h3, .type-panel, .type-quote) {
   font-size-adjust: cap-height 0.72;
 }
+
+/* Cookie banner (vanilla-cookieconsent, components/ConsentBanner.tsx) in the site's colours.
+   Outside the layers so it wins over the library's own stylesheet. Both buttons look the
+   same on purpose: "Alle ablehnen" must be as easy as "Alle akzeptieren". */
+html #cc-main {
+  --cc-font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --cc-modal-border-radius: 2px;
+  --cc-btn-border-radius: 0;
+  --cc-z-index: 2147483000;
+  --cc-bg: #fdfcfa;
+  --cc-primary-color: #141414;
+  --cc-secondary-color: #4a4a46;
+  --cc-link-color: #8a6437;
+  --cc-btn-primary-bg: #141414;
+  --cc-btn-primary-color: #fdfcfa;
+  --cc-btn-primary-border-color: #141414;
+  --cc-btn-primary-hover-bg: #3b322a;
+  --cc-btn-primary-hover-color: #fdfcfa;
+  --cc-btn-primary-hover-border-color: #3b322a;
+  --cc-btn-secondary-bg: #141414;
+  --cc-btn-secondary-color: #fdfcfa;
+  --cc-btn-secondary-border-color: #141414;
+  --cc-btn-secondary-hover-bg: #3b322a;
+  --cc-btn-secondary-hover-color: #fdfcfa;
+  --cc-btn-secondary-hover-border-color: #3b322a;
+  --cc-separator-border-color: #e5e1da;
+  --cc-toggle-on-bg: #a17a4a;
+  --cc-toggle-off-bg: #8f8a82;
+  --cc-toggle-on-knob-bg: #fdfcfa;
+  --cc-toggle-off-knob-bg: #fdfcfa;
+  --cc-toggle-enabled-icon-color: #fdfcfa;
+  --cc-toggle-disabled-icon-color: #fdfcfa;
+  --cc-toggle-readonly-bg: #e5e1da;
+  --cc-toggle-readonly-knob-bg: #fdfcfa;
+  --cc-toggle-readonly-knob-icon-color: #e5e1da;
+  --cc-section-category-border: #e5e1da;
+  --cc-cookie-category-block-bg: #f7f5f1;
+  --cc-cookie-category-block-border: #e5e1da;
+  --cc-cookie-category-block-hover-bg: #f0e8dc;
+  --cc-cookie-category-block-hover-border: #e5e1da;
+  --cc-cookie-category-expanded-block-bg: #fdfcfa;
+  --cc-cookie-category-expanded-block-hover-bg: #f7f5f1;
+  --cc-overlay-bg: rgba(19, 19, 17, 0.55);
+  --cc-footer-bg: #f7f5f1;
+  --cc-footer-color: #4a4a46;
+  --cc-footer-border-color: #e5e1da;
+}
+
+html #cc-main .cm__title,
+html #cc-main .pm__title {
+  font-family: var(--font-cormorant), ui-serif, Georgia, serif;
+  font-size-adjust: cap-height 0.72;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+html #cc-main .cm__btn,
+html #cc-main .pm__btn {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+html #cc-main button:focus-visible,
+html #cc-main a:focus-visible {
+  outline: 2px solid #a17a4a;
+  outline-offset: 2px;
+}

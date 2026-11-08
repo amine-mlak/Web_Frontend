@@ -26,6 +26,8 @@ export type ClickIds = {
   ttclid?: string;
   li_fat_id?: string;
   msclkid?: string;
+  /** Pinterest */
+  epik?: string;
   twclid?: string;
   rdt_cid?: string;
 };
@@ -47,6 +49,8 @@ export type LeadBody = {
   landing_url?: string;
   click_ids?: ClickIds;
   utm?: Record<string, string>;
+  /** The banner choice at the moment of sending (lib/consent-state.ts). */
+  tracking_consent?: { analytics?: unknown; marketing?: unknown };
   /** Ticked "newsletter" box: the address also gets the newsletter confirmation mail. */
   newsletter?: unknown;
   locale?: unknown;
@@ -262,6 +266,10 @@ export function validateLead(body: LeadBody, planner: PlannerContent) {
   const landingUrl = trim(body.landing_url, 500);
   const clickIds = sanitizeClickIds(body.click_ids);
   const utm = sanitizeUtm(body.utm);
+  const consent = {
+    analytics: body.tracking_consent?.analytics === true,
+    marketing: body.tracking_consent?.marketing === true,
+  };
   const details = readPlannerAnswers(body, planner);
   const message = composePlannerMessage({ ...details, message: fields.message }, planner);
 
@@ -276,8 +284,10 @@ export function validateLead(body: LeadBody, planner: PlannerContent) {
       eventId: eventId || undefined,
       eventSourceUrl: eventSourceUrl || undefined,
       landingUrl: landingUrl || undefined,
-      clickIds,
+      // Without Marketing consent the click IDs are not used, even if a client sent some.
+      clickIds: consent.marketing ? clickIds : {},
       utm,
+      consent,
     },
   };
 }
@@ -296,6 +306,7 @@ function sanitizeClickIds(value: LeadBody["click_ids"]) {
     "ttclid",
     "li_fat_id",
     "msclkid",
+    "epik",
     "twclid",
     "rdt_cid",
   ];

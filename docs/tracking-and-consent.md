@@ -1,101 +1,83 @@
-# Cookies, consent and tracking (GA4, Google Ads, Meta)
+# Cookies, consent and tracking
 
-Plan for staging.beer.de → beer.de, for about €3,000/month of ads (€36k/year).
-Goal: the most measurable conversions for Google and Meta to optimise on, with the
-least custom code to maintain. Nothing here is live yet. Not legal advice: banner
-texts and the Datenschutzerklärung need a legal check.
+For staging.beer.de → beer.de, about €3,000/month of ads. Not legal advice: the
+banner texts (`lib/consent-copy.ts`) and the Datenschutzerklärung need a legal check.
+Account setup and the GTM container: `docs/gtm-setup.md`.
 
-## Decision
+## Decision (2026-11-08, replaces the 26 Oct choice of a paid consent tool + Stape)
 
-**Consent tool (CMP) + Google Tag Manager in the browser + server-side GTM on Stape
-(EU) at our own subdomain. The site only pushes clean events to the `dataLayer`.**
+Package C from `docs/tracking-options.html`, browser first:
 
-| Layer | What | Who maintains it |
+| Layer | What | Status |
 |---|---|---|
-| Consent | Usercentrics or Cookiebot (Google-certified, Consent Mode v2 built in, cookie scanner, consent log, texts kept legally current) | The vendor; we only style it |
-| Browser | Web GTM container: GA4 tag, Meta Pixel, Conversion Linker, all behind consent | Marketing / agency in the GTM web UI |
-| Server | Server GTM container on Stape, at `sgtm.beer.de`: GA4, Google Ads conversions + enhanced conversions, Meta Conversions API | Stape hosts and updates; tag templates maintained by Google/Stape |
-| Site code | `dataLayer.push()` for each event (with `event_id`), consent defaults, CMP + GTM snippet | Us; changes only when a new kind of event is needed |
-| n8n | Lead to e-mail/CRM; later the signed order → sGTM webhook (offline conversion) | Us; one HTTP call, no ad-platform APIs |
-| Umami | Cookieless internal stats, stays as is (session recorder only with consent, or off) | Us |
+| Banner | Open source, in our code: vanilla-cookieconsent 3.1.0 (MIT). Categories Notwendig / Statistik / Marketing, "Alle ablehnen" next to "Alle akzeptieren" with the same weight, DE/EN | built |
+| Consent log | `/api/consent` → n8n "Consent log" (data table). No IP, no user agent | site built; n8n workflow open, until then the server log |
+| Consent Mode v2 | **basic**: defaults all denied; GTM itself loads only after a "yes" to Statistik or Marketing (VG Hannover 2025: GTM needs consent under § 25 TDDDG) | built |
+| Tag manager | Google Tag Manager, web container as import file (`gtm/web-container.json`) | built, waits for accounts |
+| Platforms | GA4, Google Ads (+ enhanced conversions), Meta, Pinterest, Microsoft Ads, TikTok, LinkedIn. A platform stays paused until its ID is set | prepared |
+| Umami | Cookieless counting stays without consent; the session recorder only with Statistik | built |
+| Server-side | Phase 2: own server GTM on Coolify at `sgtm.beer.de`; no site change needed (`event_id` is already on every lead) | later |
 
-### Why this is the best fit for €3k/month with low maintenance
+Why browser first: server tracking recovers roughly 10–30% of conversions lost to
+Safari and ad blockers, but it does not help with people who say no, and a
+self-hosted server that goes down silently drops conversions. The banner, clean
+events and enhanced conversions come first; later, signed orders from the CRM as
+offline conversions have the biggest effect on bidding.
 
-- **Server-side events recover what the browser loses.** Safari limits cookies to 7
-  days or less, and ad blockers stop the Pixel and gtag. The server container sends
-  conversions to Google and Meta from `sgtm.beer.de` (first-party), so more of the
-  leads Christian pays for get credited, and the bidding learns from them. How much
-  more varies by audience; it is mostly the Safari/iPhone share.
-- **No custom ad-platform code.** Google Ads and Meta change their APIs regularly
-  (Google Ads API versions are retired about yearly). With sGTM those integrations
-  are vendor templates, not our code in n8n. That is why the n8n Meta CAPI node
-  (dry-run) is replaced, not finished.
-- **The agency (or whoever runs the ads) works in GTM**, without a developer and
-  without a deploy. The site only changes when a new event is needed.
-- **A paid CMP is worth it at this spend.** It costs a small monthly fee (check
-  current plans; a site this size is on a lower tier) and removes the risk that a
-  tag added in GTM is not covered by the banner: the scanner finds it. Its Consent
-  Mode v2 integration is what Google Ads needs in the EEA. Rejecting must be as easy
-  as accepting ("Alle ablehnen" on the first layer).
-- **Costs stay small against the ad budget:** Stape (a paid plan, about the price of
-  a few clicks) + CMP fee, together a small single-digit share of €3,000/month.
+Why basic, not advanced: Google's conversion modelling for rejected visitors needs
+about 700 ad clicks a week; €3,000/month is well below that. Switching later is a
+GTM setting, no code change.
 
-### What it does not change
+## How it works on the site
 
-Consent still decides. Without "Marketing" consent nothing goes to Google Ads or
-Meta, server-side included. Consent Mode **basic** (nothing loads before consent) is
-the safe start in Germany; **advanced** (cookieless pings, Google models the gaps)
-gives Google better bidding data but needs the lawyer's yes.
+- `components/TagManager.tsx`: consent defaults (inline, first in `<body>`); loads
+  `gtm.js` via `components/TagManagerClient.tsx` after a "yes". Nothing renders
+  without `NEXT_PUBLIC_GTM_ID`. Client-side navigation pushes `page_view_spa`.
+- `components/ConsentBanner.tsx`: the banner; `gtag('consent','update', …)` on every
+  answer; withdrawing a category deletes its cookies and reloads the page. Raise
+  `CONSENT_REVISION` when services change, so everyone is asked again.
+- `lib/consent-state.ts`: the current answer for the rest of the code
+  (`hasConsent`, `subscribeConsent`).
+- `lib/analytics.ts`: `track(event, params)` → Umami + dataLayer.
+- `components/LinkTracking.tsx`: phone/e-mail/route/social link clicks → dataLayer.
+- `lib/conversion.ts`: click IDs and UTMs stay in memory; saved to sessionStorage and
+  sent with a lead only with Marketing consent. UTMs (not personal) always go with
+  the lead. `/api/lead` passes `consent: {analytics, marketing}` on to n8n.
+- Footer "Cookie-Einstellungen" (from the CMS or the fallback, matched by the word
+  "cookie") is a button that opens the settings.
 
 ## Events (site → dataLayer)
 
-Every event carries `event_id`; the same id goes to the Pixel and to the server so
-Meta and Google count it once.
+| Moment | Event | GA4 | Google Ads | Meta | Pinterest | Microsoft | TikTok | LinkedIn |
+|---|---|---|---|---|---|---|---|---|
+| Planner funnel | `form_view/start/step/attempt/error/submit` | funnel | – | – | – | – | – | – |
+| Planner sent (the lead) | `generate_lead` + `event_id`, `value`, `user_data` (hashes only, Marketing only) | `generate_lead` | primary conversion + enhanced conversions | `Lead` | `lead` | `submit_lead_form` | `SubmitForm` | conversion |
+| Phone / e-mail click | `contact` (`method`, `placement`) | `contact` | secondary (phone) | `Contact` | – | `contact` | `Contact` | – |
+| Route | `get_directions` | `get_directions` | secondary | `FindLocation` | – | – | – | – |
+| Social link | `social_click` (`network`) | `social_click` | – | – | – | – | – | – |
+| Navigation | `page_view_spa` | (enhanced measurement) | remarketing | `PageView` | `page` | (auto) | `page` | (auto) |
+| Later: appointment, signed order | n8n → sGTM webhook (phase 2) | | offline conversion | `Schedule` / `Purchase` | | | | |
 
-| Moment | dataLayer event | GA4 | Google Ads | Meta |
-|---|---|---|---|---|
-| Planner opened / step / error | `form_start`, `form_step`, `form_error` | funnel | – | – |
-| Planner sent (the lead) | `generate_lead` + `user_data` (e-mail, phone; hashed in sGTM) | `generate_lead` | primary conversion + enhanced conversions | `Lead` (Pixel + CAPI) |
-| Phone / e-mail click | `contact` (`method`) | `contact` | secondary conversion | `Contact` |
-| "Route planen" | `get_directions` | `get_directions` | secondary | `FindLocation` |
-| Appointment booked (Bookings via n8n, later) | n8n → sGTM webhook `book_appointment` | via sGTM | conversion | `Schedule` |
-| Signed order (later, from CRM/n8n) | n8n → sGTM webhook `purchase` (value) | – | offline conversion "Auftrag" | `Purchase` |
+`user_data` = `sha256_email_address`, `sha256_phone_number` (E.164, +49 default),
+`address.postal_code`, `address.country` (`lib/hash.ts`). The raw e-mail and phone
+never enter the dataLayer.
 
-The last row is the biggest lever for the budget: the platforms then optimise for
-people who buy a kitchen, not for whoever fills in a form.
+## Env
 
-Umami keeps its own events (`form_*`, `tel_click`, `cta_*`) for the internal
-dashboard; `lib/analytics.ts` sends each event to both.
+| Variable | Where | Example |
+|---|---|---|
+| `NEXT_PUBLIC_GTM_ID` | staging + production | `GTM-ABC1234` |
+| `NEXT_PUBLIC_GTM_AUTH`, `NEXT_PUBLIC_GTM_PREVIEW` | staging only (GTM environment) | from GTM → Environments |
+| `NEXT_PUBLIC_GTM_SERVER_URL` | phase 2 | `https://sgtm.beer.de` |
+| `NEXT_PUBLIC_LEAD_VALUE` | optional | `150` (EUR per lead, for value bidding) |
+| `N8N_CONSENT_WEBHOOK_URL` | optional; default `/webhook/beer-consent/log` on the lead webhook's host | |
 
-## To build
+`NEXT_PUBLIC_` values are read at build time: change them, then redeploy.
 
-Site (us):
-1. `lib/analytics.ts`: `track(event, params)` → Umami + `dataLayer`; replace the
-   direct Umami calls. Lead submit pushes `generate_lead` with `event_id` and
-   `user_data` only after marketing consent.
-2. Consent defaults (all denied) + CMP script + GTM snippet in the root layout,
-   loaded from `sgtm.beer.de` (first-party loader). IDs from env.
-3. `captureClickIds()` only after marketing consent (§ 25 TDDDG); the lead record
-   keeps click IDs/UTMs for attribution in the CRM.
-4. `/api/lead` passes the consent state to n8n; footer link "Cookie-Einstellungen".
-5. Umami recorder only with statistics consent, or off.
+## Still open
 
-GTM (us, once; then marketing): web and server containers as importable JSON
-(GA4, Google Ads conversion + enhanced conversions + remarketing, Meta Pixel + CAPI
-with dedup, Conversion Linker, consent checks).
-
-n8n (later): signed order / booked appointment → sGTM webhook.
-
-Datenschutz: list CMP, GTM, Stape (processor, EU), GA4, Google Ads, Meta, Umami;
-purposes, legal basis, storage times, US transfer basis (EU-US Data Privacy
-Framework).
-
-## Needed from BEER (accounts only the owner can create)
-
-- Google Tag Manager account with a web and a server container.
-- Stape account (EU region), DNS record `sgtm.beer.de` → Stape.
-- CMP account (Usercentrics or Cookiebot) for beer.de + staging.
-- GA4 property, Google Ads conversion actions, Meta Pixel/dataset + CAPI token
-  (the token goes into the server container, never into git).
-- Data processing terms accepted in Google, Meta, Stape and the CMP.
-- Access for whoever manages the ads (agency or in-house).
+- n8n workflow "Consent log" (data table) and its deploy (needs a yes).
+- Datenschutzerklärung text for all services, legal check, then into the CMS.
+- Accounts (see `docs/gtm-setup.md`), GTM import tested in Tag Assistant.
+- Phase 2: server GTM on Coolify; n8n Meta CAPI dry-run node removed; offline
+  conversions from signed orders.

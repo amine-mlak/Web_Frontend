@@ -26,14 +26,7 @@ export default function Umami() {
         data-website-id={websiteId}
         {...(domains ? { "data-domains": domains } : {})}
       />
-      {recorderSrc ? (
-        <script
-          defer
-          src={recorderSrc}
-          data-website-id={websiteId}
-          {...(domains ? { "data-domains": domains } : {})}
-        />
-      ) : null}
+      {/* The session recorder is added by UmamiClient, only after Statistik consent. */}
       <UmamiClient
         src={src}
         recorderSrc={recorderSrc ?? undefined}

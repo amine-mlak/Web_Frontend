@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Figtree } from "next/font/google";
 import { notFound } from "next/navigation";
 import ClickIds from "@/components/ClickIds";
+import ConsentBanner from "@/components/ConsentBanner";
+import LinkTracking from "@/components/LinkTracking";
+import TagManager from "@/components/TagManager";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
 import Umami from "@/components/Umami";
@@ -82,9 +85,13 @@ export default async function RootLayout({
         className={`${figtree.className} antialiased`}
         suppressHydrationWarning
       >
+        {/* Consent Mode defaults first, before anything can push to the dataLayer. */}
+        <TagManager />
         <LocaleProvider locale={locale}>
           <SmoothScroll />
+          <ConsentBanner />
           <ClickIds />
+          <LinkTracking />
           <Umami />
           {children}
         </LocaleProvider>

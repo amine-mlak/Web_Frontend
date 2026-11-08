@@ -1,0 +1,228 @@
+<title>BEER Tracking Options</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: one reading column, wide tables scroll in their own box; packages as a 3-up grid that stacks on phones */
+:root{
+  --bg:#f6f7f6; --surface:#ffffff; --fg:#1b2420; --muted:#5b6862; --line:#d9dfdb;
+  --accent:#1f6b52; --accent-soft:#e3f0ea; --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#a3322b;
+  --display:"Newsreader",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121715; --surface:#1a211e; --fg:#e4ebe7; --muted:#9aa8a1; --line:#2d3833;
+  --accent:#6cc7a3; --accent-soft:#1d3329; --warn:#f0b65a; --warn-soft:#352a17; --bad:#f08a80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121715; --surface:#1a211e; --fg:#e4ebe7; --muted:#9aa8a1; --line:#2d3833;
+  --accent:#6cc7a3; --accent-soft:#1d3329; --warn:#f0b65a; --warn-soft:#352a17; --bad:#f08a80; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font:600 clamp(30px,5vw,44px)/1.1 var(--display)}
+h2{font:600 26px/1.2 var(--display);margin-bottom:6px}
+h3{font:600 16px/1.3 var(--body)}
+p{margin:0;max-width:68ch}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:17px;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:14px}
+.note{background:var(--warn-soft);color:var(--fg);border-left:3px solid var(--warn);padding:12px 16px;border-radius:4px;max-width:78ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font:500 12px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font:500 11px/1 var(--mono);padding:4px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.tag.os{color:var(--accent);border-color:var(--accent)}
+.tag.paid{color:var(--warn);border-color:var(--warn)}
+.tag.free{color:var(--fg)}
+.pick{color:var(--accent);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.pkg{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pkg.rec{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pkg .cost{font:500 22px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+.pkg ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.pkg dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+.pkg dt{color:var(--muted)}
+.pkg dd{margin:0}
+.badge{align-self:flex-start;font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--bg);padding:5px 8px;border-radius:4px}
+ol.choose{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;max-width:78ch}
+ol.choose li::marker{font-family:var(--mono);color:var(--accent)}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:78ch}
+code{font-family:var(--mono);font-size:13px;background:var(--accent-soft);padding:1px 5px;border-radius:3px}
+.src{font-size:13px;color:var(--muted)}
+.src a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header style="display:flex;flex-direction:column;gap:12px">
+  <div class="eyebrow">beer.de · cookies, analytics, ads · 7 Nov 2026</div>
+  <h1>Tracking and consent: what to choose</h1>
+  <p class="lead">Options for each part of the setup, open source, self-hosted and paid, with three ready packages. Pick one package, or one option per part, and we build it. Prices are approximate from vendor and comparison sites; check the vendor's pricing page before signing up.</p>
+  <p class="note"><strong>Where we are.</strong> On 26 Oct we chose package A below (paid consent tool + Google Tag Manager + server tracking on Stape). Nothing is built yet: it waits for Christian's accounts. Today the site has Umami (cookieless), but click IDs are saved before consent and the Umami session recorder runs without consent. Both must be fixed before beer.de goes live, whatever you choose.</p>
+</header>
+
+<section>
+  <div class="eyebrow">Rules that apply to every option</div>
+  <h2>What the law and Google require</h2>
+  <ul class="plain">
+    <li><strong>§ 25 TDDDG + DSGVO:</strong> no tracking cookies, pixels or click-ID storage before the visitor says yes. "Alle ablehnen" must be on the first layer, as easy as "Alle akzeptieren".</li>
+    <li><strong>Google Consent Mode v2:</strong> Google Ads needs it in the EU for conversions, remarketing and audiences. Every banner option below can send it.</li>
+    <li><strong>Proof of consent:</strong> we must be able to show what a visitor agreed to (consent log). Paid tools do this for us; with open source we keep the log ourselves.</li>
+    <li><strong>Datenschutzerklärung:</strong> every tool goes in with purpose, legal basis, storage time, and the US transfer basis (EU-US Data Privacy Framework). This needs a legal check in every package.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Part 1</div>
+  <h2>Cookie banner (consent tool)</h2>
+  <p>Asks the visitor, stores the answer, tells Google Tag Manager what is allowed. The paid tools also scan the site for new cookies and keep the banner texts legally current.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Option</th><th>Type</th><th>Cost / month</th><th>Cookie scanner + consent log</th><th>Good for us because</th><th>Watch out</th></tr></thead>
+    <tbody>
+      <tr><td>CookieConsent v3 (orestbida)</td><td><span class="tag os">open source, MIT</span></td><td class="num">€0</td><td>No / we build the log</td><td>Light, looks like our site, fully in our code, Consent Mode v2 via a few lines</td><td>We write and update the texts and cookie list ourselves; every new tag in GTM needs a code change</td></tr>
+      <tr><td>Klaro</td><td><span class="tag os">open source</span> or hosted</td><td class="num">€0 / hosted paid</td><td>Hosted version only</td><td>Made in Germany, official Consent Mode v2 support</td><td>Same upkeep as above when self-hosted</td></tr>
+      <tr><td>CCM19</td><td><span class="tag paid">paid, German</span></td><td class="num">~€8–20</td><td>Yes / yes</td><td>Hosted in Germany, cheap, scanner, German legal texts; also sold as a version we install on our own server</td><td>Check Google CMP certification for the plan we take</td></tr>
+      <tr><td>Cookiebot</td><td><span class="tag paid">paid</span></td><td class="num">~€15–50</td><td>Yes / yes</td><td>Google-certified, simple, widely used</td><td>Priced by number of pages; with blog, projects and regions we are likely on a higher tier</td></tr>
+      <tr><td>Usercentrics</td><td><span class="tag paid">paid</span></td><td class="num">~€50+</td><td>Yes / yes</td><td>Google-certified, strongest legal coverage</td><td>Priced by sessions, upgrades itself when traffic grows; more than we need</td></tr>
+      <tr><td>consentmanager</td><td><span class="tag paid">paid</span></td><td class="num">€0–23+</td><td>Yes / yes</td><td>Free tier for very small traffic</td><td>Free tier is far below our expected traffic</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Part 2</div>
+  <h2>Analytics (who visits, what they do)</h2>
+  <p>Two jobs: our own numbers (visitors, pages, form funnel) and the data Google Ads needs to bid well. GA4 does the second; the others are for us.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Option</th><th>Type</th><th>Cost / month</th><th>Needs consent</th><th>Good for us because</th><th>Watch out</th></tr></thead>
+    <tbody>
+      <tr><td>Umami (have it)</td><td><span class="tag os">open source, self-hosted</span></td><td class="num">€0</td><td>No (cookieless); recorder yes</td><td>Already running, simple dashboard, form events already sent</td><td>No ad audiences, no link to Google Ads</td></tr>
+      <tr><td>Matomo</td><td><span class="tag os">open source, self-hosted</span></td><td class="num">€0 + server</td><td>Cookieless mode: usually no; full mode: yes</td><td>GA-like reports, goals, funnels, heatmaps (paid plugin); data stays on our Coolify server</td><td>Heavier than Umami (database, updates, archiving jobs); doubles what Umami does</td></tr>
+      <tr><td>Google Analytics 4</td><td><span class="tag free">free, Google</span></td><td class="num">€0</td><td>Yes</td><td>Feeds Google Ads (conversions, audiences, bidding); the agency knows it</td><td>Only counts people who accept; data goes to Google (US, DPF)</td></tr>
+      <tr><td>Plausible CE</td><td><span class="tag os">open source, self-hosted</span></td><td class="num">€0 + server</td><td>No</td><td>Very clean, cookieless</td><td>Same role as Umami, no reason to switch</td></tr>
+      <tr><td>PostHog</td><td><span class="tag os">open source</span> / EU cloud</td><td class="num">€0 at low volume</td><td>Yes (replays)</td><td>Session replays and funnels for the kitchen planner</td><td>Large to self-host; only if we want replays beyond Umami's recorder</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Part 3</div>
+  <h2>Tag manager and server tracking</h2>
+  <p>Google Tag Manager (free) loads all tags behind consent, so the agency can add or change ads tags without a developer. A server container sends conversions from our own subdomain (<code>sgtm.beer.de</code>), so fewer leads get lost to Safari limits and ad blockers. Consent still decides: without "Marketing" nothing is sent.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Option</th><th>Type</th><th>Cost / month</th><th>Who runs it</th><th>Good for us because</th><th>Watch out</th></tr></thead>
+    <tbody>
+      <tr><td>Web GTM only</td><td><span class="tag free">free, Google</span></td><td class="num">€0</td><td>Google</td><td>Simplest start</td><td>Loses the conversions blocked in the browser; Meta and Google learn from fewer leads</td></tr>
+      <tr><td>Server GTM on Stape (EU)</td><td><span class="tag paid">paid hosting</span></td><td class="num">~€20–100</td><td>Stape</td><td>Ready templates for Google Ads, Meta, Pinterest, TikTok, LinkedIn, Microsoft; Stape keeps it running and updated</td><td>Price grows with requests; one more processor in the Datenschutz text</td></tr>
+      <tr><td>Server GTM self-hosted on Coolify</td><td><span class="tag os">Google's free image, our server</span></td><td class="num">€0 + server</td><td>Us</td><td>Same templates as Stape, data on our server, no hosting fee</td><td>Two containers to run, monitor and update; when it is down, no conversions reach the ad platforms. Adds to the Coolify work we already have</td></tr>
+      <tr><td>RudderStack / Jitsu</td><td><span class="tag os">open source</span></td><td class="num">€0 + server</td><td>Us</td><td>No Google tool in the middle</td><td>Much more setup; agencies don't know it; not worth it at our size</td></tr>
+      <tr><td>Direct code in the site / n8n</td><td>custom</td><td class="num">€0</td><td>Us</td><td>Nothing extra to host</td><td>Every ad platform API change breaks our code; the agency can't change anything alone. Not recommended</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Part 4</div>
+  <h2>Ad and social platforms</h2>
+  <p>Each platform has a browser tag (behind consent) and a server API. With server GTM both send the same <code>event_id</code>, so a lead is counted once. Adding a platform later is a GTM change, not a site change.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Platform</th><th>Covers</th><th>Browser + server</th><th>Fit for a kitchen studio</th><th>Suggestion</th></tr></thead>
+    <tbody>
+      <tr><td>Google Ads</td><td>Search, YouTube, Maps, Display</td><td>Google tag + enhanced conversions</td><td>People searching "Küchenstudio in der Nähe"; highest intent</td><td class="pick">Start</td></tr>
+      <tr><td>Meta</td><td>Facebook, Instagram</td><td>Pixel + Conversions API</td><td>Visual kitchens, local audiences, retargeting planner visitors</td><td class="pick">Start</td></tr>
+      <tr><td>Pinterest</td><td>Pinterest</td><td>Pinterest tag + Conversions API</td><td>People collect kitchen ideas here months before buying</td><td class="pick">Strong second</td></tr>
+      <tr><td>Microsoft Ads</td><td>Bing, Edge, partner sites</td><td>UET tag + Conversions API</td><td>Older, higher-income searchers, cheaper clicks; can import Google campaigns</td><td>Optional, cheap test</td></tr>
+      <tr><td>TikTok</td><td>TikTok</td><td>TikTok pixel + Events API</td><td>Younger audience, fewer kitchen buyers; good for jobs/apprentices</td><td>Later, only if there is video content</td></tr>
+      <tr><td>LinkedIn</td><td>LinkedIn</td><td>Insight tag + Conversions API</td><td>B2B (architects, property developers) and job ads</td><td>Only for B2B or recruiting</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Ready packages</div>
+  <h2>Three ways to put it together</h2>
+  <div class="grid">
+    <article class="pkg">
+      <h3>A · Fully managed</h3>
+      <div class="cost">~€70–150<span style="font-size:13px;color:var(--muted)"> / month</span></div>
+      <ul>
+        <li>Cookiebot or Usercentrics</li>
+        <li>Web GTM + server GTM on Stape</li>
+        <li>GA4 + Umami</li>
+        <li>Google Ads, Meta (+ Pinterest later)</li>
+      </ul>
+      <dl><dt>Our upkeep</dt><dd>Lowest</dd><dt>Legal risk</dt><dd>Lowest</dd><dt>Data</dt><dd>Vendors in EU, Google/Meta in US</dd></dl>
+      <p>What we chose on 26 Oct. Safest, but the consent tool is more than this site needs.</p>
+    </article>
+    <article class="pkg rec">
+      <span class="badge">Recommended</span>
+      <h3>B · German consent tool + Stape</h3>
+      <div class="cost">~€30–60<span style="font-size:13px;color:var(--muted)"> / month</span></div>
+      <ul>
+        <li>CCM19 (hosted in Germany)</li>
+        <li>Web GTM + server GTM on Stape</li>
+        <li>GA4 + Umami</li>
+        <li>Google Ads, Meta, Pinterest; Microsoft as a test</li>
+      </ul>
+      <dl><dt>Our upkeep</dt><dd>Low</dd><dt>Legal risk</dt><dd>Low</dd><dt>Data</dt><dd>Consent in Germany, Stape in EU</dd></dl>
+      <p>Same tracking quality as A at about half the cost. Scanner and consent log included. Server stays off our Coolify box.</p>
+    </article>
+    <article class="pkg">
+      <h3>C · Open source, self-hosted</h3>
+      <div class="cost">~€0–10<span style="font-size:13px;color:var(--muted)"> / month + our time</span></div>
+      <ul>
+        <li>CookieConsent v3 in our code</li>
+        <li>Web GTM + server GTM on Coolify</li>
+        <li>Umami (or Matomo) + GA4</li>
+        <li>Same platforms as B</li>
+      </ul>
+      <dl><dt>Our upkeep</dt><dd>Highest</dd><dt>Legal risk</dt><dd>Higher: no scanner, we keep texts and log</dd><dt>Data</dt><dd>On our server</dd></dl>
+      <p>Cheapest in money. Every new tag needs a code change, and a server outage silently drops conversions. Good if budget matters more than time.</p>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Same in every package</div>
+  <h2>What we build on the site</h2>
+  <ul class="plain">
+    <li>One <code>track()</code> function that sends each event to Umami and to the <code>dataLayer</code> (with <code>event_id</code>).</li>
+    <li>Consent defaults "all denied", the banner, and the GTM snippet in the root layout.</li>
+    <li>Click IDs (gclid, fbclid, …) and UTMs saved only after marketing consent; lead records keep them for the CRM.</li>
+    <li>Umami recorder only with statistics consent, or switched off.</li>
+    <li>Footer link "Cookie-Einstellungen" opens the banner again.</li>
+    <li>Events: lead (planner sent), phone/e-mail click, route, appointment booked; later the signed order from n8n as an offline conversion, so the platforms learn from real buyers.</li>
+    <li>GTM containers prepared as importable files, so the agency can take over.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Accounts only BEER can create</div>
+  <h2>Needed from Christian</h2>
+  <ul class="plain">
+    <li>Google Tag Manager account (web container; server container for A/B/C with server tracking).</li>
+    <li>Stape account, EU region (A, B) and a DNS record <code>sgtm.beer.de</code>.</li>
+    <li>Consent tool account for beer.de + staging (A, B).</li>
+    <li>GA4 property, Google Ads conversion actions, Meta Pixel + Conversions API token, and Pinterest/Microsoft accounts if chosen.</li>
+    <li>Data processing terms accepted in each tool; access for whoever runs the ads.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Your choice</div>
+  <h2>Tell us four things</h2>
+  <ol class="choose">
+    <li><strong>Package</strong> A, B or C, or mix (for example B with self-hosted server GTM).</li>
+    <li><strong>Consent mode:</strong> basic (nothing loads before yes, safe start) or advanced (cookieless Google pings before yes, better bidding, needs the lawyer's okay).</li>
+    <li><strong>Platforms at launch:</strong> Google Ads + Meta, plus Pinterest / Microsoft / TikTok / LinkedIn?</li>
+    <li><strong>Analytics:</strong> keep Umami alone next to GA4, or add Matomo?</li>
+  </ol>
+</section>
+
+<p class="src">Price sources (approximate, Nov 2026): <a href="https://consently.net/blog/cookiebot-vs-usercentrics">Cookiebot vs Usercentrics</a>, <a href="https://www.capterra.ie/software/1022220/cookiebot">Cookiebot on Capterra</a>, <a href="https://us.fitgap.com/products/ccm19-cookie-consent-manager">CCM19</a>, <a href="https://www.rfp.wiki/retail-ecommerce/consent-management-platform/cookiebot/consentmanager">consentmanager</a>, <a href="https://stape.io/blog/how-much-does-server-gtm-cost">Stape: server GTM cost</a>, <a href="https://europeanstack.pages.dev/software/stape">Stape EU plans</a>, <a href="https://klaro.org/blog/klaro-and-google-consent-mode-v">Klaro and Consent Mode v2</a>. Not legal advice.</p>
+
+</div>

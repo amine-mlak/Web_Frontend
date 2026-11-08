@@ -7,6 +7,7 @@ import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { fetchFooter } from "@/lib/strapi";
 import { type SocialIcon } from "@/lib/footer";
+import { CONSENT_SETTINGS_ATTR } from "@/lib/consent-state";
 
 const headingClass =
   "font-sans text-[11px] font-medium tracking-[0.22em] text-[#c2a483]";
@@ -16,6 +17,11 @@ const linkClass =
   "inline-flex min-h-7 items-center text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
 
 const shortcutClass = `inline-flex min-h-6 items-center ${headingClass}`;
+
+/** "Cookie-Einstellungen" / "Cookie settings", from the CMS footer or the fallback. */
+function isCookieSettings(link: { href: string; label: string }) {
+  return /cookie/i.test(link.label) || link.href.startsWith("#cookie");
+}
 
 export default async function Footer() {
   const year = new Date().getFullYear();
@@ -98,12 +104,24 @@ export default async function Footer() {
             <ul className="flex flex-wrap gap-x-5 gap-y-2">
               {footer.legal.map((link) => (
                 <li key={link.label}>
-                  <LocaleLink
-                    href={link.href}
-                    className="inline-flex min-h-6 items-center text-[13px] text-[#9c9892] transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </LocaleLink>
+                  {isCookieSettings(link) ? (
+                    // Opens the cookie banner's settings (components/ConsentBanner.tsx).
+                    <button
+                      type="button"
+                      {...{ [CONSENT_SETTINGS_ATTR]: "" }}
+                      aria-haspopup="dialog"
+                      className="inline-flex min-h-6 cursor-pointer items-center text-[13px] text-[#9c9892] transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </button>
+                  ) : (
+                    <LocaleLink
+                      href={link.href}
+                      className="inline-flex min-h-6 items-center text-[13px] text-[#9c9892] transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </LocaleLink>
+                  )}
                 </li>
               ))}
             </ul>
