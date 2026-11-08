@@ -85,8 +85,10 @@ Everything goes in as drafts, and a person publishes.
       on the contact page against Wolfersdorf elsewhere.
 - [ ] **Project pages as stories**: about 190 words on average today. Each project told like an exposé,
       as on the colour pages.
-- [ ] **Photo descriptions**: nearly all 1,462 project photos have poor alt text, some with customer
-      names. "BEER Projekttexte" proposes new ones and a person reviews them. Needs the Strapi token.
+- [x] **Photo descriptions**: all 1,581 images the site uses (1,461 project photos, article covers,
+      appliances, brands, materials, regions, the showroom and Innenleben pages) got an alt text from
+      looking at the photo and a matching file name (2026-11-03). Spot-check a few projects; old values
+      are in `D:\Beer\backups\media-names-alts-before-20261103`. New photos go through "BEER Projekttexte".
 - [ ] **Duplicate short addresses**: `/formen`, `/stile`, `/farben`, `/inseln` and `/innenleben` share
       text with their twins. Nine more still need checking.
 - [ ] **Outdoor projects**: "Terrassenküche mit Eiche und Edelstahl" and "Outdoorküche mit Naturstein"

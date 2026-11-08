@@ -27,6 +27,18 @@ const slugify = (value, max = 60) =>
     .slice(0, max)
     .replace(/-$/, "");
 
+// The media library name of a project photo: project address and description, so a photo
+// can be found by what it shows. Only the name in Strapi changes; the photo's address under
+// /uploads stays the same, so no page breaks.
+const FILLER = new Set("mit und oder in im ins am an auf aus vor zum zur von vom fuer bei unter ueber neben hinter zwischen darunter daneben einem einer eines einen eine ein der die das dem den des".split(" "));
+const photoName = (projectSlug, alt, ext) => {
+  const type = String(ext ?? "").toLowerCase().replace(/^./, "").replace("jpeg", "jpg") || "jpg";
+  const words = slugify(alt, 300).split("-").filter((word) => word && !FILLER.has(word));
+  // Whole words only, up to about 90 characters, so most descriptions fit completely.
+  const kept = words.filter((_, i) => words.slice(0, i + 1).join("-").length <= 90);
+  return `${[slugify(projectSlug, 40), ...kept].filter(Boolean).join("-")}.${type}`;
+};
+
 const UID = {
   projects: "api::project.project",
   articles: "api::article.article",
@@ -62,6 +74,7 @@ const NAV = [
   ["SEO-Prüfung", "/webhook/seo-pruefung"],
   ["SEO-Vorschläge", "/webhook/seo-vorschlaege"],
   ["Projekttexte", "/webhook/beer-texte"],
+  ["Mediathek", "/webhook/beer-mediathek"],
   ["Ratgeber", "/webhook/beer-ratgeber"],
   ["GEO-Monitor", "/webhook/geo-monitor"],
   ["Regionen", "/webhook/beer-regionen"],

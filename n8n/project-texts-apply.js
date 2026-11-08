@@ -1,6 +1,6 @@
 /**
  * n8n Code node "Aktion" (workflow "BEER Projekttexte").
- * Button "Übernehmen": one item per photo description and one for the English draft,
+ * Button "Übernehmen": one item per photo description (alt text and file name) and one for the English draft,
  * routed by "Verteilen" to the two Strapi writes. Button "Verwerfen": marks the proposal.
  * Writes what stands in the form on the review page, so a person's correction wins. An empty
  * field is skipped and the photo keeps its old text; nothing is generated again here.
@@ -24,7 +24,9 @@ for (const photo of Object.values(proposal.alt ?? {})) {
   const text = String(body[`alt_${photo.id}`] ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
   if (!text) continue;
   photo.text = text;
-  items.push({ json: { kind: "alt", documentId: proposal.documentId, id: photo.id, fileInfo: JSON.stringify({ alternativeText: text }) } });
+  // The file name follows the text as saved, so a person's correction renames it too.
+  photo.name = photoName(proposal.slug, text, photo.ext);
+  items.push({ json: { kind: "alt", documentId: proposal.documentId, id: photo.id, fileInfo: JSON.stringify({ alternativeText: text, name: photo.name }) } });
 }
 if (proposal.en) {
   const { title, place, intro, body: text, ueberschrift, lesetext, specs, metaTitle, metaDescription } = proposal.en;

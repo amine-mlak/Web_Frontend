@@ -31,7 +31,8 @@ Start page for the team: **https://n8n.beer.de/webhook/redaktion**
 | **BEER Redaktion** | `/webhook/redaktion` | Start page; collects the errors of all others | – |
 | **BEER SEO-Prüfung** | `/webhook/seo-pruefung` | Report on every German entry: titles, descriptions, duplicates, addresses, images, photo descriptions, town, year, region, topic | – |
 | **BEER SEO-Vorschläge** | `/webhook/seo-vorschlaege` | New meta titles and descriptions for what the check flags, as a Google-style preview, old next to new | SEO block of the draft |
-| **BEER Projekttexte** | `/webhook/beer-texte` | Photo descriptions from Claude (looks at each photo), reviewed, then applied | photo alt texts |
+| **BEER Projekttexte** | `/webhook/beer-texte` | Photo descriptions from Claude (looks at each photo), reviewed, then applied | photo alt texts and file names |
+| **BEER Mediathek** | `/webhook/beer-mediathek` | The same for every photo in the media library with a weak description, also ones no page uses yet (for a later photo search). Every 15 minutes the next batch (15 photos on Kimi, 60 on Claude); clean texts are saved at once, texts with a warning wait on the page | photo alt texts and file names |
 | **BEER Ratgeber** | `/webhook/beer-ratgeber` | Topic ideas from web research into what buyers ask; one click writes the article from the FAQ answers and matching projects | article draft |
 | **BEER Meldungen** | chat (link on the start page) | A few lines about an event, award or new kitchen → article draft in "Presse" with project photos, plus Business Profile and social media texts; asks back when date, time or place is missing; warns about similar drafts | article draft |
 | **BEER Neue Seite** | chat (link on the start page) | A short brief → draft of a fixed page, topic, material, appliance, brand, furniture or region page in the house style (example: "Weiße Küchen"), with overlap check | page draft |
@@ -41,6 +42,13 @@ Start page for the team: **https://n8n.beer.de/webhook/redaktion**
 
 Schedules (built, **off**): Projekttexte every 2 hours, SEO-Vorschläge and Ratgeber monthly,
 GEO-Monitor weekly (Monday 6:00). Switch on in n8n once the first results look right.
+"BEER Mediathek" ran with its 15-minute schedule from 2026-11-04 until 2026-11-06, when the Kimi
+credit ran out (every request answered 429). It saved about 1,030 photos; about 1,210 unused
+originals are still open, plus about 200 marked as errors and 48 waiting for review. It is
+**switched off**. To finish: top up the AI credit (or switch to Claude), set the schedule to
+`disabled: false` in `pack-workflows.mjs`, deploy and activate. It then also picks up new uploads. It has its own credential, *BEER Strapi Mediathek (Token)*, filled on 2026-11-04 with
+the website's Strapi token (Amine's decision), so the drafts-only key of the other workflows stays
+limited. Replace it with a custom token (Upload: find, findOne, upload) when convenient.
 
 ## Switching them on
 
@@ -87,6 +95,13 @@ same text as another photo, a brand not in the project's specs.
 The checker cannot see a wrong fact in a sentence that reads well, such as a dark worktop called
 light. A person compares each text with its photo: the review page has an editable field per
 photo, "Übernehmen" writes what stands in the fields, and an empty field is skipped.
+
+"Übernehmen" also renames each photo in the media library: project address plus the saved
+description, without filler words, up to about 90 characters (`photoName` in `lib-common.js`), e.g.
+`pfoerring-schwarz-weiss-kuechenzeile-salbeigruenen-fronten-heller-arbeitsplatte-fenster-garten.jpg`.
+A corrected text gives a corrected name. Only the name in Strapi changes: the address under
+`/uploads/` stays the same (Strapi keeps it even when a file is replaced), so no page breaks, and
+the website never shows media names.
 
 ## Open decisions for the team
 

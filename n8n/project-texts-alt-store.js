@@ -60,7 +60,7 @@ $input.all().forEach((item, i) => {
   if (elsewhere) warnings.push(`gleicher Text wie in „${elsewhere.title}“`);
   const brands = (alt.match(BRANDS) ?? []).filter((brand) => !facts.toLowerCase().includes(brand.toLowerCase()));
   if (brands.length) warnings.push(`Marke nicht in den Projektangaben: ${brands.join(", ")}`);
-  proposal.alt[photo.id] = { id: photo.id, thumb: photo.thumb, full: photo.url, old: photo.old, text: alt, bildart: value.bildart, sichtbar: value.sichtbar ?? [], warnings };
+  proposal.alt[photo.id] = { id: photo.id, thumb: photo.thumb, full: photo.url, old: photo.old, oldName: photo.oldName, ext: photo.ext, text: alt, bildart: value.bildart, sichtbar: value.sichtbar ?? [], warnings };
 });
 
 return [{ json: { stored: $input.all().length } }];

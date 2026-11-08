@@ -48,7 +48,7 @@ for (const project of projects) {
   for (const m of unique) uses.set(m.alternativeText, (uses.get(m.alternativeText) ?? 0) + 1);
   const photos = unique
     .filter((m) => weakAlt(m.alternativeText) || uses.get(m.alternativeText) > 1)
-    .map((m) => ({ id: m.id, url: photoUrl(m), thumb: thumbUrl(m), old: m.alternativeText ?? "" }));
+    .map((m) => ({ id: m.id, url: photoUrl(m), thumb: thumbUrl(m), old: m.alternativeText ?? "", oldName: m.name ?? "", ext: m.ext ?? "" }));
   const needsEnglish = ENGLISH && !english.has(project.documentId);
   if (!documentId && !photos.length && !needsEnglish) continue;
   chosen.push({

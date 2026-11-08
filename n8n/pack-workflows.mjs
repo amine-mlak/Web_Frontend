@@ -39,6 +39,9 @@ const AI_API = {
 
 const CREDENTIALS = {
   strapi: { name: "BEER Strapi (Token)", type: "httpHeaderAuth", placeholder: { name: "Authorization", value: "Bearer TOKEN-HIER-EINTRAGEN" } },
+  // Only "BEER Mediathek" uses this one (media alt texts and names), so the drafts-only key of the
+  // other workflows stays limited. Filled with the website's Strapi token on 2026-11-04 (Amine's yes).
+  media: { name: "BEER Strapi Mediathek (Token)", type: "httpHeaderAuth", placeholder: { name: "Authorization", value: "Bearer TOKEN-HIER-EINTRAGEN" } },
   claude: { name: "Claude API (BEER)", type: "httpHeaderAuth", placeholder: { name: "x-api-key", value: "KEY-HIER-EINTRAGEN" } },
   login: { name: "BEER Redaktion (Login)", type: "httpBasicAuth", placeholder: () => ({ user: "redaktion", password: randomPassword() }) },
   // The same value as N8N_WEBHOOK_SECRET of the website (Coolify); the website sends it with each form.
@@ -394,6 +397,54 @@ const WORKFLOWS = {
         link("Übernehmen oder verwerfen", "Zur Seite (gespeichert)", "Aktion", "Verteilen"),
         link(["Verteilen", 0], "Alt-Text speichern", "Alt-Text gespeichert"),
         link(["Verteilen", 1], "Englisch speichern", "Englisch gespeichert"),
+      ),
+    );
+  },
+
+  "media-texts": () => {
+    row(0);
+    const nodes = [webhook("Seite aufrufen", "GET", "beer-mediathek", "4b7e2c91-6d3a-4f58-9e1c-2a8b5d7f0c31"), code("Seite", "media-texts-page.js"), html("Seite senden")];
+    row(1);
+    nodes.push(
+      webhook("Stapel starten", "POST", "beer-mediathek/start", "9c1d4e7a-2b5f-4a86-b3d0-6e9f1a2c4b52"),
+      redirect("Zur Seite (gestartet)", "/webhook/beer-mediathek?gestartet=1"),
+      // Each run takes one batch (see media-texts-select.js). Switched off 2026-11-06: the Kimi credit
+      // ran out (every request 429). Set disabled: false and activate again once there is AI credit.
+      { ...schedule("Alle 15 Minuten", { field: "minutes", minutesInterval: 15 }), disabled: true },
+      code("Auftrag", "media-texts-request.js"),
+      { ...strapi("Mediathek lesen"), credentials: cred("media") },
+      code("Auswahl", "media-texts-select.js"),
+      download("Foto laden"),
+      code("Anfrage bauen", "media-texts-ask.js"),
+      claude("Alt-Text KI"),
+      code("Alt-Text merken", "media-texts-store.js"),
+    );
+    row(2);
+    nodes.push(
+      webhook("Übernehmen", "POST", "beer-mediathek/aktion", "e2a5c8f1-7b4d-4c39-8a6e-0d3f5b9c1e73"),
+      redirect("Zur Seite (gespeichert)", "/webhook/beer-mediathek?gespeichert=1"),
+      code("Aktion", "media-texts-apply.js"),
+      code("Speichern vorbereiten", "media-texts-save-prep.js"),
+      {
+        ...strapi("Speichern", {
+          method: "POST",
+          url: "=https://cms.beer.de/api/upload?id={{ $json.id }}",
+          sendBody: true,
+          contentType: "multipart-form-data",
+          bodyParameters: { parameters: [{ parameterType: "formData", name: "fileInfo", value: "={{ $json.fileInfo }}" }] },
+        }),
+        credentials: cred("media"),
+      },
+      code("Gespeichert", "media-texts-saved.js"),
+    );
+    return workflow(
+      "BEER Mediathek",
+      nodes,
+      merge(
+        link("Seite aufrufen", "Seite", "Seite senden"),
+        link("Stapel starten", "Zur Seite (gestartet)", "Auftrag"),
+        link("Alle 15 Minuten", "Auftrag", "Mediathek lesen", "Auswahl", "Foto laden", "Anfrage bauen", "Alt-Text KI", "Alt-Text merken", "Speichern vorbereiten"),
+        link("Übernehmen", "Zur Seite (gespeichert)", "Aktion", "Speichern vorbereiten", "Speichern", "Gespeichert"),
       ),
     );
   },
