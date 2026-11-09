@@ -26,6 +26,58 @@ leaves that section out while the text is still the template, so nothing is writ
 real reading text for these pages is part of the content work (launch plan, phase 3); as soon as an
 entry gets its own text, the section shows again by itself.
 
+### T3 wording proposal (for Amine's yes)
+
+Today's headlines, four tiles and closing titles were copied into the CMS for all 37 entries
+(fields "Seitentitel", "Betonung", "Stichworte", "Schluss-Titel"), so the change is made there:
+saved as **drafts** after a yes, then published. The furniture pages were already rewritten in this
+plain style ("Badmöbel nach Maß", tiles that name real features, "Ihr Bad planen") and stay as they are.
+
+Style: the headline says what the page is about, the italic part says what for, no full stop.
+Tiles name real properties or options instead of two-word riddles. Points marked *(prüfen)* are claims
+BEER must confirm before publishing.
+
+**Materials**
+
+| Page | Today | New headline | New tiles | Closing |
+|---|---|---|---|---|
+| Keramik | Keramik *mit Kante.* | Keramik *für Arbeitsplatte und Spüle* | Hitzebeständig · Kratzfest im Alltag · Durchgefärbt oder mit Dekor · Becken unter- oder flächenbündig | Keramik in der Ausstellung ansehen |
+| Naturstein | Naturstein *als Unikat.* | Naturstein *als Arbeitsplatte* | Jede Platte ein Unikat · Granit, Quarzit oder Marmor *(prüfen)* · Regelmäßig imprägnieren · Platte vor dem Zuschnitt aussuchen *(prüfen)* | Ihre Steinplatte aussuchen |
+| Edelstahl | Edelstahl *mit Arbeitsspuren.* | Edelstahl *für Arbeitsplatte und Spüle* | Becken nahtlos eingeschweißt *(prüfen)* · Hitzebeständig und hygienisch · Kratzer werden zur Patina · Wie in der Profiküche | Edelstahl planen |
+| Holz massiv | Holz *will Öl.* | Massivholz *als Arbeitsplatte* | Geölt statt lackiert · Kratzer lassen sich abschleifen · Regelmäßig nachölen · Warm neben Stein und Lack | Ihre Holzplatte planen |
+| Lack matt | Lack matt *ohne Polieren.* | Matter Lack *für Fronten* | In jedem Farbton *(prüfen)* · Weniger Spiegelungen als Hochglanz · Farbton am Muster bei Tageslicht wählen · Pflege mit feuchtem Tuch | Ihren Farbton aussuchen |
+| Eiche furniert | Eiche *als Fläche.* | Eiche furniert *für Fronten* | Echtholz auf stabiler Trägerplatte · Maserung läuft über mehrere Fronten *(prüfen)* · Geölt oder lackiert · Passt zu Stein und Lack | Furniere ansehen |
+| Fenix | Fenix *wo Finger stören.* | Fenix *für Fronten und Platten* | Tiefmatte Oberfläche · Kaum Fingerabdrücke · Feine Kratzer mit Wärme ausbessern · Warm und weich im Griff | Fenix anfassen |
+| Vollauszüge | Vollauszüge *bis hinten.* | Vollauszüge *für Unterschränke* | Auszug bis zur Rückwand · Gedämpft schließend · Innen nach Bedarf eingeteilt · Eckschränke ohne toten Winkel | Innenleben planen |
+
+**Appliances**
+
+| Page | Today | New headline | New tiles | Closing |
+|---|---|---|---|---|
+| Kochfeld | Kochfeld *mit der Platte.* | Kochfelder *flächenbündig geplant* | Induktion, Gas oder kombiniert · Flächenbündig oder aufgesetzt · Anschluss im Aufmaß · Marke frei wählbar | Ihr Kochfeld planen |
+| Kochfeldabzug | Abzug *in der Platte.* | Kochfeldabzug *statt Dunstabzugshaube* | Abluft oder Umluft · Kanal im Unterschrank geplant · Freier Blick über die Insel · Bora und andere Hersteller | Ihren Abzug planen |
+| Backofen | Backofen *wo die Hand ist.* | Backofen *auf Griffhöhe* | Im Hochschrank auf Arbeitshöhe · Mit Dampf- oder Mikrowellenfunktion · Nische nach Gerätemaß · Marke frei wählbar | Ihren Backofen planen |
+| Dampfgarer | Dampf *mit Wasser.* | Dampfgarer *neben dem Backofen* | Wassertank oder Festwasser *(prüfen)* · Auf Augenhöhe im Hochschrank · Gemüse, Fisch, Aufwärmen · Wasseranschluss im Aufmaß | Ihren Dampfgarer planen |
+| Kühlung | Kühlung *mit Nische.* | Kühlschränke *hinter der Front* | Vollintegriert · Lüftung im Schrank geplant · Kühl-Gefrier-Kombination oder getrennt · Weinkühlschrank möglich | Ihre Kühlung planen |
+| Geschirrspüler | Spüler *in der Zeile.* | Geschirrspüler *vollintegriert* | Front bündig mit der Küche · Neben der Spüle · Auf Wunsch erhöht eingebaut · Anschluss im Aufmaß | Ihren Spüler planen |
+| Kaffeevollautomat | Kaffee *auf Augenhöhe.* | Kaffeevollautomat *eingebaut* | Im Hochschrank auf Augenhöhe · Festwasseranschluss möglich *(prüfen)* · Nische nach Gerätemaß · Tassenfach daneben | Ihre Kaffeeecke planen |
+| Quooker-Armatur | Quooker *als Tank.* | Quooker *kochendes Wasser aus dem Hahn* | Tank im Unterschrank · Kochend, gekühlt, mit Kohlensäure *(prüfen: Cube)* · Strom im Unterschrank nötig · Mit der Spüle geplant | Ihren Quooker planen |
+
+**Brands** (headline "Marke *in BEER-Küchen*" or "Marke *bei BEER*")
+
+| Page | Today | New headline | New tiles | Closing |
+|---|---|---|---|---|
+| Miele | Miele *für den Tag.* | Miele *in BEER-Küchen* | Backöfen, Dampfgarer, Kochfelder, Spüler · Freie Markenwahl · Kundendienst durch Miele · In die Planung eingebaut | Miele in der Ausstellung |
+| Gaggenau | Gaggenau *als Architektur.* | Gaggenau *in BEER-Küchen* | Geräte sichtbar oder verborgen · Backöfen und Kochfelder *(prüfen)* · Freie Markenwahl · In die Planung eingebaut | Gaggenau planen |
+| Bora | Bora *für den Blick.* | Bora-Kochfeldabzug *in BEER-Küchen* | Abzug im Kochfeld · Freier Blick ohne Haube · Unterschrank neu aufgeteilt · Abluft oder Umluft | Bora planen |
+| Siemens | Siemens *wo es passt.* | Siemens *in BEER-Küchen* | Breites Gerätesortiment · Freie Markenwahl · Neben anderen Marken möglich · In die Planung eingebaut | Siemens planen |
+| Quooker | Quooker *mit dem Becken.* | Quooker *in BEER-Küchen* | Armatur mit Tank im Unterschrank · Mit der Spüle geplant · Freie Markenwahl · Einbau durch uns *(prüfen)* | Quooker planen |
+
+**Regions** (11 pages, today all "{Ort} *im Radius.*" with the same four tiles):
+headline "Küchen in {Ort}" without italics, no tiles, and the projects from that area first. The CMS
+has no distance or drive time (fields empty), and none is invented. Which regions stay at all is the
+open content decision from the audit (keep areas with real projects, redirect the rest).
+
 ## Phase 2: movement (A1 colour cover, A2 parallax, A3 slide-in; reduced motion in the homepage carousel)
 planned
 
