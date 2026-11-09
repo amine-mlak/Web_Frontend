@@ -92,8 +92,14 @@ open content decision from the audit (keep areas with real projects, redirect th
 Checked: every frame uncovers after scrolling (project 11/11, Landhaus 13/13, homepage 8/8); with
 "reduce motion" no cover, no rise, no drift; without JavaScript nothing is covered (CSS `scripting: enabled`).
 
-## Phase 3: openers and header (B1 three-panel opener, transparent header with two buttons)
-planned
+## Phase 3: openers
+
+| ID | What | Status | Files | Check on |
+|---|---|---|---|---|
+| B1 | Project pages open in three panels: the room, the title on a close-up, a detail. Close-ups are picked by their alt text (Kante, Ecke, Bedienknebel, geöffnete Schublade …) and leave the photo pairs below, so nothing repeats; projects with fewer than two close-ups keep the single photo | on staging (9 Nov) | `components/catalog/TriptychHero.tsx`, `components/catalog/ReferenzPage.tsx` | [Anthrazit unter dem Dach](https://staging.beer.de/projekte/dachgeschoss-anthrazit), [Greige U-Form](https://staging.beer.de/projekte/greige-u-form-holzdecke) |
+| B1b | The same opener on topic pages (L-Form, Kochinsel …), with close-ups taken from the tagged projects' galleries that the page doesn't show yet | planned | `lib/collection-topics.ts`, topic views | |
+| – | Hub pages (Küchenformen, Stile …) keep their full-screen photo opener | decided | | |
+| – | Transparent header: not done. Amine kept the white bar on purpose (commit f3396c4, 23 Sep). Header buttons: the menu already has "Küche planen"; a "Termin" button comes with booking in phase 4 | decided | | |
 
 ## Phase 4: sections from existing photos (C7, C8, C2, C4, C9, D2, D3, A5)
 planned
