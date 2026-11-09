@@ -82,14 +82,18 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
+      <KitchenShowcase hub={hub} title={houses} />
       <TopicReading
         locale={hub.locale}
         cms={hub}
         // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
       />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <KitchenShowcase hub={hub} title={houses} />
-      <SoftClose hub={hub} />
+      <SoftClose
+        hub={hub}
+        tiles={hub.siblings}
+        tilesTitle={hub.siblingEyebrow}
+      />
     </main>
   );
 }

@@ -3,7 +3,6 @@ import {
   Crumbs,
   QuoteLine,
   RuledPoints,
-  SiblingCards,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
@@ -69,8 +68,11 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
       />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <SiblingCards siblings={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
-      <SoftClose hub={hub} />
+      <SoftClose
+        hub={hub}
+        tiles={hub.siblings}
+        tilesTitle={hub.siblingEyebrow}
+      />
     </main>
   );
 }

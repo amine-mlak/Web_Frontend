@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
+import InstagramFeed from "@/components/InstagramFeed";
 import HomeProjects from "@/components/HomeProjects";
 import Kacheln from "@/components/Kacheln";
 import PlannerSection from "@/components/planner/PlannerSection";
@@ -59,6 +60,7 @@ export default async function Home() {
       <Process content={ablauf} />
       <Faq content={faq} />
       <PlannerSection />
+      <InstagramFeed />
     </main>
   );
 }
