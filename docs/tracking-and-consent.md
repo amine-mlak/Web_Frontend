@@ -11,7 +11,7 @@ Package C from `docs/tracking-options.html`, browser first:
 | Layer | What | Status |
 |---|---|---|
 | Banner | Open source, in our code: vanilla-cookieconsent 3.1.0 (MIT). Categories Notwendig / Statistik / Marketing, "Alle ablehnen" next to "Alle akzeptieren" with the same weight, DE/EN | built |
-| Proof of consent | No server log. The choice stays in the visitor's `beer_consent` cookie (random ID, time, categories, banner revision); the banner set-up is versioned in git (`CONSENT_REVISION`, `lib/consent-copy.ts`). If the legal check asks for a per-visitor log, self-host a consent tool on Coolify instead of building one | decided 2026-11-09 |
+| Proof of consent | No server log. The choice stays in the visitor's `beer_consent` cookie (random ID, time, categories, banner revision); the banner set-up is versioned in git (`CONSENT_REVISION`, `lib/consent-copy.ts`). Art. 7(1) GDPR asks us to be able to show consent, not to keep a server log per visitor; tracking only loads after a yes, and that is how it is shown | decided 2026-11-09, no log |
 | Consent Mode v2 | **basic**: defaults all denied; GTM itself loads only after a "yes" to Statistik or Marketing (VG Hannover 2025: GTM needs consent under § 25 TDDDG) | built |
 | Tag manager | Google Tag Manager, web container as import file (`gtm/web-container.json`) | built; accounts exist on today's beer.de, connected ~1 month before launch |
 | Platforms | GA4, Google Ads (+ enhanced conversions), Meta, Pinterest, Microsoft Ads, TikTok, LinkedIn. A platform stays paused until its ID is set | prepared |

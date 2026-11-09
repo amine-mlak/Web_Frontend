@@ -130,8 +130,8 @@ close the window and saved with your enquiry. Legal basis: Art. 6(1)(a) GDPR, §
 
 ## Open points for the legal check
 
-1. Proof of consent (Art. 7(1)): there is no per-visitor log on the server, only the cookie and the banner
-   set-up versioned in git. Is that enough? If not, BEER self-hosts a consent tool with a log.
+1. ~~Proof of consent~~: decided 2026-11-09, no per-visitor log (not required by law); the cookie and the
+   banner set-up versioned in git.
 2. Umami: version, hosting location, whether the recorder masks form fields.
 3. TikTok: transfer basis outside the EU.
 4. Joint controllership (Art. 26) for Google Ads and Meta: link the vendors' terms.
