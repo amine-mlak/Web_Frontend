@@ -40,8 +40,10 @@ Claude does not copy keys or passwords between systems, so these need a person.
 
 ## Security (first)
 
-- [ ] **Strapi 5.33.4 is out of date**: `npm audit` reports 12 critical and 36 high issues; 5.60.0 is
-      current. Test the update on a restored copy, then deploy.
+- [x] **Updates 2026-11-09**: Strapi 5.33.4 → 5.61.0 (tested locally, then live; all 76 website queries
+      answer), n8n 2.10.4 → 2.46.6 (14 workflows, same on/off), Umami 3.3.1 → 3.4.1. A database dump from before
+      each update lies in each service's postgres volume: `/var/lib/postgresql/data/pre-update-20261109.dump`.
+- [ ] **cms.beer.de/favicon.ico gives 500**: `favicon.png` is missing in beer-cms. Add one.
 - [x] **Public drafts and open CORS on the CMS**: closed on 2026-11-03. Drafts need an API token, and
       only BEER's own sites may read the API from a browser.
 - [x] **Next.js 16.4.4, security headers, tighter form checks**: on staging since 2026-11-03.
