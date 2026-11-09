@@ -1229,7 +1229,8 @@ function pointBranches(voice: Voice | undefined, photo: (n: number, w?: number) 
     imageC: photo(18 + index * 3, 1200),
     alt: labels[index] ?? voice?.title ?? "",
     kicker: String(index + 1).padStart(2, "0"),
-    points,
+    // The first line is the branch text; the list holds only what follows it.
+    points: points.slice(1),
     caption: looks[index] ?? labels[index] ?? "",
   }));
 }
@@ -1307,7 +1308,8 @@ function withPunkte(
       ...branch,
       title: punkt.titel || branch.title,
       text: points[0] || branch.text,
-      points,
+      // The first line is shown as the text; repeating it in the list doubled it on the page.
+      points: points.slice(1),
     };
   });
 }

@@ -8,7 +8,6 @@ import {
 } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
-import { entryReading } from "@/lib/entry-reading";
 import type { PresentedTopic } from "@/lib/collection-topics";
 
 export default function PlacePage({ hub }: { hub: PresentedTopic }) {
@@ -64,7 +63,11 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
-      <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
+      <TopicReading
+        locale={hub.locale}
+        cms={hub}
+        // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
+      />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <SiblingCards siblings={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
       <SoftClose hub={hub} />

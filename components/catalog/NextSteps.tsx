@@ -48,14 +48,14 @@ export default function NextSteps({
       </LocaleLink>
       {more.map((step) =>
         step.href.startsWith("tel:") ? (
-          <a key={step.href} href={step.href} className={cn(secondary, "inline-flex items-center gap-2")} data-umami-event="tel_click">
+          <a key={`${step.href}-${step.label}`} href={step.href} className={cn(secondary, "inline-flex items-center gap-2")} data-umami-event="tel_click">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true" className="h-4 w-4">
               <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" strokeLinejoin="round" />
             </svg>
             {step.label}
           </a>
         ) : (
-          <LocaleLink key={step.href} href={step.href} className={secondary}>
+          <LocaleLink key={`${step.href}-${step.label}`} href={step.href} className={secondary}>
             {step.label}
           </LocaleLink>
         ),
