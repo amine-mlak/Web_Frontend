@@ -54,7 +54,7 @@ function originOf(raw: string | undefined) {
 
 // Report-only until a browser check shows nothing needed is refused; then it can be enforced.
 // Hosts GTM loads after consent: Google (GA4, Ads), Meta, Pinterest, Microsoft UET,
-// TikTok, LinkedIn. See docs/tracking-and-consent.md.
+// LinkedIn. See docs/tracking-and-consent.md.
 const TAG_SCRIPT_HOSTS = [
   "https://www.googletagmanager.com",
   "https://*.googletagmanager.com",
@@ -65,7 +65,6 @@ const TAG_SCRIPT_HOSTS = [
   "https://connect.facebook.net",
   "https://s.pinimg.com",
   "https://bat.bing.com",
-  "https://analytics.tiktok.com",
   "https://snap.licdn.com",
 ];
 const TAG_CONNECT_HOSTS = [
@@ -79,7 +78,6 @@ const TAG_CONNECT_HOSTS = [
   "https://connect.facebook.net",
   "https://ct.pinterest.com",
   "https://bat.bing.com",
-  "https://*.tiktok.com",
   "https://px.ads.linkedin.com",
 ];
 const TAG_IMG_HOSTS = [...TAG_CONNECT_HOSTS, "https://www.google.de", "https://*.linkedin.com"];

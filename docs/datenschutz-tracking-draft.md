@@ -45,7 +45,7 @@ verbessern); es wird nichts auf Ihrem Gerät gespeichert. Daten verlassen unsere
 
 **Umami-Sitzungsaufzeichnung** (nur mit Einwilligung „Statistik"). Zeichnet Klicks, Scrollen und
 Seitenwechsel auf, damit wir Formulare verbessern können. Eingaben in Formularfeldern werden
-nicht aufgezeichnet **[prüfen: Maskierung in der Umami-Konfiguration]**. Speicherdauer: **[prüfen]**.
+nicht aufgezeichnet. Speicherdauer: **[prüfen]**.
 
 **Google Analytics 4** (nur mit Einwilligung „Statistik"). Anbieter: Google Ireland Limited.
 Zweck: Reichweite messen, Anfragen zählen. Verarbeitet: gekürzte IP-Adresse, Geräte- und
@@ -63,7 +63,8 @@ Wenn Sie den Küchenplaner absenden, geben wir Ihre E-Mail-Adresse und Telefonnu
 weiter, damit diese die Anfrage einer Anzeige zuordnen können („erweiterte Conversions"). Wenn
 Sie über eine Anzeige kommen, merken wir uns deren Kennung (z. B. `gclid`, `fbclid`) bis zum
 Schließen des Fensters (Sitzungsspeicher `beer_click_ids`, `beer_utm`) und speichern sie mit Ihrer
-Anfrage, um später zu sehen, welche Anzeigen zu Aufträgen führen.
+Anfrage, um später zu sehen, welche Anzeigen zu Aufträgen führen. Sie werden zusammen mit Ihrer
+Anfrage gelöscht.
 
 | Dienst | Anbieter | Cookies (Laufzeit) | Drittland |
 |---|---|---|---|
@@ -71,14 +72,15 @@ Anfrage, um später zu sehen, welche Anzeigen zu Aufträgen führen.
 | Meta-Pixel (Facebook, Instagram) | Meta Platforms Ireland Ltd., Merrion Road, Dublin 4, D04 X2K5, Irland | `_fbp`, `_fbc` (90 Tage) | USA, DPF |
 | Pinterest-Tag | Pinterest Europe Ltd., Palmerston House, Fenian Street, Dublin 2, Irland | `_pin_unauth`, `_epik` (1 Jahr) | USA, DPF **[prüfen]** |
 | Microsoft Advertising (UET) | Microsoft Ireland Operations Ltd., One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland | `_uetsid` (1 Tag), `_uetvid` (13 Monate), `MUID` (1 Jahr) | USA, DPF |
-| TikTok-Pixel | TikTok Technology Ltd., 10 Earlsfort Terrace, Dublin, D02 T380, Irland | `_ttp` (13 Monate) | USA, Singapur, China möglich; Standardvertragsklauseln **[prüfen]** |
 | LinkedIn Insight Tag | LinkedIn Ireland Unlimited Company, Wilton Plaza, Wilton Place, Dublin 2, Irland | `li_fat_id` (30 Tage), `li_sugr`, `bcookie` (bis 1 Jahr) | USA, DPF |
 
-Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG. Für Google Ads und Meta sind wir
-für die Erhebung gemeinsam mit dem Anbieter verantwortlich (Art. 26 DSGVO) **[prüfen: jeweilige
-Controller-Vereinbarung]**. Datenschutzhinweise der Anbieter: policies.google.com/privacy,
+Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG. Für die Erhebung und Übermittlung der
+Daten über das Meta-Pixel sind wir gemeinsam mit Meta Platforms Ireland Ltd. verantwortlich (Art. 26 DSGVO);
+die Vereinbarung dazu: facebook.com/legal/controller_addendum. Für alles, was Meta danach mit den Daten
+macht, ist Meta allein verantwortlich. Google verarbeitet die Daten aus Google Ads als eigener
+Verantwortlicher (business.safety.google/adscontrollerterms). Datenschutzhinweise der Anbieter: policies.google.com/privacy,
 facebook.com/privacy/policy, policy.pinterest.com/de/privacy-policy, privacy.microsoft.com,
-tiktok.com/legal/privacy-policy-eea, linkedin.com/legal/privacy-policy.
+linkedin.com/legal/privacy-policy.
 
 Werbe-Einstellungen bei den Anbietern: adssettings.google.com, facebook.com/adpreferences,
 pinterest.com/settings/privacy.
@@ -113,7 +115,7 @@ Privacy Framework).
 **Umami** (no cookies): page views and clicks counted on our own server, no cookies, no IP
 addresses stored. Legal basis: Art. 6(1)(f) GDPR. **Umami session recording** (only with
 "Statistics" consent): clicks, scrolling and page changes, to improve our forms; form input is
-not recorded **[check]**.
+not recorded.
 
 **Google Analytics 4** (only with "Statistics" consent): Google Ireland Limited. Reach and
 enquiries; truncated IP, device and browser data, pages, clicks, approximate location. Cookies
@@ -121,21 +123,21 @@ enquiries; truncated IP, device and browser data, pages, clicks, approximate loc
 
 ### Marketing (only with "Marketing" consent)
 
-Google Ads, Meta Pixel, Pinterest Tag, Microsoft Advertising (UET), TikTok Pixel and LinkedIn
+Google Ads, Meta Pixel, Pinterest Tag, Microsoft Advertising (UET) and LinkedIn
 Insight Tag show us whether an ad led to an enquiry and let us show our ads to previous
 visitors. Providers, cookies and transfers: see the table in the German section. When you send
 the kitchen planner, your e-mail address and phone number are passed on only hashed (SHA-256),
 with your postcode. Ad click IDs (e.g. `gclid`, `fbclid`) are kept in session storage until you
-close the window and saved with your enquiry. Legal basis: Art. 6(1)(a) GDPR, § 25(1) TDDDG.
+close the window, saved with your enquiry and deleted with it. For the Meta Pixel we and Meta are joint
+controllers (Art. 26 GDPR, facebook.com/legal/controller_addendum); Google processes Google Ads data as
+an independent controller. Legal basis: Art. 6(1)(a) GDPR, § 25(1) TDDDG.
 
 ## Open points for the legal check
 
 1. ~~Proof of consent~~: decided 2026-11-09, no per-visitor log (not required by law); the cookie and the
    banner set-up versioned in git.
-2. Umami: version, hosting location, whether the recorder masks form fields.
-3. TikTok: transfer basis outside the EU.
-4. Joint controllership (Art. 26) for Google Ads and Meta: link the vendors' terms.
-5. Whether the click-ID storage with the lead in the CRM needs its own retention period.
-6. Newsletter section (separate open item).
+2. Umami: hosting location of stats.beer.de and how long recordings are kept. (Form fields: masked, checked
+   2026-11-09 in recorder.js, `maskAllInputs: true`.)
+3. Newsletter section (separate open item).
 
 > **Entwurf.** Rechtliche Prüfung vor Veröffentlichung erforderlich.

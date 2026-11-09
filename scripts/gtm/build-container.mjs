@@ -32,7 +32,6 @@ const PLATFORMS = {
   meta: { "Meta Pixel ID": "REPLACE_META_PIXEL_ID" },
   pinterest: { "Pinterest Tag ID": "REPLACE_PINTEREST_TAG_ID" },
   microsoft: { "Microsoft UET Tag ID": "REPLACE_UET_TAG_ID" },
-  tiktok: { "TikTok Pixel ID": "REPLACE_TIKTOK_PIXEL_ID" },
   linkedin: {
     "LinkedIn Partner ID": "REPLACE_LINKEDIN_PARTNER_ID",
     "LinkedIn Conversion ID Lead": "REPLACE_LINKEDIN_CONVERSION_ID",
@@ -235,24 +234,6 @@ if (em || ph) window.uetq.push('set', { pid: { em: em || undefined, ph: ph || un
 window.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: 'Kuechenplaner', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });
 </script>`), [T.lead], "ad_storage");
 tag("microsoft", "Microsoft UET - Contact", "html", html(`<script>window.uetq = window.uetq || []; window.uetq.push('event', 'contact', { event_label: {{DLV - method}} });</script>`), [T.contact], "ad_storage");
-
-// TikTok (ad_storage).
-tag("tiktok", "TikTok - Base + Page", "html", html(`<script>
-!function (w, d, t) {
-  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=r+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-  ttq.load('{{TikTok Pixel ID}}');
-  ttq.page();
-}(window, document, 'ttq');
-</script>`), [ALL_PAGES], "ad_storage");
-tag("tiktok", "TikTok - Page (navigation)", "html", html(`<script>window.ttq && ttq.page();</script>`), [T.spa], "ad_storage");
-tag("tiktok", "TikTok - Lead", "html", html(`<script>
-if (window.ttq) {
-  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};
-  if (em || ph) ttq.identify({ email: em || undefined, phone_number: ph || undefined });
-  ttq.track('SubmitForm', { value: {{DLV - value}} || 0, currency: 'EUR' }, { event_id: {{DLV - event_id}} });
-}
-</script>`), [T.lead], "ad_storage");
-tag("tiktok", "TikTok - Contact", "html", html(`<script>window.ttq && ttq.track('Contact');</script>`), [T.contact], "ad_storage");
 
 // LinkedIn Insight Tag (ad_storage). Single-page navigation is tracked by the tag itself.
 tag("linkedin", "LinkedIn - Insight Tag", "html", html(`<script>

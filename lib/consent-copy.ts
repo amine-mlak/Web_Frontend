@@ -44,7 +44,6 @@ const marketingRows: Record<"de" | "en", Row[]> = {
     { name: "_fbp, _fbc", provider: "Meta Pixel (Meta Platforms Ireland)", purpose: "Erfolgsmessung und Zielgruppen für Facebook und Instagram", lifetime: "90 Tage" },
     { name: "_pin_unauth, _epik", provider: "Pinterest Tag (Pinterest Europe)", purpose: "Erfolgsmessung und Zielgruppen für Pinterest", lifetime: "1 Jahr" },
     { name: "_uetsid, _uetvid, MUID", provider: "Microsoft Advertising (Microsoft Ireland)", purpose: "Erfolgsmessung für Anzeigen bei Bing", lifetime: "1 Tag bis 13 Monate" },
-    { name: "_ttp", provider: "TikTok Pixel (TikTok Technology, Irland)", purpose: "Erfolgsmessung und Zielgruppen für TikTok", lifetime: "13 Monate" },
     { name: "li_fat_id, li_sugr, bcookie", provider: "LinkedIn Insight Tag (LinkedIn Ireland)", purpose: "Erfolgsmessung für Anzeigen bei LinkedIn", lifetime: "30 Tage bis 1 Jahr" },
     { name: "beer_click_ids, beer_utm", provider: "BEER (Sitzungsspeicher)", purpose: "Merkt sich, über welche Anzeige Sie kamen, und gibt es mit Ihrer Anfrage weiter", lifetime: "bis das Fenster geschlossen wird" },
   ],
@@ -53,7 +52,6 @@ const marketingRows: Record<"de" | "en", Row[]> = {
     { name: "_fbp, _fbc", provider: "Meta Pixel (Meta Platforms Ireland)", purpose: "Measuring results and audiences for Facebook and Instagram", lifetime: "90 days" },
     { name: "_pin_unauth, _epik", provider: "Pinterest Tag (Pinterest Europe)", purpose: "Measuring results and audiences for Pinterest", lifetime: "1 year" },
     { name: "_uetsid, _uetvid, MUID", provider: "Microsoft Advertising (Microsoft Ireland)", purpose: "Measuring results of ads on Bing", lifetime: "1 day to 13 months" },
-    { name: "_ttp", provider: "TikTok Pixel (TikTok Technology, Ireland)", purpose: "Measuring results and audiences for TikTok", lifetime: "13 months" },
     { name: "li_fat_id, li_sugr, bcookie", provider: "LinkedIn Insight Tag (LinkedIn Ireland)", purpose: "Measuring results of ads on LinkedIn", lifetime: "30 days to 1 year" },
     { name: "beer_click_ids, beer_utm", provider: "BEER (session storage)", purpose: "Remembers which ad brought you here and passes it on with your enquiry", lifetime: "until the window is closed" },
   ],
@@ -73,7 +71,7 @@ export function consentTranslation(locale: "de" | "en", links: Links): Translati
         label: "Cookie consent",
         title: "Cookies on beer.de",
         description:
-          "We would like to measure how our website is used and which ads bring enquiries. For this we and our partners (Google, Meta, Pinterest, Microsoft, TikTok, LinkedIn) use cookies and similar technology, but only if you agree. Some partners process data in the USA. You can change your choice at any time under “Cookie settings” at the bottom of every page.",
+          "We would like to measure how our website is used and which ads bring enquiries. For this we and our partners (Google, Meta, Pinterest, Microsoft, LinkedIn) use cookies and similar technology, but only if you agree. Some partners process data in the USA. You can change your choice at any time under “Cookie settings” at the bottom of every page.",
         acceptAllBtn: "Accept all",
         acceptNecessaryBtn: "Reject all",
         showPreferencesBtn: "Settings",
@@ -125,7 +123,7 @@ export function consentTranslation(locale: "de" | "en", links: Links): Translati
       label: "Cookie-Einwilligung",
       title: "Cookies auf beer.de",
       description:
-        "Wir möchten messen, wie unsere Website genutzt wird und welche Anzeigen zu Anfragen führen. Dafür setzen wir und unsere Partner (Google, Meta, Pinterest, Microsoft, TikTok, LinkedIn) Cookies und ähnliche Techniken ein, aber nur, wenn Sie zustimmen. Einige Partner verarbeiten Daten auch in den USA. Sie können Ihre Auswahl jederzeit unter „Cookie-Einstellungen“ unten auf jeder Seite ändern.",
+        "Wir möchten messen, wie unsere Website genutzt wird und welche Anzeigen zu Anfragen führen. Dafür setzen wir und unsere Partner (Google, Meta, Pinterest, Microsoft, LinkedIn) Cookies und ähnliche Techniken ein, aber nur, wenn Sie zustimmen. Einige Partner verarbeiten Daten auch in den USA. Sie können Ihre Auswahl jederzeit unter „Cookie-Einstellungen“ unten auf jeder Seite ändern.",
       acceptAllBtn: "Alle akzeptieren",
       acceptNecessaryBtn: "Alle ablehnen",
       showPreferencesBtn: "Einstellungen",

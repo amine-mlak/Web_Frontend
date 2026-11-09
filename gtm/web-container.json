@@ -1,6 +1,6 @@
 {
   "exportFormatVersion": 2,
-  "exportTime": "2026-11-08 22:17:04",
+  "exportTime": "2026-11-09 00:59:22",
   "containerVersion": {
     "path": "accounts/0/containers/0/versions/0",
     "accountId": "0",
@@ -18,7 +18,7 @@
     },
     "tag": [
       {
-        "tagId": "35",
+        "tagId": "34",
         "name": "GA4 - Google tag",
         "type": "googtag",
         "parameter": [
@@ -47,7 +47,7 @@
         "paused": true
       },
       {
-        "tagId": "36",
+        "tagId": "35",
         "name": "GA4 - generate_lead",
         "type": "gaawe",
         "parameter": [
@@ -134,7 +134,7 @@
           }
         ],
         "firingTriggerId": [
-          "28"
+          "27"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -152,7 +152,7 @@
         "paused": true
       },
       {
-        "tagId": "37",
+        "tagId": "36",
         "name": "GA4 - contact",
         "type": "gaawe",
         "parameter": [
@@ -209,7 +209,7 @@
           }
         ],
         "firingTriggerId": [
-          "29"
+          "28"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -227,7 +227,7 @@
         "paused": true
       },
       {
-        "tagId": "38",
+        "tagId": "37",
         "name": "GA4 - get_directions",
         "type": "gaawe",
         "parameter": [
@@ -269,7 +269,7 @@
           }
         ],
         "firingTriggerId": [
-          "31"
+          "30"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -287,7 +287,7 @@
         "paused": true
       },
       {
-        "tagId": "39",
+        "tagId": "38",
         "name": "GA4 - social_click",
         "type": "gaawe",
         "parameter": [
@@ -329,7 +329,7 @@
           }
         ],
         "firingTriggerId": [
-          "32"
+          "31"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -347,7 +347,7 @@
         "paused": true
       },
       {
-        "tagId": "40",
+        "tagId": "39",
         "name": "GA4 - form funnel",
         "type": "gaawe",
         "parameter": [
@@ -434,7 +434,7 @@
           }
         ],
         "firingTriggerId": [
-          "33"
+          "32"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -452,7 +452,7 @@
         "paused": true
       },
       {
-        "tagId": "41",
+        "tagId": "40",
         "name": "Google Ads - Conversion Linker",
         "type": "gclidw",
         "parameter": [
@@ -491,7 +491,7 @@
         "paused": true
       },
       {
-        "tagId": "42",
+        "tagId": "41",
         "name": "Google Ads - Lead (Küchenplaner)",
         "type": "awct",
         "parameter": [
@@ -552,7 +552,61 @@
           }
         ],
         "firingTriggerId": [
-          "28"
+          "27"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "ad_storage"
+              }
+            ]
+          }
+        },
+        "paused": true
+      },
+      {
+        "tagId": "42",
+        "name": "Google Ads - Contact (phone)",
+        "type": "awct",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "conversionId",
+            "value": "{{Google Ads Conversion ID}}"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "conversionLabel",
+            "value": "{{Google Ads Label Contact}}"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableConversionLinker",
+            "value": "true"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableNewCustomerReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "enableProductReporting",
+            "value": "false"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "rdp",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "29"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -571,7 +625,7 @@
       },
       {
         "tagId": "43",
-        "name": "Google Ads - Contact (phone)",
+        "name": "Google Ads - Directions",
         "type": "awct",
         "parameter": [
           {
@@ -582,7 +636,7 @@
           {
             "type": "TEMPLATE",
             "key": "conversionLabel",
-            "value": "{{Google Ads Label Contact}}"
+            "value": "{{Google Ads Label Directions}}"
           },
           {
             "type": "BOOLEAN",
@@ -625,60 +679,6 @@
       },
       {
         "tagId": "44",
-        "name": "Google Ads - Directions",
-        "type": "awct",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "conversionId",
-            "value": "{{Google Ads Conversion ID}}"
-          },
-          {
-            "type": "TEMPLATE",
-            "key": "conversionLabel",
-            "value": "{{Google Ads Label Directions}}"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "enableConversionLinker",
-            "value": "true"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "enableNewCustomerReporting",
-            "value": "false"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "enableProductReporting",
-            "value": "false"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "rdp",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "31"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "45",
         "name": "Google Ads - Remarketing",
         "type": "sp",
         "parameter": [
@@ -710,7 +710,7 @@
         ],
         "firingTriggerId": [
           "2147479553",
-          "34"
+          "33"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -728,7 +728,7 @@
         "paused": true
       },
       {
-        "tagId": "46",
+        "tagId": "45",
         "name": "Meta - Base + PageView",
         "type": "html",
         "parameter": [
@@ -762,7 +762,7 @@
         "paused": true
       },
       {
-        "tagId": "47",
+        "tagId": "46",
         "name": "Meta - PageView (navigation)",
         "type": "html",
         "parameter": [
@@ -778,7 +778,41 @@
           }
         ],
         "firingTriggerId": [
-          "34"
+          "33"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "ad_storage"
+              }
+            ]
+          }
+        },
+        "paused": true
+      },
+      {
+        "tagId": "47",
+        "name": "Meta - Lead",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script>\nif (window.fbq) {\n  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}}, zp = {{DLV - user_data.address.postal_code}};\n  var am = {};\n  if (em) am.em = em;\n  if (ph) am.ph = ph.replace(/^\\+/, '');\n  if (zp) am.zp = zp;\n  if (em || ph) fbq('init', '{{Meta Pixel ID}}', am);\n  var v = {{DLV - value}};\n  fbq('track', 'Lead', v ? { value: v, currency: 'EUR' } : {}, { eventID: {{DLV - event_id}} });\n}\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "27"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -797,13 +831,13 @@
       },
       {
         "tagId": "48",
-        "name": "Meta - Lead",
+        "name": "Meta - Contact",
         "type": "html",
         "parameter": [
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script>\nif (window.fbq) {\n  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}}, zp = {{DLV - user_data.address.postal_code}};\n  var am = {};\n  if (em) am.em = em;\n  if (ph) am.ph = ph.replace(/^\\+/, '');\n  if (zp) am.zp = zp;\n  if (em || ph) fbq('init', '{{Meta Pixel ID}}', am);\n  var v = {{DLV - value}};\n  fbq('track', 'Lead', v ? { value: v, currency: 'EUR' } : {}, { eventID: {{DLV - event_id}} });\n}\n</script>"
+            "value": "<script>window.fbq && fbq('track', 'Contact', { content_category: {{DLV - method}} });</script>"
           },
           {
             "type": "BOOLEAN",
@@ -831,13 +865,13 @@
       },
       {
         "tagId": "49",
-        "name": "Meta - Contact",
+        "name": "Meta - FindLocation",
         "type": "html",
         "parameter": [
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script>window.fbq && fbq('track', 'Contact', { content_category: {{DLV - method}} });</script>"
+            "value": "<script>window.fbq && fbq('track', 'FindLocation');</script>"
           },
           {
             "type": "BOOLEAN",
@@ -846,7 +880,7 @@
           }
         ],
         "firingTriggerId": [
-          "29"
+          "30"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -865,40 +899,6 @@
       },
       {
         "tagId": "50",
-        "name": "Meta - FindLocation",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>window.fbq && fbq('track', 'FindLocation');</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "31"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "51",
         "name": "Pinterest - Base + Page",
         "type": "html",
         "parameter": [
@@ -932,7 +932,7 @@
         "paused": true
       },
       {
-        "tagId": "52",
+        "tagId": "51",
         "name": "Pinterest - Page (navigation)",
         "type": "html",
         "parameter": [
@@ -948,7 +948,41 @@
           }
         ],
         "firingTriggerId": [
-          "34"
+          "33"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "ad_storage"
+              }
+            ]
+          }
+        },
+        "paused": true
+      },
+      {
+        "tagId": "52",
+        "name": "Pinterest - Lead",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script>\nif (window.pintrk) {\n  var em = {{DLV - user_data.sha256_email_address}};\n  if (em) pintrk('set', { em: em });\n  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: 'Kuechenplaner' });\n}\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "27"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -967,40 +1001,6 @@
       },
       {
         "tagId": "53",
-        "name": "Pinterest - Lead",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>\nif (window.pintrk) {\n  var em = {{DLV - user_data.sha256_email_address}};\n  if (em) pintrk('set', { em: em });\n  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: 'Kuechenplaner' });\n}\n</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "28"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "54",
         "name": "Microsoft UET - Base",
         "type": "html",
         "parameter": [
@@ -1034,7 +1034,7 @@
         "paused": true
       },
       {
-        "tagId": "55",
+        "tagId": "54",
         "name": "Microsoft UET - Lead",
         "type": "html",
         "parameter": [
@@ -1042,6 +1042,40 @@
             "type": "TEMPLATE",
             "key": "html",
             "value": "<script>\nwindow.uetq = window.uetq || [];\nvar em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};\nif (em || ph) window.uetq.push('set', { pid: { em: em || undefined, ph: ph || undefined } });\nwindow.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: 'Kuechenplaner', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "false"
+          }
+        ],
+        "firingTriggerId": [
+          "27"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "consentSettings": {
+          "consentStatus": "NEEDED",
+          "consentType": {
+            "type": "LIST",
+            "list": [
+              {
+                "type": "TEMPLATE",
+                "value": "ad_storage"
+              }
+            ]
+          }
+        },
+        "paused": true
+      },
+      {
+        "tagId": "55",
+        "name": "Microsoft UET - Contact",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script>window.uetq = window.uetq || []; window.uetq.push('event', 'contact', { event_label: {{DLV - method}} });</script>"
           },
           {
             "type": "BOOLEAN",
@@ -1069,176 +1103,6 @@
       },
       {
         "tagId": "56",
-        "name": "Microsoft UET - Contact",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>window.uetq = window.uetq || []; window.uetq.push('event', 'contact', { event_label: {{DLV - method}} });</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "29"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "57",
-        "name": "TikTok - Base + Page",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>\n!function (w, d, t) {\n  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[\"page\",\"track\",\"identify\",\"instances\",\"debug\",\"on\",\"off\",\"once\",\"ready\",\"alias\",\"group\",\"enableCookie\",\"disableCookie\",\"holdConsent\",\"revokeConsent\",\"grantConsent\"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r=\"https://analytics.tiktok.com/i18n/pixel/events.js\";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement(\"script\");o.type=\"text/javascript\",o.async=!0,o.src=r+\"?sdkid=\"+e+\"&lib=\"+t;var a=document.getElementsByTagName(\"script\")[0];a.parentNode.insertBefore(o,a)};\n  ttq.load('{{TikTok Pixel ID}}');\n  ttq.page();\n}(window, document, 'ttq');\n</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "2147479553"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "58",
-        "name": "TikTok - Page (navigation)",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>window.ttq && ttq.page();</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "34"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "59",
-        "name": "TikTok - Lead",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>\nif (window.ttq) {\n  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};\n  if (em || ph) ttq.identify({ email: em || undefined, phone_number: ph || undefined });\n  ttq.track('SubmitForm', { value: {{DLV - value}} || 0, currency: 'EUR' }, { event_id: {{DLV - event_id}} });\n}\n</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "28"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "60",
-        "name": "TikTok - Contact",
-        "type": "html",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "html",
-            "value": "<script>window.ttq && ttq.track('Contact');</script>"
-          },
-          {
-            "type": "BOOLEAN",
-            "key": "supportDocumentWrite",
-            "value": "false"
-          }
-        ],
-        "firingTriggerId": [
-          "29"
-        ],
-        "tagFiringOption": "ONCE_PER_EVENT",
-        "consentSettings": {
-          "consentStatus": "NEEDED",
-          "consentType": {
-            "type": "LIST",
-            "list": [
-              {
-                "type": "TEMPLATE",
-                "value": "ad_storage"
-              }
-            ]
-          }
-        },
-        "paused": true
-      },
-      {
-        "tagId": "61",
         "name": "LinkedIn - Insight Tag",
         "type": "html",
         "parameter": [
@@ -1272,7 +1136,7 @@
         "paused": true
       },
       {
-        "tagId": "62",
+        "tagId": "57",
         "name": "LinkedIn - Lead",
         "type": "html",
         "parameter": [
@@ -1288,7 +1152,7 @@
           }
         ],
         "firingTriggerId": [
-          "28"
+          "27"
         ],
         "tagFiringOption": "ONCE_PER_EVENT",
         "consentSettings": {
@@ -1308,7 +1172,7 @@
     ],
     "trigger": [
       {
-        "triggerId": "28",
+        "triggerId": "27",
         "name": "CE - generate_lead",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1330,7 +1194,7 @@
         ]
       },
       {
-        "triggerId": "29",
+        "triggerId": "28",
         "name": "CE - contact",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1352,7 +1216,7 @@
         ]
       },
       {
-        "triggerId": "30",
+        "triggerId": "29",
         "name": "CE - contact (phone)",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1391,7 +1255,7 @@
         ]
       },
       {
-        "triggerId": "31",
+        "triggerId": "30",
         "name": "CE - get_directions",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1413,7 +1277,7 @@
         ]
       },
       {
-        "triggerId": "32",
+        "triggerId": "31",
         "name": "CE - social_click",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1435,7 +1299,7 @@
         ]
       },
       {
-        "triggerId": "33",
+        "triggerId": "32",
         "name": "CE - form funnel",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1457,7 +1321,7 @@
         ]
       },
       {
-        "triggerId": "34",
+        "triggerId": "33",
         "name": "CE - page_view_spa",
         "type": "CUSTOM_EVENT",
         "customEventFilter": [
@@ -1578,18 +1442,6 @@
       },
       {
         "variableId": "9",
-        "name": "TikTok Pixel ID",
-        "type": "c",
-        "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "value",
-            "value": "REPLACE_TIKTOK_PIXEL_ID"
-          }
-        ]
-      },
-      {
-        "variableId": "10",
         "name": "LinkedIn Partner ID",
         "type": "c",
         "parameter": [
@@ -1601,7 +1453,7 @@
         ]
       },
       {
-        "variableId": "11",
+        "variableId": "10",
         "name": "LinkedIn Conversion ID Lead",
         "type": "c",
         "parameter": [
@@ -1613,7 +1465,7 @@
         ]
       },
       {
-        "variableId": "12",
+        "variableId": "11",
         "name": "DLV - event_id",
         "type": "v",
         "parameter": [
@@ -1635,7 +1487,7 @@
         ]
       },
       {
-        "variableId": "13",
+        "variableId": "12",
         "name": "DLV - value",
         "type": "v",
         "parameter": [
@@ -1657,7 +1509,7 @@
         ]
       },
       {
-        "variableId": "14",
+        "variableId": "13",
         "name": "DLV - currency",
         "type": "v",
         "parameter": [
@@ -1679,7 +1531,7 @@
         ]
       },
       {
-        "variableId": "15",
+        "variableId": "14",
         "name": "DLV - method",
         "type": "v",
         "parameter": [
@@ -1701,7 +1553,7 @@
         ]
       },
       {
-        "variableId": "16",
+        "variableId": "15",
         "name": "DLV - placement",
         "type": "v",
         "parameter": [
@@ -1723,7 +1575,7 @@
         ]
       },
       {
-        "variableId": "17",
+        "variableId": "16",
         "name": "DLV - network",
         "type": "v",
         "parameter": [
@@ -1745,7 +1597,7 @@
         ]
       },
       {
-        "variableId": "18",
+        "variableId": "17",
         "name": "DLV - form",
         "type": "v",
         "parameter": [
@@ -1767,7 +1619,7 @@
         ]
       },
       {
-        "variableId": "19",
+        "variableId": "18",
         "name": "DLV - source",
         "type": "v",
         "parameter": [
@@ -1789,7 +1641,7 @@
         ]
       },
       {
-        "variableId": "20",
+        "variableId": "19",
         "name": "DLV - step",
         "type": "v",
         "parameter": [
@@ -1811,7 +1663,7 @@
         ]
       },
       {
-        "variableId": "21",
+        "variableId": "20",
         "name": "DLV - reason",
         "type": "v",
         "parameter": [
@@ -1833,7 +1685,7 @@
         ]
       },
       {
-        "variableId": "22",
+        "variableId": "21",
         "name": "DLV - page_path",
         "type": "v",
         "parameter": [
@@ -1855,7 +1707,7 @@
         ]
       },
       {
-        "variableId": "23",
+        "variableId": "22",
         "name": "DLV - user_data",
         "type": "v",
         "parameter": [
@@ -1877,7 +1729,7 @@
         ]
       },
       {
-        "variableId": "24",
+        "variableId": "23",
         "name": "DLV - user_data.sha256_email_address",
         "type": "v",
         "parameter": [
@@ -1899,7 +1751,7 @@
         ]
       },
       {
-        "variableId": "25",
+        "variableId": "24",
         "name": "DLV - user_data.sha256_phone_number",
         "type": "v",
         "parameter": [
@@ -1921,7 +1773,7 @@
         ]
       },
       {
-        "variableId": "26",
+        "variableId": "25",
         "name": "DLV - user_data.address.postal_code",
         "type": "v",
         "parameter": [
@@ -1943,7 +1795,7 @@
         ]
       },
       {
-        "variableId": "27",
+        "variableId": "26",
         "name": "User-Provided Data",
         "type": "awec",
         "parameter": [

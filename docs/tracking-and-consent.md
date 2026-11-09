@@ -14,7 +14,7 @@ Package C from `docs/tracking-options.html`, browser first:
 | Proof of consent | No server log. The choice stays in the visitor's `beer_consent` cookie (random ID, time, categories, banner revision); the banner set-up is versioned in git (`CONSENT_REVISION`, `lib/consent-copy.ts`). Art. 7(1) GDPR asks us to be able to show consent, not to keep a server log per visitor; tracking only loads after a yes, and that is how it is shown | decided 2026-11-09, no log |
 | Consent Mode v2 | **basic**: defaults all denied; GTM itself loads only after a "yes" to Statistik or Marketing (VG Hannover 2025: GTM needs consent under § 25 TDDDG) | built |
 | Tag manager | Google Tag Manager, web container as import file (`gtm/web-container.json`) | built; accounts exist on today's beer.de, connected ~1 month before launch |
-| Platforms | GA4, Google Ads (+ enhanced conversions), Meta, Pinterest, Microsoft Ads, TikTok, LinkedIn. A platform stays paused until its ID is set | prepared |
+| Platforms | GA4, Google Ads (+ enhanced conversions), Meta, Pinterest, Microsoft Ads, LinkedIn (no TikTok: BEER runs no TikTok ads). A platform stays paused until its ID is set | prepared |
 | Umami | Cookieless counting stays without consent; the session recorder only with Statistik | built |
 | Server-side | Phase 2: own server GTM on Coolify at `sgtm.beer.de`; no site change needed (`event_id` is already on every lead) | later |
 
@@ -48,15 +48,15 @@ GTM setting, no code change.
 
 ## Events (site → dataLayer)
 
-| Moment | Event | GA4 | Google Ads | Meta | Pinterest | Microsoft | TikTok | LinkedIn |
-|---|---|---|---|---|---|---|---|---|
-| Planner funnel | `form_view/start/step/attempt/error/submit` | funnel | – | – | – | – | – | – |
-| Planner sent (the lead) | `generate_lead` + `event_id`, `value`, `user_data` (hashes only, Marketing only) | `generate_lead` | primary conversion + enhanced conversions | `Lead` | `lead` | `submit_lead_form` | `SubmitForm` | conversion |
-| Phone / e-mail click | `contact` (`method`, `placement`) | `contact` | secondary (phone) | `Contact` | – | `contact` | `Contact` | – |
-| Route | `get_directions` | `get_directions` | secondary | `FindLocation` | – | – | – | – |
-| Social link | `social_click` (`network`) | `social_click` | – | – | – | – | – | – |
-| Navigation | `page_view_spa` | (enhanced measurement) | remarketing | `PageView` | `page` | (auto) | `page` | (auto) |
-| Later: appointment, signed order | n8n → sGTM webhook (phase 2) | | offline conversion | `Schedule` / `Purchase` | | | | |
+| Moment | Event | GA4 | Google Ads | Meta | Pinterest | Microsoft | LinkedIn |
+|---|---|---|---|---|---|---|---|
+| Planner funnel | `form_view/start/step/attempt/error/submit` | funnel | – | – | – | – | – |
+| Planner sent (the lead) | `generate_lead` + `event_id`, `value`, `user_data` (hashes only, Marketing only) | `generate_lead` | primary conversion + enhanced conversions | `Lead` | `lead` | `submit_lead_form` | conversion |
+| Phone / e-mail click | `contact` (`method`, `placement`) | `contact` | secondary (phone) | `Contact` | – | `contact` | – |
+| Route | `get_directions` | `get_directions` | secondary | `FindLocation` | – | – | – |
+| Social link | `social_click` (`network`) | `social_click` | – | – | – | – | – |
+| Navigation | `page_view_spa` | (enhanced measurement) | remarketing | `PageView` | `page` | (auto) | (auto) |
+| Later: appointment, signed order | n8n → sGTM webhook (phase 2) | | offline conversion | `Schedule` / `Purchase` | | | |
 
 `user_data` = `sha256_email_address`, `sha256_phone_number` (E.164, +49 default),
 `address.postal_code`, `address.country` (`lib/hash.ts`). The raw e-mail and phone

@@ -72,7 +72,6 @@ export default function ConsentBanner() {
               { name: /^_pin_unauth$/ },
               { name: /^_epik$/ },
               { name: /^_uet/ },
-              { name: /^_ttp$/ },
               { name: /^li_/ },
             ],
             reloadPage: true,

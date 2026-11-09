@@ -28,7 +28,6 @@ The table below is for anything that is still missing.
 | Meta | business.facebook.com → Events Manager → connect a **web data source (Pixel)** for beer.de; verify the domain beer.de | Pixel ID |
 | Pinterest | ads.pinterest.com → Conversions → Tag | Tag ID |
 | Microsoft Advertising | ads.microsoft.com → Tools → UET tag | UET Tag ID |
-| TikTok | ads.tiktok.com → Events Manager → Web → Pixel (manual setup) | Pixel ID |
 | LinkedIn | Campaign Manager → Analyze → Insight tag; Conversions → "Küchenplaner-Anfrage" (method: event-specific) | Partner ID + Conversion ID |
 
 Only create the ad platforms Christian will actually spend money on. A platform
@@ -52,7 +51,7 @@ Google Ads) and import nothing twice: the Ads conversions come from GTM, not fro
 
 What is in it: Google tag (GA4) + GA4 events (lead, contact, directions, social, form
 funnel); Google Ads lead conversion with enhanced conversions, phone and directions
-conversions, remarketing, Conversion Linker; Meta, Pinterest, Microsoft UET, TikTok
+conversions, remarketing, Conversion Linker; Meta, Pinterest, Microsoft UET
 and LinkedIn as Custom HTML tags (base + page view on navigation + lead, contact).
 Every tag requires its consent type (`analytics_storage` for GA4, `ad_storage` for
 the rest), on top of the site loading GTM only after a "yes".
@@ -73,7 +72,7 @@ shows it as broken, recreate it: New variable → User-Provided Data → Code �
    staging.beer.de: accept the banner, send a planner test, check that each tag
    fires once, and that nothing fires after "Alle ablehnen".
 4. Meta Events Manager → Test events; Google Ads → conversion "Recording" status
-   (can take a day); Pinterest/TikTok/Microsoft helpers (browser extensions).
+   (can take a day); Pinterest/Microsoft helpers (browser extensions).
 
 ## 4. Live
 
