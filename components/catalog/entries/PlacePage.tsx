@@ -26,17 +26,21 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         <p className="mt-6 max-w-xl font-sans text-[17px] leading-relaxed font-light text-muted">
           {hub.lede}
         </p>
-        <dl className="mt-12 grid grid-cols-2 border-t border-line sm:grid-cols-4">
-          {hub.facts.map((fact) => (
-            <div
-              key={`${fact.value}-${fact.label}`}
-              className="border-b border-line py-5 sm:border-b-0 sm:border-l sm:px-5 sm:first:border-l-0"
-            >
-              <dt className="font-serif text-[26px] leading-none text-ink">{fact.value}</dt>
-              <dd className="type-eyebrow mt-3 text-muted">{fact.label}</dd>
-            </div>
-          ))}
-        </dl>
+        {hub.facts.length ? (
+          <dl className="mt-12 grid grid-cols-2 border-t border-line sm:grid-cols-4">
+            {hub.facts.map((fact) => (
+              <div
+                key={`${fact.value}-${fact.label}`}
+                className="border-b border-line py-5 sm:border-b-0 sm:border-l sm:px-5 sm:first:border-l-0"
+              >
+                <dt className="font-serif text-[26px] leading-none text-ink">
+                  {fact.value}
+                </dt>
+                <dd className="type-eyebrow mt-3 text-muted">{fact.label}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
       </header>
 
       {hub.heroImage ? (

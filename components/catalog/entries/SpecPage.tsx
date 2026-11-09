@@ -19,7 +19,8 @@ function markFor(hub: PresentedTopic) {
 
 export default function SpecPage({ hub }: { hub: PresentedTopic }) {
   const mark = markFor(hub);
-  const houses = hub.locale === "en" ? "Fitted in these houses" : "In diesen Häusern";
+  const houses =
+    hub.locale === "en" ? "Fitted in these houses" : "In diesen Häusern";
 
   return (
     <main className="bg-paper">
@@ -58,14 +59,23 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
         <p className="mx-auto mt-10 max-w-2xl text-center font-serif text-[24px] leading-snug text-paper italic md:text-[30px]">
           {hub.ledgerLine}
         </p>
-        <dl className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-px bg-paper/15 sm:grid-cols-4">
-          {hub.facts.map((fact) => (
-            <div key={`${fact.value}-${fact.label}`} className="bg-nacht px-4 py-5">
-              <dt className="font-serif text-[22px] leading-none text-messing">{fact.value}</dt>
-              <dd className="type-eyebrow mt-3 text-paper/55">{fact.label}</dd>
-            </div>
-          ))}
-        </dl>
+        {hub.facts.length ? (
+          <dl className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-px bg-paper/15 sm:grid-cols-4">
+            {hub.facts.map((fact) => (
+              <div
+                key={`${fact.value}-${fact.label}`}
+                className="bg-nacht px-4 py-5"
+              >
+                <dt className="font-serif text-[22px] leading-none text-messing">
+                  {fact.value}
+                </dt>
+                <dd className="type-eyebrow mt-3 text-paper/55">
+                  {fact.label}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
       </section>
 
       <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
