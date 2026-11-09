@@ -50,7 +50,7 @@ function FeatureText({ feature, locale, wide }: { feature: ProjectFeatureData; l
 export default function ProjectFeature({ feature, variant, locale }: { feature: ProjectFeatureData; variant: number; locale: Locale }) {
   const photo = (className: string, sizes: string) => (
     <LocaleLink href={feature.href} className="group block" tabIndex={-1} aria-hidden="true">
-      <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} sizes={sizes} />
+      <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} sizes={sizes} drift />
     </LocaleLink>
   );
   const detail = (className: string, sizes: string) =>

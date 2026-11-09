@@ -56,7 +56,7 @@ export default function Process({
     >
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <div>
+          <div data-rise="">
             <p className="type-eyebrow mb-3">{data.eyebrow}</p>
             <h2 id="ablauf-heading" className="type-h2 max-w-xl text-ink">
               {data.title}

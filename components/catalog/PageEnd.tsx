@@ -29,7 +29,7 @@ export default function PageEnd({
     <>
       <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="page-end">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
+          <div data-rise="" className="lg:col-span-7">
             <h2 id="page-end" className="font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.03em] text-ink md:text-[52px]">
               {title}
             </h2>

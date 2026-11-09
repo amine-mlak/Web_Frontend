@@ -34,7 +34,7 @@ export default async function HomeProjects() {
   return (
     <section aria-labelledby="home-projects" className="bg-paper">
       <div className="px-5 pt-20 sm:px-8 lg:px-14 lg:pt-28">
-        <h2 id="home-projects" className="font-serif text-[40px] leading-[1.02] font-medium tracking-[-0.035em] text-ink md:text-[56px]">
+        <h2 data-rise="" id="home-projects" className="font-serif text-[40px] leading-[1.02] font-medium tracking-[-0.035em] text-ink md:text-[56px]">
           {copy.title}
         </h2>
         <p className="mt-5 max-w-xl font-sans text-[17px] leading-relaxed text-muted">{copy.text}</p>

@@ -80,8 +80,17 @@ headline "Küchen in {Ort}" without italics, no tiles, and the projects from tha
 has no distance or drive time (fields empty), and none is invented. Which regions stay at all is the
 open content decision from the audit (keep areas with real projects, redirect the rest).
 
-## Phase 2: movement (A1 colour cover, A2 parallax, A3 slide-in; reduced motion in the homepage carousel)
-planned
+## Phase 2: movement
+
+| ID | What | Status | Files | Check on |
+|---|---|---|---|---|
+| A1 | Photo frames show the photo's own colours blurred (24 px version) and uncover the photo with an upward wipe once it is in view and loaded | on staging (9 Nov) | `Frame` in `components/catalog/collections/parts.tsx`, `lib/photo-reveal.ts`, `components/RevealObserver.tsx`, `app/globals.css`, width 24 in the `/cms-opt` route | any project or topic page |
+| A2 | Project photos drift slowly inside their frames (CSS scroll timeline, no JavaScript) | on staging (9 Nov) | `ReferenzPage` story photos, `ProjectFeature` | [Projekt](https://staging.beer.de/projekte/greige-u-form-holzdecke) |
+| A3 | Headings and closing text rise into place once | on staging (9 Nov) | `data-rise` on EndBand, PageEnd, TopicReading, project texts, homepage projects, Ablauf, FAQ | homepage, project pages |
+| – | Homepage carousel stops with "reduce motion" | on staging (9 Nov) | `components/HeroCarousel.tsx` | |
+
+Checked: every frame uncovers after scrolling (project 11/11, Landhaus 13/13, homepage 8/8); with
+"reduce motion" no cover, no rise, no drift; without JavaScript nothing is covered (CSS `scripting: enabled`).
 
 ## Phase 3: openers and header (B1 three-panel opener, transparent header with two buttons)
 planned

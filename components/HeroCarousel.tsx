@@ -65,10 +65,20 @@ export default function HeroCarousel({
 }) {
   const [index, setIndex] = useState(0);
   const [animate, setAnimate] = useState(true);
+  // With "reduce motion" switched on, the first photo stays put.
+  const [still, setStill] = useState(false);
   const track = slides.length > 0 ? [...slides, slides[0]] : [];
 
   useEffect(() => {
-    if (slides.length < 2) {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setStill(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (slides.length < 2 || still) {
       return;
     }
 
@@ -85,7 +95,7 @@ export default function HeroCarousel({
     }, DWELL_MS);
 
     return () => window.clearTimeout(next);
-  }, [index, slides.length]);
+  }, [index, slides.length, still]);
 
   useEffect(() => {
     if (animate || index !== 0) {

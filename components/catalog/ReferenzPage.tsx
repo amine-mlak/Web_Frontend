@@ -231,8 +231,12 @@ export default function ReferenzPage({
                   alt={describes(item.frame.alt) ? item.frame.alt : project.title}
                   className={cn("aspect-[4/3] lg:col-span-7", index % 2 === 1 && "lg:order-2")}
                   sizes="(max-width: 1024px) 100vw, 58vw"
+                  drift
                 />
-                <div className={cn("px-5 py-10 sm:px-8 lg:col-span-5 lg:px-14 lg:py-16", index % 2 === 1 && "lg:order-1")}>
+                <div
+                  data-rise=""
+                  className={cn("px-5 py-10 sm:px-8 lg:col-span-5 lg:px-14 lg:py-16", index % 2 === 1 && "lg:order-1")}
+                >
                   <p
                     className={
                       item.lead
@@ -269,16 +273,13 @@ export default function ReferenzPage({
                 className={index % 3 === 0 ? "lg:col-span-7" : "lg:col-span-5"}
               >
                 <figure>
-                  <div className="relative aspect-[4/3] overflow-hidden bg-nacht">
-                    <CmsImage
-                      src={frame.src}
-                      alt={describes(frame.alt) ? frame.alt : project.title}
-                      srcSet={frame.srcSet}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
+                  <Frame
+                    src={frame.src}
+                    alt={describes(frame.alt) ? frame.alt : project.title}
+                    srcSet={frame.srcSet}
+                    className="aspect-[4/3]"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                   {describes(frame.alt) ? (
                     <figcaption className="mt-3 max-w-xl font-sans text-[14px] leading-relaxed text-muted">
                       {frame.alt}
