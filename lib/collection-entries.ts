@@ -1277,9 +1277,13 @@ function withCms(voice: Voice, cms?: CmsPageFields): Voice {
     quoteSource: cms.zitat ? cms.zitatQuelle || "" : "",
     closeTitle: cms.schlussTitel || voice.closeTitle,
     closeText: cms.schlussText || voice.closeText,
+    // With its own title the CMS owns the tiles too: no tiles there means no tiles on the page,
+    // not the old generated ones (region pages have none since T3).
     facts: cms.stichworte?.length
       ? cms.stichworte.map((item) => ({ value: item.wert, label: item.zeile }))
-      : voice.facts,
+      : cms.seitentitel
+        ? []
+        : voice.facts,
   };
 }
 
