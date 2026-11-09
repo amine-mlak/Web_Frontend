@@ -26,12 +26,6 @@ export async function POST(request: Request) {
     entry?: { locale?: string };
   } | null;
 
-  // Cookie consent entries (written by /api/consent on every banner answer) are no site
-  // content; refreshing on them would empty the CMS cache with each visitor's click.
-  if (payload?.model === "consent-log") {
-    return Response.json({ ok: true, skipped: "consent-log" }, { headers: { "cache-control": "no-store" } });
-  }
-
   // Webhooks need the data gone now, not stale-while-revalidate.
   revalidateTag("strapi", { expire: 0 });
 

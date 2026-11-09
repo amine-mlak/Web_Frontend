@@ -25,8 +25,6 @@ Claude does not copy keys or passwords between systems, so these need a person.
 - [ ] **Tracking accounts** (decided 2026-11-08: own banner + GTM, browser first): GA4, Google Ads,
       Meta and the other platforms already run on today's beer.de; connect them here about a month
       before launch (reuse, don't recreate). New: a GTM web container. Steps: `docs/gtm-setup.md`.
-- [ ] **Consent log token**: after the CMS deploy, create the API token "Website: Einwilligungen" in the
-      CMS admin (custom, only Consent-log → create) and put it in Coolify as `STRAPI_CONSENT_TOKEN`.
 - [ ] **Canonical domain and contact email** (`www.beer.de`? `info@beer.de`?), so they can be set
       in the CMS site settings.
 - [ ] **Datenschutz**: add a newsletter section (double opt-in, what is stored, how to unsubscribe).
@@ -104,7 +102,7 @@ Never publish the 6 sample project drafts (invented places and years).
 - [x] Consent banner and tracking built on `cms-central` (2026-11-08): own banner, GTM only after a yes,
       click IDs and the Umami recorder only with consent, footer link opens the settings. See
       `docs/tracking-and-consent.md`.
-- [ ] Tracking still open: consent log live (CMS deploy + token), the Datenschutz text for all tracking services
+- [ ] Tracking still open: the Datenschutz text for all tracking services
       (legal check, then CMS), GTM IDs in Coolify, GTM container imported and tested in Tag Assistant.
 - [ ] Spam protection on the forms, and keys rotated.
 - [ ] Links in newsletter mails point to `www.beer.de/impressum` and `/datenschutz`: check that they

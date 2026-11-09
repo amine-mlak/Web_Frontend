@@ -12,8 +12,8 @@ import { withLocale, type Locale } from "@/lib/i18n";
 /**
  * The cookie banner (vanilla-cookieconsent v3, MIT). Nothing that needs consent
  * loads before an answer; "Alle ablehnen" sits next to "Alle akzeptieren" with
- * the same weight. Every answer is logged without IP via /api/consent (proof of
- * consent, Art. 7(1) GDPR). Texts and the cookie list: lib/consent-copy.ts.
+ * the same weight. The answer lives only in the visitor's beer_consent cookie
+ * (ID, time, categories, revision). Texts and the cookie list: lib/consent-copy.ts.
  */
 
 /** Raise when services or cookies change: everyone is asked again. */
@@ -39,23 +39,6 @@ function apply() {
     ad_personalization: ads,
   });
   setConsent(state);
-}
-
-/** One line in the consent log. sendBeacon also survives the reload after a withdrawal. */
-function logConsent() {
-  const cookie = CookieConsent.getCookie();
-  const body = JSON.stringify({
-    consent_id: cookie.consentId,
-    categories: cookie.categories,
-    revision: cookie.revision,
-    language: cookie.languageCode,
-    first_consent: cookie.consentTimestamp,
-    path: window.location.pathname,
-  });
-  const blob = new Blob([body], { type: "application/json" });
-  if (!navigator.sendBeacon?.("/api/consent", blob)) {
-    void fetch("/api/consent", { method: "POST", body, headers: { "content-type": "application/json" }, keepalive: true }).catch(() => {});
-  }
 }
 
 function translations(locale: Locale) {
@@ -101,11 +84,7 @@ export default function ConsentBanner() {
         translations: { de: translations("de"), en: translations("en") },
       },
       onConsent: apply,
-      onFirstConsent: logConsent,
-      onChange: () => {
-        apply();
-        logConsent();
-      },
+      onChange: apply,
     });
     // run() only works once per page load; the locale effect below handles language changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps

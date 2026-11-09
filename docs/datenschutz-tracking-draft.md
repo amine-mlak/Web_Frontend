@@ -19,11 +19,8 @@ Ihre Auswahl speichern wir im Cookie `beer_consent` (6 Monate). Sie können sie 
 Widerruf gilt für die Zukunft. Beim Widerruf löschen wir die Cookies der betroffenen
 Dienste in Ihrem Browser.
 
-Um nachweisen zu können, dass Sie eingewilligt haben (Art. 7 Abs. 1 DSGVO), speichern wir zu
-jeder Auswahl: eine zufällige Kennung (die auch im Cookie steht), die gewählten Kategorien,
-die Version des Banners, die Sprache, den Zeitpunkt und die aufgerufene Seite. Wir speichern
-dabei keine IP-Adresse. Speicherdauer: 3 Jahre **[prüfen]**, danach automatisch gelöscht. Speicherort:
-unser eigenes Redaktionssystem (cms.beer.de) bei **[Hoster prüfen]** in der EU.
+Der Cookie enthält eine zufällige Kennung, den Zeitpunkt, die gewählten Kategorien und die Version
+des Banners. Auf unseren Servern speichern wir zu Ihrer Auswahl nichts.
 
 Rechtsgrundlage für Dienste, die eine Einwilligung brauchen: Art. 6 Abs. 1 lit. a DSGVO und
 § 25 Abs. 1 TDDDG. Für das Speichern Ihrer Auswahl: § 25 Abs. 2 Nr. 2 TDDDG und Art. 6 Abs. 1
@@ -98,9 +95,8 @@ Your choice is stored in the cookie `beer_consent` (6 months). You can change or
 any time via "Cookie settings" at the bottom of every page, with effect for the future; the
 services' cookies are then deleted from your browser.
 
-To prove consent (Art. 7(1) GDPR) we store per choice: a random ID (also in the cookie), the
-chosen categories, the banner version, the language, the time and the page, but no IP address.
-Kept for 3 years **[check]**, then deleted automatically, in our own content system (cms.beer.de) in the EU **[check host]**.
+The cookie holds a random ID, the time, the chosen categories and the banner version. We store
+nothing about your choice on our servers.
 
 Legal basis for services that need consent: Art. 6(1)(a) GDPR and § 25(1) TDDDG. For storing
 your choice: § 25(2) no. 2 TDDDG and Art. 6(1)(c) GDPR.
@@ -134,7 +130,8 @@ close the window and saved with your enquiry. Legal basis: Art. 6(1)(a) GDPR, §
 
 ## Open points for the legal check
 
-1. Retention of the consent log (3 years proposed) and where cms.beer.de is hosted.
+1. Proof of consent (Art. 7(1)): there is no per-visitor log on the server, only the cookie and the banner
+   set-up versioned in git. Is that enough? If not, BEER self-hosts a consent tool with a log.
 2. Umami: version, hosting location, whether the recorder masks form fields.
 3. TikTok: transfer basis outside the EU.
 4. Joint controllership (Art. 26) for Google Ads and Meta: link the vendors' terms.
