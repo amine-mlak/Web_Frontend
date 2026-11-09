@@ -3,6 +3,7 @@ import CmsImage from "@/components/CmsImage";
 import NextSteps from "@/components/catalog/NextSteps";
 import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
+import TriptychHero from "@/components/catalog/TriptychHero";
 import type { KitchenClusterSlug, Project } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
 import { cn, photoKey } from "@/lib/utils";
@@ -120,6 +121,8 @@ function projectFacts(project: Project, copy: (typeof COPY)["de" | "en"]): Fact[
   return facts;
 }
 
+const CLOSE_UP = /^(Kante|Ecke|Bedienknebel|Geöffnete?|Eingelassene?|Griff|Griffmulde|Detail|Nahaufnahme|Messerleiste|Armatur|Blick in)/i;
+
 export default function ReferenzPage({
   project,
   others,
@@ -140,6 +143,14 @@ export default function ReferenzPage({
     seen.add(key);
     return true;
   });
+  // Close-ups (an edge, a corner, knobs, an open drawer) carry the opener: the title on one,
+  // the other beside it. The alt texts describe each photo, so they tell which ones are close-ups.
+  const closeUps = gallery.filter((frame) => CLOSE_UP.test(frame.alt ?? ""));
+  const opener =
+    project.image && closeUps.length >= 2 ? { close: closeUps[0], detail: closeUps[1] } : null;
+  if (opener) {
+    for (const used of [opener.close, opener.detail]) gallery.splice(gallery.indexOf(used), 1);
+  }
   // The last frame moves to the closing band instead of being shown twice.
   const closePhoto = gallery.length > 3 ? gallery.pop()! : null;
   // The intro and each paragraph stand beside a gallery photo, in gallery order; the rest follow below.
@@ -160,17 +171,27 @@ export default function ReferenzPage({
               {copy.file}
             </p>
           </div>
-          <h1 className="mt-8 max-w-4xl font-serif text-[44px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px] lg:text-[80px]">
-            {project.title}
-          </h1>
-          {meta ? (
-            <p className="mt-5 font-sans text-[12px] tracking-[0.18em] text-muted uppercase">
-              {meta}
-            </p>
-          ) : null}
+          {opener ? null : (
+            <>
+              <h1 className="mt-8 max-w-4xl font-serif text-[44px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px] lg:text-[80px]">
+                {project.title}
+              </h1>
+              {meta ? (
+                <p className="mt-5 font-sans text-[12px] tracking-[0.18em] text-muted uppercase">{meta}</p>
+              ) : null}
+            </>
+          )}
         </header>
 
-        {project.image ? (
+        {opener && project.image ? (
+          <TriptychHero
+            room={{ src: project.image, srcSet: project.srcSet, alt: project.title }}
+            close={{ src: opener.close.src, srcSet: opener.close.srcSet, alt: opener.close.alt ?? "" }}
+            detail={{ src: opener.detail.src, srcSet: opener.detail.srcSet, alt: opener.detail.alt ?? "" }}
+            title={project.title}
+            meta={meta}
+          />
+        ) : project.image ? (
           <Frame
             src={project.image}
             alt={project.title}
