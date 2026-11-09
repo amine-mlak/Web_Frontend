@@ -39,7 +39,7 @@ export default function TopicReading({
   return (
     <section className="border-t border-line bg-paper" aria-labelledby={`reading-${slug ?? "seite"}`}>
       <div className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
-        <div className="lg:col-span-4">
+        <div data-rise="" className="lg:col-span-4">
           <p className="type-eyebrow text-gold">{places.eyebrow}</p>
           <h2
             id={`reading-${slug ?? "seite"}`}

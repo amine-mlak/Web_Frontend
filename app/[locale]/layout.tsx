@@ -7,6 +7,7 @@ import LinkTracking from "@/components/LinkTracking";
 import TagManager from "@/components/TagManager";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import SmoothScroll from "@/components/SmoothScroll";
+import RevealObserver from "@/components/RevealObserver";
 import Umami from "@/components/Umami";
 import { isLocale, LOCALES } from "@/lib/i18n";
 import { siteUrl } from "@/lib/seo";
@@ -89,6 +90,7 @@ export default async function RootLayout({
         <TagManager />
         <LocaleProvider locale={locale}>
           <SmoothScroll />
+          <RevealObserver />
           <ConsentBanner />
           <ClickIds />
           <LinkTracking />

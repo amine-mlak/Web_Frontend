@@ -115,6 +115,7 @@ export default async function Faq({ content }: { content: FaqContent | null }) {
       />
       <div className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
         <h2
+          data-rise=""
           id="faq-heading"
           className="font-serif text-[34px] leading-[1.15] font-medium tracking-[-0.02em] text-ink md:text-[42px]"
         >

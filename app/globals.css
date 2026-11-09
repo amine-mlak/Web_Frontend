@@ -483,3 +483,99 @@ html #cc-main a:focus-visible {
   outline: 2px solid #a17a4a;
   outline-offset: 2px;
 }
+
+/* ---------------------------------------------------------------------------------------------
+   Photo reveal, drift and rise (design phase 2). RevealObserver sets data-shown when an element
+   scrolls into view. Without JavaScript or with "reduce motion" nothing is covered or moved.
+   --------------------------------------------------------------------------------------------- */
+
+/* The photo's own colours, blurred, under the photo while it loads. */
+.photo-stand-in {
+  position: absolute;
+  inset: -12%;
+  background-image: var(--stand-in);
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px) saturate(1.05);
+}
+
+/* The same colours on top, wiped upwards once the frame is in view and the photo has loaded. */
+.photo-cover {
+  display: none;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .photo-cover {
+    display: block;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 900ms cubic-bezier(0.65, 0, 0.2, 1);
+  }
+
+  .photo-cover::before {
+    content: "";
+    position: absolute;
+    inset: -12%;
+    background-image: var(--stand-in);
+    background-size: cover;
+    background-position: center;
+    filter: blur(18px) saturate(1.05);
+  }
+
+  [data-reveal][data-shown] .photo-cover {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  /* The photo settles from a slight zoom while the cover lifts. */
+  [data-reveal] > img {
+    transform: scale(1.06);
+    transition: transform 1400ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  [data-reveal][data-shown] > img {
+    transform: none;
+  }
+
+  /* Headings and buttons rise into place once. */
+  [data-rise] {
+    transition:
+      opacity 800ms ease-out,
+      transform 800ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  [data-rise]:not([data-shown]) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* Photo drifting inside its frame while scrolling (no JavaScript; only where the browser can). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .photo-drift > img {
+      top: -8%;
+      height: 116%;
+      animation: photo-drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+
+    /* Reveal and drift together: the drift owns the transform. */
+    .photo-drift[data-reveal] > img {
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes photo-drift {
+  from {
+    transform: translateY(-6%);
+  }
+  to {
+    transform: translateY(6%);
+  }
+}
