@@ -14,12 +14,12 @@ Status: planned · in progress · on staging · done
 
 | ID | What | Status | Files | Check on |
 |---|---|---|---|---|
-| T1 | First point under each numbered item repeated the line above it | done (branch) | `lib/collection-entries.ts` (`pointBranches`, `withPunkte`) | [Keramik](https://staging.beer.de/material/keramik), [Kochfeld](https://staging.beer.de/geraete/kochfeld) |
-| T2 | Same "…, geplant in Wolfersdorf." block on 32 pages | done (branch) | `lib/entry-reading.ts` (`isSeededReading`), `components/catalog/clusters/TopicReading.tsx`, Spec/Sample/PlacePage | [Keramik](https://staging.beer.de/material/keramik), [Miele](https://staging.beer.de/marken/miele), [Augsburg](https://staging.beer.de/regionen/augsburg) |
-| T3 | Plain headlines instead of wordplay; real facts instead of one-word tiles | waiting: CMS drafts after the other CMS work is finished | `lib/collection-entries.ts` (`VOICE`, `regionVoice`) | wording list below for Amine |
-| T4 | Each page type gets its own section order: materials show their kitchens right after the photo, appliances and brands before the reading text; "Unter Tageslicht" caption gone | done (branch) | `components/catalog/entries/*` | Keramik, Kochfeld, Augsburg |
-| D1 | Dark ending band with photo, next step and tiles to neighbouring pages (materials, appliances, brands, regions); topic pages get the band without tiles | done (branch) | `components/catalog/EndBand.tsx`, `SoftClose` in `clusters/parts.tsx` | Keramik, Kochfeld, Augsburg, Weiße Küchen |
-| – | Instagram only on the homepage and `/projekte` | done (branch) | `app/[locale]/(main)/layout.tsx` | |
+| T1 | First point under each numbered item repeated the line above it | on staging (9 Nov) | `lib/collection-entries.ts` (`pointBranches`, `withPunkte`) | [Keramik](https://staging.beer.de/material/keramik), [Kochfeld](https://staging.beer.de/geraete/kochfeld) |
+| T2 | Same "…, geplant in Wolfersdorf." block on 32 pages | on staging (9 Nov) | `lib/entry-reading.ts` (`isSeededReading`), `components/catalog/clusters/TopicReading.tsx`, Spec/Sample/PlacePage | [Keramik](https://staging.beer.de/material/keramik), [Miele](https://staging.beer.de/marken/miele), [Augsburg](https://staging.beer.de/regionen/augsburg) |
+| T3 | Plain headlines instead of wordplay; real facts instead of one-word tiles | waiting: CMS fix for draft access (Strapi 5.61) must go live first | `lib/collection-entries.ts` (`VOICE`, `regionVoice`) | wording list below for Amine |
+| T4 | Each page type gets its own section order: materials show their kitchens right after the photo, appliances and brands before the reading text; "Unter Tageslicht" caption gone | on staging (9 Nov) | `components/catalog/entries/*` | Keramik, Kochfeld, Augsburg |
+| D1 | Dark ending band with photo, next step and tiles to neighbouring pages (materials, appliances, brands, regions); topic pages get the band without tiles | on staging (9 Nov) | `components/catalog/EndBand.tsx`, `SoftClose` in `clusters/parts.tsx` | Keramik, Kochfeld, Augsburg, Weiße Küchen |
+| – | Instagram only on the homepage and `/projekte` | on staging (9 Nov) | `app/[locale]/(main)/layout.tsx` | |
 
 Photos: pages without tagged kitchens all drew the same fallback photos; the list of other projects now starts at a different point per page (`lib/kitchen-photos.ts`, `seed`).
 
