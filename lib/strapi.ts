@@ -794,6 +794,27 @@ function mapCopiedFaqItems(items?: StrapiFaqItem[]): FaqItem[] {
     .filter((item) => item.question && item.answer);
 }
 
+// Strapi caps a page at 100 entries, and the FAQ has more, so read every page.
+async function fetchAllFaqItems(): Promise<unknown[]> {
+  const rows: unknown[] = [];
+  for (let page = 1; page <= 10; page++) {
+    const payload = await strapiGet<{
+      data?: unknown;
+      meta?: { pagination?: { pageCount?: number } };
+    }>("/api/faq-items", {
+      sort: "order:asc",
+      populate: "themes",
+      "pagination[pageSize]": "100",
+      "pagination[page]": String(page),
+    });
+    rows.push(...flattenCollection(payload?.data));
+    if (page >= (payload?.meta?.pagination?.pageCount ?? 1)) {
+      break;
+    }
+  }
+  return rows;
+}
+
 async function fetchFaqItemsByTheme(themeSlug: string): Promise<FaqItem[]> {
   const payload = await strapiGet<{ data?: unknown }>("/api/faq-items", {
     "filters[themes][slug][$eq]": themeSlug,
@@ -865,11 +886,7 @@ export async function fetchFaqHub(): Promise<{
       sort: "order:asc",
       "pagination[pageSize]": "100",
     }),
-    strapiGet<{ data?: unknown }>("/api/faq-items", {
-      sort: "order:asc",
-      populate: "themes",
-      "pagination[pageSize]": "100",
-    }),
+    fetchAllFaqItems(),
   ]);
 
   const themes = flattenCollection(themePayload?.data)
@@ -877,7 +894,7 @@ export async function fetchFaqHub(): Promise<{
     .filter((theme): theme is FaqTheme => Boolean(theme))
     .sort((left, right) => left.order - right.order);
 
-  const items = flattenCollection(itemPayload?.data)
+  const items = itemPayload
     .map(mapFaqEntry)
     .filter((item): item is FaqEntry => Boolean(item))
     .sort((left, right) => left.order - right.order);

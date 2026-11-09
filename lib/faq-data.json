@@ -156,11 +156,15 @@
   "items": [
     {
       "slug": "wie-laeuft-die-beratung-ab",
-      "question": "Wie läuft die Beratung ab?",
-      "answer": "Zuerst ein Gespräch – in der Ausstellung oder bei Ihnen. Wir klären Raum, Alltag und Budget, bevor gezeichnet wird. Daraus entsteht ein Vorschlag mit Materialien und einem ehrlichen Preisrahmen. Vertieft wird nur, was Sie weiterführen möchten.",
-      "showOnHome": false,
+      "question": "Wie läuft die Beratung und Planung ab, und wie viele Termine sind nötig?",
+      "answer": "Zunächst lernen wir Ihre Wünsche und räumlichen Voraussetzungen in einem ausführlichen Gespräch kennen. Danach erstellen wir eine individuelle Planung mit Angebot, die wir gewöhnlich bei einem zweiten Termin vorstellen und gemeinsam weiterentwickeln. Nach der Beauftragung folgen Aufmaß, technische Konstruktion und Kundenfreigabe, anschließend Fertigung und Montage. Die konkrete Anzahl der Termine richtet sich nach dem Projekt.",
+      "showOnHome": true,
       "order": 10,
-      "themes": ["allgemein", "ausstellung", "planung"]
+      "themes": [
+        "allgemein",
+        "ausstellung",
+        "planung"
+      ]
     },
     {
       "slug": "ist-ein-termin-zu-frueh",
@@ -168,7 +172,10 @@
       "answer": "Nein. Die meisten Gespräche beginnen genau so: mit Bildern, einem Raum und dem Gefühl, dass etwas besser gehen könnte. Wir sortieren gemeinsam – bevor gezeichnet wird.",
       "showOnHome": true,
       "order": 11,
-      "themes": ["allgemein", "ausstellung"]
+      "themes": [
+        "allgemein",
+        "ausstellung"
+      ]
     },
     {
       "slug": "kuechen-anschauen-und-anfassen",
@@ -176,7 +183,10 @@
       "answer": "Ja. In der Ausstellung in Wolfersdorf stehen Materialien, Muster und ausgeführte Details zum Anfassen – nicht nur Visualisierungen. Dafür lohnt ein Termin, dann ist Zeit dafür.",
       "showOnHome": true,
       "order": 12,
-      "themes": ["allgemein", "ausstellung"]
+      "themes": [
+        "allgemein",
+        "ausstellung"
+      ]
     },
     {
       "slug": "pinterest-bilder-mitbringen",
@@ -184,39 +194,56 @@
       "answer": "Bitte. Bilder sagen oft mehr als ein Grundriss. Wir schauen, was daran wirklich zu Ihrem Alltag und zum Raum passt – und was nur auf dem Bildschirm funktioniert.",
       "showOnHome": true,
       "order": 13,
-      "themes": ["allgemein", "planung", "ausstellung"]
+      "themes": [
+        "allgemein",
+        "planung",
+        "ausstellung"
+      ]
     },
     {
       "slug": "was-kostet-der-erste-schritt",
       "question": "Was kostet der erste Schritt?",
-      "answer": "Nichts. Das Erstgespräch in der Ausstellung oder bei Ihnen ist kostenlos. Verbindlich wird es erst mit Planung und Auftrag.",
+      "answer": "Nichts. Das Erstgespräch ist kostenlos. Verbindlich wird es erst mit Planung und Auftrag.",
       "showOnHome": true,
       "order": 14,
-      "themes": ["kosten", "allgemein", "ausstellung"]
+      "themes": [
+        "kosten",
+        "allgemein",
+        "ausstellung"
+      ]
     },
     {
       "slug": "brauche-ich-einen-termin",
       "question": "Brauche ich einen Termin für die Ausstellung?",
       "answer": "Sie können vorbeikommen. Für ein ruhiges Gespräch empfehlen wir einen Termin – dann ist Ihr Berater vorbereitet und die Zeit gehört Ihnen. Ohne Termin zeigen wir Ihnen gern die Ausstellung, vertiefen aber nicht jede Planung.",
-      "showOnHome": false,
+      "showOnHome": true,
       "order": 20,
-      "themes": ["allgemein", "ausstellung"]
+      "themes": [
+        "allgemein",
+        "ausstellung"
+      ]
     },
     {
       "slug": "was-kostet-eine-kueche-nach-mass",
-      "question": "Was kostet eine Küche nach Maß?",
-      "answer": "Jede Küche wird einzeln geplant. Der Preis hängt von Größe, Front, Arbeitsplatte und Geräten ab. Im Erstgespräch nennen wir einen Rahmen – bevor die Planung vertieft wird. Pauschalpreise aus dem Katalog führen hier nicht weiter.",
-      "showOnHome": false,
+      "question": "Was kostet eine individuell gefertigte Küche bei BEER?",
+      "answer": "Unsere Küchen werden vollständig individuell geplant und kalkuliert. Deshalb gibt es weder einen pauschalen Küchenpreis noch einen sinnvollen Meterpreis. Als grobe Orientierung lag der Durchschnitt unserer Küchen zuletzt bei etwa 30.000–40.000 € inklusive Geräte, Arbeitsplatte und Montage. Unser Ziel ist es, Ihnen eine individuelle Küche zum Preis einer guten Fertigküche anzubieten. Im Beratungsgespräch klären wir frühzeitig, welche Lösung zu Ihrem Budget passt.",
+      "showOnHome": true,
       "order": 30,
-      "themes": ["kosten", "allgemein"]
+      "themes": [
+        "kosten",
+        "allgemein"
+      ]
     },
     {
       "slug": "wie-lange-dauert-planung-und-fertigung",
       "question": "Wie lange dauert Planung und Fertigung?",
       "answer": "Von der ersten Beratung bis zur Montage rechnen wir in der Regel mit einigen Monaten. Aufmaß, Freigabe, Fertigung und Einbau folgen nacheinander. Den konkreten Zeitplan stimmen wir nach dem Aufmaß mit Ihnen ab – nicht vorher aus der Luft.",
-      "showOnHome": false,
+      "showOnHome": true,
       "order": 40,
-      "themes": ["planung", "montage"]
+      "themes": [
+        "planung",
+        "montage"
+      ]
     },
     {
       "slug": "brauche-ich-einen-grundriss",
@@ -224,15 +251,22 @@
       "answer": "Hilfreich, aber nicht Pflicht. Skizze, Fotos oder ein alter Plan reichen für das erste Gespräch. Das verbindliche Maß nehmen wir vor Ort – Wände, Nischen und Anschlüsse weichen oft vom Papier ab.",
       "showOnHome": false,
       "order": 50,
-      "themes": ["planung", "allgemein"]
+      "themes": [
+        "planung",
+        "allgemein"
+      ]
     },
     {
       "slug": "was-bringe-ich-zum-erstgespraech-mit",
-      "question": "Was bringe ich zum Erstgespräch mit?",
-      "answer": "Was Sie haben: Fotos des Raums, Wunschbilder, grobes Budget. Wenn ein Grundriss da ist, bringen Sie ihn mit. Wichtiger als Unterlagen ist, wie Sie kochen und leben – das lässt sich im Gespräch klären.",
+      "question": "Welche Unterlagen und Informationen sollte ich zum ersten Termin mitbringen?",
+      "answer": "Hilfreich sind ein Grundriss mit Maßen, gegebenenfalls Baupläne, Fotos des Raums, Inspirationen und eine grobe Vorstellung Ihres Budgets und Einzugstermins. Überlegen Sie außerdem, welche Geräte Sie benötigen, wie viele Personen die Küche nutzen und was Sie an Ihrer bisherigen Küche verbessern möchten. Ein vollständig ausgearbeiteter Plan ist für das Erstgespräch nicht erforderlich.",
       "showOnHome": false,
       "order": 60,
-      "themes": ["allgemein", "planung", "ausstellung"]
+      "themes": [
+        "allgemein",
+        "planung",
+        "ausstellung"
+      ]
     },
     {
       "slug": "arbeiten-sie-nur-an-neubauten",
@@ -240,15 +274,21 @@
       "answer": "Nein. Viele Küchen entstehen im Bestand: Altbau, Anbau, bestehende Anschlüsse. Gerade dort lohnt Maßarbeit, weil Wände und Nischen selten rechtwinklig sind.",
       "showOnHome": false,
       "order": 70,
-      "themes": ["allgemein", "besondere", "planung"]
+      "themes": [
+        "allgemein",
+        "besondere",
+        "planung"
+      ]
     },
     {
       "slug": "welche-kuechenfarben-sind-moeglich",
-      "question": "Welche Küchenfarben sind möglich?",
-      "answer": "Fast jede Farbe, die zum Raum passt: Weiß, Sand, Grau, Schwarz, Salbei, Blau, lagige Holztöne. Wir arbeiten mit Lack, Folie, Furnier und massivem Holz. Die Farbe entscheiden wir am Muster – nicht am Bildschirm.",
+      "question": "Welche Farben können für die Küche gewählt werden?",
+      "answer": "Dank unserer eigenen Lackiererei steht Ihnen eine sehr große Farbauswahl zur Verfügung, von zurückhaltenden Naturtönen bis zu kräftigen Akzentfarben. Je nach Material sind matte, stumpfmatte oder glänzende Oberflächen möglich. Bei Holzoberflächen bestimmen außerdem Holzart, Maserung und Behandlung den Farbcharakter.",
       "showOnHome": false,
       "order": 80,
-      "themes": ["farben"]
+      "themes": [
+        "farben"
+      ]
     },
     {
       "slug": "weisse-kueche-im-alltag",
@@ -256,7 +296,10 @@
       "answer": "Weiß bleibt hell und ruhig, zeigt aber Gebrauch. Die Pflege hängt von der Oberfläche ab: matte Lacke verzeihen anders als Hochglanz. Wir zeigen Ihnen Muster unter Tageslicht und sprechen ehrlich über Spuren.",
       "showOnHome": false,
       "order": 90,
-      "themes": ["farben", "pflege"]
+      "themes": [
+        "farben",
+        "pflege"
+      ]
     },
     {
       "slug": "schwarze-kueche-zu-dunkel",
@@ -264,7 +307,10 @@
       "answer": "Schwarz braucht Licht, Kontrast und oft Holz oder Stein als Gegengewicht. In offenen Räumen mit Fenster kann sie ruhig und präzise wirken. In kleinen, dunklen Zimmern raten wir eher zu gebrochenen Tönen.",
       "showOnHome": false,
       "order": 100,
-      "themes": ["farben", "stile"]
+      "themes": [
+        "farben",
+        "stile"
+      ]
     },
     {
       "slug": "salbeigrune-kueche",
@@ -272,7 +318,10 @@
       "answer": "Ja – wenn der Ton zum Stein, zum Boden und zum Licht passt. Salbei liegt zwischen Landhaus und zurückhaltender Moderne. Wir mustern den Farbton an der Wand, nicht nur auf dem Chip.",
       "showOnHome": false,
       "order": 110,
-      "themes": ["farben", "stile"]
+      "themes": [
+        "farben",
+        "stile"
+      ]
     },
     {
       "slug": "holz-und-farbfronten-kombinieren",
@@ -280,15 +329,22 @@
       "answer": "Ja, oft ist das die ruhigere Lösung: farbige Unterschränke, Holz oben – oder umgekehrt. Wichtig sind Maserung, Griff und Arbeitsplatte, damit es nicht nach zwei Küchen aussieht.",
       "showOnHome": false,
       "order": 120,
-      "themes": ["farben", "material", "stile"]
+      "themes": [
+        "farben",
+        "material",
+        "stile"
+      ]
     },
     {
       "slug": "welche-kuechenform-passt",
-      "question": "Welche Küchenform passt zu meinem Raum?",
-      "answer": "Das entscheidet der Grundriss, nicht der Trend. Eine Zeile braucht Länge, die L-Form eine Ecke, die U-Form zwei. Inseln brauchen Laufwege. Wir zeichnen Varianten, bevor Sie sich festlegen.",
+      "question": "Welche Küchenform passt zu unserem Grundriss, ohne zu viel Wohnraum einzunehmen?",
+      "answer": "Ob Zeile, L-Form, U-Form oder Inselküche am besten passt, hängt von Fenster- und Türpositionen, Laufwegen und dem Verhältnis von Küche zu Wohnen ab. Wir prüfen mehrere Anordnungen und achten darauf, dass ausreichend Arbeits- und Stauraum entsteht, ohne den Wohnbereich unnötig einzuschränken.",
       "showOnHome": false,
       "order": 130,
-      "themes": ["formen", "planung"]
+      "themes": [
+        "formen",
+        "planung"
+      ]
     },
     {
       "slug": "l-form-oder-u-form",
@@ -296,7 +352,9 @@
       "answer": "Weder noch. Die L-Form hält Laufwege offen, die U-Form gibt mehr Arbeits- und Stauraum, schließt den Raum aber. In Wohnküchen ist oft die L-Form mit Insel die klarere Lösung.",
       "showOnHome": false,
       "order": 140,
-      "themes": ["formen"]
+      "themes": [
+        "formen"
+      ]
     },
     {
       "slug": "kuechenzeile-kleine-raeume",
@@ -304,7 +362,10 @@
       "answer": "Oft ja – wenn Höhe, Nischen und Innenleben mitgedacht werden. Eine klare Zeile ist besser als eine gedrängte U-Form. Kleine Räume verzeihen keine überladenen Inseln.",
       "showOnHome": false,
       "order": 150,
-      "themes": ["formen", "besondere"]
+      "themes": [
+        "formen",
+        "besondere"
+      ]
     },
     {
       "slug": "offene-kueche-planen",
@@ -312,7 +373,11 @@
       "answer": "Sichtachsen, Geräusche, Dunst und Stauraum gehören zusammen. Die Küche darf Möbel sein, nicht nur Technik. Insel, Materialwechsel und eine ruhige Rückwand halten den Wohnraum klar.",
       "showOnHome": false,
       "order": 160,
-      "themes": ["formen", "besondere", "inseln"]
+      "themes": [
+        "formen",
+        "besondere",
+        "inseln"
+      ]
     },
     {
       "slug": "moderne-oder-landhauskueche",
@@ -320,7 +385,9 @@
       "answer": "Das Haus gibt den Ton vor, nicht der Katalog. Moderne Küchen sind ruhig und flächig, Landhaus arbeitet mit Rahmen, Holz und Wärme. Mischformen gehen – wenn Griffe, Stein und Licht zusammenpassen.",
       "showOnHome": false,
       "order": 170,
-      "themes": ["stile"]
+      "themes": [
+        "stile"
+      ]
     },
     {
       "slug": "was-ist-eine-designkueche",
@@ -328,7 +395,9 @@
       "answer": "Keine Showküche. Eine Designküche bei uns heißt: klare Fugen, passende Geräte, Materialien, die man anfassen mag. Weniger Dekor, mehr Maß – und eine Haltung, die zum Haus passt.",
       "showOnHome": false,
       "order": 180,
-      "themes": ["stile"]
+      "themes": [
+        "stile"
+      ]
     },
     {
       "slug": "puristische-grifflose-kueche",
@@ -336,7 +405,10 @@
       "answer": "Ja, wenn die Öffnung stimmt: Tipp-on, Griffmulde oder lange Profilgriffe. Grifflos sieht ruhig aus, braucht aber saubere Fronten und durchdachte Auszüge. Wir testen das am Muster, nicht nur in der Visualisierung.",
       "showOnHome": false,
       "order": 190,
-      "themes": ["stile", "material"]
+      "themes": [
+        "stile",
+        "material"
+      ]
     },
     {
       "slug": "holzkueche-welcher-stil",
@@ -344,7 +416,11 @@
       "answer": "Nein. Eiche, Nussbaum oder Esche können modern, warm oder zurückhaltend sein – je nach Schliff, Fuge und Arbeitsplatte. Holz ist Material, nicht Stil.",
       "showOnHome": false,
       "order": 200,
-      "themes": ["stile", "material", "farben"]
+      "themes": [
+        "stile",
+        "material",
+        "farben"
+      ]
     },
     {
       "slug": "lohnt-sich-eine-kuecheninsel",
@@ -352,15 +428,21 @@
       "answer": "Wenn der Raum Laufwege lässt: ja. Eine Insel ist Arbeitsfläche, Treffpunkt und oft Kochstelle. Wird sie zum Hindernis, planen wir eine Halbinsel oder eine klare Zeile – nicht um jeden Preis eine Insel.",
       "showOnHome": false,
       "order": 210,
-      "themes": ["inseln", "formen"]
+      "themes": [
+        "inseln",
+        "formen"
+      ]
     },
     {
       "slug": "wie-viel-platz-braucht-eine-insel",
-      "question": "Wie viel Platz braucht eine Kücheninsel?",
-      "answer": "Planen Sie um die Insel herum Wege, nicht nur die Platte. Unter einem Meter Durchgang wird es eng, besonders an Spüle und Herd. Das genaue Maß ergibt das Aufmaß – und wie Sie zu zweit kochen.",
+      "question": "Wie breit müssen Durchgänge sein, insbesondere zwischen Küchenzeile und Insel?",
+      "answer": "Als häufig sinnvoller Planungswert gelten etwa 100–120 cm zwischen zwei Küchenbereichen; bei gegenüberliegenden Geschirrspülern oder Auszügen und mehreren gleichzeitig arbeitenden Personen kann mehr Platz vorteilhaft sein. Ob geringere Abstände funktionieren, hängt von der konkreten Nutzung ab. Die Maße sind Planungsrichtwerte, keine pauschale baurechtliche Vorgabe.",
       "showOnHome": false,
       "order": 220,
-      "themes": ["inseln", "planung"]
+      "themes": [
+        "inseln",
+        "planung"
+      ]
     },
     {
       "slug": "kochinsel-mit-abzug",
@@ -368,23 +450,34 @@
       "answer": "Ja. Kochfeldabzüge halten den Blick frei, brauchen aber Technik unter der Platte und oft mehr Korpustiefe. Eine Esse über der Insel bleibt eine Alternative, wenn der Raum sie trägt.",
       "showOnHome": false,
       "order": 230,
-      "themes": ["inseln", "geraete", "marken"]
+      "themes": [
+        "inseln",
+        "geraete",
+        "marken"
+      ]
     },
     {
       "slug": "kleine-kueche-nach-mass",
-      "question": "Lohnt Maßarbeit in einer kleinen Küche?",
-      "answer": "Gerade dort. Zentimeter, Nischen und raumhohe Schränke entscheiden, ob der Raum atmet. Standardzeilen lassen oft Ecken und Decken ungenutzt.",
+      "question": "Ist unsere Küche zu klein, und lässt sich auch eine kleine Küche gut gestalten?",
+      "answer": "Auch kleine Räume können sehr funktional und hochwertig gestaltet werden. Durch millimetergenaue Schrankmaße, niedrige Sockel, raumhohe Stauraumnutzung und eine sinnvolle Geräteauswahl holen wir mehr aus der verfügbaren Fläche heraus. Entscheidend sind gute Laufwege und eine auf Ihren Alltag abgestimmte Planung.",
       "showOnHome": false,
       "order": 240,
-      "themes": ["besondere", "formen"]
+      "themes": [
+        "besondere",
+        "formen"
+      ]
     },
     {
       "slug": "raumhohe-schraenke",
-      "question": "Sind raumhohe Schränke sinnvoll?",
-      "answer": "Ja, wenn die Decke mitspielt. Raumhoch nimmt Staubkanten weg und gibt Stauraum, den Unterschränke nicht ersetzen. Obere Fächer planen wir so, dass sie erreichbar bleiben – mit Tritt oder Auszug, nicht als totes Lager.",
+      "question": "Können die Küchenschränke raumhoch bis zur Decke gefertigt werden?",
+      "answer": "Ja. Raumhohe Schränke sind eine unserer Stärken, da wir nicht auf feste Standard-Korpusmaße angewiesen sind. Die Ausführung hängt von der tatsächlichen Raumhöhe, dem Aufmaß und der Montagekonstruktion ab. So entsteht eine ruhige, integrierte Küchenarchitektur mit zusätzlichem Stauraum.",
       "showOnHome": false,
       "order": 250,
-      "themes": ["besondere", "material", "innenleben"]
+      "themes": [
+        "besondere",
+        "material",
+        "innenleben"
+      ]
     },
     {
       "slug": "kueche-im-altbau",
@@ -392,7 +485,11 @@
       "answer": "Ja. Schiefe Wände, alte Anschlüsse und niedrige Decken sind der Normalfall, nicht die Ausnahme. Deshalb messen wir vor Ort und fertigen nach dem Raum, nicht nach dem Rastermaß.",
       "showOnHome": false,
       "order": 260,
-      "themes": ["besondere", "planung", "montage"]
+      "themes": [
+        "besondere",
+        "planung",
+        "montage"
+      ]
     },
     {
       "slug": "welche-fronten-gibt-es",
@@ -400,7 +497,9 @@
       "answer": "Lack, Schichtstoff, furniertes Holz, massives Holz – jeweils matt, seidenmatt oder mit sichtbarer Maserung. Die Front ist das, was Sie täglich anfassen. Deshalb mustern wir vor der Bestellung.",
       "showOnHome": false,
       "order": 270,
-      "themes": ["material"]
+      "themes": [
+        "material"
+      ]
     },
     {
       "slug": "lack-oder-furnier",
@@ -408,7 +507,10 @@
       "answer": "Beides hält, wenn es zur Nutzung passt. Lack ist ruhig und farbstark, Furnier zeigt Holz und altert mit. In Haushalten mit Kindern zählen Kanten und Reinigung oft mehr als die Theorie der Härte.",
       "showOnHome": false,
       "order": 280,
-      "themes": ["material", "pflege"]
+      "themes": [
+        "material",
+        "pflege"
+      ]
     },
     {
       "slug": "grifflose-kueche-vor-und-nachteile",
@@ -416,15 +518,20 @@
       "answer": "Vorteil: ruhige Flächen, weniger Beschläge. Nachteil: Fronten brauchen ein klares Öffnungssystem und zeigen Finger eher. Ob Tipp-on oder Mulde besser ist, hängt von Korpus und Gewohnheit ab.",
       "showOnHome": false,
       "order": 290,
-      "themes": ["material", "stile"]
+      "themes": [
+        "material",
+        "stile"
+      ]
     },
     {
       "slug": "welche-arbeitsplatte-passt",
-      "question": "Welche Arbeitsplatte passt zur Küche?",
-      "answer": "Stein und Keramik sind unempfindlich und kühl, Holz ist warm und will Pflege, gute Schichtstoffe sind alltagstauglich. Die Platte muss zu Kochen, Backen und zur Front passen – nicht nur zum Moodboard.",
+      "question": "Welche Arbeitsplattenmaterialien gibt es, und welches ist für meine Küche am besten geeignet?",
+      "answer": "Zur Auswahl stehen unter anderem Naturstein, Quarzwerkstoff, Dekton, Beton, Massivholz und individuell gefertigte Metallarbeitsplatten. Die beste Lösung hängt davon ab, ob Ihnen beispielsweise Pflegeleichtigkeit, Hitzebeständigkeit, natürliche Haptik oder eine besondere Gestaltung am wichtigsten sind. Wir zeigen die Vor- und Nachteile anhand von Mustern und Ihrem Nutzungsverhalten.",
       "showOnHome": false,
       "order": 300,
-      "themes": ["arbeitsplatten"]
+      "themes": [
+        "arbeitsplatten"
+      ]
     },
     {
       "slug": "naturstein-oder-keramik",
@@ -432,7 +539,9 @@
       "answer": "Naturstein ist einzigartig in Aderung und Haptik, Keramik oft unempfindlicher gegen Säure und Hitze. Beide brauchen ein sauberes Detail an Spüle und Kante. Wir legen Muster unter Ihr Licht, bevor Sie wählen.",
       "showOnHome": false,
       "order": 310,
-      "themes": ["arbeitsplatten"]
+      "themes": [
+        "arbeitsplatten"
+      ]
     },
     {
       "slug": "holzarbeitsplatte-pflege",
@@ -440,7 +549,10 @@
       "answer": "Sie ist alltagstauglich, wenn Sie sie ölen und nasse Stellen nicht stehen lassen. Schnittspuren gehören dazu – Holz arbeitet mit. Wer eine völlig unberührte Fläche will, nimmt Stein oder Keramik.",
       "showOnHome": false,
       "order": 320,
-      "themes": ["arbeitsplatten", "pflege"]
+      "themes": [
+        "arbeitsplatten",
+        "pflege"
+      ]
     },
     {
       "slug": "schubkaesten-oder-tueren",
@@ -448,15 +560,20 @@
       "answer": "Auszüge zeigen den Inhalt, Türen sind ruhiger und oft günstiger. In der Arbeitszone planen wir meist Vollauszüge, in Eck- und Gerätezonen gemischt. Das Innenleben entscheidet den Alltag mehr als die Front.",
       "showOnHome": false,
       "order": 330,
-      "themes": ["innenleben"]
+      "themes": [
+        "innenleben"
+      ]
     },
     {
       "slug": "eckschrank-loesungen",
-      "question": "Was tun mit dem Eckschrank?",
-      "answer": "Ecken nicht totplanen: LeMans, Auszüge oder eine klare Lücke für Geräte. Blind verlorener Raum ärgert später mehr als eine sichtbare Lösung. Wir zeichnen die Ecke, bevor die Front feststeht.",
+      "question": "Wie lassen sich Ecken in der Küche sinnvoll nutzen?",
+      "answer": "Je nach Grundriss kommen Eckauszüge, Schwenkbeschläge oder eine bewusst ungenutzte Ecke mit breiten Auszugschränken daneben infrage. Nicht jeder Eckbeschlag ist automatisch die beste Lösung. Wir vergleichen Stauraum, Bedienbarkeit und Kosten.",
       "showOnHome": false,
       "order": 340,
-      "themes": ["innenleben", "formen"]
+      "themes": [
+        "innenleben",
+        "formen"
+      ]
     },
     {
       "slug": "apothekerauszug-sinnvoll",
@@ -464,7 +581,9 @@
       "answer": "Ja, wenn Vorräte an einem Ort bleiben sollen und der Korpus hoch genug ist. Schmal und durchdacht schlägt er zwei unübersichtliche Schränke. Breite, Tiefe und Beschlag müssen zum Gewicht passen.",
       "showOnHome": false,
       "order": 350,
-      "themes": ["innenleben"]
+      "themes": [
+        "innenleben"
+      ]
     },
     {
       "slug": "welche-geraete-planen-sie",
@@ -472,7 +591,10 @@
       "answer": "Kochfeld, Backofen, Kühlung, Spülmaschine, Dunstabzug – so, dass Nischen und Lüftung stimmen. Die Marke wählen Sie mit uns, nicht gegen die Küche. Technik folgt dem Raum, nicht umgekehrt.",
       "showOnHome": false,
       "order": 360,
-      "themes": ["geraete", "marken"]
+      "themes": [
+        "geraete",
+        "marken"
+      ]
     },
     {
       "slug": "kochfeldabzug-statt-esse",
@@ -480,7 +602,10 @@
       "answer": "Für Inseln und offene Räume, in denen eine Haube stört. Der Abzug braucht Platz unter der Platte und eine ehrliche Aussage zur Leistung. Wer intensiv brät, prüfen wir beides – ohne Verkaufsdruck.",
       "showOnHome": false,
       "order": 370,
-      "themes": ["geraete", "inseln"]
+      "themes": [
+        "geraete",
+        "inseln"
+      ]
     },
     {
       "slug": "integrierte-kuechengeraete",
@@ -488,15 +613,21 @@
       "answer": "Kühlschrank und Spülmaschine oft ja, Backofen und Kaffee eher in einer klaren Nische. Vollintegriert wirkt ruhig, braucht aber Griff und Lüftung. Wir zeigen beides in der Ausstellung.",
       "showOnHome": false,
       "order": 380,
-      "themes": ["geraete", "stile"]
+      "themes": [
+        "geraete",
+        "stile"
+      ]
     },
     {
       "slug": "welche-marken-verbauen-sie",
-      "question": "Welche Marken verbauen Sie?",
-      "answer": "Unter anderem Bora, Miele, Gaggenau, Siemens, Neff und Blanco – je nach Küche und Budget. Wir sind keine Vertragsküche einer einzigen Marke. Entscheidend ist, was zum Raum und zu Ihrer Art zu kochen passt.",
+      "question": "Welche Marken und Hersteller, insbesondere bei Elektrogeräten, bietet BEER an?",
+      "answer": "Wir bieten Elektrogeräte verschiedener Hersteller an. Schwerpunkte sind unter anderem Miele, Siemens, BORA und Gaggenau; bei Armaturen ist Quooker ein wichtiger Partner. Auch andere Marken können wir projektbezogen anbieten.",
       "showOnHome": false,
       "order": 390,
-      "themes": ["marken", "geraete"]
+      "themes": [
+        "marken",
+        "geraete"
+      ]
     },
     {
       "slug": "bora-in-beer-kuechen",
@@ -504,7 +635,11 @@
       "answer": "Ja. Kochfeldabzüge wie Bora brauchen Korpustiefe, Kabelführung und oft eine andere Unterschrank-Aufteilung. Das zeichnen wir mit, nicht nachträglich in eine fertige Zeile.",
       "showOnHome": false,
       "order": 400,
-      "themes": ["marken", "geraete", "inseln"]
+      "themes": [
+        "marken",
+        "geraete",
+        "inseln"
+      ]
     },
     {
       "slug": "an-eine-marke-gebunden",
@@ -512,15 +647,20 @@
       "answer": "Nein. BEER plant und fertigt selbst. Geräte und Spülen kommen von Herstellern, die zur Aufgabe passen – nicht von einem Konzern, der die ganze Küche vorgibt.",
       "showOnHome": false,
       "order": 410,
-      "themes": ["marken", "allgemein"]
+      "themes": [
+        "marken",
+        "allgemein"
+      ]
     },
     {
       "slug": "moebel-ausserhalb-der-kueche",
-      "question": "Fertigen Sie auch Möbel außerhalb der Küche?",
-      "answer": "Ja, in kleinerem Umfang: Einbauschränke, Ankleiden, Tische und Wohnmöbel – immer dann, wenn sie zur Küche und zum Haus gehören. Kein beliebiges Möbelprogramm, sondern Anschlüsse an das, was wir ohnehin bauen.",
-      "showOnHome": false,
+      "question": "Fertigt BEER neben Küchen auch Einbaumöbel, Sitzfenster und Türen?",
+      "answer": "Unser Schwerpunkt liegt auf maßgefertigten Küchen und dazu passenden Einbaumöbeln. Ob ein Sitzfenster oder Zimmertüren außerhalb der Küche zum jeweiligen Auftrag passen, muss im Einzelfall geprüft werden.",
+      "showOnHome": true,
       "order": 420,
-      "themes": ["moebel"]
+      "themes": [
+        "moebel"
+      ]
     },
     {
       "slug": "einbauschraenke-und-ankleide",
@@ -528,7 +668,10 @@
       "answer": "Ja. Nischen, Schrägen und raumhohe Füllungen – oft im Anschluss an die Küche oder den Flur. Das Maß nimmt dieselbe Manufaktur, die Ihre Küche baut.",
       "showOnHome": false,
       "order": 430,
-      "themes": ["moebel", "besondere"]
+      "themes": [
+        "moebel",
+        "besondere"
+      ]
     },
     {
       "slug": "tische-und-baenke-nach-mass",
@@ -536,7 +679,9 @@
       "answer": "Ja, wenn sie zum Stein, zum Holz und zur Insel passen. Ein Esstisch aus der gleichen Sprache wie die Küche hält den Raum zusammen. Maße und Kante klären wir am Muster.",
       "showOnHome": false,
       "order": 440,
-      "themes": ["moebel"]
+      "themes": [
+        "moebel"
+      ]
     },
     {
       "slug": "was-passiert-beim-aufmass",
@@ -544,7 +689,10 @@
       "answer": "Wir messen Wände, Nischen, Fenster, Steckdosen, Wasser und Lüftung. Erst danach wird die Planung verbindlich. Was auf dem Papier rechtwinklig wirkt, ist es vor Ort selten.",
       "showOnHome": false,
       "order": 450,
-      "themes": ["planung", "montage"]
+      "themes": [
+        "planung",
+        "montage"
+      ]
     },
     {
       "slug": "wann-wird-die-planung-verbindlich",
@@ -552,7 +700,10 @@
       "answer": "Nach Aufmaß, Materialfreigabe und einem Angebot, das Sie unterschreiben. Visualisierungen sind Annäherung, keine Bauzeichnung. Änderungen danach sind möglich – sie kosten Zeit und oft Geld, das wir vorher benennen.",
       "showOnHome": false,
       "order": 460,
-      "themes": ["planung", "kosten"]
+      "themes": [
+        "planung",
+        "kosten"
+      ]
     },
     {
       "slug": "wovon-haengt-der-preis-ab",
@@ -560,15 +711,23 @@
       "answer": "Von Metern, Front, Arbeitsplatte, Innenleben und Geräten – und davon, wie viele Sondermaße der Raum verlangt. Eine ruhige Zeile in Schichtstoff liegt anders als eine Insel in Lack und Naturstein. Deshalb der Rahmen im Gespräch, nicht im Online-Rechner.",
       "showOnHome": false,
       "order": 470,
-      "themes": ["kosten", "material", "geraete"]
+      "themes": [
+        "kosten",
+        "material",
+        "geraete"
+      ]
     },
     {
       "slug": "ist-das-erstgespraech-kostenlos",
       "question": "Ist das Erstgespräch kostenlos?",
-      "answer": "Ja. Das erste Beratungsgespräch in der Ausstellung oder bei Ihnen kostet nichts. Verbindlich wird es erst mit Planung und Auftrag – nicht durch den Termin.",
+      "answer": "Ja. Das erste Beratungsgespräch kostet Sie nichts. Verbindlich wird es erst mit Planung und Auftrag – nicht durch den Termin.",
       "showOnHome": false,
       "order": 480,
-      "themes": ["kosten", "ausstellung", "allgemein"]
+      "themes": [
+        "kosten",
+        "ausstellung",
+        "allgemein"
+      ]
     },
     {
       "slug": "wo-ist-die-ausstellung",
@@ -576,23 +735,31 @@
       "answer": "In Wolfersdorf bei Freising, Badendorf 6. Keine Filialkette – ein Studio, in dem Materialien, Muster und Gespräche Platz haben. Anfahrt aus München, Erding und Landshut ist üblich.",
       "showOnHome": false,
       "order": 490,
-      "themes": ["ausstellung", "regionen"]
+      "themes": [
+        "ausstellung",
+        "regionen"
+      ]
     },
     {
       "slug": "oeffnungszeiten-wolfersdorf",
       "question": "Wie sind die Öffnungszeiten in Wolfersdorf?",
-      "answer": "Bitte vereinbaren Sie den Termin über das Formular oder telefonisch – so ist jemand da und die Ausstellung nicht belegt. Spontane Besuche sind möglich, ein Gespräch ohne Anmeldung können wir nicht immer leisten.",
+      "answer": "Unser Werkstudio ist Montag bis Freitag von 8:00–12:00 Uhr und 13:00–18:00 Uhr geöffnet. Beratungstermine außerhalb dieser Zeiten – auch früh morgens oder abends – können individuell vereinbart werden.",
       "showOnHome": false,
       "order": 500,
-      "themes": ["ausstellung"]
+      "themes": [
+        "ausstellung"
+      ]
     },
     {
       "slug": "wo-werden-die-kuechen-gefertigt",
-      "question": "Wo werden die Küchen gefertigt?",
-      "answer": "In der Manufaktur, nicht als anonymes Raster aus dem Zentrallager. Das hält Wege kurz und Änderungen im Blick. Montage erfolgt bei Ihnen vor Ort.",
+      "question": "Fertigt BEER die Küchen und Korpusse tatsächlich selbst?",
+      "answer": "Ja. Unsere Küchen werden in unseren eigenen Werken in Wolfersdorf geplant, konstruiert und gefertigt – vom Korpus über die Front bis zur Oberflächenbehandlung. Wir verfügen unter anderem über CNC-Fertigung, PUR-Kantenbearbeitung und eine eigene Lackiererei. Gerne zeigen wir Ihnen unsere Produktion bei einer kleinen Führung. Spezialteile wie Arbeitsplatten aus Stein, Glas und Metall beziehen wir von entsprechenden Handwerksbetrieben.",
       "showOnHome": false,
       "order": 510,
-      "themes": ["montage", "nachhaltigkeit"]
+      "themes": [
+        "montage",
+        "nachhaltigkeit"
+      ]
     },
     {
       "slug": "wie-laeuft-die-montage-ab",
@@ -600,7 +767,10 @@
       "answer": "Nach Fertigung kommt das Team zum Einbau: Korpusse, Arbeitsplatte, Passungen. Elektro und Sanitär müssen vorbereitet sein – das klären wir vorher mit Ihrem Handwerker oder uns. Am Ende steht eine Küche, die schließt, nicht nur steht.",
       "showOnHome": false,
       "order": 520,
-      "themes": ["montage", "planung"]
+      "themes": [
+        "montage",
+        "planung"
+      ]
     },
     {
       "slug": "wer-schliesst-wasser-und-strom-an",
@@ -608,7 +778,9 @@
       "answer": "Die Anschlüsse macht das Fachhandwerk – oft Ihr Elektriker und Installateur, abgestimmt auf unseren Plan. Wir sagen, wo Steckdosen, Wasser und Abluft sitzen müssen. So bleibt die Gewährleistung klar.",
       "showOnHome": false,
       "order": 530,
-      "themes": ["montage"]
+      "themes": [
+        "montage"
+      ]
     },
     {
       "slug": "kueche-muenchen-freising",
@@ -616,7 +788,10 @@
       "answer": "Ja. Wolfersdorf liegt bei Freising; München, der Norden und der Flughafen-Korridor gehören zum Alltag. Beratung in der Ausstellung, Aufmaß und Montage bei Ihnen.",
       "showOnHome": false,
       "order": 540,
-      "themes": ["regionen", "ausstellung"]
+      "themes": [
+        "regionen",
+        "ausstellung"
+      ]
     },
     {
       "slug": "einzugsgebiet-erding-landshut",
@@ -624,7 +799,9 @@
       "answer": "Ja. Das Einzugsgebiet ist die Region nördlich und östlich von München – Erding, Landshut, Pfaffenhofen und benachbarte Orte. Ob der Weg passt, klären wir im Erstgespräch.",
       "showOnHome": false,
       "order": 550,
-      "themes": ["regionen"]
+      "themes": [
+        "regionen"
+      ]
     },
     {
       "slug": "lackfronten-pflegen",
@@ -632,7 +809,10 @@
       "answer": "Weiches Tuch, mildes Mittel, keine scheuernden Schwämme. Matte Lacke nicht polieren, bis sie glänzen. Kleine Kratzer besprechen wir – oft hilft mehr Ruhe als Nachlackieren.",
       "showOnHome": false,
       "order": 560,
-      "themes": ["pflege", "material"]
+      "themes": [
+        "pflege",
+        "material"
+      ]
     },
     {
       "slug": "naturstein-im-alltag",
@@ -640,7 +820,10 @@
       "answer": "Stein ist fest, nicht unverwundbar. Säure, Öl und harte Schläge hinterlassen Spuren, je nach Sorte. Impregnierung und Abwischen nach dem Kochen gehören dazu – wir sagen Ihnen, welcher Stein wie lebt.",
       "showOnHome": false,
       "order": 570,
-      "themes": ["pflege", "arbeitsplatten"]
+      "themes": [
+        "pflege",
+        "arbeitsplatten"
+      ]
     },
     {
       "slug": "wie-nachhaltig-ist-eine-manufakturkueche",
@@ -648,7 +831,9 @@
       "answer": "Vor allem durch Dauer: eine Küche, die zwanzig Jahre bleibt, schlägt drei Austausche. Dazu regionale Fertigung, reparierbare Korpusse und Materialien, die man nacharbeiten kann – nicht jede Saison neu.",
       "showOnHome": false,
       "order": 580,
-      "themes": ["nachhaltigkeit"]
+      "themes": [
+        "nachhaltigkeit"
+      ]
     },
     {
       "slug": "regionale-fertigung",
@@ -656,7 +841,10 @@
       "answer": "Kurze Wege, Ansprechpartner, Nacharbeit ohne Fernost-Umweg. Nachhaltigkeit hier heißt: wir bauen hier und kommen wieder, wenn etwas klemmt.",
       "showOnHome": false,
       "order": 590,
-      "themes": ["nachhaltigkeit", "montage"]
+      "themes": [
+        "nachhaltigkeit",
+        "montage"
+      ]
     },
     {
       "slug": "kueche-reparieren-statt-tauschen",
@@ -664,7 +852,912 @@
       "answer": "Oft ja: Fronten, Griffe, Arbeitsplatte – wenn Korpus und Raster mitgedacht wurden. Eine Manufakturküche ist kein versiegeltes System. Was sich ändern lässt, sagen wir schon in der Planung.",
       "showOnHome": false,
       "order": 600,
-      "themes": ["nachhaltigkeit", "material", "planung"]
+      "themes": [
+        "nachhaltigkeit",
+        "material",
+        "planung"
+      ]
+    },
+    {
+      "slug": "kann-ich-mir-eine-beer-kueche-leisten",
+      "question": "Kann ich mir eine Küche von BEER überhaupt leisten?",
+      "answer": "Das hängt von Ihrem Budget und Ihren Wünschen ab. Wir fertigen nicht ausschließlich besonders große oder aufwendige Küchen, sondern planen jede Küche entsprechend Raum, Nutzung und finanziellen Vorstellungen. Am besten sprechen Sie Ihr Budget offen im ersten Gespräch an, damit wir Ihnen eine realistische Einschätzung geben können.",
+      "showOnHome": false,
+      "order": 1020,
+      "themes": [
+        "kosten",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "kueche-fuer-20000-euro",
+      "question": "Ist bei BEER auch eine Küche für etwa 20.000 € möglich?",
+      "answer": "Ja, das ist durchaus möglich. Ob wir Ihr konkretes Projekt zu diesem Preis umsetzen können, lässt sich erst anhand von Grundriss, Materialwünschen und Geräten beurteilen.",
+      "showOnHome": false,
+      "order": 1030,
+      "themes": [
+        "kosten"
+      ]
+    },
+    {
+      "slug": "einfachere-kuechen",
+      "question": "Bietet BEER auch einfachere Küchen an als die auf der Website gezeigten?",
+      "answer": "Ja. Auf unserer Website zeigen wir häufig besonders individuelle und gestalterisch auffällige Projekte. Wir fertigen aber ebenso schlichte, funktionale Küchen. Die Ausführung kann über Frontmaterial, Arbeitsplatte, Ausstattung und Geräte an den gewünschten Stil und das Budget angepasst werden.",
+      "showOnHome": false,
+      "order": 1040,
+      "themes": [
+        "kosten",
+        "stile"
+      ]
+    },
+    {
+      "slug": "schreinerkueche-mietwohnung",
+      "question": "Lohnt sich eine maßgefertigte Schreinerküche für eine Mietwohnung?",
+      "answer": "Das kann sinnvoll sein, wenn die Wohnung langfristig genutzt oder die Küche Bestandteil einer hochwertigen Vermietung werden soll. Eine maßgefertigte Küche nutzt den Raum gut aus und ist auf Langlebigkeit ausgelegt. Entscheidend sind geplante Nutzungsdauer, Kostenrahmen und die Frage, ob die Küche bei einem Umzug weiterverwendet werden könnte.",
+      "showOnHome": false,
+      "order": 1050,
+      "themes": [
+        "kosten",
+        "besondere"
+      ]
+    },
+    {
+      "slug": "kosten-fuer-planung-und-entwurf",
+      "question": "Welche Kosten entstehen für Planung und Küchenentwurf?",
+      "answer": "Unsere Planung entsteht individuell nach einem ausführlichen Beratungsgespräch und umfasst Entwurf, Zeichnung und Angebot. Wir sind von unserem Angebot überzeugt und erstellen es in der Regel kostenlos. Bei besonders aufwendigen Projekten vereinbaren wir gelegentlich eine Planungsgebühr – immer nach vorheriger Absprache.",
+      "showOnHome": false,
+      "order": 1060,
+      "themes": [
+        "kosten",
+        "planung"
+      ]
+    },
+    {
+      "slug": "ist-der-kuechenpreis-verbindlich",
+      "question": "Ist der vereinbarte Küchenpreis verbindlich oder können später zusätzliche Kosten entstehen?",
+      "answer": "Grundlage ist das schriftlich vereinbarte Angebot mit dem festgelegten Leistungsumfang. Änderungswünsche, zusätzliche Leistungen oder besondere bauliche Situationen können zu Mehr- oder Minderkosten führen.",
+      "showOnHome": false,
+      "order": 1080,
+      "themes": [
+        "kosten",
+        "planung"
+      ]
+    },
+    {
+      "slug": "familienrabatt",
+      "question": "Gibt es einen Rabatt, wenn Familienangehörige bereits eine Küche von BEER gekauft haben?",
+      "answer": "Einen pauschalen Familienrabatt gibt es nicht. Erfolgreiche Empfehlungen belohnen wir aber über unser Empfehlungsprogramm – nutzen Sie es jederzeit gerne.",
+      "showOnHome": false,
+      "order": 1090,
+      "themes": [
+        "kosten"
+      ]
+    },
+    {
+      "slug": "praemie-fuer-empfehlungen",
+      "question": "Erhält die Person, die BEER weiterempfohlen hat, eine Prämie?",
+      "answer": "Ja. Unser Empfehlungsprogramm belohnt erfolgreiche Empfehlungen. Für die erste geworbene Kundin oder den ersten geworbenen Kunden gibt es ein hochwertiges Schneidebrett mit Brotmesser; ab der zweiten erfolgreichen Empfehlung jeweils einen Amazon-Wertgutschein über 200 €. Für weitere Meilensteine sind zusätzliche Prämien vorgesehen. Voraussetzung ist unter anderem die Registrierung über den Empfehlungslink.",
+      "showOnHome": false,
+      "order": 1100,
+      "themes": [
+        "kosten"
+      ]
+    },
+    {
+      "slug": "sechs-meter-zeile-mit-insel-budget",
+      "question": "Ist eine etwa sechs Meter lange Küchenzeile mit Insel innerhalb meines Budgets machbar?",
+      "answer": "Das lässt sich erst nach einer ersten Planung beurteilen. Neben den Abmessungen haben Frontmaterial, Schrankausstattung, Arbeitsplatte und Elektrogeräte einen großen Einfluss auf den Preis. Wir können Varianten so entwickeln, dass die wichtigsten Wünsche möglichst innerhalb Ihres Budgets umgesetzt werden.",
+      "showOnHome": false,
+      "order": 1110,
+      "themes": [
+        "kosten",
+        "inseln",
+        "planung"
+      ]
+    },
+    {
+      "slug": "griffe-oder-grifflos-preis",
+      "question": "Sind Küchen mit Griffen teurer oder günstiger als grifflose Küchen?",
+      "answer": "Das lässt sich nicht pauschal beantworten. Aufgesetzte Griffe sind häufig wirtschaftlicher als aufwendige Griffprofile oder besondere grifflose Konstruktionen. Bei hochwertigen Designgriffen oder bestimmten Beschlägen kann es auch umgekehrt sein. Entscheidend ist die konkret gewählte Ausführung.",
+      "showOnHome": false,
+      "order": 1120,
+      "themes": [
+        "kosten",
+        "material"
+      ]
+    },
+    {
+      "slug": "wann-mit-der-kuechenplanung-beginnen",
+      "question": "Wie früh sollte ich mit der Küchenplanung beginnen – auch wenn der Einzug erst in ein bis anderthalb Jahren geplant ist?",
+      "answer": "Eine frühzeitige Beratung ist immer sinnvoll, bei einem Neubau ebenso wie bei einem Umbau. So können Grundriss, Fensterpositionen und Elektro- sowie Wasseranschlüsse rechtzeitig auf die spätere Küche abgestimmt werden. Die endgültige Detailplanung und verbindliche Terminabstimmung erfolgen näher an der Realisierung.",
+      "showOnHome": false,
+      "order": 1140,
+      "themes": [
+        "planung",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "kuechenplanung-ohne-baugenehmigung",
+      "question": "Ist eine Küchenplanung auch ohne vorliegende Baugenehmigung sinnvoll?",
+      "answer": "Ja. Gerade in einer frühen Bauphase können wir bei Raumaufteilung, Fensterpositionen, Anschlüssen und Küchenform wertvolle Hinweise geben. Wichtig ist, dass sich Maße und bauliche Vorgaben bis zum genehmigten Plan noch ändern können; die finale Konstruktion basiert später auf den verbindlichen Planständen und dem Aufmaß.",
+      "showOnHome": false,
+      "order": 1150,
+      "themes": [
+        "planung",
+        "besondere"
+      ]
+    },
+    {
+      "slug": "wo-findet-der-erste-termin-statt",
+      "question": "Findet der erste Termin bei BEER oder bei mir vor Ort statt?",
+      "answer": "Der erste ausführliche Beratungstermin findet normalerweise in unserem rund 800 m² großen Werkstudio in Wolfersdorf statt. Dort können Sie Küchen, Materialien und Ausstattungen direkt erleben. Das genaue Aufmaß vor Ort gehört zu einer späteren Planungsphase. Ob im Einzelfall auch ein erster Hausbesuch möglich ist, klären wir gern mit Ihnen ab.",
+      "showOnHome": false,
+      "order": 1170,
+      "themes": [
+        "ausstellung",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "online-beratung",
+      "question": "Kann der erste Beratungstermin online stattfinden?",
+      "answer": "Ja. Neben der Beratung in unserem Werkstudio bieten wir auch virtuelle Beratungstermine über Microsoft Teams an. Für die Bemusterung von Farben, Hölzern und Oberflächen empfiehlt sich im Laufe des Projekts ein Besuch unserer Ausstellung.",
+      "showOnHome": false,
+      "order": 1180,
+      "themes": [
+        "ausstellung",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "beratung-am-samstag",
+      "question": "Sind Beratungstermine auch samstags möglich?",
+      "answer": "Samstags sind Termine in Ausnahmefällen und nach vorheriger Vereinbarung möglich. Regulär ist unser Werkstudio von Montag bis Freitag geöffnet.",
+      "showOnHome": false,
+      "order": 1190,
+      "themes": [
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "dauer-des-ersten-beratungsgespraechs",
+      "question": "Wie lange dauert das erste Beratungsgespräch?",
+      "answer": "Wir nehmen uns Zeit, um Ihre Wünsche, Ihren Grundriss und die wesentlichen Gestaltungs- und Budgetfragen kennenzulernen. Meist dauern diese Termine zwischen 1,5 und 2,5 Stunden.",
+      "showOnHome": false,
+      "order": 1210,
+      "themes": [
+        "ausstellung",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "persoenlicher-kuechenberater",
+      "question": "Wer wird mein persönlicher Küchenberater sein?",
+      "answer": "Die Zuordnung hängt von der Terminverfügbarkeit und gegebenenfalls vom Projekt ab. Gern können Sie sich einen bestimmten Küchenplaner wünschen – gerade bei Empfehlungen ist das sinnvoll und wird gern berücksichtigt.",
+      "showOnHome": false,
+      "order": 1220,
+      "themes": [
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "entscheidung-beim-ersten-termin",
+      "question": "Muss ich mich schon beim ersten Termin für eine Küche entscheiden?",
+      "answer": "Nein. Beim ersten Termin stehen das gegenseitige Kennenlernen, Ihre Wünsche und die Möglichkeiten der Planung im Mittelpunkt. Anschließend erarbeiten wir einen individuellen Entwurf mit Angebot. Die Entscheidung für eine Beauftragung fällt erst, wenn die Planung und die Rahmenbedingungen für Sie passen.",
+      "showOnHome": false,
+      "order": 1230,
+      "themes": [
+        "allgemein",
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "partner-beim-ersten-termin",
+      "question": "Sollte mein Ehepartner oder Lebensgefährte beim ersten Termin dabei sein?",
+      "answer": "Das ist sehr sinnvoll, wenn beide die Küche später nutzen oder gemeinsam entscheiden. Unterschiedliche Vorstellungen zu Arbeitsabläufen, Design, Geräten und Budget können dann von Anfang an berücksichtigt werden. Eine zwingende Voraussetzung ist es nicht.",
+      "showOnHome": false,
+      "order": 1240,
+      "themes": [
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "kinder-zum-beratungstermin",
+      "question": "Darf ich meine Kinder zum Beratungstermin mitbringen?",
+      "answer": "Klar, ein Beratungstermin mit Kindern ist gut machbar. Die Kinder sollen sich auch in der neuen Küche wohlfühlen – und wir haben eine kleine Werkbank mit Zeichenrolle zum Malen in unserem Showroom.",
+      "showOnHome": false,
+      "order": 1250,
+      "themes": [
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "hund-zum-beratungstermin",
+      "question": "Darf ich meinen Hund zum Beratungstermin mitbringen?",
+      "answer": "Klar, Ihr Hund gehört zur Familie und ist bei uns gerne gesehen.",
+      "showOnHome": false,
+      "order": 1260,
+      "themes": [
+        "ausstellung"
+      ]
+    },
+    {
+      "slug": "welche-kuechenloesung-empfehlen-sie",
+      "question": "Welche Küchenlösung würden Sie persönlich an meiner Stelle empfehlen?",
+      "answer": "Wir orientieren uns nicht allein an aktuellen Trends, sondern an Ihrem Alltag. Entscheidend sind Laufwege, Stauraum, Ergonomie, Licht, Materialien und Ihr Budget. Nach dem Kennenlernen Ihrer Wünsche empfehlen wir Ihnen die Lösung, die aus unserer Sicht langfristig am besten zu Ihnen und Ihrem Zuhause passt.",
+      "showOnHome": false,
+      "order": 1270,
+      "themes": [
+        "planung",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "schreinerkueche-oder-kuechenstudio",
+      "question": "Worin liegt der Qualitätsunterschied zwischen einer BEER-Schreinerküche und einer Küche aus dem Küchenstudio?",
+      "answer": "Der zentrale Unterschied ist die individuelle Fertigung: Wir können Maße, Design, Schrankaufteilung, Materialien und konstruktive Details an Ihren Raum anpassen, statt auf ein festes Standardsortiment angewiesen zu sein. Planung, Konstruktion, Produktion und Montage sind eng miteinander verzahnt. Eine hochwertige Industrieküche kann ebenfalls gut sein; unser besonderer Mehrwert liegt in der Maßarbeit und der direkten Verantwortung für das Gesamtprojekt. Ein direkter Weg von der Produktion zum Kunden – ohne Zwischenhandel.",
+      "showOnHome": false,
+      "order": 1290,
+      "themes": [
+        "allgemein",
+        "material"
+      ]
+    },
+    {
+      "slug": "liefergebiet-frankfurt-chiemgau",
+      "question": "In welche Regionen liefert BEER Küchen, beispielsweise auch nach Frankfurt oder ins Chiemgau?",
+      "answer": "Unser Schwerpunkt liegt im Großraum München und in Regionen wie Freising, Erding, Landshut, Ingolstadt, Augsburg, Regensburg und den Voralpen. Wir haben einen Einsatzradius von ca. 200 km um München. Das Chiemgau liegt grundsätzlich in unserem üblichen Gebiet; bei weiter entfernten Orten wie Frankfurt prüfen wir die Realisierbarkeit individuell.",
+      "showOnHome": false,
+      "order": 1300,
+      "themes": [
+        "regionen"
+      ]
+    },
+    {
+      "slug": "lieferzeit-der-kueche",
+      "question": "Wie lange ist die Lieferzeit bis zur fertigen Küche?",
+      "answer": "Als Richtwert gilt in der Regel 10–18 Wochen ab Bestellung. Die tatsächliche Lieferzeit hängt von Ihrem Zeitplan sowie der Auslastung unserer Fertigung und den gewählten Materialien beziehungsweise Zulieferteilen ab. Besondere Arbeitsplatten oder Geräte können längere Vorlaufzeiten erfordern; den konkreten Termin stimmen wir mit Ihnen ab.",
+      "showOnHome": false,
+      "order": 1310,
+      "themes": [
+        "montage",
+        "planung"
+      ]
+    },
+    {
+      "slug": "produktionszeit-der-kueche",
+      "question": "Wie lange dauert die Produktion einer Küche?",
+      "answer": "Die gesamte Lieferzeit umfasst mehr als die eigentliche Fertigung, beispielsweise technische Vorbereitung und die Beschaffung von Zulieferteilen. Die reine Produktionszeit hängt zudem vom Aufwand der Küche ab, ob z. B. Massivholzteile dabei sind, ob Oberflächen umgesetzt werden müssen sowie vielen weiteren Faktoren – in der Regel beträgt die reine Produktionszeit ca. 2–4 Wochen.",
+      "showOnHome": false,
+      "order": 1320,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "dauer-der-kuechenmontage",
+      "question": "Wie lange dauert die Montage der Küche?",
+      "answer": "Das hängt stark von Größe, Einbausituation und Komplexität Ihrer Küche ab. Eine kompakte Küche ist schneller montiert als eine raumhohe Anlage mit aufwendigen Sonderdetails. In der Regel dauern die Küchenmontagen circa 2 Tage.",
+      "showOnHome": false,
+      "order": 1330,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "eigene-kuechenmonteure",
+      "question": "Hat BEER eigene Küchenmonteure und montiert die Küchen selbst?",
+      "answer": "Ja. Die fachgerechte Montage erfolgt durch unsere eigenen Fachleute. Dadurch sind Planung, Konstruktion, Fertigung und Einbau direkt aufeinander abgestimmt und Sie erhalten die wesentlichen Leistungen aus einer Hand.",
+      "showOnHome": false,
+      "order": 1340,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "garantie-und-gewaehrleistung",
+      "question": "Welche Garantie- und Gewährleistungsleistungen bietet BEER?",
+      "answer": "Für unsere Leistungen gelten die jeweils anwendbaren gesetzlichen Regelungen. Hersteller können für einzelne Geräte beziehungsweise Materialien zusätzliche freiwillige Garantien anbieten. Wir betreuen unsere Kunden auch nach dem Einbau und führen Servicearbeiten an unseren Küchen durch.",
+      "showOnHome": false,
+      "order": 1350,
+      "themes": [
+        "montage",
+        "allgemein"
+      ]
+    },
+    {
+      "slug": "demontage-der-alten-kueche",
+      "question": "Übernimmt BEER auch die Demontage der alten Küche?",
+      "answer": "Bei einem Küchentausch kann die Demontage Teil des Projekts sein. Gerne übernehmen wir für Sie die Demontage und fachgerechte Entsorgung Ihrer alten Küche und planen dies entsprechend ein.",
+      "showOnHome": false,
+      "order": 1360,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "fliesen-entfernen",
+      "question": "Kann BEER vorhandene Fliesen entfernen?",
+      "answer": "Das Entfernen von Fliesen gehört nicht zur eigentlichen Küchenfertigung. Allerdings können wir Ihnen gerne passende Partnerfirmen für diese Arbeiten nennen und auf Wunsch können wir zudem die Koordination und Ausführung komplett übernehmen.",
+      "showOnHome": false,
+      "order": 1370,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "steckdosen-versetzen",
+      "question": "Kann BEER Steckdosen versetzen lassen?",
+      "answer": "Die Positionen für Steckdosen planen wir im Zuge der Küche und stellen dafür Elektropläne bereit. Das Versetzen und Anschließen übernimmt eine dafür qualifizierte Elektrofachkraft. Gerne nennen wir Ihnen für diese Arbeiten passende Partnerfirmen oder auf Wunsch übernehmen wir zudem die Koordination und Ausführung komplett.",
+      "showOnHome": false,
+      "order": 1380,
+      "themes": [
+        "montage",
+        "planung"
+      ]
+    },
+    {
+      "slug": "elektriker-und-installateure",
+      "question": "Arbeitet BEER mit Elektrikern und Installateuren zusammen?",
+      "answer": "Für die Küche erstellen wir Elektro- und Installationspläne. Wir haben zudem einige Partnerbetriebe, mit denen wir regelmäßig zusammenarbeiten. Auf Wunsch übernehmen wir zudem die komplette Koordination und Ausführung.",
+      "showOnHome": false,
+      "order": 1390,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "anschluss-der-kuechengeraete",
+      "question": "Wer übernimmt den elektrischen Anschluss der Küchengeräte?",
+      "answer": "Die mechanische Integration der Geräte erfolgt im Rahmen der Küchenmontage. Ebenso der Anschluss an die bauseits vorhandenen Stromanschlüsse – unsere Monteure sind hierzu eigens geschult.",
+      "showOnHome": false,
+      "order": 1400,
+      "themes": [
+        "montage",
+        "geraete"
+      ]
+    },
+    {
+      "slug": "parkettboden-verlegen",
+      "question": "Kann BEER auch einen Parkettboden verlegen lassen?",
+      "answer": "Wir haben uns auf Küchen- und Einbaumöbel spezialisiert. Für Parkettböden arbeiten wir meist mit entsprechenden Partnerfirmen zusammen.",
+      "showOnHome": false,
+      "order": 1410,
+      "themes": [
+        "montage"
+      ]
+    },
+    {
+      "slug": "welche-materialien-gibt-es",
+      "question": "Welche Materialien stehen für eine Küche zur Auswahl?",
+      "answer": "Wir arbeiten mit einer breiten Auswahl an Materialien: beispielsweise Massivholz und Furnier, lackierten Oberflächen, hochwertigen melaminbeschichteten Platten und HPL sowie Glas und Metall. Für Arbeitsplatten kommen unter anderem Naturstein, Edelstahl, Dekton, Beton und Holz infrage. In unserer Materialbibliothek im Werkstudio zeigen wir Ihnen zahlreiche Originalmuster.",
+      "showOnHome": false,
+      "order": 1430,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "schraenke-aus-massivholz",
+      "question": "Bestehen die Schränke ausschließlich aus Massivholz?",
+      "answer": "Nein. Je nach Ausführung verwenden wir hochwertige Holzwerkstoffplatten, furnierte Materialien oder Massivholz. Gerade bei Korpussen sind formstabile Holzwerkstoffplatten technisch sinnvoll. Massivholz eignet sich besonders für ausgewählte Fronten, sichtbare Bauteile und gestalterische Akzente.",
+      "showOnHome": false,
+      "order": 1440,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "moderne-kuechenfarben",
+      "question": "Welche Küchenfarben sind aktuell modern?",
+      "answer": "Gefragt sind zeitlose, warme und natürliche Farbstimmungen – etwa gebrochene Weißtöne, Greige, warme Grau- und Erdtöne sowie Holzoberflächen. Auch zurückhaltende Grüntöne können gut funktionieren. Wir empfehlen, sich nicht allein nach Trends zu richten, sondern nach Raumlicht, Boden und einem Farbkonzept, das Ihnen langfristig gefällt.",
+      "showOnHome": false,
+      "order": 1460,
+      "themes": [
+        "farben"
+      ]
+    },
+    {
+      "slug": "glasfronten",
+      "question": "Welche Glasfronten bietet BEER an?",
+      "answer": "In unserer Materialbibliothek präsentieren wir verschiedene Glas- und Oberflächenmuster. Welche Glasfront-Ausführungen – beispielsweise hinsichtlich Oberfläche, Farbe und Glanzgrad – zur jeweiligen Küche passen, stimmen wir individuell ab.",
+      "showOnHome": false,
+      "order": 1470,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "melamin-oder-lackfronten",
+      "question": "Was ist der Unterschied zwischen Melamin- und Lackfronten?",
+      "answer": "Melaminfronten bestehen aus einer Holzwerkstoffplatte mit einer werkseitig aufgebrachten, widerstandsfähigen Dekorschicht. Sie sind pflegeleicht und häufig wirtschaftlicher. Lackfronten werden lackiert und bieten eine besonders große Freiheit bei Farbe und Glanzgrad; dafür sind Herstellung und Oberflächenbearbeitung aufwendiger. Welche Variante besser passt, hängt von Gestaltung, Beanspruchung und Budget ab.",
+      "showOnHome": false,
+      "order": 1480,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "holzarten-und-holzdekore",
+      "question": "Welche Holzarten und Holzdekore stehen zur Auswahl?",
+      "answer": "An Holzdekoren gibt es eine nahezu unendlich große Auswahl – bei den echten Holzarten verarbeiten wir alle europäischen und amerikanischen Hölzer. Tropenhölzer versuchen wir nach Möglichkeit aus ethischen Gründen zu vermeiden und haben dafür verschiedene Ersatzhölzer, die mit entsprechenden Beizen eine ähnliche Optik erreichen.",
+      "showOnHome": false,
+      "order": 1490,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "holzfronten-mit-quermaserung",
+      "question": "Können Holzfronten mit quer verlaufender Maserung gefertigt werden?",
+      "answer": "Ja. Durch die individuelle Fertigung können wir den Verlauf der Holzmaserung gestalterisch planen, beispielsweise horizontal über mehrere Fronten hinweg. Materialformat, Furnierbild und die technischen Anforderungen werden dabei berücksichtigt.",
+      "showOnHome": false,
+      "order": 1500,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "holzfronten-ohne-aeste",
+      "question": "Sind Holzfronten auch ohne sichtbare Äste erhältlich?",
+      "answer": "Ja, bei entsprechend ausgewähltem Holz oder Furnier lassen sich ruhige, weitgehend astfreie Oberflächen realisieren. Da Holz ein Naturprodukt ist, unterscheiden sich Struktur und Farbton von Stück zu Stück. Wir wählen die passende Sortierung gemeinsam mit Ihnen aus.",
+      "showOnHome": false,
+      "order": 1510,
+      "themes": [
+        "material"
+      ]
+    },
+    {
+      "slug": "preis-naturstein-arbeitsplatte",
+      "question": "Wie viel kostet eine Arbeitsplatte aus Naturstein?",
+      "answer": "Der Preis hängt vor allem von Gesteinsart, Plattenstärke, Oberfläche, Kantenbearbeitung, Ausschnitten und Montageaufwand ab. Ein verlässlicher Preis lässt sich daher nur anhand einer konkreten Planung oder eines Angebots des Steinmetzbetriebs nennen.",
+      "showOnHome": false,
+      "order": 1530,
+      "themes": [
+        "arbeitsplatten",
+        "kosten"
+      ]
+    },
+    {
+      "slug": "edelstahl-arbeitsplatte",
+      "question": "Sind Arbeitsplatten aus Edelstahl möglich und wie teuer sind sie?",
+      "answer": "Ja. Arbeitsplatten aus Edelstahl sind sogar unsere Spezialität. Der Preis hängt insbesondere von Plattenabmessungen, Stärke, Oberflächenfinish, Unterkonstruktion und der Integration von Spüle oder Kochfeld ab.",
+      "showOnHome": false,
+      "order": 1540,
+      "themes": [
+        "arbeitsplatten",
+        "kosten"
+      ]
+    },
+    {
+      "slug": "arbeitsplatte-selbst-beschaffen",
+      "question": "Kann ich meine Arbeitsplatte selbst beschaffen oder einen eigenen Steinmetz beauftragen?",
+      "answer": "Grundsätzlich lässt sich eine Küche auch mit extern vergebenen Leistungen wie zum Beispiel der Arbeitsplatte planen. Unterm Strich ist es jedoch meist günstiger, wenn wir die Küche komplett liefern, da die entsprechenden Konstruktionszeichnungen in einem Prozess erstellt werden.",
+      "showOnHome": false,
+      "order": 1550,
+      "themes": [
+        "arbeitsplatten"
+      ]
+    },
+    {
+      "slug": "welche-spuele-passt",
+      "question": "Welche Spüle ist für meine Küche am besten geeignet?",
+      "answer": "Die Wahl hängt von Ihren Koch- und Spülgewohnheiten ab. Wichtige Kriterien sind Beckengröße, Material, Pflegeaufwand, Einbauart und die Frage, ob Sie eine Abtropffläche wünschen. Bei wenig Platz kann ein großes Einzelbecken praktischer sein als zwei kleine Becken.",
+      "showOnHome": false,
+      "order": 1560,
+      "themes": [
+        "geraete",
+        "planung"
+      ]
+    },
+    {
+      "slug": "landhauskueche-nach-mass",
+      "question": "Kann BEER auch Küchen im Landhausstil fertigen?",
+      "answer": "Ja. Da wir Fronten, Korpusse und Oberflächen individuell fertigen, sind auch Landhausküchen mit Rahmen- oder Kassettenfronten möglich. Stil, Farbe und Details können modern interpretiert oder bewusst klassisch gestaltet werden.",
+      "showOnHome": false,
+      "order": 1570,
+      "themes": [
+        "stile"
+      ]
+    },
+    {
+      "slug": "moeglichkeiten-einer-individuellen-kueche",
+      "question": "Welche gestalterischen und funktionalen Möglichkeiten bietet eine individuell geplante Küche?",
+      "answer": "Wir können Schrankmaße, Design, Aufteilung, Materialien, Frontbild, Arbeitshöhen und Stauraumlösungen an Ihre Bedürfnisse anpassen. Möglich sind beispielsweise raumhohe Einbauten, maßgeschneiderte Nischen, grifflose Fronten, besondere Ecklösungen und die Integration von Geräten und Beleuchtung. Technische Grenzen und Budget berücksichtigen wir bereits in der Planung.",
+      "showOnHome": false,
+      "order": 1580,
+      "themes": [
+        "planung",
+        "stile"
+      ]
+    },
+    {
+      "slug": "eigene-elektrogeraete-einbauen",
+      "question": "Kann ich neue, selbst gekaufte Elektrogeräte in meine Küche einbauen lassen?",
+      "answer": "Ob kundenseitig beschaffte Neugeräte integriert werden, muss vor der Planung abgestimmt werden. Wichtig sind exakte Einbaumaße, ausreichende Belüftung, Kompatibilität und die klare Trennung von Liefer-, Einbau- und Gewährleistungsverantwortung.",
+      "showOnHome": false,
+      "order": 1600,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "vorhandene-geraete-uebernehmen",
+      "question": "Können vorhandene Elektrogeräte aus meiner bisherigen Küche übernommen werden?",
+      "answer": "Technisch ist die Übernahme vorhandener Geräte oft möglich, sofern Maße, Zustand und Einbauanforderungen passen.",
+      "showOnHome": false,
+      "order": 1610,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "wie-gut-ist-ein-muldenluefter",
+      "question": "Wie gut funktioniert ein Muldenlüfter tatsächlich?",
+      "answer": "Moderne Muldenlüfter können Kochdunst bei geeigneter Planung sehr wirksam direkt am Kochfeld erfassen. Entscheidend sind das konkrete Gerät, die Luftführung sowie das Kochverhalten. Bei hohen Töpfen oder starken Querströmungen kann die Erfassung anspruchsvoller sein. Wir wählen das System passend zur Küchensituation aus.",
+      "showOnHome": false,
+      "order": 1620,
+      "themes": [
+        "geraete",
+        "inseln"
+      ]
+    },
+    {
+      "slug": "umluft-oder-abluft",
+      "question": "Ist Umluft genauso gut wie Abluft?",
+      "answer": "Beide Systeme können Gerüche und Fett wirksam reduzieren, unterscheiden sich aber bei der Feuchtigkeit: Abluft führt die belastete Luft nach draußen, Umluft filtert die Luft und gibt sie in den Raum zurück. Bei Umluft sind geeignete Filter, Wartung und regelmäßiges Lüften besonders wichtig. Welche Variante sinnvoller ist, hängt auch von Gebäude und Lüftungskonzept ab. Abluft ist in der Regel mit einem größeren Aufwand verbunden.",
+      "showOnHome": false,
+      "order": 1630,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "muldenluefter-stauraum",
+      "question": "Wie viel Stauraum geht durch einen Muldenlüfter verloren?",
+      "answer": "Das ist vom Gerätemodell und vom Verlauf der Luftkanäle abhängig. Bei modernen Systemen kann ein Teil des Auszugraums erhalten bleiben, bei anderen entfallen Schubladentiefe oder einzelne Schrankbereiche. Den tatsächlichen Platzbedarf zeigen wir Ihnen anhand der konkreten Geräteplanung.",
+      "showOnHome": false,
+      "order": 1640,
+      "themes": [
+        "geraete",
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "backofen-neben-kuehlschrank",
+      "question": "Darf ein Backofen direkt neben einem Kühlschrank eingebaut werden?",
+      "answer": "Ja, das ist bei vielen modernen Einbaugeräten möglich, sofern die Einbau- und Lüftungsvorgaben der Hersteller eingehalten werden. Entscheidend sind geeignete Möbeleinbauten, Wärmedämmung und Belüftung. Die Kombination wird deshalb immer anhand der vorgesehenen Gerätemodelle geprüft.",
+      "showOnHome": false,
+      "order": 1650,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "kombigeraete",
+      "question": "Sind Kombigeräte in der Küche empfehlenswert?",
+      "answer": "Kombigeräte sind besonders interessant, wenn Platz gespart oder mehrere Garmethoden komfortabel kombiniert werden sollen. Ein Dampfbackofen oder Backofen mit Mikrowellenfunktion kann separate Geräte ersetzen. Ob das sinnvoll ist, hängt davon ab, wie häufig Sie gleichzeitig mehrere Funktionen benötigen.",
+      "showOnHome": false,
+      "order": 1660,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "dampfbackofen",
+      "question": "Wofür benötigt man einen Dampfbackofen?",
+      "answer": "Ein Dampfbackofen ermöglicht schonendes Garen mit Wasserdampf sowie – je nach Gerät – die Kombination von Dampf und Heißluft. Das eignet sich beispielsweise für Gemüse, Fisch, Brot und das Regenerieren vorbereiteter Speisen. Besonders praktisch ist die kontrollierte Feuchtigkeit während des Garens.",
+      "showOnHome": false,
+      "order": 1670,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "side-by-side-kuehlschrank",
+      "question": "Lässt sich ein großer Side-by-Side-Kühlschrank integrieren?",
+      "answer": "Ja, wenn Raummaße, Türöffnungswinkel, Bewegungsflächen und die vorgeschriebene Gerätebelüftung berücksichtigt werden. Je nach Modell sind zusätzlich Wasseranschluss und ausreichend Wandabstand einzuplanen. Wir prüfen die Einbausituation frühzeitig anhand des gewünschten Gerätes.",
+      "showOnHome": false,
+      "order": 1680,
+      "themes": [
+        "geraete"
+      ]
+    },
+    {
+      "slug": "weinklimaschrank-und-gefrierschrank",
+      "question": "Wo lassen sich zusätzliche Geräte wie Weinklimaschrank oder Gefrierschrank unterbringen?",
+      "answer": "Je nach Grundriss lassen sich solche Geräte in Hochschränken, unter Arbeitsplatten oder in angrenzenden Vorratsbereichen integrieren. Maßgeblich sind die benötigten Einbaumaße, Luftführung, Bedienbarkeit und die übrigen Stauraumwünsche. Wir berücksichtigen diese Geräte am besten schon zu Beginn der Planung.",
+      "showOnHome": false,
+      "order": 1690,
+      "themes": [
+        "geraete",
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "kaffeemaschine-und-thermomix-unterbringen",
+      "question": "Wie kann man Kaffeemaschine und Thermomix unauffällig unterbringen?",
+      "answer": "Möglich sind beispielsweise eine geschlossene Gerätenische, ein Hochschrankfach mit geeigneter Türlösung oder ein separater Frühstücksbereich. Wichtig sind Steckdosen, Arbeitshöhe, ausreichende Belüftung und genug Platz zur Nutzung. Geräte mit Dampfentwicklung sollten nicht ungeprüft im geschlossenen Schrank betrieben werden.",
+      "showOnHome": false,
+      "order": 1700,
+      "themes": [
+        "geraete",
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "passt-eine-kochinsel",
+      "question": "Passt eine Kochinsel in unseren Raum?",
+      "answer": "Eine Insel ist sinnvoll, wenn neben der Insel selbst auch ausreichend Bewegungsfläche für geöffnete Auszüge und mehrere Personen vorhanden ist. Bei wenig Platz kann eine Halbinsel oder eine großzügige Zeile die bessere Lösung sein. Entscheidend ist der maßstäbliche Grundriss.",
+      "showOnHome": false,
+      "order": 1730,
+      "themes": [
+        "inseln"
+      ]
+    },
+    {
+      "slug": "groesse-der-kuecheninsel",
+      "question": "Wie groß kann beziehungsweise sollte unsere Kücheninsel werden?",
+      "answer": "Die Inselgröße richtet sich nach dem Raum, dem gewünschten Funktionsumfang und den umlaufenden Laufwegen. Eine reine Arbeitsinsel kann kompakter sein als eine Insel mit Kochfeld, Spüle oder Sitzplätzen. Wir dimensionieren sie so, dass sie den Alltag erleichtert und nicht zu einem Hindernis wird.",
+      "showOnHome": false,
+      "order": 1740,
+      "themes": [
+        "inseln"
+      ]
+    },
+    {
+      "slug": "schraenke-anordnen",
+      "question": "Wie sollten die Schränke angeordnet werden?",
+      "answer": "Häufig benötigte Dinge sollten leicht erreichbar und nahe am jeweiligen Arbeitsplatz liegen. Wir ordnen Vorräte, Geschirr, Besteck, Kochutensilien und Reinigungsmittel nach Nutzungsabläufen an. Breite Vollauszüge sind für viele Alltagsgegenstände besonders praktisch.",
+      "showOnHome": false,
+      "order": 1770,
+      "themes": [
+        "innenleben",
+        "planung"
+      ]
+    },
+    {
+      "slug": "kuechengeraete-anordnen",
+      "question": "Wie sollten die Küchengeräte angeordnet werden?",
+      "answer": "Kühlschrank, Spüle, Kochfeld, Geschirrspüler und Backofen sollten so positioniert sein, dass Arbeitswege kurz bleiben und sich geöffnete Türen nicht gegenseitig blockieren. Auch Abstellflächen neben Geräten und eine ergonomische Einbauhöhe sind wichtig. Die optimale Anordnung ergibt sich aus Ihren Kochgewohnheiten.",
+      "showOnHome": false,
+      "order": 1780,
+      "themes": [
+        "planung",
+        "geraete"
+      ]
+    },
+    {
+      "slug": "kueche-im-wohnraum",
+      "question": "Kann der Küchenbereich in den Wohnraum hineinreichen, ohne dass die Laufwege zu lang werden?",
+      "answer": "Ja, das kann besonders in offenen Wohnbereichen sehr gut funktionieren. Wichtig sind eine klare Zonierung, ausreichend breite Wege und die passende Positionierung von Spüle, Kühlbereich und Kochstelle. Wir betrachten Küche und Wohnraum als zusammenhängenden Grundriss.",
+      "showOnHome": false,
+      "order": 1790,
+      "themes": [
+        "formen",
+        "planung"
+      ]
+    },
+    {
+      "slug": "fenster-im-kuechenbereich",
+      "question": "Wo sollten die Fenster im Küchenbereich angeordnet werden?",
+      "answer": "Fenster sind ideal, wenn sie gutes Tageslicht auf die Arbeitsflächen bringen, ohne Schrankflächen oder wichtige Gerätepositionen ungünstig einzuschränken. Bei Neubauten kann die Fensterplanung oft noch mit der Küchenplanung abgestimmt werden. Auch Öffnungsrichtung und Brüstungshöhe müssen berücksichtigt werden.",
+      "showOnHome": false,
+      "order": 1800,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "fenstergroesse-in-der-kueche",
+      "question": "Wie groß sollten die Fenster in der Küche sein?",
+      "answer": "Das hängt von Raumgröße, Himmelsrichtung, Möblierung und gewünschter Privatsphäre ab. Große Fenster bringen Licht und Aussicht, verringern aber gegebenenfalls Stellflächen für Hochschränke oder Hängeschränke. Wir empfehlen, Fenster- und Küchenplanung gemeinsam zu betrachten.",
+      "showOnHome": false,
+      "order": 1810,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "fensterfront-und-arbeitsflaeche",
+      "question": "Nimmt eine große Fenster- oder Türfront zu viel mögliche Arbeitsfläche weg?",
+      "answer": "Das kann sein, muss aber kein Nachteil sein. Große Glasflächen steigern die Aufenthaltsqualität, können jedoch lange durchgehende Arbeits- oder Hochschrankbereiche verhindern. Mit einer passenden Anordnung von Zeile, Insel und Hochschränken lässt sich häufig ein guter Kompromiss finden.",
+      "showOnHome": false,
+      "order": 1820,
+      "themes": [
+        "planung",
+        "besondere"
+      ]
+    },
+    {
+      "slug": "wand-entfernen-fuer-offene-kueche",
+      "question": "Sollte eine bestehende Wand entfernt werden, um die Küche offener zu gestalten?",
+      "answer": "Eine offene Lösung kann Licht, Kommunikation und Raumgefühl verbessern. Gleichzeitig gehen Wandflächen für Schränke verloren und Geräusche sowie Gerüche verteilen sich stärker. Ob die Wand statisch entfernt werden darf, muss ein entsprechend qualifizierter Planer oder Tragwerksplaner prüfen.",
+      "showOnHome": false,
+      "order": 1830,
+      "themes": [
+        "planung",
+        "besondere",
+        "formen"
+      ]
+    },
+    {
+      "slug": "uebergang-der-bodenbelaege",
+      "question": "Wo sollte der Übergang zwischen verschiedenen Bodenbelägen liegen?",
+      "answer": "Am harmonischsten wirkt der Übergang meist an einer klaren architektonischen Linie, etwa in einer Türöffnung oder entlang einer nachvollziehbaren Raumkante. In offenen Grundrissen kann ein durchgehender Boden die ruhigere Lösung sein. Die endgültige Fuge sollte vor Ausführung der Bodenarbeiten mit der Küchenplanung abgestimmt werden.",
+      "showOnHome": false,
+      "order": 1840,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "mehrere-personen-kochen",
+      "question": "Ist genügend Platz vorhanden, damit mehrere Personen gleichzeitig kochen können?",
+      "answer": "Dafür planen wir ausreichend Arbeitsfläche, gut zugängliche Auszüge und Wege, auf denen man sich nicht ständig gegenseitig blockiert. Besonders wichtig sind die Bewegungsflächen rund um Spüle, Kochfeld und Insel. Wie gut das funktioniert, lässt sich im maßstäblichen Grundriss überprüfen.",
+      "showOnHome": false,
+      "order": 1850,
+      "themes": [
+        "planung",
+        "inseln"
+      ]
+    },
+    {
+      "slug": "hoehe-der-schrankanlage",
+      "question": "Wie hoch sollte die Küche beziehungsweise die Schrankanlage insgesamt werden?",
+      "answer": "Die Höhe ergibt sich aus der Raumhöhe, dem gewünschten Gestaltungsbild und den benötigten Stauraumfunktionen. Wir können Korpusmaße und Sockel individuell anpassen und Hochschränke auch raumhoch ausführen. Bedienbarkeit, Deckenanschlüsse und die Erreichbarkeit oberer Fächer planen wir mit.",
+      "showOnHome": false,
+      "order": 1860,
+      "themes": [
+        "planung",
+        "besondere"
+      ]
+    },
+    {
+      "slug": "arbeitshoehe-fuer-zwei-personen",
+      "question": "Welche Arbeitshöhe ist richtig, wenn zwei Personen unterschiedlich groß sind?",
+      "answer": "Die ideale Arbeitshöhe richtet sich nach Körpergröße und insbesondere nach der Ellbogenhöhe. Wenn zwei Personen deutlich unterschiedlich groß sind, kann eine gemeinsame Kompromisshöhe sinnvoll sein; alternativ lassen sich getrennte Arbeitszonen in unterschiedlichen Höhen planen. Entscheidend ist, wer welche Tätigkeiten am häufigsten ausführt.",
+      "showOnHome": false,
+      "order": 1870,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "stauraum-oben-im-hochschrank",
+      "question": "Wie lässt sich der schwer erreichbare Stauraum ganz oben in Hochschränken sinnvoll nutzen?",
+      "answer": "Die obersten Bereiche eignen sich besonders für selten benötigte Gegenstände wie Festtagsgeschirr oder große Servierplatten. Dinge des täglichen Bedarfs platzieren wir in bequemer Greifhöhe. Bei sehr hohen Schränken können passende Innenausstattungen helfen; die sichere Erreichbarkeit bleibt wichtig.",
+      "showOnHome": false,
+      "order": 1890,
+      "themes": [
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "fronten-bis-zum-boden",
+      "question": "Können alle Küchenfronten bis zum Boden geführt werden?",
+      "answer": "Je nach Konstruktion können Fronten und Blenden sehr weit nach unten geführt werden, sodass eine nahezu bodentiefe Optik entsteht. Technisch müssen jedoch Bodenfreiheit, Gerätebelüftung, Öffnungsbewegungen und gegebenenfalls ein rückspringender Sockel berücksichtigt werden. Wir wählen die Ausführung passend zu Ihrer Küche.",
+      "showOnHome": false,
+      "order": 1900,
+      "themes": [
+        "material",
+        "planung"
+      ]
+    },
+    {
+      "slug": "abstand-zwischen-kueche-und-decke",
+      "question": "Warum ist zwischen raumhoher Küche und Decke ein Abstand von etwa 40 mm erforderlich?",
+      "answer": "Ein oberer Einbau- oder Ausgleichsbereich kann nötig sein, um Unebenheiten der Decke, Montagetoleranzen und die Montagefolge aufzufangen. 40 mm sind aber kein allgemeingültiger vorgeschriebener Lüftungsabstand. Wir prüfen, wie schmal der Anschluss bei der konkreten Decke und Konstruktion ausgeführt werden kann.",
+      "showOnHome": false,
+      "order": 1910,
+      "themes": [
+        "besondere",
+        "montage"
+      ]
+    },
+    {
+      "slug": "kuecheninsel-mit-sitzplaetzen",
+      "question": "Kann man eine Kücheninsel mit Sitzplätzen für Barhocker auf Arbeitsplattenhöhe gestalten?",
+      "answer": "Ja. Sitzplätze können direkt an einer erhöhten Arbeitsplatte oder auf normaler Arbeitsplattenhöhe geplant werden. Wichtig sind ausreichend Beinfreiheit und eine zur Arbeitshöhe passende Sitzhöhe der Hocker. Je nach Plattenmaterial muss ein Überstand konstruktiv abgestützt werden.",
+      "showOnHome": false,
+      "order": 1920,
+      "themes": [
+        "inseln"
+      ]
+    },
+    {
+      "slug": "spuele-vor-dem-fenster",
+      "question": "Ist eine Spüle direkt vor dem Fenster sinnvoll?",
+      "answer": "Das kann angenehm sein, weil Tageslicht und Ausblick direkt am Spülplatz liegen. Zu prüfen sind vor allem Fensteröffnung, Armaturenhöhe, Brüstungshöhe und die Lage des Wasseranschlusses. Wenn diese Punkte passen, spricht grundsätzlich nichts gegen diese Lösung.",
+      "showOnHome": false,
+      "order": 1930,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "spuele-und-abstellflaeche",
+      "question": "Wie lässt sich die Spüle anordnen, damit genügend Abstell- und Abtropffläche bleibt?",
+      "answer": "Wir planen nicht nur das Spülbecken, sondern auch die angrenzenden Arbeitsabläufe: wo schmutziges Geschirr gesammelt, abgespült und sauber abgestellt wird. Je nach Platz können eine integrierte Abtropffläche, eine Abtropfmatte oder eine zusätzliche freie Arbeitsfläche sinnvoll sein.",
+      "showOnHome": false,
+      "order": 1940,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "sitzfenster-in-der-kueche",
+      "question": "Kann ein Sitzfenster in die Küchenplanung integriert werden?",
+      "answer": "Ein Sitzfenster lässt sich gestalterisch häufig gut mit der Küche verbinden, beispielsweise über durchlaufende Materialien und abgestimmte Höhen.",
+      "showOnHome": false,
+      "order": 1950,
+      "themes": [
+        "moebel",
+        "besondere"
+      ]
+    },
+    {
+      "slug": "speisekammer-sinnvoll",
+      "question": "Ist eine separate Speisekammer für Vorräte, Getränkekisten und weitere Geräte sinnvoll oder kostet sie zu viel Platz?",
+      "answer": "Eine Speisekammer kann bei großem Vorratsbedarf sehr praktisch sein. Sie benötigt aber Wände und Verkehrsflächen, die in einer offenen Küche möglicherweise besser als gut organisierte Hochschränke genutzt würden.",
+      "showOnHome": false,
+      "order": 1960,
+      "themes": [
+        "innenleben",
+        "planung"
+      ]
+    },
+    {
+      "slug": "ist-die-kueche-hell-genug",
+      "question": "Ist unsere Küche ausreichend hell, auch in Bereichen ohne Fenster?",
+      "answer": "Das beurteilen wir anhand von Fensterpositionen, Raumtiefe und den geplanten Materialien. Dunklere Zonen können durch eine gut abgestimmte Beleuchtung von Arbeitsflächen, Schrankinnerem und Raum aufgehellt werden.",
+      "showOnHome": false,
+      "order": 1970,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "kuechenbeleuchtung",
+      "question": "Wie sollte die Küche künstlich beleuchtet werden?",
+      "answer": "Eine gute Küchenbeleuchtung kombiniert helles, möglichst schattenarmes Arbeitslicht mit einer angenehmen Grundbeleuchtung und gezielten Akzenten. LED-Leuchten unter Oberschränken oder in Nischen können Arbeitsflächen sehr gut ausleuchten. Lichtfarbe, Dimmbarkeit und Schaltgruppen stimmen wir auf die Raumnutzung ab.",
+      "showOnHome": false,
+      "order": 1980,
+      "themes": [
+        "planung"
+      ]
+    },
+    {
+      "slug": "saugroboter-unterbringen",
+      "question": "Wo kann ein Saugroboter unauffällig untergebracht werden?",
+      "answer": "Für einen Saugroboter kann eine eigene Nische im Sockel- oder Unterschrankbereich vorgesehen werden. Entscheidend sind die Maße der Ladestation, ein Stromanschluss sowie ausreichend freie Ein- und Ausfahrt. Bei Modellen mit Reinigungsstation benötigen wir entsprechend mehr Platz.",
+      "showOnHome": false,
+      "order": 1990,
+      "themes": [
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "gewuerze-aufbewahren",
+      "question": "Wie bewahrt man Gewürze am praktischsten auf?",
+      "answer": "Gewürze sollten nahe am Kochbereich, übersichtlich und möglichst vor starker Wärme, Dampf und direkter Sonne geschützt gelagert werden. Sinnvoll sind beispielsweise flache Auszüge mit Einsätzen oder gut zugängliche Innenauszüge. Die passende Lösung hängt von Ihrer Gewürzsammlung ab.",
+      "showOnHome": false,
+      "order": 2000,
+      "themes": [
+        "innenleben"
+      ]
+    },
+    {
+      "slug": "handtuecher-in-der-grifflosen-kueche",
+      "question": "Wo können Handtücher in einer grifflosen Küche aufgehängt werden?",
+      "answer": "Dafür gibt es mehrere unauffällige Möglichkeiten: integrierte Handtuchhalter, ausziehbare Halter im Unterschrank oder eine passende seitliche Griff- beziehungsweise Nischenlösung. Wir berücksichtigen den gewünschten Platz bereits bei der Planung, damit die grifflose Optik erhalten bleibt.",
+      "showOnHome": false,
+      "order": 2010,
+      "themes": [
+        "innenleben",
+        "material"
+      ]
     }
   ]
 }
