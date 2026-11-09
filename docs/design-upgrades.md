@@ -84,7 +84,7 @@ open content decision from the audit (keep areas with real projects, redirect th
 
 | ID | What | Status | Files | Check on |
 |---|---|---|---|---|
-| A1 | Photo frames show the photo's own colours blurred (24 px version) and uncover the photo with an upward wipe once it is in view and loaded | on staging (9 Nov) | `Frame` in `components/catalog/collections/parts.tsx`, `lib/photo-reveal.ts`, `components/RevealObserver.tsx`, `app/globals.css`, width 24 in the `/cms-opt` route | any project or topic page |
+| A1 | Photo frames show the photo's own colours blurred (24 px version) under the photo while it loads. The upward wipe and zoom were removed on 9 Nov (Amine: repetitive and cheap) | on staging (9 Nov) | `Frame` in `components/catalog/collections/parts.tsx`, `lib/photo-reveal.ts`, `components/RevealObserver.tsx`, `app/globals.css`, width 24 in the `/cms-opt` route | any project or topic page |
 | A2 | Project photos drift slowly inside their frames (CSS scroll timeline, no JavaScript) | on staging (9 Nov) | `ReferenzPage` story photos, `ProjectFeature` | [Projekt](https://staging.beer.de/projekte/greige-u-form-holzdecke) |
 | A3 | Headings and closing text rise into place once | on staging (9 Nov) | `data-rise` on EndBand, PageEnd, TopicReading, project texts, homepage projects, Ablauf, FAQ | homepage, project pages |
 | – | Homepage carousel stops with "reduce motion" | on staging (9 Nov) | `components/HeroCarousel.tsx` | |

@@ -20,7 +20,6 @@ export function Frame({
   imgClassName,
   priority,
   sizes,
-  reveal = !priority,
   drift = false,
 }: {
   src: string;
@@ -30,16 +29,14 @@ export function Frame({
   imgClassName?: string;
   priority?: boolean;
   sizes: string;
-  /** Uncover the photo with its own blurred colours when it scrolls into view (off for heroes). */
-  reveal?: boolean;
   /** Let the photo drift slowly inside the frame while the page scrolls. */
   drift?: boolean;
 }) {
+  // The photo's own colours, blurred, sit under it while it loads (no grey box, no movement).
   const standIn = photoStandIn(src);
   return (
     <figure
       className={cn("relative overflow-hidden bg-nacht", drift && "photo-drift", className)}
-      data-reveal={standIn && reveal ? "" : undefined}
       style={standIn ? ({ "--stand-in": `url("${standIn}")` } as CSSProperties) : undefined}
     >
       {standIn ? <span className="photo-stand-in" aria-hidden /> : null}
@@ -52,7 +49,6 @@ export function Frame({
         sizes={sizes}
         className={cn("object-cover", imgClassName)}
       />
-      {standIn && reveal ? <span className="photo-cover" aria-hidden /> : null}
     </figure>
   );
 }
