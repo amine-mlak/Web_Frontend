@@ -1,7 +1,6 @@
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import InstagramFeed from "@/components/InstagramFeed";
 import { PreviewBanner } from "@/components/PreviewBanner";
 import SiteHeader from "@/components/SiteHeader";
 import { getAnnouncement } from "@/lib/announcement";
@@ -21,7 +20,6 @@ export default async function MainLayout({
         <Header />
       </SiteHeader>
       {children}
-      <InstagramFeed />
       <Footer />
     </>
   );

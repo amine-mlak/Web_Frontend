@@ -1,7 +1,6 @@
 import CmsImage from "@/components/CmsImage";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
-import { entryReading } from "@/lib/entry-reading";
 import { Frame } from "@/components/catalog/collections/parts";
 import {
   Crumbs,
@@ -83,10 +82,18 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
         </div>
       </section>
 
-      <TopicReading locale={hub.locale} cms={hub} copy={entryReading(hub.title, hub.lede, hub.locale)} />
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <KitchenShowcase hub={hub} title={houses} />
-      <SoftClose hub={hub} />
+      <TopicReading
+        locale={hub.locale}
+        cms={hub}
+        // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
+      />
+      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
+      <SoftClose
+        hub={hub}
+        tiles={hub.siblings}
+        tilesTitle={hub.siblingEyebrow}
+      />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import { useId } from "react";
+import EndBand, { type EndBandTile } from "@/components/catalog/EndBand";
 import LocaleLink from "@/components/LocaleLink";
-import NextSteps from "@/components/catalog/NextSteps";
 import { Frame } from "@/components/catalog/collections/parts";
 import { chromeCopy } from "@/lib/i18n";
 import { absoluteUrl } from "@/lib/seo";
@@ -227,17 +227,29 @@ export function IndexRows({
     </section>
   );
 }
-export function SoftClose({ hub }: { hub: PresentedHub }) {
+/**
+ * The end of a detail page: the dark band with a photo and the next step, plus photo tiles to
+ * neighbouring pages when the page passes them.
+ */
+export function SoftClose({
+  hub,
+  tiles,
+  tilesTitle,
+}: {
+  hub: PresentedHub;
+  tiles?: EndBandTile[];
+  tilesTitle?: string;
+}) {
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-      <h2 className="max-w-2xl font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.03em] text-ink md:text-[48px]">
-        {hub.closeTitle}
-      </h2>
-      <p className="mt-5 max-w-md font-sans text-[16px] leading-relaxed text-muted">
-        {hub.closeText}
-      </p>
-      <NextSteps primary={{ href: hub.ctaHref, label: hub.ctaLabel }} locale={hub.locale} className="mt-8" />
-    </section>
+    <EndBand
+      title={hub.closeTitle}
+      text={hub.closeText}
+      image={hub.closeImage || undefined}
+      primary={{ href: hub.ctaHref, label: hub.ctaLabel }}
+      tiles={tiles}
+      tilesTitle={tilesTitle}
+      locale={hub.locale}
+    />
   );
 }
 

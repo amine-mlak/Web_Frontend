@@ -24,12 +24,14 @@ const OWN_SLOTS_FROM = 60;
  * belong to one kitchen and no photo repeats on the page. Covers are left to
  * the project cards. Old example projects (gallery assembled in code, mixed
  * kitchens) are left out. When the projects run out, `fallback` (the old pool)
- * fills in.
+ * fills in. `seed` (the page slug) turns the list of other projects to a different starting point
+ * for each page, so pages without tagged kitchens do not all show the same photos.
  */
-export function kitchenPhotos(related: Project[], all: Project[], fallback: Photo): KitchenPhotos {
+export function kitchenPhotos(related: Project[], all: Project[], fallback: Photo, seed?: string): KitchenPhotos {
   const real = (project: Project) => !isCodeGallery(project.slug);
   const relatedSlugs = new Set(related.map((project) => project.slug));
-  const order = [...related, ...all.filter((project) => !relatedSlugs.has(project.slug))].filter(real);
+  const others = all.filter((project) => !relatedSlugs.has(project.slug));
+  const order = [...related, ...rotate(others, seed)].filter(real);
   const queue: string[] = [];
   const queued = new Set<string>();
   for (const project of order) {
@@ -68,6 +70,14 @@ export function kitchenPhotos(related: Project[], all: Project[], fallback: Phot
     return src ? cmsLarge(src, width) : undefined;
   };
   return photo;
+}
+
+function rotate<T>(items: T[], seed?: string) {
+  if (!seed || items.length < 2) return items;
+  let hash = 0;
+  for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  const start = hash % items.length;
+  return [...items.slice(start), ...items.slice(0, start)];
 }
 
 /** The cover of the first project that matches, for a card that links to another topic or place. */

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
+import InstagramFeed from "@/components/InstagramFeed";
 import { collectionHubMetadata } from "@/lib/collection-hubs";
 import { fetchProjects } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
@@ -29,13 +30,17 @@ export default async function ProjektePage() {
     image: project.image,
   }));
 
+  // The Instagram feed belongs to the homepage and the projects, not to every page.
   return (
-    <CollectionHub
-      id="projekte"
-      locale={locale}
-      branches={featured.length > 0 ? featured : undefined}
-      extras={extras}
-      extrasTitle={locale === "en" ? "Further houses" : "Weitere Häuser"}
-    />
+    <>
+      <CollectionHub
+        id="projekte"
+        locale={locale}
+        branches={featured.length > 0 ? featured : undefined}
+        extras={extras}
+        extrasTitle={locale === "en" ? "Further houses" : "Weitere Häuser"}
+      />
+      <InstagramFeed />
+    </>
   );
 }

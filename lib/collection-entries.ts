@@ -1229,7 +1229,8 @@ function pointBranches(voice: Voice | undefined, photo: (n: number, w?: number) 
     imageC: photo(18 + index * 3, 1200),
     alt: labels[index] ?? voice?.title ?? "",
     kicker: String(index + 1).padStart(2, "0"),
-    points,
+    // The first line is the branch text; the list holds only what follows it.
+    points: points.slice(1),
     caption: looks[index] ?? labels[index] ?? "",
   }));
 }
@@ -1307,7 +1308,8 @@ function withPunkte(
       ...branch,
       title: punkt.titel || branch.title,
       text: points[0] || branch.text,
-      points,
+      // The first line is shown as the text; repeating it in the list doubled it on the page.
+      points: points.slice(1),
     };
   });
 }
@@ -1514,6 +1516,7 @@ export function presentMaterialKind(
       : projects.filter((project) => project.brands.some((brand) => brand.slug === "quooker")),
     projects,
     (n, width) => devPhoto(start + n, width),
+    slug,
   );
   const related = meta.kind
     ? materials.filter((item) => item.kind === meta.kind)
@@ -1607,6 +1610,7 @@ export function presentApplianceKind(
     projects.filter((project) => project.appliances.some((item) => item.kind === slug)),
     projects,
     (n, width) => devPhoto(start + n, width),
+    slug,
   );
   const related = appliances.filter((item) => item.kind === slug);
   const siblings = GERAETE_KIND_ROUTES.filter((item) => item.slug !== slug).map(
@@ -1667,6 +1671,7 @@ export function presentMaterialItem(
     all.filter((project) => project.materials.some((material) => material.slug === item.slug)),
     all,
     (n, width) => devPhoto(100 + item.order + n, width),
+    item.slug,
   );
   const siblings = materials
     .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
@@ -1725,6 +1730,7 @@ export function presentApplianceItem(
     all.filter((project) => project.appliances.some((entry) => entry.slug === item.slug)),
     all,
     (n, width) => devPhoto(140 + item.order + n, width),
+    item.slug,
   );
   const siblings = appliances
     .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
@@ -1829,6 +1835,7 @@ export function presentBrandItem(
     all.filter((project) => project.brands.some((brand) => brand.slug === item.slug)),
     all,
     (n, width) => devPhoto(186 + item.order + n, width),
+    item.slug,
   );
   const siblings = brands
     .filter((entry) => entry.slug !== item.slug)
@@ -1879,6 +1886,7 @@ export function presentRegionItem(
     all.filter((project) => project.regions.some((region) => region.slug === item.slug)),
     all,
     (n, width) => devPhoto(204 + item.order + n, width),
+    item.slug,
   );
   const siblings = regions
     .filter((entry) => entry.slug !== item.slug)

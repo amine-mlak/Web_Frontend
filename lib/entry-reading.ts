@@ -1,6 +1,20 @@
 import type { Locale } from "@/lib/i18n";
 import type { TopicReadingCopy } from "@/lib/topic-reading";
 
+// Sentences from the generated fallback below. They were copied into the CMS reading text of
+// 32 materials, appliances, brands and regions, so the same paragraph stood on every page.
+const SEEDED = [
+  "am Muster und nicht am Bildschirm",
+  "etwa zweihundert Kilometer um München",
+  "on a sample rather than on a screen",
+  "about two hundred kilometres around Munich",
+];
+
+/** True for a reading text that is still the generated template, not text written for the page. */
+export function isSeededReading(text: string | undefined) {
+  return SEEDED.some((sentence) => text?.includes(sentence));
+}
+
 export function entryReading(
   title: string,
   intro: string,

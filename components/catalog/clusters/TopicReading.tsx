@@ -1,11 +1,13 @@
 import LocaleLink from "@/components/LocaleLink";
+import { isSeededReading } from "@/lib/entry-reading";
 import { stilePlaces } from "@/lib/stile-reading";
 import { topicReading, type TopicReadingCopy } from "@/lib/topic-reading";
 import type { Locale } from "@/lib/i18n";
 
 function fromCms(cms?: { ueberschrift?: string; lesetext?: string; title?: string }) {
   const body = cms?.lesetext?.trim();
-  if (!body) {
+  // The template paragraph copied into the CMS is left out until real text is written.
+  if (!body || isSeededReading(body)) {
     return null;
   }
   const heading = cms?.ueberschrift?.trim() || cms?.title || "";
