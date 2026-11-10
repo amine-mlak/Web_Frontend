@@ -128,18 +128,18 @@ Pages without matching gallery photos keep the old layout: Fenix, Geschirrspüle
 - Only 6 of 95 projects are tagged to a region; no project is tagged Keramik.
 - Keramik and Miele pages still have aphoristic CMS copy ("Die Platte ist Arbeit. Kein Bild.").
 
-## Reading text and places (branch `design/reading-text`, not on staging yet)
+## Reading text and places (on staging since 10 Nov, merge `06b6c5d`)
 
 Amine: the "Im Radius" block repeats, some pages look empty, and photo pages have no room for text
 or for text that names places.
 
 | ID | What | Status | Files | Check on |
 |---|---|---|---|---|
-| R1 | The "Im Radius" column is gone from all topic pages (was on 19). The word "Radius" is out of the page copy; the 200 km fact stays in plain words | branch | `lib/topic-reading.ts`, `lib/stile-reading.ts`, `lib/collection-hubs.ts`, `lib/collection-present.ts`, `lib/entry-reading.ts` | /kuechen/formen/kuechenzeile |
-| R2 | One reading block on every material, appliance, brand and region page and on the Regionen overview: heading on the left, text with sub-headings on the right. Text is in code (DE and EN); a text written in the CMS replaces it | branch | `components/catalog/clusters/TopicReading.tsx`, `lib/page-reading/*`, `SamplePage`, `SpecPage`, `PlacePage`, `RegionenCollection` | /material/fenix, /marken/gaggenau, /regionen |
-| R3 | Place names in the text link to their region pages, once per page. Topic pages that name no place get one paragraph on where BEER builds | branch | `components/catalog/PlaceText.tsx`, `lib/topic-places.ts` | /regionen/augsburg |
-| R4 | Region pages: each has its own text in place of the one 101-word paragraph all eleven shared, plain titles ("Küchen in Augsburg"), no points block | branch | `lib/page-reading/regions.ts`, `lib/collection-entries.ts`, `PlacePage` | /regionen/erding |
-| R5 | Search titles and descriptions: the seeded "Name · Wolfersdorf" title and the seeded description give way to the page text ("Küchen nach Maß in Erding", "Fenix als Küchenfront"). A title or description written in the CMS still wins | branch | `app/[locale]/(main)/{material,geraete,marken,regionen}/[slug]/page.tsx`, `lib/page-reading/index.ts` | page source |
+| R1 | The "Im Radius" column is gone from all topic pages (was on 19). The word "Radius" is out of the page copy; the 200 km fact stays in plain words | on staging | `lib/topic-reading.ts`, `lib/stile-reading.ts`, `lib/collection-hubs.ts`, `lib/collection-present.ts`, `lib/entry-reading.ts` | /kuechen/formen/kuechenzeile |
+| R2 | One reading block on every material, appliance, brand and region page and on the Regionen overview: heading on the left, text with sub-headings on the right. Text is in code (DE and EN); a text written in the CMS replaces it | on staging | `components/catalog/clusters/TopicReading.tsx`, `lib/page-reading/*`, `SamplePage`, `SpecPage`, `PlacePage`, `RegionenCollection` | /material/fenix, /marken/gaggenau, /regionen |
+| R3 | Place names in the text link to their region pages, once per page. Topic pages that name no place get one paragraph on where BEER builds | on staging | `components/catalog/PlaceText.tsx`, `lib/topic-places.ts` | /regionen/augsburg |
+| R4 | Region pages: each has its own text in place of the one 101-word paragraph all eleven shared, plain titles ("Küchen in Augsburg"), no points block | on staging | `lib/page-reading/regions.ts`, `lib/collection-entries.ts`, `PlacePage` | /regionen/erding |
+| R5 | Search titles and descriptions: the seeded "Name · Wolfersdorf" title and the seeded description give way to the page text ("Küchen nach Maß in Erding", "Fenix als Küchenfront"). A title or description written in the CMS still wins | on staging | `app/[locale]/(main)/{material,geraete,marken,regionen}/[slug]/page.tsx`, `lib/page-reading/index.ts` | page source |
 
 Words per page, before and after: Fenix 161 to 270, Lack matt 167 to 286, Geschirrspüler 164 to 280,
 Gaggenau 185 to 296, Quooker 163 to 267, Regionen overview 337 to 456. All 80 collection pages answer 200.
