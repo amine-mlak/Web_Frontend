@@ -70,7 +70,11 @@ export default async function AppliancePage({
   if (isGeraeteKindRoute(slug)) {
     const page = await fetchSitePage(slug);
     return (
-      <CategoryPage hub={presentApplianceKind(slug, locale, items, projects, page)} faqTheme="geraete" path={`/geraete/${slug}`} />
+      <CategoryPage
+        hub={{ ...presentApplianceKind(slug, locale, items, projects, page), depth: { path: `/geraete/${slug}` } }}
+        faqTheme="geraete"
+        path={`/geraete/${slug}`}
+      />
     );
   }
 
@@ -82,6 +86,11 @@ export default async function AppliancePage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <SpecPage hub={presentApplianceItem(item, locale, items, houses, projects)} />
+    <SpecPage
+      hub={{
+        ...presentApplianceItem(item, locale, items, houses, projects),
+        depth: { path: `/geraete/${item.slug}`, name: item.name },
+      }}
+    />
   );
 }

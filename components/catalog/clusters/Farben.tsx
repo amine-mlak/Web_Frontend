@@ -5,6 +5,7 @@ import { Crumbs, SoftClose } from "@/components/catalog/clusters/parts";
 import type { ClusterHouse, ClusterSwatch, PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 
 function isLight(hex: string) {
   const raw = hex.replace("#", "");
@@ -251,6 +252,8 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       ) : (
         <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       )}
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );

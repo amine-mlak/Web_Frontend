@@ -1,5 +1,6 @@
 import CmsImage from "@/components/CmsImage";
 import EntryHeader from "@/components/catalog/EntryHeader";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import {
   CloseBand,
@@ -97,6 +98,8 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
       <TopicReading locale={hub.locale} cms={hub} copy={hub.reading} />
       <KitchenShowcase hub={hub} title={houses} />
       {story.band ? <CloseBand photo={story.band} locale={hub.locale} /> : null}
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <SoftClose
         hub={hub}

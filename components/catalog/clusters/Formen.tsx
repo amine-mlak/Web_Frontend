@@ -7,6 +7,7 @@ import { IndexRows, PointsSection, SoftClose } from "@/components/catalog/cluste
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Projects with this layout" : "Projekte mit diesem Grundriss";
@@ -71,6 +72,8 @@ export function FormenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <PointsSection hub={hub} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherForms hub={hub} />
       <SoftClose hub={hub} />
     </main>

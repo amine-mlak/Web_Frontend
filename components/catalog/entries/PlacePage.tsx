@@ -1,6 +1,6 @@
 import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
-import Questions from "@/components/catalog/Questions";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import { QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
@@ -58,8 +58,9 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
       {hub.housesElsewhere ? null : showcase}
       <TopicReading locale={hub.locale} cms={hub} copy={hub.reading} self={hub.placeHref} />
       {hub.housesElsewhere ? showcase : null}
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} theme="regionen" />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <Questions theme="regionen" title={hub.title} locale={hub.locale} limit={4} />
 
       <SoftClose hub={hub} tiles={hub.siblings} tilesTitle={hub.siblingEyebrow} />
     </main>

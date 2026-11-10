@@ -78,7 +78,7 @@ export default async function MaterialDetailPage({
 
   if (isMaterialKindRoute(slug)) {
     const page = await fetchSitePage(slug);
-    const hub = presentMaterialKind(slug, locale, items, projects, page);
+    const hub = { ...presentMaterialKind(slug, locale, items, projects, page), depth: { path: `/material/${slug}` } };
     // Innenleben shows each CMS point as its own photo section once the points carry photos.
     if (slug === "innenleben" && page && interiorPoints(page).length >= 2) {
       return <InteriorPage hub={hub} page={page} faqTheme={MATERIAL_FAQ[slug]} />;
@@ -100,6 +100,11 @@ export default async function MaterialDetailPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <SamplePage hub={presentMaterialItem(item, locale, items, houses, projects)} />
+    <SamplePage
+      hub={{
+        ...presentMaterialItem(item, locale, items, houses, projects),
+        depth: { path: `/material/${item.slug}`, name: item.name },
+      }}
+    />
   );
 }

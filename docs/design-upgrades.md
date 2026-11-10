@@ -214,6 +214,28 @@ and the pages under them. Before and after: `docs/design-reference/collections-p
 - Marken: the Miele and Siemens photos are small product snapshots (the brand list now shows project photos in their place; the brand pages still open on them).
 - Marken: Gaggenau and Quooker have no project photo whose description names them. Once a gallery photo does, the brand list picks it up by itself.
 
+## Sub-page content: care notes, guide excerpt, picked questions
+on staging since 2026-11-10
+
+Why: the sub-pages held 230 to 545 words each. The CMS entries have no long-text field beyond the reading text, and the
+pages showed none of BEER's FAQ answers, guide and magazine articles or care instructions. Pages that rank for these
+subjects hold 1,000 to 2,900 words (what it is, variants, planning, cost, questions, further articles).
+
+| What | Files | Pages to check |
+|---|---|---|
+| Care notes from BEER's own care instructions (stone, stainless steel, ceramic, solid wood, veneer, lacquer) | `components/catalog/PageDepth.tsx` (`PageCare`), `lib/page-reading/care.ts` | /material/naturstein, /material/edelstahl, /material/lack-matt |
+| Guide block: the opening of BEER's article on the subject, what the article covers, further articles. Pages without an article of their own get a reading list with summaries. German only | `PageDepth.tsx` (`PageGuide`), `lib/guide-excerpt.ts` | /geraete/dampfgarer, /marken/bora, /marken/miele, /regionen/muenchen |
+| Questions picked per page, filled up from the FAQ theme, headed with the page's subject | `PageDepth.tsx` (`PageQuestions`), `components/catalog/Questions.tsx` | /kuechen/formen/l-form, /moebel/ankleide |
+| Which page gets which article, questions and care notes | `lib/page-depth.ts` | all material, appliance, brand, region, furniture and kitchen-topic pages |
+
+Average words per page: 389 before, about 710 after (74 pages).
+
+**Open points:**
+- Fenix has no care notes. BEER must confirm whether their notes for HPL and laminate apply.
+- Regions without an article (Freising, Erding, Landshut and the smaller places) show questions only.
+- The guide "Dampfgarer" has a spelling slip in the CMS ("Vitaminreich"); the guide "Küchenschreiner aus München." is linked, not quoted, because its opening reads weak.
+- Keyword data from Ubersuggest is missing (Chrome was not connected). Longer reading texts per page are a follow-up as CMS drafts.
+
 ## Phase 5: after a showroom photo day (B2, C1, C5, C6)
 planned; the shot list will be added here
 

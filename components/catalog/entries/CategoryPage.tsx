@@ -2,7 +2,7 @@ import LocaleLink from "@/components/LocaleLink";
 import CollectionJsonLd from "@/components/catalog/CollectionJsonLd";
 import EndBand from "@/components/catalog/EndBand";
 import EntryHeader from "@/components/catalog/EntryHeader";
-import Questions from "@/components/catalog/Questions";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
 import { CloseBand } from "@/components/catalog/PhotoStory";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
@@ -174,7 +174,8 @@ export default function CategoryPage({
         <AtelierFacts facts={hub.facts} kicker={copy.figures} image={ledgerImage} />
       ) : null}
 
-      <Questions theme={faqTheme} title={hub.title} locale={hub.locale} />
+      <PageGuide hub={hub} path={path} />
+      <PageQuestions hub={hub} path={path} theme={faqTheme} />
 
       <HouseLine houses={hub.houses} title={copy.houses} />
 

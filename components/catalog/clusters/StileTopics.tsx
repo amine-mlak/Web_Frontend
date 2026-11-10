@@ -5,6 +5,7 @@ import { Crumbs, QuoteLine, SoftClose } from "@/components/catalog/clusters/part
 import { cmsSrc } from "@/lib/beer-photos";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 
 function plate(file: string) {
   return cmsSrc(`/cms-uploads/${file}`, 1800);
@@ -164,6 +165,8 @@ function Modern({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
@@ -226,6 +229,8 @@ function Landhaus({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
@@ -287,6 +292,8 @@ function Design({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
@@ -355,6 +362,8 @@ function Holz({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
@@ -410,6 +419,8 @@ function Purist({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
@@ -480,6 +491,8 @@ function Luxus({
       </div>
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
       <SoftClose hub={hub} />
     </main>
