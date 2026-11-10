@@ -101,22 +101,22 @@ Checked: every frame uncovers after scrolling (project 11/11, Landhaus 13/13, ho
 | – | Hub pages (Küchenformen, Stile …) keep their full-screen photo opener | decided | | |
 | – | Transparent header: not done. Amine kept the white bar on purpose (commit f3396c4, 23 Sep). Header buttons: the menu already has "Küche planen"; a "Termin" button comes with booking in phase 4 | decided | | |
 
-## Collections: one grammar, real kitchens (branch `design/collections-grammar`, 10 Nov)
+## Collections: one grammar, real kitchens (on staging since 10 Nov, merge `e4b3091`)
 
 Hub pages, category pages and single pages now follow one order and one type scale, and their photos
-come from kitchens BEER built. Not on staging yet: waits for Amine's yes.
+come from kitchens BEER built.
 
-| ID | What | Status | Files | Check on (local) |
+| ID | What | Status | Files | Check on |
 |---|---|---|---|---|
-| G1 | One type scale (`.t-display` … `.type-eyebrow`) and one page order for hubs, category and single pages: header, statement, options, quote, FAQ, ending. The parent page is a visible link above the title; one h1 per page; JSON-LD on all | committed `adce62f` | `app/globals.css`, `components/catalog/collections/*`, `components/catalog/entries/*` | /material, /material/arbeitsplatten, /material/keramik |
-| G2 | Photo matcher: finds the gallery photos that show a material or appliance by their alt text, and sorts them into room, close-up and other | committed | `lib/photo-match.ts` | |
-| C1 | Single pages (material, appliance, brand) open on three photos of one kitchen, then a close-up from edge to edge between two texts, with a caption that links to the project | committed | `components/catalog/PhotoStory.tsx`, `SamplePage`, `SpecPage` | /material/naturstein, /geraete/kochfeld, /marken/miele |
-| C2 | Staggered pair on single pages: two photos of one kitchen at different sizes, the second set lower | committed | `PhotoStory.tsx` | /material/edelstahl, /geraete/backofen |
-| C8 | Pair tiles on category pages: the room and a close-up of the same kitchen in one card | committed | `CategoryPage`, `lib/collection-entries.ts` | /material/arbeitsplatten, /geraete/kochen |
-| – | Category pages open on a room with one of their options, with caption and "Zur Küche" | committed | `CategoryPage`, `matchHero` | /material/fronten, /geraete/backen |
-| – | Material hub: each area shows a built kitchen with a close-up set into its corner and names the kitchen. Drawers and the sink lead with the close-up. Geräte hub rows use built kitchens too | committed | `MaterialCollection`, `GeraeteCollection`, `matchArea`, `withAreaPhotos` | /material, /geraete |
-| – | "In diesen Küchen" cards lead with the photo that shows the thing; the end tiles show built kitchens | committed | `lib/collection-entries.ts`, `lib/project-features.ts` | /material/holz-massiv |
-| – | No photo appears twice on a page (checked on 24 hub, category and single pages) | committed | `CategoryPage`, `photoMatch().used` | |
+| G1 | One type scale (`.t-display` … `.type-eyebrow`) and one page order for hubs, category and single pages: header, statement, options, quote, FAQ, ending. The parent page is a visible link above the title; one h1 per page; JSON-LD on all | on staging | `app/globals.css`, `components/catalog/collections/*`, `components/catalog/entries/*` | /material, /material/arbeitsplatten, /material/keramik |
+| G2 | Photo matcher: finds the gallery photos that show a material or appliance by their alt text, and sorts them into room, close-up and other | on staging | `lib/photo-match.ts` | |
+| C1 | Single pages (material, appliance, brand) open on three photos of one kitchen, then a close-up from edge to edge between two texts, with a caption that links to the project | on staging | `components/catalog/PhotoStory.tsx`, `SamplePage`, `SpecPage` | /material/naturstein, /geraete/kochfeld, /marken/miele |
+| C2 | Staggered pair on single pages: two photos of one kitchen at different sizes, the second set lower | on staging | `PhotoStory.tsx` | /material/edelstahl, /geraete/backofen |
+| C8 | Pair tiles on category pages: the room and a close-up of the same kitchen in one card | on staging | `CategoryPage`, `lib/collection-entries.ts` | /material/arbeitsplatten, /geraete/kochen |
+| – | Category pages open on a room with one of their options, with caption and "Zur Küche" | on staging | `CategoryPage`, `matchHero` | /material/fronten, /geraete/backen |
+| – | Material hub: each area shows a built kitchen with a close-up set into its corner and names the kitchen. Drawers and the sink lead with the close-up. Geräte hub rows use built kitchens too | on staging | `MaterialCollection`, `GeraeteCollection`, `matchArea`, `withAreaPhotos` | /material, /geraete |
+| – | "In diesen Küchen" cards lead with the photo that shows the thing; the end tiles show built kitchens | on staging | `lib/collection-entries.ts`, `lib/project-features.ts` | /material/holz-massiv |
+| – | No photo appears twice on a page (checked on 24 hub, category and single pages) | on staging | `CategoryPage`, `photoMatch().used` | |
 
 Pages without matching gallery photos keep the old layout: Fenix, Geschirrspüler, Lack matt.
 
