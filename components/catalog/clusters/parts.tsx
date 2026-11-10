@@ -162,7 +162,13 @@ export function HouseLine({
       </div>
       <ul
         className={`mt-10 grid gap-8 ${
-          shown.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : shown.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-xl"
+          shown.length === 4
+            ? "sm:grid-cols-2 lg:grid-cols-4"
+            : shown.length === 3
+              ? "sm:grid-cols-2 lg:grid-cols-3"
+              : shown.length === 2
+                ? "sm:grid-cols-2"
+                : "max-w-xl"
         }`}
       >
         {shown.map((house) => (
@@ -171,8 +177,8 @@ export function HouseLine({
               <Frame
                 src={house.image}
                 alt={house.title}
-                className="aspect-[4/5]"
-                sizes="(max-width: 1024px) 100vw, 33vw"
+                className={shown.length === 2 ? "aspect-[4/5] sm:aspect-[4/3] lg:aspect-[3/2]" : "aspect-[4/5]"}
+                sizes={shown.length === 2 ? "(max-width: 640px) 100vw, 50vw" : "(max-width: 1024px) 100vw, 33vw"}
               />
               <p className="t-item mt-4 text-ink">{house.title}</p>
               {house.meta ? <p className="type-eyebrow mt-2 text-muted">{house.meta}</p> : null}
@@ -271,7 +277,7 @@ export function IndexRows({
   title,
 }: {
   items: ClusterSibling[];
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
 }) {
   const headingId = useId();
@@ -281,10 +287,10 @@ export function IndexRows({
 
   return (
     <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14" aria-labelledby={headingId}>
-      <p className="type-eyebrow text-gold">{eyebrow}</p>
+      {eyebrow ? <p className="type-eyebrow mb-3 text-gold">{eyebrow}</p> : null}
       <h2
         id={headingId}
-        className="t-section mt-3 text-ink"
+        className="t-section text-ink"
       >
         {title}
       </h2>

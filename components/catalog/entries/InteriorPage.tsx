@@ -5,6 +5,7 @@ import { Frame } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine } from "@/components/catalog/clusters/parts";
 import type { PagePoint, SitePage } from "@/lib/catalog";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import { photoKey } from "@/lib/utils";
 
 /**
  * A page told in photo sections: each CMS point is its own section with a large photo, a detail
@@ -185,12 +186,17 @@ export default function InteriorPage({
 }) {
   const locale = hub.locale === "en" ? "en" : "de";
   const copy = { ...COPY[locale], ...labels };
-  const points = interiorPoints(page);
+  const heroImage = page.image || hub.heroImage;
+  // The header often shows the first room's photo. That room then opens on its second photo, so no photo shows twice.
+  const points = interiorPoints(page).map((point) =>
+    point.detailbild?.src && photoKey(point.bild.src) === photoKey(heroImage)
+      ? { ...point, bild: point.detailbild, detailbild: undefined }
+      : point,
+  );
   const body = page.body
     .split(/\n{2,}/)
     .map((part) => part.trim())
     .filter(Boolean);
-  const heroImage = page.image || hub.heroImage;
 
   return (
     <main className="bg-paper">

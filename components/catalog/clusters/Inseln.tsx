@@ -9,7 +9,7 @@ import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
-  return locale === "en" ? "Islands that stand" : "Inseln, die stehen";
+  return locale === "en" ? "Projects with an island" : "Projekte mit Insel";
 }
 
 function Pedestal({
@@ -59,9 +59,6 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
           priority
           sizes="(max-width: 1024px) 100vw, 64rem"
         />
-        {hub.ledgerLine ? (
-          <p className="t-lead mx-auto mt-10 max-w-2xl text-center text-paper">{hub.ledgerLine}</p>
-        ) : null}
       </section>
 
       <PointsSection hub={hub} />

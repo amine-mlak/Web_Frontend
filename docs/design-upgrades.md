@@ -162,7 +162,8 @@ are published.
 ## Phase 4: sections from existing photos (C7, C8, C2, C4, C9, D2, D3, A5)
 
 C2 and C8 for the collection pages went out with the collections grammar (table above). The project
-pages follow here, on branch `design/phase-4-projects` (built 10 Nov, not merged; waits for Amine's yes).
+pages follow here. Built 10 Nov on branch `design/phase-4-projects`, merged into local `main` (`4a8636a`).
+Not pushed and not on staging yet: the push and the deploy wait for Amine's yes.
 Before and after: `docs/design-reference/projects-before-after.html`.
 
 | ID | What | Status | Files | Check on |
@@ -172,13 +173,46 @@ Before and after: `docs/design-reference/projects-before-after.html`.
 | – | Photo viewer (not in the SieMatic list): a click on any photo of a house opens it on a dark full screen with caption, counter and arrows. Arrow keys, swipe, Escape. Browser dialog, no library; the two neighbours load ahead | built | `components/catalog/PhotoViewer.tsx`, `components/catalog/Frame.tsx` (moved out of `collections/parts.tsx`), `TriptychHero.tsx` | any project page |
 | A5 | Pinned wipe on project pages | dropped: Amine found the photo wipe cheap; motion stays rare | | |
 | D2 | Slider for "Ähnliche Häuser", HomeProjects, Presse | not built: three cards fit side by side; a slider adds nothing there | | |
-| C7 | Chapter banners with line drawings on /kuechen/formen | planned | | |
+| C7 | Floor-plan line drawings for the six kitchen forms: on the chapters of /kuechen/formen, in the header of each form page, and as the "Weitere Küchenformen" cards | built (collections polish, below) | `components/catalog/shapes/PlanDrawing.tsx`, `clusters/ClusterPage.tsx`, `clusters/Formen.tsx` | /kuechen/formen, /kuechen/formen/u-form |
 | C4 | "Das Material in dieser Küche" card on project pages | planned; needs projects tagged with materials in the CMS | | |
 | C9 | Calm photo between grid and text on topic pages | planned | | |
 
 **CMS content that holds the project list back:** `year` is empty on all 95 projects; `place` is
 "Raum München" on 70 and empty on 16, so only 9 houses can show a place. With real places the archive
 could get a filter row by region.
+
+## Collections polish: hubs and their sub-pages (built 10 Nov, branch `design/collections-polish`, not merged)
+
+A pass over every collection hub (Küchen with its five groups, Material, Geräte, Marken, Regionen, Möbel)
+and the pages under them. Before and after: `docs/design-reference/collections-polish-before-after.html`.
+
+| What | Files | Check on |
+|---|---|---|
+| Each kitchen topic page opens and closes on its own room photo; the "weitere" cards show photos the page has not used; no photo twice on a hub | `lib/kitchen-photos.ts`, `lib/collection-topics.ts`, `lib/collection-clusters.ts` | /kuechen/stile/landhaus, /kuechen/formen/offen |
+| Hub chapters in a rhythm: one full-width chapter, then a pair, and again. Darker shade under the chapter text | `clusters/ClusterPage.tsx`, `FullChapter.tsx`, `app/globals.css` | /kuechen/stile, /kuechen/farben, /kuechen/inseln |
+| Floor-plan drawings (C7) | see Phase 4 | /kuechen/formen |
+| Every collection ends on its own view of the showroom or the building beside the visit facts. Before, Geräte, Marken and Regionen ended on the same customer kitchen | `lib/house-photos.ts` (`HUB_VISIT`), `lib/collection-present.ts` | the end of /geraete, /marken, /regionen, /moebel |
+| Cards fill the row when there are one, two or four of them (end tiles, "Was zur Wahl steht", the kitchen row) instead of leaving a hole | `EndBand.tsx`, `PageEnd.tsx`, `entries/CategoryPage.tsx`, `clusters/parts.tsx` | /geraete/kochen, /regionen/muenchen |
+| Slogans out of the code: the line under the fact tiles, the price punchline, the lines under the five group tiles, the section headings ("Projekte mit diesem Grundriss", "In diesen Küchen verbaut", "Weitere Materialien"). "In Zahlen" over word tiles is now "Auf einen Blick" | `lib/collection-*.ts`, `lib/house-pages.ts`, `lib/stile-reading.ts`, `entries/*.tsx`, `clusters/*.tsx` | /material/naturstein, /marken/bora |
+| The Wohnmöbel photo showed a person. The site now shows a BEER project photo (shelf and display cabinet under a staircase) in its place, on the hub, the page and the end tiles | `lib/catalog-api.ts` (`WITHOUT_PEOPLE`) | /moebel, /moebel/wohnmoebel |
+| The "Arbeitsplatz" block on the Wohnmöbel page showed a person. Its second photo (the shelves) now takes that place | `lib/catalog-api.ts` (`POINT_PHOTOS_WITH_PEOPLE`) | /moebel/wohnmoebel |
+| The furniture pages showed their header photo a second time in the first block. That block now opens on its second photo | `entries/InteriorPage.tsx` | /moebel/ankleide, /moebel/einbauschraenke, /moebel/tische-baenke |
+| Brand list: the rows for Bora, Miele and Siemens show a kitchen BEER built with that brand (a project photo whose description names the brand) instead of a product snapshot. Gaggenau and Quooker keep the CMS photo, because no project photo names them yet | `lib/photo-match.ts` (`brandCover`), `app/[locale]/(main)/marken/page.tsx` | /marken |
+
+**CMS content that still reads as generated on these pages** (text in the CMS, not code; a human replaces it):
+- Material, appliance and brand pages: the closing titles ("Maserung unter Licht.", "Öl und Schnitt.", "Kante und Becken.",
+  "Den Ton mustern.", "Hinten erreichen.", "Spuren erlaubt.", "Diese Platte.", "Dort, wo die Hand liegt.", "Wasser zuerst.",
+  "Nische und Rücken.", "Neben der Spüle.", "Ablauf oder nicht.", "Korpus zuerst.", "Luft ehrlich.", "Tank mitzeichnen.",
+  "Luft messen.", "Korpus mit Bora.", "Zeigen oder ruhen.", "Mit der Spüle.", "Aufgabe, nicht Paket.", "Nische, dann Miele.").
+- The same entries hold slogan points and word tiles, for example Eiche furniert: "Öl, ehrlich", "Folie bleibt Kostüm.",
+  tiles "Furnier / oder ehrlich massiv", "Alter / ist erlaubt". These need plain text and real facts (thickness, care, where it is used).
+- Page titles with a full stop ("Eiche als Fläche.", "Naturstein als Unikat.") go with the T3 headline drafts.
+
+**CMS photos to replace:**
+- Möbel → Wohnmöbel: the photo shows a person (swapped in code until then; remove the line in `WITHOUT_PEOPLE` afterwards).
+- Möbel → Wohnmöbel → "Arbeitsplatz": the main photo shows a person (swapped in code until then; remove the line in `POINT_PHOTOS_WITH_PEOPLE` afterwards).
+- Marken: the Miele and Siemens photos are small product snapshots (the brand list now shows project photos in their place; the brand pages still open on them).
+- Marken: Gaggenau and Quooker have no project photo whose description names them. Once a gallery photo does, the brand list picks it up by itself.
 
 ## Phase 5: after a showroom photo day (B2, C1, C5, C6)
 planned; the shot list will be added here

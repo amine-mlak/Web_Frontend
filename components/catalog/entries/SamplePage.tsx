@@ -40,10 +40,9 @@ export default function SamplePage({ hub }: { hub: PresentedTopic }) {
 
       <AtelierFacts
         facts={hub.facts}
-        kicker={hub.locale === "en" ? "The material in figures" : "Das Material in Zahlen"}
+        kicker={hub.locale === "en" ? "The material at a glance" : "Das Material auf einen Blick"}
         image={story.ledger?.src ?? hub.ledgerImage}
         imageAlt={story.ledger?.alt}
-        sentence={hub.ledgerLine}
       />
 
       {story.pair ? <PhotoPair pair={story.pair} locale={hub.locale} /> : null}

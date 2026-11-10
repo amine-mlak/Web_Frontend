@@ -4,6 +4,7 @@ import FullChapter from "@/components/catalog/FullChapter";
 import PageEnd from "@/components/catalog/PageEnd";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine, QuoteLine } from "@/components/catalog/clusters/parts";
+import PlanDrawing, { hasPlanDrawing } from "@/components/catalog/shapes/PlanDrawing";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { photoKey } from "@/lib/utils";
 
@@ -24,6 +25,29 @@ const COPY = {
   },
 } as const;
 
+/**
+ * The chapters in rows: one across the whole width, then two side by side, then one again.
+ * A single chapter left over at the end takes the whole width.
+ */
+function chapterRows<T>(items: T[]) {
+  // `side` counts the wide chapters, so their text alternates left and right.
+  const rows: { item: T; index: number; side: number }[][] = [];
+  let index = 0;
+  let side = 0;
+  while (index < items.length) {
+    rows.push([{ item: items[index], index, side: side++ }]);
+    index += 1;
+    if (items.length - index >= 2) {
+      rows.push([
+        { item: items[index], index, side: 0 },
+        { item: items[index + 1], index: index + 1, side: 0 },
+      ]);
+      index += 2;
+    }
+  }
+  return rows;
+}
+
 /** The overview of one kitchen world (Farben, Stile, Formen, Inseln, Besondere). */
 export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path?: string }) {
   const copy = COPY[hub.locale === "en" ? "en" : "de"];
@@ -31,6 +55,29 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
   // The hero photo is not the first chapter's photo again.
   const firstImage = first ? first.cover || first.image : "";
   const hero = firstImage && photoKey(firstImage) === photoKey(hub.heroImage) ? hub.statementImage : hub.heroImage;
+  const rows = chapterRows(hub.branches);
+  const chapter = (branch: PresentedCluster["branches"][number], index: number, size: "full" | "card", side: number) => {
+    // A layout shows its floor plan before its name.
+    const form = branch.href?.includes("/formen/") ? branch.href.split("/").pop() : undefined;
+    return (
+      <FullChapter
+        key={branch.href ?? branch.title}
+        id={`chapter-${index}`}
+        index={side}
+        size={size}
+        image={branch.cover || branch.image}
+        alt={branch.alt}
+        title={branch.title}
+        text={branch.text}
+        href={branch.href ?? "/kuechen"}
+        linkLabel={copy.discover}
+        kicker={branch.count ? copy.projects(branch.count) : undefined}
+        hex={branch.hex}
+        mark={hasPlanDrawing(form) ? <PlanDrawing form={form} className="h-11 w-auto md:h-14" /> : undefined}
+        lang={hub.locale}
+      />
+    );
+  };
 
   return (
     <main className="bg-paper">
@@ -58,22 +105,15 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
       <StatementBand statement={hub.statement} note={hub.statementNote} rule={false} />
 
       <div className="space-y-3 px-3 sm:space-y-4 sm:px-4">
-        {hub.branches.map((branch, index) => (
-          <FullChapter
-            key={branch.href ?? branch.title}
-            id={`chapter-${index}`}
-            index={index}
-            image={branch.cover || branch.image}
-            alt={branch.alt}
-            title={branch.title}
-            text={branch.text}
-            href={branch.href ?? "/kuechen"}
-            linkLabel={copy.discover}
-            kicker={branch.count ? copy.projects(branch.count) : undefined}
-            hex={branch.hex}
-            lang={hub.locale}
-          />
-        ))}
+        {rows.map((row) =>
+          row.length === 1 ? (
+            chapter(row[0].item, row[0].index, "full", row[0].side)
+          ) : (
+            <div key={`pair-${row[0].index}`} className="grid gap-3 sm:gap-4 md:grid-cols-2">
+              {row.map(({ item, index }) => chapter(item, index, "card", 0))}
+            </div>
+          ),
+        )}
       </div>
 
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />

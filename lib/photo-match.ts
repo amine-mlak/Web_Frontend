@@ -127,6 +127,30 @@ function toStory(found: Found): StoryPhoto {
   };
 }
 
+/** Photos where the brand is only a neighbour: a drawer, a handle or a socket under the appliance. */
+const BESIDE = /schublade|auszug|schriftzug|bedienleiste|griff|steckdose|neben einem|unter einem/i;
+
+/**
+ * One photo of a built kitchen for a brand's row on the brand list. Photos whose description starts
+ * with the brand ("Miele-Backofen in einer weißen Hochschrankwand") come first; photos where the
+ * appliance is only a neighbour come last. Undefined when no project photo names the brand.
+ */
+export function brandCover(name: string, projects: Project[], skip: Set<string> = new Set()): StoryPhoto | undefined {
+  const rule = brandRule(name);
+  const found: Found[] = [];
+  for (const project of projects) {
+    if (!project.image || isCodeGallery(project.slug)) continue;
+    for (const frame of project.gallery) {
+      if (!frame.src || !frame.alt || frame.portrait || skip.has(photoKey(frame.src))) continue;
+      const at = frame.alt.search(rule.has);
+      if (at >= 0) found.push({ frame, project, kind: kindOf(frame.alt), matched: true, at });
+    }
+  }
+  const rank = (entry: Found) => (BESIDE.test(entry.frame.alt) ? 1000 : 0) + (entry.kind === "room" ? 0 : 100) + entry.at;
+  const best = found.sort((left, right) => rank(left) - rank(right))[0];
+  return best ? toStory(best) : undefined;
+}
+
 /**
  * The photo story of one page. `slug` is the page's slug; a brand passes its own rule.
  * Returns an empty story when no photo shows the thing: the page then keeps its plain layout.

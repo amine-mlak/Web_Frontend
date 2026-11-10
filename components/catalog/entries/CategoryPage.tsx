@@ -8,7 +8,7 @@ import { CloseBand } from "@/components/catalog/PhotoStory";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { HouseLine } from "@/components/catalog/clusters/parts";
 import type { PresentedTopic } from "@/lib/collection-topics";
-import { photoKey } from "@/lib/utils";
+import { cn, photoKey } from "@/lib/utils";
 
 /**
  * A category page such as /material/arbeitsplatten or /geraete/backen:
@@ -23,7 +23,7 @@ const COPY = {
     plan: "Küche planen",
     choiceTitle: "Was zur Wahl steht",
     more: "Mehr erfahren",
-    figures: "In Zahlen",
+    figures: "Auf einen Blick",
     houses: "In diesen Küchen verbaut",
     bandTitle: "Im Original vergleichen",
     bandText: "Muster, Kanten und Oberflächen liegen in der Ausstellung in Wolfersdorf. Wir legen Ihre Favoriten bereit, wenn Sie einen Termin vereinbaren.",
@@ -33,7 +33,7 @@ const COPY = {
     plan: "Plan your kitchen",
     choiceTitle: "What there is to choose from",
     more: "Find out more",
-    figures: "In figures",
+    figures: "At a glance",
     houses: "Kitchens that use it",
     bandTitle: "Compare the real thing",
     bandText: "Samples, edges and surfaces are waiting in the showroom in Wolfersdorf. We lay out your favourites when you book an appointment.",
@@ -118,7 +118,12 @@ export default function CategoryPage({
           <h2 id="category-choice" className="t-section text-ink">
             {copy.choiceTitle}
           </h2>
-          <ul className="mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <ul
+            className={cn(
+              "mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2",
+              options.length === 4 ? "lg:grid-cols-4" : options.length !== 2 && "lg:grid-cols-3",
+            )}
+          >
             {options.map((option) => (
               <li key={option.href + option.title}>
                 <LocaleLink href={option.href} className="group block">
@@ -127,15 +132,22 @@ export default function CategoryPage({
                       src={option.image}
                       srcSet={option.imageSrcSet}
                       alt={option.alt || option.title}
-                      className="aspect-[4/3]"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={options.length === 2 ? "aspect-[4/3] lg:aspect-[3/2]" : "aspect-[4/3]"}
+                      sizes={
+                        options.length === 2
+                          ? "(max-width: 640px) 100vw, 50vw"
+                          : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      }
                     />
                     {option.inset ? (
                       <Frame
                         src={option.inset}
                         srcSet={option.insetSrcSet}
                         alt={option.insetAlt ?? ""}
-                        className="absolute -bottom-6 right-4 aspect-square w-[34%] border-[6px] border-paper"
+                        className={cn(
+                          "absolute -bottom-6 right-4 aspect-square border-[6px] border-paper",
+                          options.length === 2 ? "w-[34%] lg:w-[24%]" : "w-[34%]",
+                        )}
                         sizes="(max-width: 640px) 34vw, (max-width: 1024px) 17vw, 12vw"
                       />
                     ) : null}
@@ -159,7 +171,7 @@ export default function CategoryPage({
       <StatementBand statement={hub.statement} note={hub.statementNote} />
 
       {hub.facts.length > 0 ? (
-        <AtelierFacts facts={hub.facts} kicker={copy.figures} image={ledgerImage} sentence={hub.ledgerLine} />
+        <AtelierFacts facts={hub.facts} kicker={copy.figures} image={ledgerImage} />
       ) : null}
 
       <Questions theme={faqTheme} title={hub.title} locale={hub.locale} />

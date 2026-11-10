@@ -18,7 +18,8 @@ import {
 import type { CollectionFact, PresentedBranch } from "@/lib/collection-present";
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
-import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { coverOf, freshCover, kitchenPhotos, roomPhoto, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { cmsLarge } from "@/lib/beer-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
@@ -117,18 +118,18 @@ const SIBLING_HEAD: Record<
   Record<KitchenClusterSlug, { eyebrow: string; title: string }>
 > = {
   de: {
-    formen: { eyebrow: "Weitere Formen", title: "Andere Formen in diesem Haus." },
-    stile: { eyebrow: "Weitere Stile", title: "Andere Haltungen im Haus." },
-    farben: { eyebrow: "Weitere Töne", title: "Farbe, die daneben liegt." },
-    inseln: { eyebrow: "Weitere Inseln", title: "Andere Rollen in der Mitte." },
-    besondere: { eyebrow: "Weitere Maße", title: "Wo das Raster weiter endet." },
+    formen: { eyebrow: "Küchenformen", title: "Weitere Küchenformen" },
+    stile: { eyebrow: "Weitere Küchenstile", title: "Weitere Küchenstile" },
+    farben: { eyebrow: "Küchenfarben", title: "Weitere Küchenfarben" },
+    inseln: { eyebrow: "Kücheninseln", title: "Weitere Kücheninseln" },
+    besondere: { eyebrow: "Besondere Küchen", title: "Weitere besondere Lösungen" },
   },
   en: {
-    formen: { eyebrow: "Further layouts", title: "Other layouts in this house." },
-    stile: { eyebrow: "Further styles", title: "Other stances in the house." },
-    farben: { eyebrow: "Further tones", title: "Colour that sits beside it." },
-    inseln: { eyebrow: "Further islands", title: "Other roles in the middle." },
-    besondere: { eyebrow: "Further measures", title: "Where the grid still ends." },
+    formen: { eyebrow: "Kitchen layouts", title: "Other kitchen layouts" },
+    stile: { eyebrow: "Other kitchen styles", title: "Other kitchen styles" },
+    farben: { eyebrow: "Kitchen colours", title: "Other kitchen colours" },
+    inseln: { eyebrow: "Kitchen islands", title: "Other kitchen islands" },
+    besondere: { eyebrow: "Special kitchens", title: "More special solutions" },
   },
 };
 
@@ -481,7 +482,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
       statement:
         "Luxus bei BEER ist Passgenauigkeit und Stein, nicht Beschlag-Theater. Was man täglich nutzt, sitzt in der Arbeitszone — weniger Flächen, die sich zeigen wollen.",
       statementNote:
-        "Der Preis folgt dem Aufmaß, dem Stein, der Zeit in der Werkstatt. Erstgespräch kostenlos. Die Küche nicht.",
+        "Der Preis folgt dem Aufmaß, dem Stein und der Zeit in der Werkstatt. Das Erstgespräch ist kostenlos.",
       quote:
         "Das Teuerste war der Stein, der saß. Nicht der Griff, den man sieht.",
       quoteSource: "Aus einem Haus westlich von München",
@@ -503,7 +504,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
       extras: [
         ["Passgenauigkeit an der Wand, nicht ein Logo auf der Front.", "Stein, den man mustert, nicht bestellt vom Bild."],
         ["Was täglich sitzt, sitzt in Griffhöhe.", "Show-Geräte außerhalb der Zone bleiben ungezeichnet."],
-        ["Ruhe statt Fläche, die gesehen werden will.", "Das Erstgespräch ist kostenlos. Die Küche nicht."],
+        ["Ruhe statt Fläche, die gesehen werden will.", "Das Erstgespräch ist kostenlos."],
       ],
     },
     weiss: {
@@ -1169,7 +1170,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
       statement:
         "Luxury at BEER is fit and stone, not hardware theatre. What you use every day sits in the work zone — fewer faces that want to be seen.",
       statementNote:
-        "The price follows the survey, the stone, the time in the workshop. The first talk is free. The kitchen is not.",
+        "The price follows the survey, the stone and the time in the workshop. The first talk is free.",
       quote:
         "The dearest thing was the stone that sat. Not the handle you see.",
       quoteSource: "From a house west of Munich",
@@ -1191,7 +1192,7 @@ const VOICE: Record<Locale, Record<string, TopicVoice>> = {
       extras: [
         ["Fit at the wall, not a logo on the front.", "Stone you sample, not order from a picture."],
         ["What sits every day sits at hand height.", "Show appliances outside the zone stay undrawn."],
-        ["Quiet instead of a face that wants to be seen.", "The first talk is free. The kitchen is not."],
+        ["Quiet instead of a face that wants to be seen.", "The first talk is free."],
       ],
     },
     weiss: {
@@ -1654,7 +1655,20 @@ export function presentTopic(
     (project) => !tagged.includes(project) && project.topics.some((item) => item.cluster === cluster),
   );
   const kitchens = [...tagged, ...sameCluster, ...projects.filter((project) => !tagged.includes(project) && !sameCluster.includes(project))];
-  const photo = kitchenPhotos(tagged, kitchens, (n, width) => devPhoto(start + n, width));
+  // Kitchens with only this topic of the cluster come first: on the white page a white kitchen,
+  // not the black-and-white one.
+  const othersInCluster = (project: Project) =>
+    project.topics.filter((item) => item.cluster === cluster && item.slug !== topic.slug).length;
+  const purestFirst = [...tagged].sort((a, b) => othersInCluster(a) - othersInCluster(b));
+  // The page opens and closes on a wide photo of the room, from two of its own kitchens where it
+  // has two. Before, both came from the first tagged kitchen's gallery in its own order, so two
+  // topics that share that kitchen opened on the same close-up.
+  const opener = roomPhoto(purestFirst);
+  const closer =
+    roomPhoto(purestFirst.filter((project) => project !== opener?.project)) ??
+    roomPhoto(purestFirst, opener ? [opener.src] : []);
+  const ownPhotos = [opener?.src, closer?.src].filter((src): src is string => Boolean(src));
+  const photo = kitchenPhotos(tagged, kitchens, (n, width) => devPhoto(start + n, width), undefined, ownPhotos);
   const hex = topic.hex || undefined;
 
   const branches = chapterBranches(topic, locale, photo);
@@ -1662,6 +1676,9 @@ export function presentTopic(
   const lookCaptions = voice?.looks ?? [];
   const film = Array.isArray(filmCaptions) ? filmCaptions : [heading.eyebrow];
 
+  // The page shows every kitchen tagged with its topic, so a card that leads to another topic
+  // takes a kitchen that is not one of those, and no two cards take the same one.
+  const onPage = new Set(tagged.map((project) => project.slug));
   const siblings = clusterTopics
     .filter((item) => item.slug !== topic.slug)
     .map((item, index) => {
@@ -1672,7 +1689,7 @@ export function presentTopic(
         text: copy.intro,
         // A real kitchen tagged with that topic, else the topic's own image.
         image: resolveDevImage(
-          coverOf(projects, (project) => project.topics.some((entry) => entry.slug === item.slug)) ?? item.image,
+          freshCover(projects, (project) => project.topics.some((entry) => entry.slug === item.slug), onPage) ?? item.image,
           photo(70 + index, 1100),
         ),
       };
@@ -1698,18 +1715,12 @@ export function presentTopic(
       };
     });
 
-  // Kitchens with only this topic of the cluster come first: on the white page a white kitchen,
-  // not the black-and-white one.
-  const othersInCluster = (project: Project) =>
-    project.topics.filter((item) => item.cluster === cluster && item.slug !== topic.slug).length;
-  const purestFirst = [...tagged].sort((a, b) => othersInCluster(a) - othersInCluster(b));
-
   // Up to four kitchens shown one by one (photo, detail, text, links to what they connect to);
   // the project grid below lists the others.
   const features: TopicFeature[] = purestFirst
     .filter((project) => project.image)
     .slice(0, 4)
-    .map((project) => projectFeature(project, [topic.image ?? ""]));
+    .map((project) => projectFeature(project, [topic.image ?? "", ...ownPhotos]));
   const featured = new Set(features.map((feature) => feature.href));
 
   const taggedHouses = tagged
@@ -1733,7 +1744,7 @@ export function presentTopic(
     lede: local.intro,
     statement: cms?.aussage || voice?.statement || local.intro,
     statementNote: cms?.hinweis || voice?.statementNote || "",
-    heroImage: photo.hero(topic.image, 1800),
+    heroImage: opener ? cmsLarge(opener.src, 2560) : photo.hero(topic.image, 1800),
     heroAlt: local.name,
     indexEyebrow: voice?.indexEyebrow ?? heading.eyebrow,
     // Quotes come only from the CMS, where someone enters a real one with its real source.
@@ -1758,7 +1769,7 @@ export function presentTopic(
     hex,
     statementImage: photo(1),
     statementImageB: photo(2),
-    closeImage: photo(3),
+    closeImage: closer ? cmsLarge(closer.src, 1920) : photo(3),
     ledgerImage: photo(4),
     visitImage: photo(5),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
@@ -1786,8 +1797,8 @@ export function presentTopic(
     visitNote: visit.note,
     priceLine:
       locale === "en"
-        ? "The first conversation is free. The kitchen is not."
-        : "Das Erstgespräch ist kostenlos. Die Küche nicht.",
+        ? "The first conversation is free."
+        : "Das Erstgespräch ist kostenlos.",
     placeLine:
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"

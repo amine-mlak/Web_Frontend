@@ -74,7 +74,7 @@ function OtherStances({ hub }: { hub: PresentedTopic }) {
 }
 
 function housesTitle(locale: PresentedTopic["locale"]) {
-  return locale === "en" ? "Further kitchens with this stance" : "Weitere Küchen mit dieser Haltung";
+  return locale === "en" ? "More kitchens in this style" : "Weitere Küchen in diesem Stil";
 }
 
 function Facts({ hub, invert }: { hub: PresentedTopic; invert?: boolean }) {

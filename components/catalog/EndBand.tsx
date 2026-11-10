@@ -28,6 +28,13 @@ export default function EndBand({
   locale: Locale;
 }) {
   const shown = tiles.filter((tile) => tile.image).slice(0, 4);
+  // One tile lies wide, two share the row, three and four stand side by side.
+  const layout = [
+    { grid: "", ratio: "aspect-[4/3] sm:aspect-[21/9]", sizes: "100vw" },
+    { grid: "sm:grid-cols-2", ratio: "aspect-[4/3] lg:aspect-[16/9]", sizes: "(max-width: 640px) 100vw, 50vw" },
+    { grid: "sm:grid-cols-2 lg:grid-cols-3", ratio: "aspect-[4/3]", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" },
+    { grid: "sm:grid-cols-2 lg:grid-cols-4", ratio: "aspect-[4/3]", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" },
+  ][Math.max(shown.length, 1) - 1];
 
   return (
     <div className="border-b border-paper/10 bg-nacht">
@@ -62,15 +69,15 @@ export default function EndBand({
               {tilesTitle}
             </h2>
           ) : null}
-          <ul className={`mt-8 grid gap-3 sm:grid-cols-2 ${shown.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+          <ul className={`mt-8 grid gap-3 ${layout.grid}`}>
             {shown.map((tile) => (
               <li key={tile.href}>
                 <LocaleLink href={tile.href} className="group relative block overflow-hidden">
                   <Frame
                     src={tile.image!}
                     alt=""
-                    className="aspect-[4/3] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className={`${layout.ratio} transition-transform duration-700 ease-out group-hover:scale-[1.02]`}
+                    sizes={layout.sizes}
                   />
                   <span className="hero-scrim absolute inset-0" aria-hidden />
                   <span className="absolute inset-x-0 bottom-0 p-6">

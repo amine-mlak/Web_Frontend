@@ -164,7 +164,7 @@ export default function MaterialCollection({
         <Area key={branch.title} branch={branch} index={index} en={en} />
       ))}
 
-      <HubEnd hub={{ ...hub, visitImage: SHOWROOM_SAMPLES.detail }}>{children}</HubEnd>
+      <HubEnd hub={hub}>{children}</HubEnd>
     </main>
   );
 }

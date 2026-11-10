@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { Frame } from "@/components/catalog/collections/parts";
 
@@ -18,6 +19,7 @@ export default function FullChapter({
   linkLabel,
   kicker,
   hex,
+  mark,
   lang,
   as: Heading = "h2",
   size = "full",
@@ -33,6 +35,8 @@ export default function FullChapter({
   linkLabel: string;
   kicker?: string;
   hex?: string;
+  /** A small drawing before the name (the floor plan of a layout). */
+  mark?: ReactNode;
   lang?: string;
   as?: "h2" | "h3";
   size?: "full" | "card";
@@ -49,7 +53,7 @@ export default function FullChapter({
         className="absolute inset-0"
         sizes={card ? "(max-width: 768px) 100vw, 50vw" : "100vw"}
       />
-      <div className="hero-scrim absolute inset-0" aria-hidden />
+      <div className="chapter-scrim absolute inset-0" aria-hidden />
       <div
         className={
           card
@@ -71,6 +75,7 @@ export default function FullChapter({
                 aria-hidden
               />
             ) : null}
+            {mark ? <span className="shrink-0">{mark}</span> : null}
             {title}
           </Heading>
           {text ? (

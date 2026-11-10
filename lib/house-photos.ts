@@ -65,6 +65,22 @@ export const SHOWROOM_SAMPLES = {
   detail: u("085_Showroom_cc551702ba.jpg"),
 };
 
+/**
+ * The showroom photo beside the visit facts at the end of a collection. Each collection gets its
+ * own view, so two collections never close on the same picture.
+ */
+export const HUB_VISIT: Record<string, string> = {
+  kuechen: WERK2.hall,
+  material: SHOWROOM_SAMPLES.detail,
+  geraete: u("Ausstellung_0052_eb6f5b30c7.jpg"),
+  moebel: WERK2.lounge,
+  projekte: WERK2.meeting,
+  regionen: BUILDING.dusk,
+  marken: WERK2.kitchens,
+  ratgeber: WERK2.samples,
+  planen: WERK2.table,
+};
+
 const ROOM = {
   r0002: u("Ausstellung_0002_198946b6fd.jpg"),
   r0003: u("Ausstellung_0003_bcf7bea1a4.jpg"),

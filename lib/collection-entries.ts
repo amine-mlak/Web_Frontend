@@ -1456,8 +1456,8 @@ function assemble(args: {
     visitNote: visit.note,
     priceLine:
       locale === "en"
-        ? "The first conversation is free. The kitchen is not."
-        : "Das Erstgespräch ist kostenlos. Die Küche nicht.",
+        ? "The first conversation is free."
+        : "Das Erstgespräch ist kostenlos.",
     placeLine:
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"
@@ -1659,9 +1659,8 @@ export function presentMaterialKind(
     branches: itemBranches(sinkItems, photo, projects),
     siblings,
     houses: housesFrom(kindHouses, photo),
-    siblingEyebrow: locale === "en" ? "Further layers" : "Weitere Schichten",
-    siblingTitle:
-      locale === "en" ? "Other planes of the kitchen." : "Andere Ebenen der Küche.",
+    siblingEyebrow: locale === "en" ? "More materials" : "Weitere Materialien",
+    siblingTitle: locale === "en" ? "More materials" : "Weitere Materialien",
     cms: page ?? undefined,
   });
 }
@@ -1728,9 +1727,8 @@ export function presentApplianceKind(
       ),
       photo,
     ),
-    siblingEyebrow: locale === "en" ? "Further tasks" : "Weitere Aufgaben",
-    siblingTitle:
-      locale === "en" ? "Other kit in the kitchen." : "Andere Technik in der Küche.",
+    siblingEyebrow: locale === "en" ? "More appliances" : "Weitere Geräte",
+    siblingTitle: locale === "en" ? "More appliances" : "Weitere Geräte",
     cms: page ?? undefined,
   });
 }
@@ -1790,10 +1788,8 @@ export function presentMaterialItem(
     houses: housesFrom(projects.filter((project) =>
       project.materials.some((material) => material.slug === item.slug),
     ), photo),
-    siblingEyebrow:
-      locale === "en" ? "Further surfaces" : "Weitere Flächen",
-    siblingTitle:
-      locale === "en" ? "Other material beside it." : "Anderes Material daneben.",
+    siblingEyebrow: locale === "en" ? "More materials" : "Weitere Materialien",
+    siblingTitle: locale === "en" ? "More materials" : "Weitere Materialien",
     ueberschrift: cmsValue(locale, item, item.ueberschrift),
     lesetext: cmsValue(locale, item, item.lesetext),
     reading: pageReading("material", item.slug, locale),
@@ -1863,9 +1859,8 @@ export function presentApplianceItem(
       ),
       photo,
     ),
-    siblingEyebrow: locale === "en" ? "Further kit" : "Weitere Geräte",
-    siblingTitle:
-      locale === "en" ? "Other appliances in this task." : "Andere Geräte dieser Aufgabe.",
+    siblingEyebrow: locale === "en" ? "More appliances" : "Weitere Geräte",
+    siblingTitle: locale === "en" ? "More appliances" : "Weitere Geräte",
     ueberschrift: cmsValue(locale, item, item.ueberschrift),
     lesetext: cmsValue(locale, item, item.lesetext),
     reading: pageReading("geraete", item.slug, locale),
@@ -1911,9 +1906,8 @@ export function presentFurnitureItem(
     branches: pointBranches(voice, photo),
     siblings,
     houses: housesFrom(houses, photo),
-    siblingEyebrow: locale === "en" ? "Further furniture" : "Weitere Möbel",
-    siblingTitle:
-      locale === "en" ? "Other pieces from the workshop." : "Andere Stücke aus der Werkstatt.",
+    siblingEyebrow: locale === "en" ? "More furniture" : "Weitere Möbel",
+    siblingTitle: locale === "en" ? "More furniture" : "Weitere Möbel",
     ueberschrift: item.ueberschrift,
     lesetext: item.lesetext,
     cms: item,
@@ -1965,9 +1959,8 @@ export function presentBrandItem(
       ),
       photo,
     ),
-    siblingEyebrow: locale === "en" ? "Further brands" : "Weitere Marken",
-    siblingTitle:
-      locale === "en" ? "Chosen to the task, not a contract." : "Nach Aufgabe, nicht nach Vertrag.",
+    siblingEyebrow: locale === "en" ? "More brands" : "Weitere Marken",
+    siblingTitle: locale === "en" ? "More brands" : "Weitere Marken",
     ueberschrift: cmsValue(locale, item, item.ueberschrift),
     lesetext: cmsValue(locale, item, item.lesetext),
     reading: pageReading("marken", item.slug, locale),
@@ -2032,9 +2025,8 @@ export function presentRegionItem(
     siblings,
     featured: own,
     houses: housesFrom(own.length > 0 ? own : pool, photo),
-    siblingEyebrow: locale === "en" ? "Further places" : "Weitere Orte",
-    siblingTitle:
-      locale === "en" ? "Further places nearby." : "Weitere Orte in der Nähe.",
+    siblingEyebrow: locale === "en" ? "More places" : "Weitere Orte",
+    siblingTitle: locale === "en" ? "More places" : "Weitere Orte",
     ueberschrift: cmsValue(locale, item, item.ueberschrift),
     lesetext: cmsValue(locale, item, item.lesetext),
     reading: pageReading("regionen", item.slug, locale),
