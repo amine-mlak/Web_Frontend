@@ -1,6 +1,5 @@
-import type { CSSProperties, ReactNode } from "react";
-import CmsImage from "@/components/CmsImage";
-import { photoStandIn } from "@/lib/photo-reveal";
+import type { ReactNode } from "react";
+import { Frame } from "@/components/catalog/Frame";
 import AtelierVisit from "@/components/catalog/hub/AtelierVisit";
 import type { PresentedHub } from "@/lib/collection-present";
 import { cn } from "@/lib/utils";
@@ -12,46 +11,7 @@ export type CollectionExtra = {
   image?: string;
 };
 
-export function Frame({
-  src,
-  alt,
-  srcSet,
-  className,
-  imgClassName,
-  priority,
-  sizes,
-  drift = false,
-}: {
-  src: string;
-  alt: string;
-  srcSet?: string;
-  className?: string;
-  imgClassName?: string;
-  priority?: boolean;
-  sizes: string;
-  /** Let the photo drift slowly inside the frame while the page scrolls. */
-  drift?: boolean;
-}) {
-  // The photo's own colours, blurred, sit under it while it loads (no grey box, no movement).
-  const standIn = photoStandIn(src);
-  return (
-    <figure
-      className={cn("relative overflow-hidden bg-nacht", drift && "photo-drift", className)}
-      style={standIn ? ({ "--stand-in": `url("${standIn}")` } as CSSProperties) : undefined}
-    >
-      {standIn ? <span className="photo-stand-in" aria-hidden /> : null}
-      <CmsImage
-        src={src}
-        alt={alt}
-        srcSet={srcSet}
-        fill
-        priority={priority}
-        sizes={sizes}
-        className={cn("object-cover", imgClassName)}
-      />
-    </figure>
-  );
-}
+export { Frame };
 
 /**
  * The one sentence a page stands for, with a short note beside it. Every hub, kitchen world

@@ -2,9 +2,10 @@ import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import NextSteps from "@/components/catalog/NextSteps";
 import { Breadcrumbs } from "@/components/catalog/clusters/parts";
-import { Frame } from "@/components/catalog/collections/parts";
+import { Frame } from "@/components/catalog/Frame";
+import PhotoViewer, { type ViewerPhoto } from "@/components/catalog/PhotoViewer";
 import TriptychHero from "@/components/catalog/TriptychHero";
-import type { KitchenClusterSlug, Project } from "@/lib/catalog";
+import type { KitchenClusterSlug, Project, ProjectFrame } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
 import { cn, photoKey } from "@/lib/utils";
 
@@ -23,6 +24,8 @@ const COPY = {
     closeText:
       "Die Akte zeigt, was gebaut wurde. Was bei Ihnen entsteht, folgt dem Aufmaß.",
     cta: "Ähnliches planen",
+    zoom: "Foto groß ansehen",
+    viewer: { close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", of: "von", title: "Fotos dieser Küche" },
   },
   en: {
     eyebrow: "Reference kitchen",
@@ -37,6 +40,8 @@ const COPY = {
     close: "Your house is none of these.",
     closeText: "The file shows what was built. What is made for you follows the survey.",
     cta: "Plan something similar",
+    zoom: "View photo large",
+    viewer: { close: "Close", previous: "Previous photo", next: "Next photo", of: "of", title: "Photos of this kitchen" },
   },
 } as const;
 
@@ -121,6 +126,76 @@ function projectFacts(project: Project, copy: (typeof COPY)["de" | "en"]): Fact[
   return facts;
 }
 
+/**
+ * How a photo stands beside its text. An upright photo keeps its height and stands free with
+ * air around it; landscape photos run to the edge, by turns wide and wider, so no two
+ * neighbours share one split.
+ */
+const PAIRS = {
+  wide: {
+    row: "items-center",
+    photo: "aspect-[4/3] lg:col-span-7",
+    photoFlip: "lg:order-2",
+    text: "lg:col-span-5 lg:px-14 lg:py-16",
+    textFlip: "lg:order-1",
+    sizes: "(max-width: 1024px) 100vw, 58vw",
+  },
+  wider: {
+    row: "items-end",
+    photo: "aspect-[4/3] lg:col-span-8 lg:aspect-[3/2]",
+    photoFlip: "lg:order-2",
+    text: "lg:col-span-4 lg:px-12 lg:pt-16 lg:pb-14",
+    textFlip: "lg:order-1",
+    sizes: "(max-width: 1024px) 100vw, 67vw",
+  },
+  tall: {
+    row: "items-center lg:py-24",
+    photo: "mx-5 aspect-[4/5] sm:mx-8 lg:col-span-4 lg:col-start-2 lg:row-start-1 lg:mx-0",
+    photoFlip: "lg:col-start-8",
+    text: "lg:col-span-5 lg:col-start-7 lg:row-start-1 lg:px-0 lg:py-0",
+    textFlip: "lg:col-start-2",
+    sizes: "(max-width: 1024px) 100vw, 34vw",
+  },
+} as const;
+
+type RestCell = { frame: ProjectFrame; cell: string; ratio: string; sizes: string };
+
+/**
+ * The photos without text, two in a row. An upright photo stays upright beside a landscape one,
+ * two landscape photos swap the wide side from row to row, a last single photo runs full width.
+ */
+function restCells(frames: ProjectFrame[]): RestCell[] {
+  const half = "(max-width: 1024px) 100vw, 50vw";
+  const upright = { ratio: "aspect-[4/5]", sizes: half };
+  const landscape = { ratio: "aspect-[4/3]", sizes: half };
+  const cells: RestCell[] = [];
+  for (let at = 0, row = 0; at < frames.length; at += 2, row += 1) {
+    const [first, second] = [frames[at], frames[at + 1]];
+    if (!second) {
+      cells.push(
+        first.portrait
+          ? { frame: first, cell: "lg:col-span-4 lg:col-start-5", ...upright }
+          : { frame: first, cell: "lg:col-span-12", ratio: "aspect-[4/3] lg:aspect-[2/1]", sizes: "100vw" },
+      );
+    } else if (first.portrait && second.portrait) {
+      cells.push({ frame: first, cell: "lg:col-span-5 lg:col-start-2", ...upright });
+      cells.push({ frame: second, cell: "lg:col-span-5", ...upright });
+    } else if (first.portrait || second.portrait) {
+      for (const frame of [first, second]) {
+        cells.push(
+          frame.portrait
+            ? { frame, cell: "lg:col-span-5", ...upright }
+            : { frame, cell: "lg:col-span-7 lg:self-end", ...landscape },
+        );
+      }
+    } else {
+      cells.push({ frame: first, cell: row % 2 === 0 ? "lg:col-span-7" : "lg:col-span-5", ...landscape });
+      cells.push({ frame: second, cell: row % 2 === 0 ? "lg:col-span-5" : "lg:col-span-7", ...landscape });
+    }
+  }
+  return cells;
+}
+
 const CLOSE_UP = /^(Kante|Ecke|Bedienknebel|Geöffnete?|Eingelassene?|Griff|Griffmulde|Detail|Nahaufnahme|Messerleiste|Armatur|Blick in)/i;
 
 export default function ReferenzPage({
@@ -159,9 +234,32 @@ export default function ReferenzPage({
   const moreText = texts.slice(story.length);
   const rest = gallery.slice(story.length);
   const facts = projectFacts(project, copy);
+  // Landscape photos take turns between the two edge layouts; upright ones always stand free.
+  const pairs = story.map((item, index) => {
+    const before = story.slice(0, index).filter((other) => !other.frame.portrait).length;
+    return { ...item, layout: PAIRS[item.frame.portrait ? "tall" : before % 2 === 0 ? "wide" : "wider"] };
+  });
+  // Every photo of the page in reading order, for the full-screen viewer.
+  const altOf = (alt: string | undefined) => (alt && describes(alt) ? alt : project.title);
+  const photos: ViewerPhoto[] = [
+    ...(project.image ? [{ src: project.image, srcSet: project.srcSet, alt: project.title }] : []),
+    ...(opener ? [opener.close, opener.detail] : []),
+    ...gallery,
+    ...(closePhoto ? [closePhoto] : []),
+  ].map((frame) => ({
+    src: frame.src,
+    srcSet: frame.srcSet,
+    alt: altOf(frame.alt),
+    caption: frame.alt && describes(frame.alt) ? frame.alt : undefined,
+  }));
+  const zoom = (src: string) => {
+    const index = photos.findIndex((photo) => photo.src === src);
+    return index < 0 ? undefined : { index, label: copy.zoom };
+  };
 
   return (
     <main className="bg-paper">
+      <PhotoViewer photos={photos} labels={copy.viewer}>
       <article>
         <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
           <Breadcrumbs items={[{ href: "/projekte", label: copy.projects }]} current={project.title} locale={locale} tone="ink" />
@@ -185,9 +283,14 @@ export default function ReferenzPage({
 
         {opener && project.image ? (
           <TriptychHero
-            room={{ src: project.image, srcSet: project.srcSet, alt: project.title }}
+            room={{ src: project.image, srcSet: project.srcSet, alt: project.title, zoom: zoom(project.image) }}
             close={{ src: opener.close.src, srcSet: opener.close.srcSet, alt: opener.close.alt ?? "" }}
-            detail={{ src: opener.detail.src, srcSet: opener.detail.srcSet, alt: opener.detail.alt ?? "" }}
+            detail={{
+              src: opener.detail.src,
+              srcSet: opener.detail.srcSet,
+              alt: opener.detail.alt ?? "",
+              zoom: zoom(opener.detail.src),
+            }}
             title={project.title}
             meta={meta}
           />
@@ -199,6 +302,7 @@ export default function ReferenzPage({
             className="mt-10 aspect-[16/9] w-full lg:mt-14 lg:aspect-[2/1]"
             priority
             sizes="100vw"
+            zoom={zoom(project.image)}
           />
         ) : null}
 
@@ -244,19 +348,20 @@ export default function ReferenzPage({
 
         {story.length > 0 ? (
           <div className="space-y-3 py-3 lg:space-y-0 lg:py-0">
-            {story.map((item, index) => (
-              <section key={item.frame.src} className="grid items-center lg:grid-cols-12">
+            {pairs.map((item, index) => (
+              <section key={item.frame.src} className={cn("grid lg:grid-cols-12", item.layout.row)}>
                 <Frame
                   src={item.frame.src}
                   srcSet={item.frame.srcSet}
-                  alt={describes(item.frame.alt) ? item.frame.alt : project.title}
-                  className={cn("aspect-[4/3] lg:col-span-7", index % 2 === 1 && "lg:order-2")}
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  drift
+                  alt={altOf(item.frame.alt)}
+                  className={cn(item.layout.photo, index % 2 === 1 && item.layout.photoFlip)}
+                  sizes={item.layout.sizes}
+                  drift={!item.frame.portrait}
+                  zoom={zoom(item.frame.src)}
                 />
                 <div
                   data-rise=""
-                  className={cn("px-5 py-10 sm:px-8 lg:col-span-5 lg:px-14 lg:py-16", index % 2 === 1 && "lg:order-1")}
+                  className={cn("px-5 py-10 sm:px-8", item.layout.text, index % 2 === 1 && item.layout.textFlip)}
                 >
                   <p
                     className={
@@ -288,18 +393,16 @@ export default function ReferenzPage({
 
         {rest.length > 0 ? (
           <ul className="grid gap-3 px-5 pt-3 pb-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:pt-14">
-            {rest.map((frame, index) => (
-              <li
-                key={`${frame.src}-${index}`}
-                className={index % 3 === 0 ? "lg:col-span-7" : "lg:col-span-5"}
-              >
+            {restCells(rest).map(({ frame, cell, ratio, sizes }, index) => (
+              <li key={`${frame.src}-${index}`} className={cell}>
                 <figure>
                   <Frame
                     src={frame.src}
-                    alt={describes(frame.alt) ? frame.alt : project.title}
+                    alt={altOf(frame.alt)}
                     srcSet={frame.srcSet}
-                    className="aspect-[4/3]"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className={ratio}
+                    sizes={sizes}
+                    zoom={zoom(frame.src)}
                   />
                   {describes(frame.alt) ? (
                     <figcaption className="mt-3 max-w-xl font-sans text-[14px] leading-relaxed text-muted">
@@ -312,6 +415,7 @@ export default function ReferenzPage({
           </ul>
         ) : null}
       </article>
+      </PhotoViewer>
 
       {others.length > 0 ? (
         <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="referenz-others">

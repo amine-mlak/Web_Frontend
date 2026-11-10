@@ -160,7 +160,25 @@ one-word tiles and lines like "Fenix ist Haptik. Kein Label." They go when the 3
 are published.
 
 ## Phase 4: sections from existing photos (C7, C8, C2, C4, C9, D2, D3, A5)
-planned
+
+C2 and C8 for the collection pages went out with the collections grammar (table above). The project
+pages follow here, on branch `design/phase-4-projects` (built 10 Nov, not merged; waits for Amine's yes).
+Before and after: `docs/design-reference/projects-before-after.html`.
+
+| ID | What | Status | Files | Check on |
+|---|---|---|---|---|
+| D3 | Project list as an archive: a wide photo beside a tall one, then three in a row, ten houses per turn. Four filter rows (style, colour, layout, detail) with the number of houses behind each; one filter at a time. 20 houses at first, a button adds 20. The filter and the place in the list are kept for the tab, so coming back from a house lands where the visitor left. All houses stay in the page as links. Under each house: the place when it is a real one, then two or three words on what the kitchen is ("Raum München" is left out) | built | `lib/project-archive.ts`, `components/catalog/ProjectArchive.tsx`, `app/[locale]/(main)/projekte/page.tsx` | /projekte |
+| C2 | Project pages: photo and text pairs change their split (7/5, 8/4), upright photos stand upright with air around them. The rest of the gallery is laid out from the photos' own shapes | built | `components/catalog/ReferenzPage.tsx` | /projekte/greige-u-form-holzdecke, /projekte/kobaltblau-eichennische |
+| – | Photo viewer (not in the SieMatic list): a click on any photo of a house opens it on a dark full screen with caption, counter and arrows. Arrow keys, swipe, Escape. Browser dialog, no library; the two neighbours load ahead | built | `components/catalog/PhotoViewer.tsx`, `components/catalog/Frame.tsx` (moved out of `collections/parts.tsx`), `TriptychHero.tsx` | any project page |
+| A5 | Pinned wipe on project pages | dropped: Amine found the photo wipe cheap; motion stays rare | | |
+| D2 | Slider for "Ähnliche Häuser", HomeProjects, Presse | not built: three cards fit side by side; a slider adds nothing there | | |
+| C7 | Chapter banners with line drawings on /kuechen/formen | planned | | |
+| C4 | "Das Material in dieser Küche" card on project pages | planned; needs projects tagged with materials in the CMS | | |
+| C9 | Calm photo between grid and text on topic pages | planned | | |
+
+**CMS content that holds the project list back:** `year` is empty on all 95 projects; `place` is
+"Raum München" on 70 and empty on 16, so only 9 houses can show a place. With real places the archive
+could get a filter row by region.
 
 ## Phase 5: after a showroom photo day (B2, C1, C5, C6)
 planned; the shot list will be added here

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { Frame } from "@/components/catalog/collections/parts";
+import { Frame, type FrameZoom } from "@/components/catalog/Frame";
 
-export type TriptychPhoto = { src: string; srcSet?: string; alt: string };
+export type TriptychPhoto = { src: string; srcSet?: string; alt: string; zoom?: FrameZoom };
 
 /**
  * The opener in three panels: the whole room, the page name set on a close-up, and a detail.
@@ -29,6 +29,7 @@ export default function TriptychHero({
         className="col-span-5 aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:h-full"
         priority
         sizes="(max-width: 1024px) 100vw, 58vw"
+        zoom={room.zoom}
       />
       <div className="relative col-span-3 aspect-[3/4] overflow-hidden lg:col-span-3 lg:aspect-auto lg:h-full">
         <Frame
@@ -56,6 +57,7 @@ export default function TriptychHero({
         className="col-span-2 aspect-[1/2] lg:col-span-2 lg:aspect-auto lg:h-full"
         sizes="(max-width: 1024px) 40vw, 17vw"
         drift
+        zoom={detail.zoom}
       />
     </section>
   );
