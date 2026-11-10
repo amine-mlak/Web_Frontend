@@ -16,7 +16,7 @@ const DE: Record<string, StileReadingCopy> = {
     paragraphs: [
       "Eine moderne Küche bei BEER ist keine Jahresfarbe und kein Griff aus dem Katalog des letzten Salons. Die Fläche bleibt ruhig, die Fuge ist bewusst gesetzt, und Wärme kommt aus Holz oder Stein, damit Präzision nicht kalt wird. Was in zehn Jahren noch selbstverständlich wirken soll, entscheiden wir am Muster, nicht am Bildschirm.",
       "Griffe, Licht und Auszüge tragen die Haltung. Eine matte Front ohne Gegenlicht wird schwer. Ein Auszug, der den Tag nicht trägt, macht die ruhige Ansicht zur Pose. Deshalb zeichnen wir die Arbeitszone, bevor die Front feststeht: Kochfeld, Spüle, Wege, und das Licht aus dem Haus, nicht ein Lichtband als Dekor.",
-      "Geplant wird in der Ausstellung in Wolfersdorf bei Freising. Aufgemessen wird im Haus, ob in München, in einem Neubau in Erding oder in einem Bestand in Freising. Gefertigt wird in derselben Werkstatt. Der Radius bleibt ehrlich: etwa zweihundert Kilometer um München, Montage durch uns, nicht durch ein Netz aus Gewerken.",
+      "Geplant wird in der Ausstellung in Wolfersdorf bei Freising. Aufgemessen wird im Haus, ob in München, in einem Neubau in Erding oder in einem Bestand in Freising. Gefertigt wird in derselben Werkstatt. Wir arbeiten im Umkreis von etwa zweihundert Kilometern um München, Montage durch uns, nicht durch ein Netz aus Gewerken.",
     ],
   },
   landhaus: {
@@ -38,7 +38,7 @@ const DE: Record<string, StileReadingCopy> = {
     paragraphs: [
       "Design ist hier keine Bühne. Die Kante, die man täglich sieht, das Gerät, das zur Nische passt, das Material, das die Hand bestätigt: das ist die Küche. Eine Fläche, die nur fotografiert werden will, streichen wir. Haptik steht vor der Ansicht, Stein, Lack oder Holz, was unter Tageslicht in Wolfersdorf besteht.",
       "Dunkle Flächen brauchen Licht von zwei Seiten, sonst wird die Küche schwer statt klar. Geräte wählen wir nach der Aufgabe, nicht nach dem Logo auf der Front. Bora, Miele, Gaggenau oder Siemens sitzen dort, wo Anschluss, Nische und Blick es tragen. Der Korpus bleibt BEER.",
-      "Die meisten dieser Küchen entstehen für Häuser in München und im direkten Umland, Freising, Erding, Dachau. Das Gespräch beginnt oft in der Ausstellung in Wolfersdorf. Das Aufmaß folgt im Raum. Weiter als der ehrliche Radius um München sagen wir das, bevor eine Zeichnung entsteht.",
+      "Die meisten dieser Küchen entstehen für Häuser in München und im direkten Umland, Freising, Erding, Dachau. Das Gespräch beginnt oft in der Ausstellung in Wolfersdorf. Das Aufmaß folgt im Raum. Liegt Ihr Haus weiter entfernt, sagen wir das, bevor eine Zeichnung entsteht.",
     ],
   },
   holz: {
@@ -71,7 +71,7 @@ const DE: Record<string, StileReadingCopy> = {
     paragraphs: [
       "Luxus ist bei BEER Passgenauigkeit und Stein, nicht ein Beschlag, der gesehen werden will. Das Teure sitzt oft in der Platte, die wirklich aus dem Block kommt, und in der Zeit, die Wand, Nische und Fuge brauchen. Was man täglich nutzt, liegt in der Arbeitszone. Flächen, die nur posieren, bleiben ungezeichnet.",
       "Stein wird gemustert, nicht vom Bild bestellt. Aderung, Kante, Becken und das Licht im Haus entscheiden gemeinsam. Das Erstgespräch in Wolfersdorf ist kostenlos. Die Küche nicht: der Preis folgt dem Aufmaß, dem Material und der Werkstattzeit. Dafür gibt es keine Prospektzahl und keine Vertragsküche.",
-      "Wir bauen das für wenige Häuser im Jahr, meist im Raum München, Freising und dem näheren Umland bis Augsburg und Ingolstadt, wenn der Weg stimmt. Aufmaß vor Ort, Fertigung in Wolfersdorf, Montage durch dieselben Leute. Weiter als der Radius sagen wir, bevor Stein bestellt wird.",
+      "Wir bauen das für wenige Häuser im Jahr, meist im Raum München, Freising und dem näheren Umland bis Augsburg und Ingolstadt, wenn der Weg stimmt. Aufmaß vor Ort, Fertigung in Wolfersdorf, Montage durch dieselben Leute. Liegt der Ort zu weit entfernt, sagen wir das, bevor Stein bestellt wird.",
     ],
   },
 };
@@ -85,7 +85,7 @@ const EN: Record<string, StileReadingCopy> = {
     paragraphs: [
       "A modern kitchen at BEER is not a colour of the year and not a handle from the last trade fair. The face stays quiet, the joint is set on purpose, and warmth comes from wood or stone so precision does not turn cold. What should still feel obvious in ten years is decided on a sample, not on a screen.",
       "Handles, light and drawers carry the stance. A matt front without light from a second side becomes heavy. A drawer that does not carry the day makes the quiet view a pose. We draw the working zone before the front is fixed: hob, sink, paths, and the light the house already has.",
-      "Planning starts in the showroom at Wolfersdorf near Freising. The survey happens in the house, in Munich, in a new build in Erding, or in an older house in Freising. Making stays in the same workshop. The radius stays honest: about two hundred kilometres around Munich, fitted by us.",
+      "Planning starts in the showroom at Wolfersdorf near Freising. The survey happens in the house, in Munich, in a new build in Erding, or in an older house in Freising. Making stays in the same workshop. We work within about two hundred kilometres of Munich, fitted by us.",
     ],
   },
   landhaus: {
@@ -107,7 +107,7 @@ const EN: Record<string, StileReadingCopy> = {
     paragraphs: [
       "Design here is not a stage. The edge you see every day, the appliance that fits the niche, the material the hand confirms: that is the kitchen. A face that only wants to be photographed is struck out. Touch comes before the view. Stone, lacquer or wood, whatever holds in daylight at Wolfersdorf.",
       "Dark faces need light from two sides, or the room turns heavy instead of clear. Appliances are chosen for the task, not for a logo on the front. Bora, Miele, Gaggenau or Siemens sit where services, niche and view can carry them. The carcass stays BEER.",
-      "Most of these kitchens are for houses in Munich and close by, Freising, Erding, Dachau. The conversation often starts in the Wolfersdorf showroom. The survey follows in the room. Beyond an honest radius around Munich, we say so before a drawing begins.",
+      "Most of these kitchens are for houses in Munich and close by, Freising, Erding, Dachau. The conversation often starts in the Wolfersdorf showroom. The survey follows in the room. If your house is further away, we say so before a drawing begins.",
     ],
   },
   holz: {
@@ -140,47 +140,12 @@ const EN: Record<string, StileReadingCopy> = {
     paragraphs: [
       "Luxury at BEER is fit and stone, not a fitting that wants to be seen. The costly part is often the slab that really comes from the block, and the time wall, niche and joint require. What you use every day sits in the working zone. Faces that only pose stay undrawn.",
       "Stone is sampled, not ordered from a picture. Grain, edge, sink and the light in the house decide together. The first conversation in Wolfersdorf is free. The kitchen is not: the price follows the survey, the material and the time in the workshop. There is no brochure figure and no tied kitchen.",
-      "We build this for few houses a year, mostly around Munich, Freising and the nearer country out to Augsburg and Ingolstadt, when the road is right. Survey on site, making in Wolfersdorf, fitting by the same people. Beyond the radius we say so before stone is ordered.",
+      "We build this for few houses a year, mostly around Munich, Freising and the nearer country out to Augsburg and Ingolstadt, when the road is right. Survey on site, making in Wolfersdorf, fitting by the same people. If the place is too far away, we say so before stone is ordered.",
     ],
   },
 };
 
-const PLACES = {
-  de: {
-    eyebrow: "Im Radius",
-    title: "Wolfersdorf bei Freising.",
-    text: "Die Ausstellung steht in Badendorf 6. Das Aufmaß machen wir im Haus, die Fertigung bleibt in der Werkstatt. Etwa zweihundert Kilometer um München, Montage durch uns.",
-    linksLabel: "Küchen in der Nähe",
-    places: [
-      ["München", "/regionen/muenchen"],
-      ["Freising", "/regionen/freising"],
-      ["Erding", "/regionen/erding"],
-      ["Dachau", "/regionen/dachau"],
-      ["Pfaffenhofen", "/regionen/pfaffenhofen"],
-      ["Augsburg", "/regionen/augsburg"],
-    ],
-  },
-  en: {
-    eyebrow: "Within reach",
-    title: "Wolfersdorf near Freising.",
-    text: "The showroom is at Badendorf 6. The survey happens in the house, making stays in the workshop. About two hundred kilometres around Munich, fitted by us.",
-    linksLabel: "Kitchens nearby",
-    places: [
-      ["Munich", "/regionen/muenchen"],
-      ["Freising", "/regionen/freising"],
-      ["Erding", "/regionen/erding"],
-      ["Dachau", "/regionen/dachau"],
-      ["Pfaffenhofen", "/regionen/pfaffenhofen"],
-      ["Augsburg", "/regionen/augsburg"],
-    ],
-  },
-} as const;
-
 export function stileReading(slug: string, locale: Locale): StileReadingCopy | null {
   const book = locale === "en" ? EN : DE;
   return book[slug] ?? null;
-}
-
-export function stilePlaces(locale: Locale) {
-  return locale === "en" ? PLACES.en : PLACES.de;
 }

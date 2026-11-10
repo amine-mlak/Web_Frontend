@@ -19,6 +19,9 @@ import { clusterVisit } from "@/lib/collection-clusters";
 import type { CollectionBranch } from "@/lib/collection-hubs";
 import type { CollectionFact, HubCrumb, PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
+import { cmsValue } from "@/lib/catalog";
+import { pageReading, regionLede } from "@/lib/page-reading";
+import type { TopicReadingCopy } from "@/lib/topic-reading";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { kitchenImageOf, kitchenPhotos, kitchenPool, placeCover, uniquePagePhotos } from "@/lib/kitchen-photos";
@@ -1394,6 +1397,9 @@ function assemble(args: {
   siblingTitle: string;
   ueberschrift?: string;
   lesetext?: string;
+  /** The reading text written in code; shown when the CMS has no real one. */
+  reading?: TopicReadingCopy | null;
+  placeHref?: string;
   cms?: CmsPageFields;
 }): PresentedTopic {
   const { locale, photo } = args;
@@ -1468,70 +1474,51 @@ function assemble(args: {
     siblingTitle: args.siblingTitle,
     ueberschrift: args.ueberschrift,
     lesetext: args.lesetext,
+    reading: args.reading,
+    placeHref: args.placeHref,
   };
   return uniquePagePhotos(hub, photo);
 }
 
+/** A place page in plain words. Its text is the reading text in lib/page-reading/regions.ts. */
 function regionVoice(name: string, locale: Locale): Voice {
   if (locale === "en") {
     return {
-      title: name,
-      emphasis: "within reach.",
-      statement: `A kitchen of this class is drawn for a house in ${name}. Survey on site, made in Wolfersdorf, fitted by us — if the road still makes sense.`,
-      statementNote:
-        "The showroom sits near Freising. The first talk is often there. The measure later in the kitchen that is not yet ours.",
-      quote:
-        "The first appointment is often in Wolfersdorf. The survey later in the kitchen that is not yet ours.",
-      quoteSource: `From advice for ${name}`,
-      closeTitle: "Wolfersdorf first.",
-      closeText: `Samples, materials, a talk without a drawing. Then we come to ${name} — if the radius fits.`,
-      ledgerLine: `A kitchen for ${name} still belongs to the workshop.`,
-      lookTitle: "Road, survey, fit.",
-      indexEyebrow: "The radius",
-      ctaLabel: `Talk for ${name}`,
-      film: ["Showroom", "Survey on site", "Made here", "Fitted by us"],
-      looks: ["House, local", "Measure, room", "Stone, sampled", "Fit, on site", "Road, honest", "Workshop"],
-      facts: [
-        { value: "Showroom", label: "Wolfersdorf" },
-        { value: "Survey", label: `in ${name}` },
-        { value: "Workshop", label: "here" },
-        { value: "Fit", label: "by us" },
-      ],
-      extras: [
-        [`Advice in the showroom, the house in ${name}.`, "No branch office as a substitute."],
-        ["The survey is in the room that will take the kitchen.", "Not from a plan alone."],
-        ["Further than the radius we say so.", "No pressure to stretch the road."],
-      ],
+      title: `Kitchens in ${name}`,
+      emphasis: "",
+      statement: "",
+      statementNote: "",
+      quote: "",
+      quoteSource: "",
+      closeTitle: "The first appointment is in Wolfersdorf.",
+      closeText: `Samples, materials and your floor plan on the table. After that we measure at your home in ${name}.`,
+      ledgerLine: `A kitchen for ${name} is made in our workshop in Wolfersdorf.`,
+      lookTitle: "Advice, measuring, fitting.",
+      indexEyebrow: "The way to your kitchen",
+      ctaLabel: `Appointment for ${name}`,
+      film: ["Showroom", "Measuring on site", "Made in our workshop", "Fitted by our team"],
+      looks: ["Kitchen in the room", "Measured on site", "Worktop", "Fitting", "Detail", "Workshop"],
+      facts: [],
+      extras: [],
     };
   }
   return {
-    title: name,
-    emphasis: "im Radius.",
-    statement: `Eine Küche dieser Klasse wird für ein Haus in ${name} gezeichnet. Aufmaß vor Ort, gefertigt in Wolfersdorf, gesetzt durch uns — wenn der Weg noch Sinn hat.`,
-    statementNote:
-      "Die Ausstellung liegt bei Freising. Der erste Termin ist oft dort. Das Aufmaß später in der Küche, die noch nicht die unsere ist.",
-    quote:
-      "Der erste Termin ist oft in Wolfersdorf. Das Aufmaß später in der Küche, die noch nicht die unsere ist.",
-    quoteSource: `Aus der Beratung für ${name}`,
-    closeTitle: "Zuerst Wolfersdorf.",
-    closeText: `Muster, Materialien, ein Gespräch ohne Zeichnung. Danach kommen wir nach ${name} — wenn der Radius passt.`,
-    ledgerLine: `Eine Küche für ${name} gehört trotzdem in die Werkstatt.`,
-    lookTitle: "Weg, Aufmaß, Montage.",
-    indexEyebrow: "Der Radius",
+    title: `Küchen in ${name}`,
+    emphasis: "",
+    statement: "",
+    statementNote: "",
+    quote: "",
+    quoteSource: "",
+    closeTitle: "Der erste Termin ist in Wolfersdorf.",
+    closeText: `Muster, Materialien und Ihr Grundriss auf dem Tisch. Das Aufmaß machen wir danach bei Ihnen in ${name}.`,
+    ledgerLine: `Eine Küche für ${name} entsteht in unserer Werkstatt in Wolfersdorf.`,
+    lookTitle: "Beratung, Aufmaß, Montage.",
+    indexEyebrow: "Der Weg zur Küche",
     ctaLabel: `Termin für ${name}`,
-    film: ["Ausstellung", "Aufmaß vor Ort", "Fertigung hier", "Montage durch uns"],
-    looks: ["Haus vor Ort", "Maß im Raum", "Stein, gemustert", "Montage", "Weg, ehrlich", "Werkstatt"],
-    facts: [
-      { value: "Ausstellung", label: "Wolfersdorf" },
-      { value: "Aufmaß", label: `in ${name}` },
-      { value: "Werkstatt", label: "hier" },
-      { value: "Montage", label: "durch uns" },
-    ],
-    extras: [
-      [`Beratung in der Ausstellung, das Haus in ${name}.`, "Keine Filiale als Ersatz."],
-      ["Das Aufmaß ist in dem Raum, der die Küche tragen soll.", "Nicht allein vom Plan."],
-      ["Weiter als der Radius, sagen wir das.", "Kein Druck, den Weg zu strecken."],
-    ],
+    film: ["Ausstellung", "Aufmaß vor Ort", "Fertigung in der Werkstatt", "Montage durch eigene Monteure"],
+    looks: ["Küche im Raum", "Aufmaß vor Ort", "Arbeitsplatte", "Montage", "Detail", "Werkstatt"],
+    facts: [],
+    extras: [],
   };
 }
 
@@ -1807,8 +1794,9 @@ export function presentMaterialItem(
       locale === "en" ? "Further surfaces" : "Weitere Flächen",
     siblingTitle:
       locale === "en" ? "Other material beside it." : "Anderes Material daneben.",
-    ueberschrift: item.ueberschrift,
-    lesetext: item.lesetext,
+    ueberschrift: cmsValue(locale, item, item.ueberschrift),
+    lesetext: cmsValue(locale, item, item.lesetext),
+    reading: pageReading("material", item.slug, locale),
     cms: item,
   });
 }
@@ -1878,8 +1866,9 @@ export function presentApplianceItem(
     siblingEyebrow: locale === "en" ? "Further kit" : "Weitere Geräte",
     siblingTitle:
       locale === "en" ? "Other appliances in this task." : "Andere Geräte dieser Aufgabe.",
-    ueberschrift: item.ueberschrift,
-    lesetext: item.lesetext,
+    ueberschrift: cmsValue(locale, item, item.ueberschrift),
+    lesetext: cmsValue(locale, item, item.lesetext),
+    reading: pageReading("geraete", item.slug, locale),
     cms: item,
   });
 }
@@ -1979,10 +1968,17 @@ export function presentBrandItem(
     siblingEyebrow: locale === "en" ? "Further brands" : "Weitere Marken",
     siblingTitle:
       locale === "en" ? "Chosen to the task, not a contract." : "Nach Aufgabe, nicht nach Vertrag.",
-    ueberschrift: item.ueberschrift,
-    lesetext: item.lesetext,
+    ueberschrift: cmsValue(locale, item, item.ueberschrift),
+    lesetext: cmsValue(locale, item, item.lesetext),
+    reading: pageReading("marken", item.slug, locale),
     cms: item,
   });
+}
+
+/** The line under a place name: the CMS one, unless it is missing or still plays on "Radius". */
+function placeLede(entry: Region, locale: Locale) {
+  const own = cmsValue(locale, entry, entry.intro);
+  return own && !/radius/i.test(own) ? own : regionLede(entry.slug, locale) || own;
 }
 
 export function presentRegionItem(
@@ -2009,14 +2005,16 @@ export function presentRegionItem(
     .map((entry, index) => ({
       href: `/regionen/${entry.slug}`,
       title: entry.name,
-      text: entry.intro,
+      text: placeLede(entry, locale),
       image: resolveDevImage(placeCover(entry, all), photo(70 + index, 1100)),
     }));
 
+  // The seeded CMS page text of the places is the old "im Radius" wordplay: it is left out until someone writes a real one.
+  const seeded = /radius|within reach/i.test(`${item.betonung ?? ""} ${item.schlussText ?? ""}`);
   const page = assemble({
     locale,
     voice,
-    lede: item.intro,
+    lede: placeLede(item, locale),
     heroImage: cmsLarge(
       built ? photo(0, 3840) : resolveDevImage(ownImage ?? opener?.image, photo(0, 3840)),
       3840,
@@ -2036,10 +2034,12 @@ export function presentRegionItem(
     houses: housesFrom(own.length > 0 ? own : pool, photo),
     siblingEyebrow: locale === "en" ? "Further places" : "Weitere Orte",
     siblingTitle:
-      locale === "en" ? "Other houses in the radius." : "Andere Häuser im Radius.",
-    ueberschrift: item.ueberschrift,
-    lesetext: item.lesetext,
-    cms: item,
+      locale === "en" ? "Further places nearby." : "Weitere Orte in der Nähe.",
+    ueberschrift: cmsValue(locale, item, item.ueberschrift),
+    lesetext: cmsValue(locale, item, item.lesetext),
+    reading: pageReading("regionen", item.slug, locale),
+    placeHref: `/regionen/${item.slug}`,
+    cms: seeded ? undefined : item,
   });
   return own.length > 0 ? page : { ...page, housesElsewhere: true };
 }

@@ -13,6 +13,7 @@ import {
   presentApplianceKind,
 } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
+import { isSeededDescription, isSeededTitle, pageReading, pageTitle } from "@/lib/page-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -42,8 +43,13 @@ export async function generateMetadata({
   }
   const reading = entryReading(item.name, item.intro, locale);
   return entryMetadata(
-    cmsValue(locale, item, item.seoTitle) || reading.title,
-    cmsValue(locale, item, item.seoDescription) || reading.description,
+    isSeededTitle(cmsValue(locale, item, item.seoTitle))
+      ? pageTitle("geraete", item.slug, locale, item.name) || reading.title
+      : cmsValue(locale, item, item.seoTitle),
+    // A description written in the CMS wins; the seeded one gives way to the page's own text.
+    isSeededDescription(cmsValue(locale, item, item.seoDescription))
+      ? pageReading("geraete", item.slug, locale)?.description || reading.description
+      : cmsValue(locale, item, item.seoDescription),
     `/geraete/${item.slug}`,
     item.image,
   );

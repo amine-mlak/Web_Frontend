@@ -28,7 +28,7 @@ export function entryReading(
       paragraphs: [
         intro,
         `We look at ${title} in the showroom at Wolfersdorf near Freising, in daylight, on a sample rather than on a screen. The survey happens in the house, before a front or a slab is ordered.`,
-        "Making stays in the same workshop. Munich, Freising, Erding, Dachau, Pfaffenhofen and Augsburg sit in the radius, about two hundred kilometres around Munich, fitted by us.",
+        "Making stays in the same workshop. Munich, Freising, Erding, Dachau, Pfaffenhofen and Augsburg are within our area, about two hundred kilometres around Munich, fitted by us.",
       ],
     };
   }
@@ -40,7 +40,7 @@ export function entryReading(
     paragraphs: [
       intro,
       `${title} besprechen wir in der Ausstellung in Wolfersdorf bei Freising, unter Tageslicht, am Muster und nicht am Bildschirm. Das Aufmaß machen wir im Haus, bevor Front oder Platte bestellt werden.`,
-      "Gefertigt wird in derselben Werkstatt. München, Freising, Erding, Dachau, Pfaffenhofen und Augsburg liegen im Radius, etwa zweihundert Kilometer um München, Montage durch uns.",
+      "Gefertigt wird in derselben Werkstatt. München, Freising, Erding, Dachau, Pfaffenhofen und Augsburg liegen in unserem Gebiet, etwa zweihundert Kilometer um München, Montage durch uns.",
     ],
   };
 }

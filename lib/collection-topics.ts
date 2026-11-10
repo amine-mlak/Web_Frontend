@@ -22,7 +22,7 @@ import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
-import { topicReading } from "@/lib/topic-reading";
+import { topicReading, type TopicReadingCopy } from "@/lib/topic-reading";
 import { projectFeature, type ProjectFeatureData } from "@/lib/project-features";
 import type { PhotoStory, StoryPhoto } from "@/lib/photo-match";
 
@@ -43,6 +43,10 @@ export type PresentedTopic = PresentedCluster & {
   story?: PhotoStory;
   /** Category pages: the photo the page opens on, from a kitchen where one of its things stands. */
   opening?: StoryPhoto;
+  /** The reading text written in code for this page; a real CMS text comes before it. */
+  reading?: TopicReadingCopy | null;
+  /** A place page's own address, so its text does not link to itself. */
+  placeHref?: string;
 };
 
 export type TopicFeature = ProjectFeatureData;

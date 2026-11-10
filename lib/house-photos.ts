@@ -135,7 +135,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
       shot(WORKSHOP.two, "Fertigung in einer Hand"),
       shot(BUILDING.snow2, "Das Haus, nicht die Halle"),
       shot(ROOM.r0003, "Aktuelles aus der Manufaktur"),
-      shot(BUILDING.snow1, "Radius um Wolfersdorf"),
+      shot(BUILDING.snow1, "BEER in Wolfersdorf im Winter"),
     ],
     people: [],
   },

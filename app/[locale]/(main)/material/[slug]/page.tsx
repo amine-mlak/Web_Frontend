@@ -14,6 +14,7 @@ import {
   presentMaterialKind,
 } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
+import { isSeededDescription, isSeededTitle, pageReading, pageTitle } from "@/lib/page-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 // FAQ theme in the CMS that answers questions about each category.
@@ -51,8 +52,13 @@ export async function generateMetadata({
   }
   const reading = entryReading(item.name, item.intro, locale);
   return entryMetadata(
-    cmsValue(locale, item, item.seoTitle) || reading.title,
-    cmsValue(locale, item, item.seoDescription) || reading.description,
+    isSeededTitle(cmsValue(locale, item, item.seoTitle))
+      ? pageTitle("material", item.slug, locale, item.name) || reading.title
+      : cmsValue(locale, item, item.seoTitle),
+    // A description written in the CMS wins; the seeded one gives way to the page's own text.
+    isSeededDescription(cmsValue(locale, item, item.seoDescription))
+      ? pageReading("material", item.slug, locale)?.description || reading.description
+      : cmsValue(locale, item, item.seoDescription),
     `/material/${item.slug}`,
     item.image,
   );
