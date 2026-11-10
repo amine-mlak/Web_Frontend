@@ -136,6 +136,7 @@ type StrapiFormat = {
 export type StrapiMedia = {
   url?: string;
   width?: number;
+  height?: number;
   alternativeText?: string | null;
   formats?: {
     large?: StrapiFormat;

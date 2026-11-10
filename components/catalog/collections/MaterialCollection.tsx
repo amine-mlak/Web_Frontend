@@ -18,13 +18,27 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
   return (
     <section id={id} className="scroll-mt-24 border-t border-line" aria-labelledby={`${id}-title`}>
       <div className="grid lg:grid-cols-12">
-        <Frame
-          src={branch.image}
-          srcSet={branch.srcSet}
-          alt={branch.alt}
-          className={`aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:min-h-[80svh] ${flip ? "lg:order-2" : ""}`}
-          sizes="(max-width: 1024px) 100vw, 58vw"
-        />
+        <div className={`relative lg:col-span-7 ${flip ? "lg:order-2" : ""}`}>
+          <Frame
+            src={branch.image}
+            srcSet={branch.srcSet}
+            alt={branch.alt}
+            className="aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[80svh]"
+            sizes="(max-width: 1024px) 100vw, 58vw"
+          />
+          {branch.inset ? (
+            // The same kitchen from close up, set into the corner next to the text.
+            <Frame
+              src={branch.inset}
+              srcSet={branch.insetSrcSet}
+              alt={branch.insetAlt ?? ""}
+              className={`absolute bottom-4 aspect-square w-[30%] max-w-[17rem] border-[6px] border-paper lg:bottom-10 ${
+                flip ? "left-4 lg:left-10" : "right-4 lg:right-10"
+              }`}
+              sizes="(max-width: 1024px) 30vw, 17rem"
+            />
+          ) : null}
+        </div>
         <div className={`flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20 ${flip ? "lg:order-1" : ""}`}>
           <h2
             id={`${id}-title`}
@@ -61,6 +75,22 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
             <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit text-ink">
               {en ? `${branch.title}: the overview` : `${branch.title} im Überblick`}
             </LocaleLink>
+          ) : null}
+          {branch.source ? (
+            <p className="mt-10 font-sans text-[14px] leading-relaxed text-muted">
+              {en ? "In the photo: " : "Im Bild: "}
+              {branch.source.project}
+              {branch.source.place ? `, ${branch.source.place}` : ""}
+              {" · "}
+              <LocaleLink
+                href={branch.source.href}
+                className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
+              >
+                {en ? "The kitchen" : "Zur Küche"}
+                <span aria-hidden="true"> →</span>
+                <span className="sr-only">: {branch.source.project}</span>
+              </LocaleLink>
+            </p>
           ) : null}
         </div>
       </div>

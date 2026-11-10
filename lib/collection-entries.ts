@@ -16,6 +16,7 @@ import type {
   ClusterSibling,
 } from "@/lib/collection-clusters";
 import { clusterVisit } from "@/lib/collection-clusters";
+import type { CollectionBranch } from "@/lib/collection-hubs";
 import type { CollectionFact, HubCrumb, PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cmsLarge } from "@/lib/beer-photos";
@@ -23,6 +24,16 @@ import { devPhoto, resolveDevImage } from "@/lib/dev-images";
 import { kitchenImageOf, kitchenPhotos, kitchenPool, placeCover, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { isCodeGallery } from "@/lib/project-photos";
 import { projectFeature } from "@/lib/project-features";
+import {
+  brandRule,
+  matchArea,
+  matchHero,
+  matchTile,
+  matchTilePhoto,
+  photoMatch,
+  type PhotoMatch,
+  type StoryPhoto,
+} from "@/lib/photo-match";
 import type { Locale } from "@/lib/i18n";
 import { cmsPageText } from "@/lib/page-text";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
@@ -1239,20 +1250,29 @@ function pointBranches(voice: Voice | undefined, photo: (n: number, w?: number) 
 function itemBranches(
   items: { href: string; title: string; text: string; image?: string }[],
   photo: (n: number, w?: number) => string,
+  projects: Project[] = [],
 ): PresentedBranch[] {
-  return items.map((item, index) => ({
-    href: item.href,
-    title: item.title,
-    text: item.text,
-    image: resolveDevImage(item.image, photo(16 + index * 3)),
-    imageB: photo(17 + index * 3, 1200),
-    imageC: photo(18 + index * 3, 1200),
-    alt: item.title,
-    kicker: String(index + 1).padStart(2, "0"),
-    // Cards carry no notes: the category's notes belong to the category, not to one card.
-    points: [],
-    caption: item.title,
-  }));
+  return items.map((item, index) => {
+    // The card shows the kitchen its page opens on: the room, with a close-up set into the corner.
+    const tile = matchTile(item.href.split("/").pop() ?? "", projects);
+    return {
+      href: item.href,
+      title: item.title,
+      text: item.text,
+      image: tile?.room.src ?? resolveDevImage(item.image, photo(16 + index * 3)),
+      imageSrcSet: tile?.room.srcSet,
+      imageB: photo(17 + index * 3, 1200),
+      imageC: photo(18 + index * 3, 1200),
+      alt: tile?.room.alt ?? item.title,
+      inset: tile?.close?.src,
+      insetSrcSet: tile?.close?.srcSet,
+      insetAlt: tile?.close?.alt,
+      kicker: String(index + 1).padStart(2, "0"),
+      // Cards carry no notes: the category's notes belong to the category, not to one card.
+      points: [],
+      caption: item.title,
+    };
+  });
 }
 
 function cmsMatches(cms: CmsPageFields | undefined, locale: Locale) {
@@ -1366,6 +1386,10 @@ function assemble(args: {
   houses: ClusterHouse[];
   /** Real kitchens linked to this entry: up to four are shown one by one, the next ones in a line. */
   featured?: Project[];
+  /** Photos that show the entry itself, found in the galleries of the built kitchens. */
+  match?: PhotoMatch;
+  /** Category pages: the room photo the page opens on. */
+  opening?: StoryPhoto;
   siblingEyebrow: string;
   siblingTitle: string;
   ueberschrift?: string;
@@ -1373,8 +1397,13 @@ function assemble(args: {
   cms?: CmsPageFields;
 }): PresentedTopic {
   const { locale, photo } = args;
-  const withPhoto = (args.featured ?? []).filter((project) => project.image);
-  const features = withPhoto.slice(0, 4).map((project) => projectFeature(project, [args.heroImage]));
+  const match = args.match;
+  // Nothing tagged in the CMS: the kitchens whose photos show the entry stand in (up to three).
+  const tagged = (args.featured ?? []).filter((project) => project.image);
+  const withPhoto = tagged.length > 0 ? tagged : (match?.projects ?? []).slice(0, 3);
+  const features = withPhoto
+    .slice(0, 4)
+    .map((project) => projectFeature(project, [args.heroImage, ...(match?.used ?? [])], match?.detailOf.get(project.slug)));
   const voice = withCms(args.voice, cmsMatches(args.cms, locale));
   const branches = withPunkte(args.branches, cmsMatches(args.cms, locale)?.punkte);
   const visit = clusterVisit(locale);
@@ -1430,6 +1459,8 @@ function assemble(args: {
     siblings: args.siblings,
     houses: args.houses,
     features,
+    story: match?.story,
+    opening: args.opening,
     taggedHouses: housesFrom(withPhoto.slice(4), photo),
     swatches: [],
     lookTitle: voice.lookTitle,
@@ -1504,6 +1535,47 @@ function regionVoice(name: string, locale: Locale): Voice {
   };
 }
 
+/** The sink area has no material of its own: its photos are the kitchens with a ceramic sink or a Quooker. */
+export const SINK_PHOTOS = ["keramik", "quooker-armatur"];
+
+/**
+ * A hub's area shows the room its category page opens on, a close-up from the same kitchen,
+ * and names that kitchen. Without matching photos the area keeps its CMS photo.
+ */
+/** Which built kitchens stand for an area of the material hub, and whether it leads with a close-up. */
+export function materialArea(slug: MaterialKindRoute, materials: Material[]): { slugs: string[]; closeUp: boolean } {
+  const kind = MATERIAL_KIND_ROUTES.find((item) => item.slug === slug)?.kind;
+  return {
+    slugs:
+      slug === "spuele"
+        ? SINK_PHOTOS
+        : materials.filter((material) => kind && material.kind === kind).map((material) => material.slug),
+    // Drawers and the sink are only seen from close up.
+    closeUp: slug === "spuele" || slug === "innenleben",
+  };
+}
+
+export function withAreaPhotos(
+  branch: CollectionBranch,
+  slugs: string[],
+  projects: Project[],
+  /** The area is only seen from close up (drawers, the sink): lead with the close-up, not a room. */
+  closeUp = false,
+): CollectionBranch {
+  const area = matchArea(slugs, projects, closeUp);
+  if (!area) return branch;
+  return {
+    ...branch,
+    image: area.room.src,
+    srcSet: area.room.srcSet,
+    alt: area.room.alt,
+    inset: area.close?.src,
+    insetSrcSet: area.close?.srcSet,
+    insetAlt: area.close?.alt,
+    source: { href: area.room.href, project: area.room.project, place: area.room.place },
+  };
+}
+
 export function presentMaterialKind(
   slug: MaterialKindRoute,
   locale: Locale,
@@ -1569,14 +1641,16 @@ export function presentMaterialKind(
     : projects.filter((project) =>
         project.brands.some((brand) => brand.slug === "quooker"),
       );
-  const siblings = MATERIAL_KIND_ROUTES.filter((item) => item.slug !== slug).map(
-    (item, index) => ({
+  const siblings = MATERIAL_KIND_ROUTES.filter((item) => item.slug !== slug).map((item, index) => {
+    // The tile shows what the material page shows for that area: a kitchen we built with it.
+    const area = materialArea(item.slug, materials);
+    return {
       href: item.href,
       title: KIND_LABEL[locale][item.slug].title,
       text: KIND_LABEL[locale][item.slug].text,
-      image: photo(70 + index, 1100),
-    }),
-  );
+      image: matchArea(area.slugs, projects, area.closeUp)?.room.src ?? photo(70 + index, 1100),
+    };
+  });
 
   return assemble({
     locale,
@@ -1590,8 +1664,12 @@ export function presentMaterialKind(
     crumbs: [parent],
     eyebrow: locale === "en" ? "Layer" : "Schicht",
     ctaHref: VISIT_CTA,
+    opening: matchHero(
+      slug === "spuele" ? SINK_PHOTOS : sinkItems.map((item) => item.href.split("/").pop() ?? ""),
+      projects,
+    ),
     photo,
-    branches: itemBranches(sinkItems, photo),
+    branches: itemBranches(sinkItems, photo, projects),
     siblings,
     houses: housesFrom(kindHouses, photo),
     siblingEyebrow: locale === "en" ? "Further layers" : "Weitere Schichten",
@@ -1618,14 +1696,17 @@ export function presentApplianceKind(
     slug,
   );
   const related = appliances.filter((item) => item.kind === slug);
-  const siblings = GERAETE_KIND_ROUTES.filter((item) => item.slug !== slug).map(
-    (item, index) => ({
-      href: item.href,
-      title: KIND_LABEL[locale][item.slug].title,
-      text: KIND_LABEL[locale][item.slug].text,
-      image: photo(70 + index, 1100),
-    }),
-  );
+  const siblings = GERAETE_KIND_ROUTES.filter((item) => item.slug !== slug).map((item, index) => ({
+    href: item.href,
+    title: KIND_LABEL[locale][item.slug].title,
+    text: KIND_LABEL[locale][item.slug].text,
+    // The tile shows what the appliance page shows for that task: a kitchen we built with it.
+    image:
+      matchArea(
+        appliances.filter((entry) => entry.kind === item.slug).map((entry) => entry.slug),
+        projects,
+      )?.room.src ?? photo(70 + index, 1100),
+  }));
 
   return assemble({
     locale,
@@ -1638,6 +1719,10 @@ export function presentApplianceKind(
     parentLabel: parent.label,
     crumbs: [parent],
     eyebrow: locale === "en" ? "Task" : "Aufgabe",
+    opening: matchHero(
+      related.map((item) => item.slug),
+      projects,
+    ),
     photo,
     branches: itemBranches(
       related.map((item) => ({
@@ -1647,6 +1732,7 @@ export function presentApplianceKind(
         image: item.image,
       })),
       photo,
+      projects,
     ),
     siblings,
     houses: housesFrom(
@@ -1672,19 +1758,24 @@ export function presentMaterialItem(
   const parent = PARENT.material[locale];
   const kindRoute = MATERIAL_KIND_ROUTES.find((entry) => entry.kind === item.kind);
   const voice = voiceFor(item.slug, locale)!;
+  const match = photoMatch(item.slug, all);
   const photo = kitchenPhotos(
     all.filter((project) => project.materials.some((material) => material.slug === item.slug)),
     all,
     (n, width) => devPhoto(100 + item.order + n, width),
     item.slug,
+    match.used,
   );
+  // The tiles at the end never repeat a photo the page shows above them.
+  const taken = new Set(match.used);
   const siblings = materials
     .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
     .map((entry, index) => ({
       href: `/material/${entry.slug}`,
       title: voiceFor(entry.slug, locale)?.title ?? entry.name,
       text: entry.intro,
-      image: resolveDevImage(entry.image, photo(70 + index, 1100)),
+      // A kitchen where the surface is built in, before the sample photo from the CMS.
+      image: matchTilePhoto(entry.slug, all, taken) ?? resolveDevImage(entry.image, photo(70 + index, 1100)),
     }));
 
   return assemble({
@@ -1708,6 +1799,7 @@ export function presentMaterialItem(
     branches: pointBranches(voice, photo),
     siblings,
     featured: projects.filter((project) => project.materials.some((material) => material.slug === item.slug)),
+    match,
     houses: housesFrom(projects.filter((project) =>
       project.materials.some((material) => material.slug === item.slug),
     ), photo),
@@ -1731,19 +1823,29 @@ export function presentApplianceItem(
   const parent = PARENT.geraete[locale];
   const kindRoute = GERAETE_KIND_ROUTES.find((entry) => entry.slug === item.kind);
   const voice = voiceFor(item.slug, locale)!;
+  const match = photoMatch(item.slug, all);
   const photo = kitchenPhotos(
     all.filter((project) => project.appliances.some((entry) => entry.slug === item.slug)),
     all,
     (n, width) => devPhoto(140 + item.order + n, width),
     item.slug,
+    match.used,
   );
-  const siblings = appliances
-    .filter((entry) => entry.kind === item.kind && entry.slug !== item.slug)
+  // The appliances of the same task first, then others, so the row at the end is never a single tile.
+  const others = appliances.filter((entry) => entry.slug !== item.slug);
+  // The tiles at the end never repeat a photo the page shows above them.
+  const taken = new Set(match.used);
+  const siblings = [
+    ...others.filter((entry) => entry.kind === item.kind),
+    ...others.filter((entry) => entry.kind !== item.kind),
+  ]
+    .slice(0, 3)
     .map((entry, index) => ({
       href: `/geraete/${entry.slug}`,
       title: voiceFor(entry.slug, locale)?.title ?? entry.name,
       text: entry.intro,
-      image: resolveDevImage(entry.image, photo(70 + index, 1100)),
+      // A kitchen where the appliance is built in, before the product photo from the CMS.
+      image: matchTilePhoto(entry.slug, all, taken) ?? resolveDevImage(entry.image, photo(70 + index, 1100)),
     }));
 
   return assemble({
@@ -1765,6 +1867,8 @@ export function presentApplianceItem(
     photo,
     branches: pointBranches(voice, photo),
     siblings,
+    featured: projects.filter((project) => project.appliances.some((appliance) => appliance.slug === item.slug)),
+    match,
     houses: housesFrom(
       projects.filter((project) =>
         project.appliances.some((appliance) => appliance.slug === item.slug),
@@ -1836,11 +1940,13 @@ export function presentBrandItem(
 ): PresentedTopic {
   const parent = PARENT.marken[locale];
   const voice = voiceFor(item.slug, locale)!;
+  const match = photoMatch(item.slug, all, brandRule(item.name));
   const photo = kitchenPhotos(
     all.filter((project) => project.brands.some((brand) => brand.slug === item.slug)),
     all,
     (n, width) => devPhoto(186 + item.order + n, width),
     item.slug,
+    match.used,
   );
   const siblings = brands
     .filter((entry) => entry.slug !== item.slug)
@@ -1863,6 +1969,7 @@ export function presentBrandItem(
     branches: pointBranches(voice, photo),
     siblings,
     featured: projects.filter((project) => project.brands.some((brand) => brand.slug === item.slug)),
+    match,
     houses: housesFrom(
       projects.filter((project) =>
         project.brands.some((brand) => brand.slug === item.slug),

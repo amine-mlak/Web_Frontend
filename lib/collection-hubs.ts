@@ -17,6 +17,12 @@ export type CollectionBranch = {
   brands?: string[];
   /** Entries inside this branch (the materials of "Fronten"), listed with a small photo. */
   items?: { href: string; title: string; text: string; image?: string }[];
+  /** A close-up from the same kitchen as the photo, set into its corner. */
+  inset?: string;
+  insetSrcSet?: string;
+  insetAlt?: string;
+  /** The built kitchen the photo comes from. */
+  source?: { href: string; project: string; place?: string };
 };
 
 export type CollectionHubCopy = {

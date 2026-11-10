@@ -126,7 +126,7 @@ export default function GeraeteCollection({
                     alt={branch.alt}
                     srcSet={branch.srcSet}
                     className="aspect-[16/7] lg:col-span-4"
-                    imgClassName={cn(sink && "object-top")}
+                    imgClassName={cn(sink && !branch.source && "object-top")}
                     sizes="(max-width: 1024px) 100vw, 33vw"
                   />
                 </LocaleLink>

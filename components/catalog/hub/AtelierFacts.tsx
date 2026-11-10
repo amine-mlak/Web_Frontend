@@ -5,11 +5,14 @@ export default function AtelierFacts({
   facts,
   kicker,
   image,
+  imageAlt,
   sentence,
 }: {
   facts: CollectionFact[];
   kicker: string;
   image: string;
+  /** What the photo shows. Without it the photo is decoration beside the facts. */
+  imageAlt?: string;
   sentence: string;
 }) {
   return (
@@ -18,7 +21,7 @@ export default function AtelierFacts({
         <figure className="relative min-h-[22rem] overflow-hidden bg-nacht lg:col-span-5 lg:min-h-[36rem]">
           <CmsImage
             src={image}
-            alt={kicker}
+            alt={imageAlt ?? ""}
             fill
             sizes="(max-width: 1024px) 100vw, 42vw"
             className="object-cover"

@@ -4,6 +4,7 @@ import EndBand from "@/components/catalog/EndBand";
 import EntryHeader from "@/components/catalog/EntryHeader";
 import Questions from "@/components/catalog/Questions";
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
+import { CloseBand } from "@/components/catalog/PhotoStory";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { HouseLine } from "@/components/catalog/clusters/parts";
 import type { PresentedTopic } from "@/lib/collection-topics";
@@ -55,19 +56,22 @@ export default function CategoryPage({
     (branch): branch is typeof branch & { href: string } => Boolean(branch.title && branch.href),
   );
 
-  // Every option card shows its own photo, so the hero and the sibling cards take photos nobody else shows.
+  // Every option card shows its own photos, so the hero, the facts and the sibling cards take photos nobody else shows.
   const shown = new Set(
-    [...options.map((option) => option.image), ...hub.houses.map((house) => house.image), hub.facts.length > 0 ? hub.ledgerImage : ""]
+    [...options.flatMap((option) => [option.image, option.inset ?? ""]), ...hub.houses.map((house) => house.image)]
       .filter(Boolean)
       .map((src) => photoKey(src)),
   );
-  const spare = [hub.heroImage, hub.closeImage, hub.statementImage, hub.statementImageB, hub.visitImage].filter(Boolean);
+  const spare = [hub.heroImage, hub.statementImage, hub.statementImageB, hub.visitImage].filter(Boolean);
   const take = (fallback: string) => {
     const found = [fallback, ...spare].find((src) => !shown.has(photoKey(src))) ?? fallback;
     shown.add(photoKey(found));
     return found;
   };
-  const heroImage = take(hub.heroImage);
+  if (hub.opening) shown.add(photoKey(hub.opening.src));
+  const heroImage = hub.opening ? hub.opening.src : take(hub.heroImage);
+  const ledgerImage = hub.facts.length > 0 ? take(hub.ledgerImage) : hub.ledgerImage;
+  const closeImage = hub.closeImage ? take(hub.closeImage) : undefined;
   const siblings = hub.siblings.map((sibling) => ({ ...sibling, image: take(sibling.image) }));
 
   return (
@@ -93,16 +97,21 @@ export default function CategoryPage({
         </div>
       </EntryHeader>
 
-      <figure className="mt-10 lg:mt-14">
-        <Frame
-          src={heroImage}
-          alt={hub.heroAlt}
-          className="aspect-[2/1] w-full lg:aspect-[21/9]"
-          imgClassName="object-[center_35%]"
-          priority
-          sizes="100vw"
-        />
-      </figure>
+      {hub.opening ? (
+        // A room where one of the options stands, with what it shows and the way to that kitchen.
+        <CloseBand photo={hub.opening} locale={hub.locale} className="mt-10 lg:mt-14" priority />
+      ) : (
+        <figure className="mt-10 lg:mt-14">
+          <Frame
+            src={heroImage}
+            alt={hub.heroAlt}
+            className="aspect-[2/1] w-full lg:aspect-[21/9]"
+            imgClassName="object-[center_35%]"
+            priority
+            sizes="100vw"
+          />
+        </figure>
+      )}
 
       {options.length > 0 ? (
         <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="category-choice">
@@ -113,13 +122,25 @@ export default function CategoryPage({
             {options.map((option) => (
               <li key={option.href + option.title}>
                 <LocaleLink href={option.href} className="group block">
-                  <Frame
-                    src={option.image}
-                    alt={option.alt || option.title}
-                    className="aspect-[4/3]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  <h3 className="t-item mt-5 text-ink">{option.title}</h3>
+                  <div className="relative">
+                    <Frame
+                      src={option.image}
+                      srcSet={option.imageSrcSet}
+                      alt={option.alt || option.title}
+                      className="aspect-[4/3]"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    {option.inset ? (
+                      <Frame
+                        src={option.inset}
+                        srcSet={option.insetSrcSet}
+                        alt={option.insetAlt ?? ""}
+                        className="absolute -bottom-6 right-4 aspect-square w-[34%] border-[6px] border-paper"
+                        sizes="(max-width: 640px) 34vw, (max-width: 1024px) 17vw, 12vw"
+                      />
+                    ) : null}
+                  </div>
+                  <h3 className={`t-item text-ink ${option.inset ? "mt-9 pr-[38%]" : "mt-5"}`}>{option.title}</h3>
                   {option.text ? (
                     <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{option.text}</p>
                   ) : null}
@@ -138,7 +159,7 @@ export default function CategoryPage({
       <StatementBand statement={hub.statement} note={hub.statementNote} />
 
       {hub.facts.length > 0 ? (
-        <AtelierFacts facts={hub.facts} kicker={copy.figures} image={hub.ledgerImage} sentence={hub.ledgerLine} />
+        <AtelierFacts facts={hub.facts} kicker={copy.figures} image={ledgerImage} sentence={hub.ledgerLine} />
       ) : null}
 
       <Questions theme={faqTheme} title={hub.title} locale={hub.locale} />
@@ -148,7 +169,7 @@ export default function CategoryPage({
       <EndBand
         title={copy.bandTitle}
         text={copy.bandText}
-        image={hub.closeImage || undefined}
+        image={closeImage}
         primary={{ href: "/ausstellung", label: copy.visit }}
         tiles={siblings}
         tilesTitle={hub.siblingTitle || hub.siblingEyebrow}

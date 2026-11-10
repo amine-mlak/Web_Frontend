@@ -92,6 +92,8 @@ export type ProjectFrame = {
   src: string;
   srcSet?: string;
   alt: string;
+  /** Taller than wide. */
+  portrait?: boolean;
 };
 
 export type Project = {

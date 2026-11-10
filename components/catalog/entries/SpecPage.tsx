@@ -1,6 +1,7 @@
 import CmsImage from "@/components/CmsImage";
 import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
+import { CloseBand, PhotoOpener, PhotoPair } from "@/components/catalog/PhotoStory";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import { Frame } from "@/components/catalog/collections/parts";
 import { PointsSection, QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
@@ -13,14 +14,22 @@ function markFor(hub: PresentedTopic) {
   return APPLIANCE_BRANDS.find((brand) => brand.name.toLowerCase() === name);
 }
 
-/** An appliance or a brand: the name, the object on dark with its facts, the points, the kitchens. */
+/**
+ * An appliance or a brand: the name, three photos of it in one kitchen, its facts on dark, the
+ * points, two more photos, the kitchens, one close-up from edge to edge. Where no gallery photo
+ * shows it, the CMS image stands framed on the dark band as before.
+ */
 export default function SpecPage({ hub }: { hub: PresentedTopic }) {
   const mark = markFor(hub);
   const houses = hub.locale === "en" ? "Fitted in these houses" : "In diesen Häusern";
+  // Photos that show the appliance or the brand in the built kitchens. Without any, the CMS image stands on the dark band.
+  const story = hub.story ?? {};
 
   return (
     <main className="bg-paper">
       <EntryHeader hub={hub} emphasis={hub.emphasis} />
+
+      {story.opener ? <PhotoOpener opener={story.opener} locale={hub.locale} /> : null}
 
       <section
         className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:mt-14 lg:px-14 lg:py-20"
@@ -37,15 +46,17 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
             />
           </span>
         ) : null}
-        <Frame
-          src={hub.heroImage}
-          alt={hub.heroAlt}
-          className="mx-auto aspect-[16/10] max-w-5xl"
-          priority
-          sizes="(max-width: 1024px) 100vw, 64rem"
-        />
+        {story.opener ? null : (
+          <Frame
+            src={hub.heroImage}
+            alt={hub.heroAlt}
+            className="mx-auto mb-10 aspect-[16/10] max-w-5xl"
+            priority
+            sizes="(max-width: 1024px) 100vw, 64rem"
+          />
+        )}
         {hub.ledgerLine ? (
-          <p className="t-lead mx-auto mt-10 max-w-2xl text-center text-paper">{hub.ledgerLine}</p>
+          <p className="t-lead mx-auto max-w-2xl text-center text-paper">{hub.ledgerLine}</p>
         ) : null}
         {hub.facts.length ? (
           <dl className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-px bg-paper/15 sm:grid-cols-4">
@@ -60,7 +71,9 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
       </section>
 
       <PointsSection hub={hub} />
+      {story.pair ? <PhotoPair pair={story.pair} locale={hub.locale} flip /> : null}
       <KitchenShowcase hub={hub} title={houses} />
+      {story.band ? <CloseBand photo={story.band} locale={hub.locale} /> : null}
       <TopicReading
         locale={hub.locale}
         cms={hub}

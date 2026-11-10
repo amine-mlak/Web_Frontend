@@ -27,13 +27,20 @@ const OWN_SLOTS_FROM = 60;
  * fills in. `seed` (the page slug) turns the list of other projects to a different starting point
  * for each page, so pages without tagged kitchens do not all show the same photos.
  */
-export function kitchenPhotos(related: Project[], all: Project[], fallback: Photo, seed?: string): KitchenPhotos {
+export function kitchenPhotos(
+  related: Project[],
+  all: Project[],
+  fallback: Photo,
+  seed?: string,
+  /** Photos the page already shows elsewhere (its photo story): never handed out again. */
+  skip: string[] = [],
+): KitchenPhotos {
   const real = (project: Project) => !isCodeGallery(project.slug);
   const relatedSlugs = new Set(related.map((project) => project.slug));
   const others = all.filter((project) => !relatedSlugs.has(project.slug));
   const order = [...related, ...rotate(others, seed)].filter(real);
   const queue: string[] = [];
-  const queued = new Set<string>();
+  const queued = new Set<string>(skip.map((src) => photoKey(src)));
   for (const project of order) {
     for (const frame of project.gallery) {
       if (!frame.src || queued.has(photoKey(frame.src))) continue;
