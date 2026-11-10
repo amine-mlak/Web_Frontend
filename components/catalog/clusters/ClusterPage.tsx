@@ -1,7 +1,8 @@
 import LocaleLink from "@/components/LocaleLink";
+import CollectionJsonLd from "@/components/catalog/CollectionJsonLd";
 import FullChapter from "@/components/catalog/FullChapter";
 import PageEnd from "@/components/catalog/PageEnd";
-import { Frame } from "@/components/catalog/collections/parts";
+import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine, QuoteLine } from "@/components/catalog/clusters/parts";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { photoKey } from "@/lib/utils";
@@ -24,7 +25,7 @@ const COPY = {
 } as const;
 
 /** The overview of one kitchen world (Farben, Stile, Formen, Inseln, Besondere). */
-export default function ClusterPage({ hub }: { hub: PresentedCluster }) {
+export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path?: string }) {
   const copy = COPY[hub.locale === "en" ? "en" : "de"];
   const first = hub.branches[0];
   // The hero photo is not the first chapter's photo again.
@@ -33,34 +34,28 @@ export default function ClusterPage({ hub }: { hub: PresentedCluster }) {
 
   return (
     <main className="bg-paper">
+      {path ? (
+        <CollectionJsonLd path={path} name={hub.title} description={hub.lede} items={hub.branches} locale={hub.locale} />
+      ) : null}
       <section data-site-hero="" className="relative isolate -mt-14 min-h-[88svh] bg-nacht" aria-labelledby="cluster-hero">
         <Frame src={hero} alt={hub.heroAlt} className="absolute inset-0" priority sizes="100vw" />
         <div className="hero-scrim absolute inset-0" aria-hidden />
         <div className="relative z-10 flex min-h-[88svh] items-end px-5 pb-12 sm:px-8 lg:px-14 lg:pb-16">
           <div className="max-w-2xl">
-            <Crumbs hub={hub} />
+            <Crumbs hub={hub} tone="paper" />
             <h1
               id="cluster-hero"
-              className="mt-6 font-serif text-[56px] leading-[0.92] font-medium tracking-[-0.045em] text-paper sm:text-[88px]"
+              className="t-display mt-6 text-paper"
             >
               {hub.title}
               {hub.emphasis ? <span className="block">{hub.emphasis}</span> : null}
             </h1>
-            {hub.lede ? <p className="mt-5 max-w-lg font-sans text-[18px] leading-relaxed text-paper/90">{hub.lede}</p> : null}
+            {hub.lede ? <p className="t-lede mt-5 max-w-lg text-paper/90">{hub.lede}</p> : null}
           </div>
         </div>
       </section>
 
-      {hub.statement ? (
-        <section className="px-5 py-20 sm:px-8 lg:px-14 lg:py-28">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[38px]">{hub.statement}</p>
-            {hub.statementNote ? (
-              <p className="mx-auto mt-6 max-w-xl font-sans text-[17px] leading-relaxed text-muted">{hub.statementNote}</p>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
+      <StatementBand statement={hub.statement} note={hub.statementNote} rule={false} />
 
       <div className="space-y-3 px-3 sm:space-y-4 sm:px-4">
         {hub.branches.map((branch, index) => (

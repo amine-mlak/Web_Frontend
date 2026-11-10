@@ -31,14 +31,14 @@ export default function AtelierFacts({
                 key={`${fact.value}-${fact.label}`}
                 className="border-b border-line px-6 py-10 sm:odd:border-r md:px-10 md:py-14"
               >
-                <p className="font-serif text-[36px] leading-none font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+                <p className="t-section leading-none text-ink">
                   {fact.value}
                 </p>
                 <p className="type-eyebrow mt-4 text-muted">{fact.label}</p>
               </article>
             ))}
           </div>
-          <p className="border-t border-line px-6 py-10 font-serif text-[22px] leading-[1.25] font-medium tracking-[-0.02em] text-ink italic sm:px-10 md:text-[28px]">
+          <p className="t-feature border-t border-line px-6 py-10 text-ink sm:px-10">
             {sentence}
           </p>
         </div>

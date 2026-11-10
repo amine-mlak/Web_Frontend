@@ -30,16 +30,16 @@ export default function PageEnd({
       <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="page-end">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div data-rise="" className="lg:col-span-7">
-            <h2 id="page-end" className="font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.03em] text-ink md:text-[52px]">
+            <h2 id="page-end" className="t-section text-ink">
               {title}
             </h2>
-            {text ? <p className="mt-5 max-w-lg font-sans text-[17px] leading-relaxed text-muted">{text}</p> : null}
+            {text ? <p className="t-lede mt-5 max-w-lg text-muted">{text}</p> : null}
           </div>
           <NextSteps primary={primary} locale={locale} className="lg:col-span-5 lg:justify-end" />
         </div>
       </section>
       {shown.length ? (
-        <section className="px-3 pb-3 sm:px-4 sm:pb-4" aria-label={tilesTitle}>
+        <nav className="px-3 pb-3 sm:px-4 sm:pb-4" aria-label={tilesTitle || (locale === "en" ? "More pages" : "Weitere Seiten")}>
           <ul className={`grid gap-3 sm:grid-cols-2 ${shown.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             {shown.map((tile) => (
               <li key={tile.href}>
@@ -52,7 +52,7 @@ export default function PageEnd({
                   />
                   <span className="hero-scrim absolute inset-0" aria-hidden />
                   <span className="absolute inset-x-0 bottom-0 p-6">
-                    <span className="block font-serif text-[30px] leading-tight font-medium text-paper">{tile.title}</span>
+                    <span className="t-feature block text-paper">{tile.title}</span>
                     {tile.text ? (
                       <span className="mt-2 block max-w-xs font-sans text-[14px] leading-relaxed text-paper/85">{tile.text}</span>
                     ) : null}
@@ -61,7 +61,7 @@ export default function PageEnd({
               </li>
             ))}
           </ul>
-        </section>
+        </nav>
       ) : null}
     </>
   );

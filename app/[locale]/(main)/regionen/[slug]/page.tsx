@@ -52,10 +52,7 @@ export default async function RegionPage({
   if (!item) {
     notFound();
   }
-  const related = projectsForRegion(projects, item.slug);
-  const houses = related.length > 0 ? related : projects.slice(0, 4);
-
   return (
-    <PlacePage hub={presentRegionItem(item, locale, regions, houses, projects)} />
+    <PlacePage hub={presentRegionItem(item, locale, regions, projectsForRegion(projects, item.slug), projects)} />
   );
 }

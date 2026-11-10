@@ -28,20 +28,20 @@ export default function RegionenCollection({
       >
         <h1
           id="regionen-hero"
-          className="mx-auto max-w-4xl font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.045em] text-ink sm:text-[80px] lg:text-[96px]"
+          className="t-display mx-auto max-w-4xl text-ink"
         >
           {hub.title}
         </h1>
-        <p className="mx-auto mt-8 max-w-lg font-sans text-[17px] leading-relaxed font-light text-muted">
+        <p className="t-lede mx-auto mt-8 max-w-lg text-muted">
           {hub.lede}
         </p>
-        <p className="mx-auto mt-4 max-w-lg font-sans text-[17px] leading-relaxed text-ink">{radius}</p>
+        <p className="t-lede mx-auto mt-4 max-w-lg text-ink">{radius}</p>
         <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 text-ink">
           {hub.ctaLabel}
         </LocaleLink>
       </section>
 
-      <section className="border-y border-line bg-karte">
+      <div className="border-y border-line bg-karte">
         <div className="mx-auto grid max-w-[90rem] lg:grid-cols-12">
           <Frame
             src={hub.heroImage}
@@ -51,18 +51,14 @@ export default function RegionenCollection({
             sizes="(max-width: 1024px) 100vw, 58vw"
           />
           <div className="flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 lg:px-12">
-            <p className="font-serif text-[24px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[30px]">
-              {hub.statement}
-            </p>
-            <p className="mt-5 font-sans text-[15px] leading-relaxed text-muted">
-              {hub.statementNote}
-            </p>
+            <p className="t-lead text-ink">{hub.statement}</p>
+            <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
           </div>
         </div>
-      </section>
+      </div>
 
       <section aria-labelledby="regionen-places" className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-        <h2 id="regionen-places" className="type-h2">
+        <h2 id="regionen-places" className="t-section text-ink">
           {hub.indexEyebrow}
         </h2>
         <ul className="mt-12 divide-y divide-line border-y border-line">
@@ -73,7 +69,7 @@ export default function RegionenCollection({
                 className="group grid items-center gap-6 py-8 lg:grid-cols-12 lg:py-10"
               >
                 <div className="lg:col-span-5">
-                  <h3 className="font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+                  <h3 className="t-feature text-ink">
                     {branch.title}
                   </h3>
                 </div>
@@ -96,7 +92,7 @@ export default function RegionenCollection({
       {extras && extras.length > 0 ? (
         <section className="border-b border-line bg-karte px-5 py-16 sm:px-8 lg:px-14">
           {extrasTitle ? (
-            <h2 className="font-serif text-[28px] font-medium tracking-[-0.03em] text-ink">{extrasTitle}</h2>
+            <h2 className="t-section text-ink">{extrasTitle}</h2>
           ) : null}
           <ul className="mt-8 columns-1 gap-x-12 sm:columns-2 lg:columns-3">
             {extras.map((item) => (
@@ -105,7 +101,7 @@ export default function RegionenCollection({
                   href={item.href}
                   className="flex items-baseline justify-between gap-4 py-3"
                 >
-                  <span className="font-serif text-[20px] font-medium text-ink">
+                  <span className="t-item text-ink">
                     {item.title}
                   </span>
                   <span aria-hidden className="text-gold">

@@ -7,6 +7,7 @@ import {
   applianceBrand,
 } from "@/lib/appliance-media";
 import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { QuoteLine } from "@/components/catalog/clusters/parts";
 import { cn } from "@/lib/utils";
 
 function BrandMark({
@@ -52,12 +53,12 @@ export default function GeraeteCollection({
         <div className="grid gap-10 lg:grid-cols-12">
           <h1
             id="geraete-hero"
-            className="font-serif text-[48px] leading-[0.9] font-medium tracking-[-0.045em] text-paper sm:text-[80px] lg:col-span-7 lg:text-[92px]"
+            className="t-display text-paper lg:col-span-7"
           >
             {hub.title}
           </h1>
           <div className="lg:col-span-5 lg:pt-4">
-            <p className="font-sans text-[17px] leading-relaxed font-light text-paper/75">
+            <p className="t-lede text-paper/75">
               {hub.lede}
             </p>
             <p className="mt-6 font-sans text-[14px] leading-relaxed text-paper/55">
@@ -82,7 +83,7 @@ export default function GeraeteCollection({
         className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-14"
         aria-labelledby="geraete-partners"
       >
-        <h2 id="geraete-partners" className="font-serif text-[22px] font-medium text-paper">
+        <h2 id="geraete-partners" className="t-item text-paper">
           {partners}
         </h2>
         <ul className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-6">
@@ -99,10 +100,7 @@ export default function GeraeteCollection({
         </ul>
       </section>
 
-      <section aria-labelledby="geraete-index">
-        <h2 id="geraete-index" className="sr-only">
-          {hub.indexEyebrow}
-        </h2>
+      <section aria-label={hub.indexEyebrow}>
         <ul>
           {hub.branches.map((branch) => {
             const sink = branch.href?.includes("spuelen");
@@ -112,13 +110,13 @@ export default function GeraeteCollection({
                   href={branch.href ?? "/beratung"}
                   className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-10"
                 >
-                  <p className="font-serif text-[28px] text-messing lg:col-span-1">
+                  <p className="t-feature text-messing lg:col-span-1">
                     {branch.kicker}
                   </p>
                   <div className="lg:col-span-4">
-                    <h3 className="font-serif text-[28px] leading-tight font-medium tracking-[-0.03em] text-paper md:text-[34px]">
+                    <h2 className="t-feature text-paper">
                       {branch.title}
-                    </h3>
+                    </h2>
                   </div>
                   <p className="font-sans text-[15px] leading-relaxed font-light text-paper/65 lg:col-span-3">
                     {branch.text}
@@ -138,14 +136,7 @@ export default function GeraeteCollection({
         </ul>
       </section>
 
-      {hub.quote ? (
-        <section className="border-t border-paper/12 px-5 py-16 text-center sm:px-8 lg:py-20">
-          <p className="mx-auto max-w-3xl font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
-            {hub.quote}
-          </p>
-          <p className="mt-5 font-sans text-[14px] text-paper/70">{hub.quoteSource}</p>
-        </section>
-      ) : null}
+      <QuoteLine quote={hub.quote} source={hub.quoteSource} tone="nacht" />
 
       <div className="bg-paper text-ink">
         <HubEnd hub={hub}>{children}</HubEnd>

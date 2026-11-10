@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
-import { Frame, HubEnd, type CollectionExtra } from "@/components/catalog/collections/parts";
+import { Frame, HubEnd, StatementBand, type CollectionExtra } from "@/components/catalog/collections/parts";
+import { QuoteLine } from "@/components/catalog/clusters/parts";
 
 export default function ProjekteCollection({
   hub,
@@ -22,11 +23,11 @@ export default function ProjekteCollection({
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <h1
             id="projekte-hero"
-            className="font-serif text-[48px] leading-[0.9] font-medium tracking-[-0.045em] text-ink sm:text-[76px] lg:col-span-7 lg:text-[88px]"
+            className="t-display text-ink lg:col-span-7"
           >
             {hub.title}
           </h1>
-          <p className="max-w-md font-sans text-[17px] leading-relaxed font-light text-muted lg:col-span-5">
+          <p className="t-lede max-w-md text-muted lg:col-span-5 lg:pb-5">
             {hub.lede}
           </p>
         </div>
@@ -50,7 +51,7 @@ export default function ProjekteCollection({
               <div className="lg:col-span-9">
                 <h2
                   id="projekte-lead"
-                  className="font-serif text-[36px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[48px]"
+                  className="t-section text-ink"
                 >
                   {lead.title}
                 </h2>
@@ -72,10 +73,7 @@ export default function ProjekteCollection({
       )}
 
       {rest.length > 0 ? (
-        <section aria-labelledby="projekte-files">
-          <h2 id="projekte-files" className="sr-only">
-            {hub.indexEyebrow}
-          </h2>
+        <section aria-label={hub.indexEyebrow}>
           <ul>
             {rest.map((branch) => (
               <li key={branch.title} className="border-b border-line">
@@ -92,9 +90,9 @@ export default function ProjekteCollection({
                   />
                   <div className="flex flex-col justify-center px-5 py-10 sm:px-8 lg:col-span-6 lg:px-14">
                     {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
-                    <h3 className="font-serif text-[30px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[36px]">
+                    <h2 className="t-feature text-ink">
                       {branch.title}
-                    </h3>
+                    </h2>
                     <p className="mt-4 max-w-md font-sans text-[15px] leading-relaxed text-muted">
                       {branch.text}
                     </p>
@@ -106,31 +104,15 @@ export default function ProjekteCollection({
         </section>
       ) : null}
 
-      <section className="grid lg:grid-cols-12">
-        <div className="flex flex-col justify-center bg-karte px-5 py-16 sm:px-8 lg:col-span-5 lg:px-14">
-          <p className="font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[32px]">
-            {hub.statement}
-          </p>
-          <p className="mt-6 max-w-sm font-sans text-[15px] leading-relaxed text-muted">
-            {hub.statementNote}
-          </p>
-        </div>
-        {hub.quote ? (
-          <blockquote className="flex flex-col justify-center bg-nacht px-5 py-16 sm:px-8 lg:col-span-7 lg:px-16">
-            <p className="font-serif text-[24px] leading-snug font-medium text-paper md:text-[30px]">
-              {hub.quote}
-            </p>
-            <footer className="mt-6 font-sans text-[14px] text-paper/70">{hub.quoteSource}</footer>
-          </blockquote>
-        ) : null}
-      </section>
+      <StatementBand statement={hub.statement} note={hub.statementNote} tone="karte" rule={false} />
+      <QuoteLine quote={hub.quote} source={hub.quoteSource} tone="nacht" />
 
       {extras && extras.length > 0 ? (
         <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="projekte-more">
           {extrasTitle ? (
             <h2
               id="projekte-more"
-              className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
+              className="t-section text-ink"
             >
               {extrasTitle}
             </h2>
@@ -147,9 +129,7 @@ export default function ProjekteCollection({
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
                   ) : null}
-                  <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">
-                    {item.title}
-                  </p>
+                  <h3 className="t-item mt-4 text-ink">{item.title}</h3>
                   {item.meta ? (
                     <p className="mt-2 font-sans text-[14px] text-muted">{item.meta}</p>
                   ) : null}

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
-import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
 import { SHOWROOM_SAMPLES } from "@/lib/house-photos";
 
 function areaId(branch: PresentedBranch, index: number) {
@@ -28,7 +28,7 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
         <div className={`flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20 ${flip ? "lg:order-1" : ""}`}>
           <h2
             id={`${id}-title`}
-            className="font-serif text-[40px] leading-[1] font-medium tracking-[-0.035em] text-ink md:text-[52px]"
+            className="t-section text-ink"
           >
             {branch.title}
           </h2>
@@ -44,7 +44,7 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
                       </span>
                     ) : null}
                     <span className="min-w-0 flex-1">
-                      <span className="block font-serif text-[21px] leading-tight text-ink">{item.title}</span>
+                      <span className="t-item block text-ink">{item.title}</span>
                       {item.text ? (
                         <span className="mt-1 block font-sans text-[14px] leading-snug text-muted">{item.text}</span>
                       ) : null}
@@ -88,12 +88,12 @@ export default function MaterialCollection({
         <div className="grid items-end gap-8 lg:grid-cols-12">
           <h1
             id="material-hero"
-            className="font-serif text-[64px] leading-[0.88] font-medium tracking-[-0.05em] text-ink sm:text-[104px] lg:col-span-7 lg:text-[136px]"
+            className="t-display text-ink lg:col-span-7"
           >
             {hub.title}
           </h1>
           <div className="lg:col-span-5 lg:pb-5">
-            <p className="max-w-md font-sans text-[18px] leading-relaxed text-muted">{hub.lede}</p>
+            <p className="t-lede max-w-md text-muted">{hub.lede}</p>
             <LocaleLink href={hub.ctaHref} className="btn-quiet mt-6 text-ink">
               {hub.ctaLabel}
             </LocaleLink>
@@ -117,7 +117,7 @@ export default function MaterialCollection({
               className={`border-line ${index % 2 === 1 ? "border-l" : ""} ${index >= 2 ? "border-t lg:border-t-0" : ""} ${index === 2 ? "lg:border-l" : ""}`}
             >
               <a href={`#${areaId(branch, index)}`} className="group flex h-full flex-col justify-between gap-6 px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-                <span className="font-serif text-[24px] leading-tight text-ink md:text-[28px]">{branch.title}</span>
+                <span className="t-item text-ink">{branch.title}</span>
                 <span className="flex items-center justify-between font-sans text-[14px] text-muted">
                   {branch.items?.length ? count(branch.items.length) : en ? "Overview" : "Überblick"}
                   <span aria-hidden="true" className="transition-colors group-hover:text-ink">↓</span>
@@ -128,16 +128,7 @@ export default function MaterialCollection({
         </ul>
       </nav>
 
-      <section className="px-5 py-20 sm:px-8 lg:px-14 lg:py-28">
-        <p className="mx-auto max-w-4xl text-center font-serif text-[28px] leading-snug font-medium tracking-[-0.025em] text-ink md:text-[40px]">
-          {hub.statement}
-        </p>
-        {hub.statementNote ? (
-          <p className="mx-auto mt-6 max-w-xl text-center font-sans text-[16px] leading-relaxed text-muted">
-            {hub.statementNote}
-          </p>
-        ) : null}
-      </section>
+      <StatementBand statement={hub.statement} note={hub.statementNote} rule={false} />
 
       {hub.branches.map((branch, index) => (
         <Area key={branch.title} branch={branch} index={index} en={en} />

@@ -20,7 +20,8 @@ import type { CollectionFact, HubCrumb, PresentedBranch } from "@/lib/collection
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
-import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { kitchenImageOf, kitchenPhotos, kitchenPool, placeCover, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { isCodeGallery } from "@/lib/project-photos";
 import { projectFeature } from "@/lib/project-features";
 import type { Locale } from "@/lib/i18n";
 import { cmsPageText } from "@/lib/page-text";
@@ -1886,12 +1887,15 @@ export function presentRegionItem(
 ): PresentedTopic {
   const parent = PARENT.regionen[locale];
   const voice = regionVoice(item.name, locale);
-  const photo = kitchenPhotos(
-    all.filter((project) => project.regions.some((region) => region.slug === item.slug)),
-    all,
-    (n, width) => devPhoto(204 + item.order + n, width),
-    item.slug,
-  );
+  const here = (project: Project) => project.regions.some((region) => region.slug === item.slug);
+  const own = projects.filter(here);
+  const photo = kitchenPhotos(all.filter(here), all, (n, width) => devPhoto(204 + item.order + n, width), item.slug);
+  // Most places have no kitchen tagged to them yet. Such a page still shows kitchens (four from
+  // the workshop, named as that) and opens on a kitchen, never on a wardrobe or bathroom photo.
+  const built = own.some((project) => !isCodeGallery(project.slug));
+  const pool = kitchenPool(all, item.slug);
+  const ownImage = kitchenImageOf(item);
+  const opener = built || ownImage ? undefined : pool[4];
   const siblings = regions
     .filter((entry) => entry.slug !== item.slug)
     .slice(0, 4)
@@ -1899,32 +1903,30 @@ export function presentRegionItem(
       href: `/regionen/${entry.slug}`,
       title: entry.name,
       text: entry.intro,
-      // A real kitchen in that place, else the region's own image.
-      image: resolveDevImage(
-        coverOf(all, (project) => project.regions.some((region) => region.slug === entry.slug)) ?? entry.image,
-        photo(70 + index, 1100),
-      ),
+      image: resolveDevImage(placeCover(entry, all), photo(70 + index, 1100)),
     }));
 
-  return assemble({
+  const page = assemble({
     locale,
     voice,
     lede: item.intro,
-    heroImage: cmsLarge(photo.hero(item.image, 3840), 3840),
+    heroImage: cmsLarge(
+      built ? photo(0, 3840) : resolveDevImage(ownImage ?? opener?.image, photo(0, 3840)),
+      3840,
+    ),
     heroAlt:
-      locale === "en" ? `Kitchens in ${item.name}` : `Küchen in ${item.name}`,
+      built
+        ? locale === "en"
+          ? `Kitchens in ${item.name}`
+          : `Küchen in ${item.name}`
+        : (ownImage ? item.imageAlt : opener?.title) || (locale === "en" ? "A kitchen by BEER" : "Eine Küche von BEER"),
     parentHref: parent.href,
     parentLabel: parent.label,
     photo,
     branches: pointBranches(voice, photo),
     siblings,
-    featured: projects.filter((project) => project.regions.some((region) => region.slug === item.slug)),
-    houses: housesFrom(
-      projects.filter((project) =>
-        project.regions.some((region) => region.slug === item.slug),
-      ),
-      photo,
-    ),
+    featured: own,
+    houses: housesFrom(own.length > 0 ? own : pool, photo),
     siblingEyebrow: locale === "en" ? "Further places" : "Weitere Orte",
     siblingTitle:
       locale === "en" ? "Other houses in the radius." : "Andere Häuser im Radius.",
@@ -1932,6 +1934,7 @@ export function presentRegionItem(
     lesetext: item.lesetext,
     cms: item,
   });
+  return own.length > 0 ? page : { ...page, housesElsewhere: true };
 }
 
 export function entryMetadata(

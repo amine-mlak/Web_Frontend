@@ -3,7 +3,14 @@ import CmsImage from "@/components/CmsImage";
 import { Crumbs } from "@/components/catalog/clusters/parts";
 import type { PresentedHub } from "@/lib/collection-present";
 
-export default function CollectionHero({ hub }: { hub: PresentedHub }) {
+export default function CollectionHero({
+  hub,
+  display = false,
+}: {
+  hub: PresentedHub;
+  /** A hub's own opener: the page name at the size every hub uses. */
+  display?: boolean;
+}) {
   return (
     <section
       data-site-hero=""
@@ -22,10 +29,14 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
       <div className="absolute inset-0 z-10 flex items-end px-5 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
         <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
         <div className="max-w-3xl text-paper">
-          <Crumbs hub={hub} />
+          <Crumbs hub={hub} tone="paper" />
           <h1
             id="collection-hero-heading"
-            className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px]"
+            className={
+              display
+                ? "t-display mt-4 text-paper"
+                : "mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px]"
+            }
           >
             {hub.title}
           </h1>
@@ -39,7 +50,7 @@ export default function CollectionHero({ hub }: { hub: PresentedHub }) {
               <span className="font-sans text-[14px] text-paper/80">{hub.hex}</span>
             </p>
           ) : null}
-          <p className="mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]">
+          <p className={display ? "t-lede mt-5 max-w-lg text-paper/90" : "mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]"}>
             {hub.lede}
           </p>
           <LocaleLink

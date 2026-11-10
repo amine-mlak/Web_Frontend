@@ -34,6 +34,8 @@ export type PresentedTopic = PresentedCluster & {
   taggedKitchens?: number;
   /** Every project tagged with this topic, newest first as loaded (colour pages list them all). */
   taggedHouses?: ClusterHouse[];
+  /** The houses are not from this place or topic: the page has none of its own and shows others from the workshop. */
+  housesElsewhere?: boolean;
   /** Kitchens shown one by one at the top of a colour page; the grid lists the rest. */
   features?: TopicFeature[];
 };

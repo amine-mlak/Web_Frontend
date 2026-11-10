@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
-import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
 
 export default function MoebelCollection({
   hub,
@@ -16,11 +16,11 @@ export default function MoebelCollection({
         <div className="flex flex-col justify-end px-5 py-16 sm:px-8 lg:col-span-5 lg:px-12 lg:py-24">
           <h1
             id="moebel-hero"
-            className="font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px]"
+            className="t-display text-ink"
           >
             {hub.title}
           </h1>
-          <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-muted">
+          <p className="t-lede mt-6 max-w-md text-muted">
             {hub.lede}
           </p>
           <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 w-fit text-ink">
@@ -37,17 +37,10 @@ export default function MoebelCollection({
         />
       </section>
 
-      <section className="border-y border-line bg-paper px-5 py-14 sm:px-8 lg:px-14">
-        <p className="max-w-3xl font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[34px]">
-          {hub.statement}
-        </p>
-      </section>
+      <StatementBand statement={hub.statement} note={hub.statementNote} />
 
-      <section aria-labelledby="moebel-lines">
-        <h2 id="moebel-lines" className="sr-only">
-          {hub.indexEyebrow}
-        </h2>
-        <ul>
+      <section aria-label={hub.indexEyebrow}>
+        <ul className="border-t border-line">
           {hub.branches.map((branch, index) => {
             const reverse = index % 2 === 1;
             return (
@@ -65,9 +58,9 @@ export default function MoebelCollection({
                 <div
                   className={`flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 lg:px-12 ${reverse ? "lg:order-1" : ""}`}
                 >
-                  <h3 className="font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink">
+                  <h2 className="t-section text-ink">
                     {branch.title}
-                  </h3>
+                  </h2>
                   <p className="mt-4 font-sans text-[16px] leading-relaxed text-muted">
                     {branch.text}
                   </p>

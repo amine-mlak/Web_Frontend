@@ -81,6 +81,7 @@ export default async function MaterialDetailPage({
       <CategoryPage
         hub={hub}
         faqTheme={MATERIAL_FAQ[slug]}
+        path={`/material/${slug}`}
       />
     );
   }

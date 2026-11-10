@@ -5,17 +5,28 @@ import type { Locale } from "@/lib/i18n";
 import type { ProjectFeatureData } from "@/lib/project-features";
 
 /** The words of one kitchen: place and year, name, its text, and the pages it connects to. */
-function FeatureText({ feature, locale, wide }: { feature: ProjectFeatureData; locale: Locale; wide?: boolean }) {
+function FeatureText({
+  feature,
+  locale,
+  wide,
+  level,
+}: {
+  feature: ProjectFeatureData;
+  locale: Locale;
+  wide?: boolean;
+  level: 2 | 3;
+}) {
   const en = locale === "en";
+  const Heading = level === 3 ? "h3" : "h2";
   return (
     <div className={wide ? "grid gap-6 lg:grid-cols-12 lg:gap-16" : ""}>
       <div className={wide ? "lg:col-span-5" : ""}>
         {feature.meta ? <p className="font-sans text-[14px] text-muted">{feature.meta}</p> : null}
-        <h2 className="mt-3 font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+        <Heading className={`${level === 3 ? "t-feature" : "t-section"} mt-3 text-ink`}>
           <LocaleLink href={feature.href} className="transition-opacity hover:opacity-70">
             {feature.title}
           </LocaleLink>
-        </h2>
+        </Heading>
       </div>
       <div className={wide ? "lg:col-span-6 lg:col-start-7" : ""}>
         {feature.intro ? (
@@ -46,8 +57,19 @@ function FeatureText({ feature, locale, wide }: { feature: ProjectFeatureData; l
  * One kitchen in this colour, like a page of an exposé. Four arrangements take turns, so each
  * kitchen looks different: photo and text side by side, text with a photo and a detail, a wide
  * photo with the text below, two photos with the text under them.
+ * `level` is the heading level of the kitchen's name: 3 where a section title stands above.
  */
-export default function ProjectFeature({ feature, variant, locale }: { feature: ProjectFeatureData; variant: number; locale: Locale }) {
+export default function ProjectFeature({
+  feature,
+  variant,
+  locale,
+  level = 2,
+}: {
+  feature: ProjectFeatureData;
+  variant: number;
+  locale: Locale;
+  level?: 2 | 3;
+}) {
   const photo = (className: string, sizes: string) => (
     <LocaleLink href={feature.href} className="group block" tabIndex={-1} aria-hidden="true">
       <Frame src={feature.image} srcSet={feature.srcSet} alt="" className={className} sizes={sizes} drift />
@@ -60,9 +82,9 @@ export default function ProjectFeature({ feature, variant, locale }: { feature: 
 
   if (variant === 1) {
     return (
-      <section className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+      <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
         <div className="order-2 lg:order-1 lg:col-span-5">
-          <FeatureText feature={feature} locale={locale} />
+          <FeatureText feature={feature} locale={locale} level={level} />
         </div>
         <div className="relative order-1 lg:order-2 lg:col-span-7 lg:pb-16">
           {photo("aspect-[4/3]", "(max-width: 1024px) 100vw, 58vw")}
@@ -72,39 +94,39 @@ export default function ProjectFeature({ feature, variant, locale }: { feature: 
             </div>
           ) : null}
         </div>
-      </section>
+      </article>
     );
   }
   if (variant === 2) {
     return (
-      <section className="py-14 lg:py-24">
+      <article className="py-14 lg:py-24">
         <div className="px-5 sm:px-8 lg:px-14">{photo("aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]", "100vw")}</div>
         <div className="mt-10 px-5 sm:px-8 lg:px-14">
-          <FeatureText feature={feature} locale={locale} wide />
+          <FeatureText feature={feature} locale={locale} level={level} wide />
         </div>
-      </section>
+      </article>
     );
   }
   if (variant === 3 && feature.detail) {
     return (
-      <section className="px-5 py-14 sm:px-8 lg:px-14 lg:py-24">
+      <article className="px-5 py-14 sm:px-8 lg:px-14 lg:py-24">
         <div className="grid gap-6 sm:grid-cols-2">
           {photo("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
           {detail("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
         </div>
         <div className="mx-auto mt-10 max-w-2xl">
-          <FeatureText feature={feature} locale={locale} />
+          <FeatureText feature={feature} locale={locale} level={level} />
         </div>
-      </section>
+      </article>
     );
   }
   return (
-    <section className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+    <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
       <div className="lg:col-span-7">{photo("aspect-[4/3]", "(max-width: 1024px) 100vw, 58vw")}</div>
       <div className="lg:col-span-5">
-        <FeatureText feature={feature} locale={locale} />
+        <FeatureText feature={feature} locale={locale} level={level} />
       </div>
-    </section>
+    </article>
   );
 }
 

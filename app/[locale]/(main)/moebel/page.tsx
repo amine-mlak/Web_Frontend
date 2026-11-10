@@ -55,7 +55,7 @@ export default async function MoebelPage() {
           <div className="border-b border-line bg-paper px-5 pt-16 pb-4 sm:px-8 lg:px-14 lg:pt-24">
             <h2
               id="moebel-houses"
-              className="max-w-3xl font-serif text-[32px] leading-tight font-medium tracking-[-0.03em] text-ink md:text-[44px]"
+              className="t-section max-w-3xl text-ink"
             >
               {en ? "The kitchen and the rest of the house from one workshop" : "Küche und Haus aus einer Werkstatt"}
             </h2>

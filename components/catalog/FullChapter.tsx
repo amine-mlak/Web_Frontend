@@ -62,9 +62,7 @@ export default function FullChapter({
           <Heading
             id={id}
             lang={lang}
-            className={`mt-3 flex items-center gap-4 font-serif leading-[0.98] font-medium tracking-[-0.035em] text-paper hyphens-auto ${
-              card ? "text-[32px] lg:text-[40px]" : "text-[40px] sm:text-[52px] lg:text-[64px]"
-            }`}
+            className={`mt-3 flex items-center gap-4 text-paper hyphens-auto ${card ? "t-section" : "t-title"}`}
           >
             {hex ? (
               <span

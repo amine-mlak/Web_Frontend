@@ -225,6 +225,7 @@ function mapRegion(entry: unknown): Region | null {
     intro: text(row, "intro"),
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
+    imageAlt: text(flattenEntity(row?.image), "alternativeText"),
     ...pageFields(row),
   };
 }

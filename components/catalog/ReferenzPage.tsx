@@ -164,7 +164,7 @@ export default function ReferenzPage({
     <main className="bg-paper">
       <article>
         <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
-          <Breadcrumbs items={[{ href: "/projekte", label: copy.projects }]} current={project.title} locale={locale} />
+          <Breadcrumbs items={[{ href: "/projekte", label: copy.projects }]} current={project.title} locale={locale} tone="ink" />
           <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
             <p className="type-eyebrow text-gold">{copy.eyebrow}</p>
             <p className="font-sans text-[11px] tracking-[0.22em] text-muted uppercase">
@@ -173,7 +173,7 @@ export default function ReferenzPage({
           </div>
           {opener ? null : (
             <>
-              <h1 className="mt-8 max-w-4xl font-serif text-[44px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px] lg:text-[80px]">
+              <h1 className="t-title mt-8 max-w-4xl text-ink">
                 {project.title}
               </h1>
               {meta ? (
@@ -261,7 +261,7 @@ export default function ReferenzPage({
                   <p
                     className={
                       item.lead
-                        ? "max-w-lg font-serif text-[28px] leading-[1.2] font-medium tracking-[-0.03em] text-ink md:text-[34px]"
+                        ? "t-lead max-w-lg text-ink"
                         : "max-w-md font-sans text-[17px] leading-[1.75] text-ink/80"
                     }
                   >
@@ -278,7 +278,7 @@ export default function ReferenzPage({
             {moreText.map((item) => (
               <p
                 key={item.text.slice(0, 48)}
-                className={item.lead ? "font-serif text-[28px] leading-[1.2] font-medium text-ink md:text-[34px]" : "type-body text-muted"}
+                className={item.lead ? "t-lead text-ink" : "type-body text-muted"}
               >
                 {item.text}
               </p>
@@ -317,7 +317,7 @@ export default function ReferenzPage({
         <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="referenz-others">
           <h2
             id="referenz-others"
-            className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
+            className="t-section text-ink"
           >
             {copy.others}
           </h2>
@@ -332,7 +332,7 @@ export default function ReferenzPage({
                     className="aspect-[4/5]"
                     sizes="(max-width: 1024px) 100vw, 33vw"
                   />
-                  <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">
+                  <p className="t-item mt-4 text-ink">
                     {item.title}
                   </p>
                   <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
@@ -359,7 +359,7 @@ export default function ReferenzPage({
           </figure>
         ) : null}
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:px-16 lg:py-24">
-          <h2 className="font-serif text-[36px] leading-[1.08] font-medium tracking-[-0.03em] text-paper md:text-[48px]">
+          <h2 className="t-section text-paper">
             {copy.close}
           </h2>
           <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80">

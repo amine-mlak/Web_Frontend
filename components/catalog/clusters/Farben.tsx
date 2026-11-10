@@ -59,7 +59,7 @@ function SwatchField({
                 style={{ backgroundColor: swatch.hex }}
               >
                 <span
-                  className={`block font-serif leading-none font-medium tracking-[-0.03em] ${tall ? "text-[32px]" : "text-[26px]"} ${
+                  className={`block leading-none ${tall ? "t-feature" : "t-item"} ${
                     light ? "text-ink" : "text-paper"
                   }`}
                 >
@@ -89,7 +89,7 @@ function HouseCard({ house }: { house: ClusterHouse }) {
           className="aspect-[4/3]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-        <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">{house.title}</p>
+        <p className="t-item mt-4 text-ink">{house.title}</p>
         {house.meta ? <p className="mt-1 font-sans text-[14px] text-muted">{house.meta}</p> : null}
       </LocaleLink>
     </li>
@@ -118,7 +118,7 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
       : `${hub.heroAlt} aus unseren Projekten`;
   return (
     <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="farben-projekte">
-      <h2 id="farben-projekte" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+      <h2 id="farben-projekte" className="t-section text-ink">
         {heading}
       </h2>
       <ul className={`mt-10 ${GRID}`}>
@@ -156,10 +156,10 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <section style={{ backgroundColor: hex }} aria-labelledby="farben-topic">
         <div className="grid items-end lg:grid-cols-12">
           <div className="px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
-            <Crumbs hub={hub} />
+            <Crumbs hub={hub} tone={light ? "ink" : "paper"} />
             <h1
               id="farben-topic"
-              className={`mt-10 font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] sm:text-[68px] ${
+              className={`t-title mt-10 ${
                 light ? "text-ink" : "text-paper"
               }`}
             >
@@ -167,9 +167,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
               {hub.emphasis ? ` ${hub.emphasis}` : ""}
             </h1>
             <p
-              className={`mt-5 max-w-md font-serif text-[22px] leading-snug ${
-                light ? "text-ink/75" : "text-paper/80"
-              }`}
+              className={`t-lede mt-5 max-w-md ${light ? "text-ink/75" : "text-paper/85"}`}
             >
               {/* The CMS intro first; the line in the code is only a fallback. */}
               {hub.lede || hub.toneLine}
@@ -192,7 +190,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
 
       <ColourProjects hub={hub} more={features.length > 0} />
       <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
-        <h2 id="farben-andere" className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
+        <h2 id="farben-andere" className="t-section text-ink">
           {hub.locale === "en" ? "Other colours" : "Andere Farben"}
         </h2>
       </section>
@@ -208,7 +206,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="farben-wissen">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
-            <h2 id="farben-wissen" className="font-serif text-[30px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[36px]">
+            <h2 id="farben-wissen" className="t-section text-ink">
               {hub.statement}
             </h2>
             {hub.statementNote ? (
@@ -219,7 +217,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
             <ul className="grid gap-8 sm:grid-cols-3 lg:col-span-7">
               {hub.branches.map((branch, index) => (
                 <li key={`${branch.title}-${index}`} className="border-t border-line pt-5">
-                  <h3 className="font-serif text-[24px] leading-tight font-medium text-ink">{branch.title}</h3>
+                  <h3 className="t-item text-ink">{branch.title}</h3>
                   <p className="mt-3 font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
                   {branch.points.length ? (
                     <ul className="mt-2 space-y-1 font-sans text-[15px] leading-relaxed text-ink/80">
@@ -238,7 +236,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24" aria-labelledby="farben-lesen">
           <h2
             id="farben-lesen"
-            className="font-serif text-[34px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[44px] lg:col-span-4"
+            className="t-section text-ink lg:col-span-4"
           >
             {hub.ueberschrift || hub.heroAlt}
           </h2>

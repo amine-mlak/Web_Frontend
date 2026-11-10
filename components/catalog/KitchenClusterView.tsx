@@ -18,5 +18,5 @@ export default function KitchenClusterView({
   page?: SitePage | null;
 }) {
   const hub = presentCluster(cluster.slug, locale, topics, projects, page);
-  return <ClusterPage hub={hub} />;
+  return <ClusterPage hub={hub} path={`/kuechen/${cluster.slug}`} />;
 }

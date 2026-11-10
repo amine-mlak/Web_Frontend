@@ -1,16 +1,13 @@
-import Accordion from "@/components/Accordion";
 import CmsImage from "@/components/CmsImage";
-import FaqJsonLd from "@/components/FaqJsonLd";
+import Questions from "@/components/catalog/Questions";
 import LocaleLink from "@/components/LocaleLink";
 import RichText from "@/components/RichText";
 import NextSteps from "@/components/catalog/NextSteps";
 import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import { articleHref, isPressArticle, type Article, type ArticleBlock } from "@/lib/catalog";
-import { filterFaqItems } from "@/lib/faq";
 import type { Locale } from "@/lib/i18n";
 import { absoluteAsset, absoluteUrl } from "@/lib/seo";
-import { fetchFaqHub } from "@/lib/strapi";
 
 /**
  * A Ratgeber or Presse article: where it sits, when it was written, how
@@ -27,8 +24,6 @@ const COPY = {
     allPress: "Alle Meldungen",
     minutes: (n: number) => `${n} Min. Lesezeit`,
     updated: "Aktualisiert",
-    faqEyebrow: "Häufige Fragen",
-    faqAll: "Alle Fragen zum Thema",
     topics: "Zum Thema",
     moreEyebrow: "Weiterlesen",
     moreGuide: "Mehr aus dem Ratgeber.",
@@ -44,8 +39,6 @@ const COPY = {
     allPress: "All news",
     minutes: (n: number) => `${n} min read`,
     updated: "Updated",
-    faqEyebrow: "Frequent questions",
-    faqAll: "All questions on this topic",
     topics: "On this topic",
     moreEyebrow: "Read on",
     moreGuide: "More from the guides.",
@@ -149,7 +142,7 @@ function formatDate(value: string | undefined, locale: Locale) {
   }).format(date);
 }
 
-export default async function ArticlePage({
+export default function ArticlePage({
   item,
   articles,
   locale,
@@ -165,14 +158,13 @@ export default async function ArticlePage({
   const category = item.category?.slug ?? "";
   const blocks = bodyBlocks(item);
   const minutes = readingMinutes(blocks, item.description);
+  // Older articles mark their sections with "###" only. Those are the page's sections, so they render as h2.
+  const flat = !blocks.some((block) => block.kind === "text" && /^#{1,2} /m.test(block.body));
   const published = formatDate(item.publishedAt, locale);
   const updated = formatDate(item.updatedAt, locale);
   const path = articleHref(item);
 
   const theme = FAQ_THEME[category];
-  const faq = theme ? await fetchFaqHub() : null;
-  const questions = faq ? filterFaqItems(faq.items, theme).slice(0, 4) : [];
-  const themeName = faq?.themes.find((entry) => entry.slug === theme)?.name;
   const topicLinks = TOPIC_LINKS[locale][category] ?? [];
 
   // Same kind (guide or news), same category first; a lone news item points to the guides.
@@ -218,9 +210,10 @@ export default async function ArticlePage({
             items={[{ href: hubHref, label: press ? copy.press : copy.guide }]}
             current={item.title}
             locale={locale}
+            tone="ink"
           />
           <p className="type-eyebrow mt-10 text-gold">{item.category?.name || (press ? copy.press : copy.guide)}</p>
-          <h1 className="mt-4 font-serif text-[40px] leading-[1.02] font-medium tracking-[-0.035em] text-ink sm:text-[56px] lg:text-[64px]">
+          <h1 className="t-title mt-4 text-ink">
             {item.title}
           </h1>
           {item.description ? <p className="type-intro mt-6 max-w-2xl">{item.description}</p> : null}
@@ -260,12 +253,12 @@ export default async function ArticlePage({
           <div className="space-y-10">
             {blocks.map((block, index) => {
               if (block.kind === "text") {
-                return <RichText key={index} source={block.body} />;
+                return <RichText key={index} source={block.body} flat={flat} />;
               }
               if (block.kind === "quote") {
                 return (
                   <figure key={index} className="border-l-2 border-messing py-2 pl-6">
-                    <blockquote className="font-serif text-[24px] leading-snug text-ink italic md:text-[28px]">{block.body}</blockquote>
+                    <blockquote className="t-lead text-ink">{block.body}</blockquote>
                     {block.by ? <figcaption className="mt-3 font-sans text-[13px] text-muted">{block.by}</figcaption> : null}
                   </figure>
                 );
@@ -302,25 +295,7 @@ export default async function ArticlePage({
         </div>
       </article>
 
-      {questions.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="article-faq">
-          <FaqJsonLd items={questions} />
-          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <p className="type-eyebrow text-gold">{copy.faqEyebrow}</p>
-              <h2 id="article-faq" className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[38px]">
-                {themeName ?? item.category?.name}
-              </h2>
-              <LocaleLink href={`/faq/${theme}`} className="mt-6 inline-flex min-h-6 items-center gap-2 font-sans text-[14px] text-ink underline underline-offset-4">
-                {copy.faqAll} <span aria-hidden="true">→</span>
-              </LocaleLink>
-            </div>
-            <div className="lg:col-span-8">
-              <Accordion items={questions.map((entry) => ({ slug: entry.slug, question: entry.question, answer: entry.answer }))} />
-            </div>
-          </div>
-        </section>
-      ) : null}
+      <Questions theme={theme} title={item.category?.name} locale={locale} limit={4} narrow />
 
       {related.length > 0 ? (
         <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="article-more">
@@ -328,7 +303,7 @@ export default async function ArticlePage({
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="type-eyebrow text-gold">{copy.moreEyebrow}</p>
-                <h2 id="article-more" className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[40px]">
+                <h2 id="article-more" className="t-section mt-3 text-ink">
                   {moreIsPress ? copy.morePress : copy.moreGuide}
                 </h2>
               </div>
@@ -348,7 +323,7 @@ export default async function ArticlePage({
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     {other.category?.name ? <p className="type-eyebrow mt-5 text-muted">{other.category.name}</p> : null}
-                    <h3 className="mt-2 font-serif text-[24px] leading-snug font-medium text-ink">{other.title}</h3>
+                    <h3 className="t-item mt-2 text-ink">{other.title}</h3>
                     {other.description ? (
                       <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">{other.description}</p>
                     ) : null}
@@ -362,7 +337,7 @@ export default async function ArticlePage({
 
       <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-14 lg:py-24">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-serif text-[34px] leading-tight font-medium md:text-[46px]">{copy.bandTitle}</h2>
+          <h2 className="t-section">{copy.bandTitle}</h2>
           <p className="mx-auto mt-5 max-w-xl font-sans text-[16px] leading-relaxed font-light text-paper/80">{copy.bandText}</p>
           <NextSteps locale={locale} tone="dark" className="mt-8 justify-center" />
         </div>
