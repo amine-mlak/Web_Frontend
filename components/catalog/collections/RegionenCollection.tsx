@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
+import TopicReading from "@/components/catalog/clusters/TopicReading";
 import type { PresentedHub } from "@/lib/collection-present";
+import { regionHubReading } from "@/lib/page-reading";
 import { Frame, HubEnd, type CollectionExtra } from "@/components/catalog/collections/parts";
 
 export default function RegionenCollection({
@@ -15,7 +17,7 @@ export default function RegionenCollection({
   children?: ReactNode;
 }) {
   // The one number on this page that is a fact, said once in a sentence.
-  const radius =
+  const area =
     hub.locale === "en"
       ? "We plan and fit kitchens within about 200 kilometres of Munich."
       : "Wir planen und montieren Küchen im Umkreis von etwa 200 Kilometern um München.";
@@ -35,7 +37,7 @@ export default function RegionenCollection({
         <p className="t-lede mx-auto mt-8 max-w-lg text-muted">
           {hub.lede}
         </p>
-        <p className="t-lede mx-auto mt-4 max-w-lg text-ink">{radius}</p>
+        <p className="t-lede mx-auto mt-4 max-w-lg text-ink">{area}</p>
         <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 text-ink">
           {hub.ctaLabel}
         </LocaleLink>
@@ -113,6 +115,8 @@ export default function RegionenCollection({
           </ul>
         </section>
       ) : null}
+
+      <TopicReading locale={hub.locale} copy={regionHubReading(hub.locale)} />
 
       <HubEnd hub={hub}>{children}</HubEnd>
     </main>

@@ -307,7 +307,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     eyebrow: "Einzugsgebiet",
     title: "Regionen",
     emphasis: "um München.",
-    lede: "Ausstellung in Wolfersdorf bei Freising. Aufmaß und Montage bei Ihnen — im Radius, den die Manufaktur ehrlich bedienen kann.",
+    lede: "Ausstellung in Wolfersdorf bei Freising. Aufmaß und Montage machen wir bei Ihnen zu Hause.",
     statement:
       "Eine Küche dieser Art fährt nicht durch die Republik. Sie entsteht hier und wird gesetzt, wo der Weg zur Werkstatt und zum Service noch Sinn hat.",
     statementNote: "Ob wir auch zu Ihnen kommen, klären wir im ersten Gespräch.",
@@ -321,7 +321,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     ctaHref: "/beratung",
     closeTitle: "Zuerst Wolfersdorf.",
     closeText:
-      "Muster, Materialien, ein Gespräch ohne Zeichnung. Danach fahren wir zu Ihnen — wenn der Radius passt.",
+      "Muster, Materialien, ein Gespräch ohne Zeichnung. Danach kommen wir zum Aufmaß zu Ihnen.",
     branches: [
       {
         href: "/regionen/muenchen",
@@ -522,7 +522,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
       },
       {
         href: "/regionen",
-        title: "Radius",
+        title: "Regionen",
         text: "Ausstellung Wolfersdorf. Montage im Umland Münchens. Weiter fort nur, wenn der Weg zur Manufaktur noch trägt.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Einzugsgebiet",
@@ -782,7 +782,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     eyebrow: "Catchment",
     title: "Regions",
     emphasis: "around Munich.",
-    lede: "Showroom in Wolfersdorf near Freising. Survey and fitting at your house — in a radius the workshop can honestly serve.",
+    lede: "Showroom in Wolfersdorf near Freising. We measure and fit at your home.",
     statement:
       "A kitchen of this kind does not tour the country. It is made here and set where the road back to the workshop and to service still makes sense.",
     statementNote: "Whether we can come to you as well, we settle in the first conversation.",
@@ -796,7 +796,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     ctaHref: "/beratung",
     closeTitle: "Wolfersdorf first.",
     closeText:
-      "Samples, materials, a conversation without a drawing. After that we come to you — if the radius fits.",
+      "Samples, materials, a conversation without a drawing. After that we come to you to measure.",
     branches: [
       {
         href: "/regionen/muenchen",
@@ -997,7 +997,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
       },
       {
         href: "/regionen",
-        title: "Radius",
+        title: "Regions",
         text: "Showroom Wolfersdorf. Fitting in the Munich hinterland. Further only if the road back to the workshop still holds.",
         image: "/kitchens/stile-modern.jpg",
         alt: "Catchment",

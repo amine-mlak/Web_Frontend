@@ -5,6 +5,7 @@ import { cmsValue, findBySlug, projectsForBrand } from "@/lib/catalog";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
+import { isSeededDescription, isSeededTitle, pageReading, pageTitle } from "@/lib/page-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -26,8 +27,13 @@ export async function generateMetadata({
   }
   const reading = entryReading(brand.name, brand.intro, locale);
   return entryMetadata(
-    cmsValue(locale, brand, brand.seoTitle) || reading.title,
-    cmsValue(locale, brand, brand.seoDescription) || reading.description,
+    isSeededTitle(cmsValue(locale, brand, brand.seoTitle))
+      ? pageTitle("marken", brand.slug, locale, brand.name) || reading.title
+      : cmsValue(locale, brand, brand.seoTitle),
+    // A description written in the CMS wins; the seeded one gives way to the page's own text.
+    isSeededDescription(cmsValue(locale, brand, brand.seoDescription))
+      ? pageReading("marken", brand.slug, locale)?.description || reading.description
+      : cmsValue(locale, brand, brand.seoDescription),
     `/marken/${brand.slug}`,
     brand.image,
   );

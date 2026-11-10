@@ -113,7 +113,7 @@ const POINTS_DE: Record<string, string[]> = {
   Werkstatt: ["Jedes Element als Einzelstück", "Aufmaß, Fertigung, Montage", "Eine Verantwortung"],
   "Wenige Aufträge": ["Kapazität ist Qualität", "Keine Serie nebenan", "Zeit in der Manufaktur"],
   "Häuser, nicht Hallen": ["Was wir zeigen, steht", "Ort, Jahr, Stein, Gerät", "Kein Showraum aus der Halle"],
-  Radius: ["Wolfersdorf als Mitte", "Umland Münchens", "Weiteres ehrlich klären"],
+  Regionen: ["Ausstellung in Wolfersdorf", "München und Umland", "Bis etwa 200 Kilometer"],
 };
 
 const POINTS_EN: Record<string, string[]> = {
@@ -197,7 +197,7 @@ const FACTS: Record<Locale, Record<CollectionHubId | "default", CollectionFact[]
     regionen: [
       { value: "Wolfersdorf", label: "Ausstellung" },
       { value: "München", label: "Aufmaß in der Stadt" },
-      { value: "200 km", label: "ehrlicher Radius" },
+      { value: "200 km", label: "um München" },
       { value: "Wir", label: "montieren selbst" },
     ],
     marken: [
@@ -265,7 +265,7 @@ const FACTS: Record<Locale, Record<CollectionHubId | "default", CollectionFact[]
     regionen: [
       { value: "Wolfersdorf", label: "showroom" },
       { value: "Munich", label: "survey in the city" },
-      { value: "200 km", label: "honest radius" },
+      { value: "200 km", label: "around Munich" },
       { value: "Us", label: "fitting ourselves" },
     ],
     marken: [
@@ -302,7 +302,7 @@ const LOOK_CAPTION: Record<Locale, Partial<Record<CollectionHubId, string[]>> & 
     geraete: ["Platte, Abzug", "Ofen, Griffhöhe", "Nische zuerst", "Vollintegriert", "Kabel im Aufmaß", "Blick ohne Esse"],
     moebel: ["Holz derselben Werkstatt", "Nische, Füllung", "Kante der Küche", "Länge nach dem Raum", "Kein Katalog", "Einbau, nicht Wand"],
     projekte: ["Ort, genannt", "Jahr, gebaut", "Stein und Gerät", "Kein Hallenlook", "Wege gezeichnet", "Haus, nicht Pose"],
-    regionen: ["Wolfersdorf", "München, Aufmaß", "Freising, nah", "Erding, Bestand", "Landkreis, Weg", "Radius, ehrlich"],
+    regionen: ["Wolfersdorf", "München, Aufmaß", "Freising, nah", "Erding, Bestand", "Landkreis, Weg", "Umland, Montage"],
   },
   en: {
     default: ["Oak, oiled", "Stone, one-off", "Front, matt", "Edge, measure", "Handle, quiet", "Light from the house"],
@@ -310,7 +310,7 @@ const LOOK_CAPTION: Record<Locale, Partial<Record<CollectionHubId, string[]>> & 
     geraete: ["Top, downdraft", "Oven, hand height", "Niche first", "Fully integrated", "Cable in the survey", "View without a hood"],
     moebel: ["Wood from the same shop", "Niche, fill", "Kitchen edge", "Length from the room", "No catalogue", "Built-in, not a wall"],
     projekte: ["Place, named", "Year, built", "Stone and kit", "No hall look", "Paths drawn", "House, not a pose"],
-    regionen: ["Wolfersdorf", "Munich, survey", "Freising, near", "Erding, existing", "The district", "Radius, honest"],
+    regionen: ["Wolfersdorf", "Munich, survey", "Freising, near", "Erding, existing", "The district", "Region, fitting"],
   },
 };
 

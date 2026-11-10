@@ -1,12 +1,15 @@
 import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import Questions from "@/components/catalog/Questions";
-import { PointsSection, QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
+import { QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import type { PresentedTopic } from "@/lib/collection-topics";
 
-/** A place: the name, the distance and the facts, the kitchens built there, the points. */
+/**
+ * A place: the name, one photo, the text on how BEER works there, kitchens, questions.
+ * A place with kitchens of its own shows them before the text.
+ */
 export default function PlacePage({ hub }: { hub: PresentedTopic }) {
   const en = hub.locale === "en";
   // A place without a kitchen tagged to it shows kitchens from the workshop, and says so.
@@ -18,6 +21,7 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
       ? "Kitchens built here"
       : "Küchen, die hier stehen";
   const more = hub.housesElsewhere ? { href: "/projekte", label: en ? "All projects" : "Alle Projekte" } : undefined;
+  const showcase = <KitchenShowcase hub={hub} title={houses} more={more} />;
 
   return (
     <main className="bg-paper">
@@ -51,14 +55,9 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
         </figure>
       ) : null}
 
-      <KitchenShowcase hub={hub} title={houses} more={more} />
-      <PointsSection hub={hub} className="border-t border-line" />
-
-      <TopicReading
-        locale={hub.locale}
-        cms={hub}
-        // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
-      />
+      {hub.housesElsewhere ? null : showcase}
+      <TopicReading locale={hub.locale} cms={hub} copy={hub.reading} self={hub.placeHref} />
+      {hub.housesElsewhere ? showcase : null}
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <Questions theme="regionen" title={hub.title} locale={hub.locale} limit={4} />
 

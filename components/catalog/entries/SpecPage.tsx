@@ -72,13 +72,9 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
 
       <PointsSection hub={hub} />
       {story.pair ? <PhotoPair pair={story.pair} locale={hub.locale} flip /> : null}
+      <TopicReading locale={hub.locale} cms={hub} copy={hub.reading} />
       <KitchenShowcase hub={hub} title={houses} />
       {story.band ? <CloseBand photo={story.band} locale={hub.locale} /> : null}
-      <TopicReading
-        locale={hub.locale}
-        cms={hub}
-        // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
-      />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <SoftClose hub={hub} tiles={hub.siblings} tilesTitle={hub.siblingEyebrow} />
     </main>

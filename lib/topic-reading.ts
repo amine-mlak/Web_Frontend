@@ -23,7 +23,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Die L-Form nutzt zwei Wände und lässt den Raum offen. In Wohnküchen um München ist sie oft ruhiger als eine U-Form, die den Tisch verdrängt. Die Ecke ist die Aufgabe: ein Auszug, den man erreicht, keine tote Drehfläche.",
       "Wege, Licht und die Höhe der Platte stehen vor der Front. Wir mustern das in Wolfersdorf und messen im Haus, ob die zweite Wand ein Fenster hat, eine Tür oder eine Schräge. Der Neubau in Erding und der Altbau in Freising brauchen dieselbe Ehrlichkeit.",
-      "Die Fertigung bleibt in einer Werkstatt. Montage durch uns, von München bis Augsburg, wenn der Radius trägt. Eine Insel kommt nur dazu, wenn um die L-Form noch Wege frei sind.",
+      "Die Fertigung bleibt in einer Werkstatt. Montage durch uns, von München bis Augsburg. Eine Insel kommt nur dazu, wenn um die L-Form noch Wege frei sind.",
     ],
   },
   "u-form": {
@@ -67,7 +67,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Vier Meter, eine Nische, ein Fenster. In kleinen Wohnungen in München verliert eine Standardzeile die Ecken. Die Höhe ist der Stauraum, den die Tiefe nicht hergibt. Jeder Auszug ist eine Entscheidung, kein Füllstück.",
       "Wir messen, bevor wir anbieten. Die Fensterbrüstung, die schiefe Wand, der Anschluss, der nicht dort sitzt, wo der Katalog ihn will. Das gilt in Freising wie in Dachau und in der Innenstadt.",
-      "Gebaut wird in der Werkstatt in Wolfersdorf. Dieselbe Manufaktur, die eine große Wohnküche fertigt, fertigt die kleine Zeile. Montage durch uns, im Radius um München.",
+      "Gebaut wird in der Werkstatt in Wolfersdorf. Dieselbe Manufaktur, die eine große Wohnküche fertigt, fertigt die kleine Zeile. Montage durch uns, in München und im Umland.",
     ],
   },
   weiss: {
@@ -100,7 +100,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Nicht jedes Grün ist Salbei. Der Ton liegt zwischen Landhaus und Moderne und kippt mit Putz, Boden und Licht. Wir mustern ihn an der Wand, in der Ausstellung in Wolfersdorf, bevor die Front feststeht. Lack trägt die Farbe. Folie macht sie billig.",
       "Der Stein daneben hält den Ton ruhig. In Altbauten in Freising mit hohen Fenstern ist das eine andere Aufgabe als in einem Neubau in Erding. Das Aufmaß nimmt die schiefe Wand und die alten Anschlüsse mit.",
-      "Gebaut wird in Wolfersdorf. Montiert in München, Freising, Dachau und Pfaffenhofen, von uns, im ehrlichen Radius um München.",
+      "Gebaut wird in Wolfersdorf. Montiert in München, Freising, Dachau und Pfaffenhofen, von unseren eigenen Monteuren.",
     ],
   },
   grau: {
@@ -122,7 +122,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Eine Kochinsel trägt Herd und oft den Abzug in der Mitte des Raums. Sie braucht Wege rundherum und die Technik unter der Platte: Kabel, Kanal, Wasser, wenn die Spüle mit auf der Insel sitzt. In offenen Wohnküchen in München ist das die Zeichnung, nicht ein Möbelstück aus dem Katalog.",
       "Fehlt der Weg oder der Anschluss, bleibt die Insel ungezeichnet. Wir sagen das im Aufmaß, im Haus in Freising oder Erding, bevor Stein bestellt wird. Der Abzug in der Platte ändert den Unterschrank. Das planen wir mit, nicht nachträglich.",
-      "Gemustert wird in Wolfersdorf bei Freising. Gefertigt dort, montiert von uns im Radius um München.",
+      "Gemustert wird in Wolfersdorf bei Freising. Gefertigt dort, montiert von uns in München und der Region.",
     ],
   },
   arbeitsinsel: {
@@ -155,7 +155,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Eine grifflose Front ist ruhig, solange die Öffnung ehrlich ist. Schwere Auszüge wollen oft eine Mulde. Tipp-on trägt, wo das Gewicht es erlaubt. Ein Griff, der später dazukommt, bricht die Fläche. Das fassen wir in Wolfersdorf an, bevor die Front bestellt wird.",
       "Fingerabdrücke zeigen sich auf dunklen und auf glänzenden Flächen schneller. Matt und eine durchdachte Öffnung halten den Alltag. In Wohnungen in München ist das so wahr wie in einem Haus in Pfaffenhofen.",
-      "Aufmaß vor Ort, Fertigung in der Werkstatt bei Freising, Montage durch uns. Der Radius bleibt etwa zweihundert Kilometer um München.",
+      "Aufmaß vor Ort, Fertigung in der Werkstatt bei Freising, Montage durch uns. Wir arbeiten im Umkreis von etwa zweihundert Kilometern um München.",
     ],
   },
   "nach-mass": {
@@ -177,7 +177,7 @@ const DE: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Raumhoch nimmt die Decke mit und lässt keine Staubkante. Die oberen Fächer müssen erreichbar bleiben, sonst ist es eine Blende. In Altbauten mit hoher Decke in München und Freising zeichnen wir, was man täglich öffnet und was nur Vorrat ist.",
       "Die Fuge zur Decke, die Schräge, der Balken: das Raster endet dort. Wir messen die echte Höhe, nicht die Kataloghöhe. Die Front kommt nach der Füllung.",
-      "Besprochen in der Ausstellung in Wolfersdorf bei Freising. Gebaut in der Werkstatt dort. Montiert von uns im Radius um München, einschließlich Erding, Dachau und Pfaffenhofen.",
+      "Besprochen in der Ausstellung in Wolfersdorf bei Freising. Gebaut in der Werkstatt dort. Montiert von uns in und um München, auch in Erding, Dachau und Pfaffenhofen.",
     ],
   },
 };
@@ -202,7 +202,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "The L uses two walls and leaves the room open. In living kitchens around Munich it is often calmer than a U that pushes out the table. The corner is the task: a drawer you can reach, not a dead carousel.",
       "Paths, light and the height of the top come before the front. We sample in Wolfersdorf and measure in the house, whether the second wall has a window, a door or a slope.",
-      "Making stays in one workshop. Fitting by us, from Munich to Augsburg, when the radius carries. An island is added only if paths around the L are still free.",
+      "Making stays in one workshop. Fitting by us, from Munich to Augsburg. An island is added only if paths around the L are still free.",
     ],
   },
   "u-form": {
@@ -246,7 +246,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Four metres, a niche, a window. In small Munich apartments a standard run loses the corners. Height is the storage depth will not give. Every drawer is a decision, not a filler.",
       "We measure before we offer. The window sill, the uneven wall, the service that is not where a catalogue wants it. That is true in Freising, Dachau and the city.",
-      "Built in the workshop at Wolfersdorf. The same workshop that makes a large living kitchen makes the small run. Fitted by us, in the radius around Munich.",
+      "Built in the workshop at Wolfersdorf. The same workshop that makes a large living kitchen makes the small run. Fitted by us, in Munich and the surrounding area.",
     ],
   },
   weiss: {
@@ -279,7 +279,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Not every green is sage. The tone sits between country and modern and shifts with plaster, floor and light. We sample it on the wall, in the Wolfersdorf showroom, before the front is fixed. Lacquer carries the colour. Foil makes it cheap.",
       "The stone beside it keeps the tone quiet. In older houses in Freising with tall windows that is a different task from a new build in Erding. The survey takes the uneven wall and the old services with it.",
-      "Built in Wolfersdorf. Fitted in Munich, Freising, Dachau and Pfaffenhofen, by us, in an honest radius around Munich.",
+      "Built in Wolfersdorf. Fitted in Munich, Freising, Dachau and Pfaffenhofen, by our own fitters.",
     ],
   },
   grau: {
@@ -301,7 +301,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "A cooking island carries the hob and often the extraction in the middle of the room. It needs paths around it and the services under the top. In open living kitchens in Munich that is the drawing, not a catalogue piece.",
       "If the path or the service is missing, the island stays undrawn. We say so at the survey, in the house in Freising or Erding, before stone is ordered. Extraction in the top changes the cupboard. We plan that in, not afterwards.",
-      "Sampled in Wolfersdorf near Freising. Made there, fitted by us in the radius around Munich.",
+      "Sampled in Wolfersdorf near Freising. Made there, fitted by us in Munich and the region.",
     ],
   },
   arbeitsinsel: {
@@ -334,7 +334,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "A handleless front stays calm as long as the opening is honest. Heavy drawers often want a finger pull. Tip-on carries where the weight allows it. A handle added later breaks the face. We try that in Wolfersdorf before the front is ordered.",
       "Fingerprints show sooner on dark and glossy faces. Matt and a considered opening hold the day. That is as true in a Munich apartment as in a house in Pfaffenhofen.",
-      "Survey on site, making in the workshop near Freising, fitting by us. The radius stays about two hundred kilometres around Munich.",
+      "Survey on site, making in the workshop near Freising, fitting by us. We work within about two hundred kilometres of Munich.",
     ],
   },
   "nach-mass": {
@@ -356,7 +356,7 @@ const EN: Record<string, TopicReadingCopy> = {
     paragraphs: [
       "Full height takes the ceiling with it and leaves no dust shelf. The upper cabinets have to stay reachable, or it is only a panel. In older houses with a tall ceiling in Munich and Freising we draw what you open every day and what is only store.",
       "The joint to the ceiling, the slope, the beam: the grid ends there. We measure the real height, not the catalogue height. The front comes after the fill.",
-      "Discussed in the showroom at Wolfersdorf near Freising. Built in the workshop there. Fitted by us in the radius around Munich, including Erding, Dachau and Pfaffenhofen.",
+      "Discussed in the showroom at Wolfersdorf near Freising. Built in the workshop there. Fitted by us in and around Munich, including Erding, Dachau and Pfaffenhofen.",
     ],
   },
   outdoor: {
