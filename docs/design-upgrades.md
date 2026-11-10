@@ -162,18 +162,18 @@ are published.
 ## Phase 4: sections from existing photos (C7, C8, C2, C4, C9, D2, D3, A5)
 
 C2 and C8 for the collection pages went out with the collections grammar (table above). The project
-pages follow here. Built 10 Nov on branch `design/phase-4-projects`, merged into local `main` (`4a8636a`).
-Not pushed and not on staging yet: the push and the deploy wait for Amine's yes.
+pages follow here. Built 10 Nov on branch `design/phase-4-projects`, merged into `main` (`4a8636a`).
+On staging since 10 Nov (deploy of `014a9a7`).
 Before and after: `docs/design-reference/projects-before-after.html`.
 
 | ID | What | Status | Files | Check on |
 |---|---|---|---|---|
-| D3 | Project list as an archive: a wide photo beside a tall one, then three in a row, ten houses per turn. Four filter rows (style, colour, layout, detail) with the number of houses behind each; one filter at a time. 20 houses at first, a button adds 20. The filter and the place in the list are kept for the tab, so coming back from a house lands where the visitor left. All houses stay in the page as links. Under each house: the place when it is a real one, then two or three words on what the kitchen is ("Raum München" is left out) | built | `lib/project-archive.ts`, `components/catalog/ProjectArchive.tsx`, `app/[locale]/(main)/projekte/page.tsx` | /projekte |
-| C2 | Project pages: photo and text pairs change their split (7/5, 8/4), upright photos stand upright with air around them. The rest of the gallery is laid out from the photos' own shapes | built | `components/catalog/ReferenzPage.tsx` | /projekte/greige-u-form-holzdecke, /projekte/kobaltblau-eichennische |
-| – | Photo viewer (not in the SieMatic list): a click on any photo of a house opens it on a dark full screen with caption, counter and arrows. Arrow keys, swipe, Escape. Browser dialog, no library; the two neighbours load ahead | built | `components/catalog/PhotoViewer.tsx`, `components/catalog/Frame.tsx` (moved out of `collections/parts.tsx`), `TriptychHero.tsx` | any project page |
+| D3 | Project list as an archive: a wide photo beside a tall one, then three in a row, ten houses per turn. Four filter rows (style, colour, layout, detail) with the number of houses behind each; one filter at a time. 20 houses at first, a button adds 20. The filter and the place in the list are kept for the tab, so coming back from a house lands where the visitor left. All houses stay in the page as links. Under each house: the place when it is a real one, then two or three words on what the kitchen is ("Raum München" is left out) | on staging | `lib/project-archive.ts`, `components/catalog/ProjectArchive.tsx`, `app/[locale]/(main)/projekte/page.tsx` | /projekte |
+| C2 | Project pages: photo and text pairs change their split (7/5, 8/4), upright photos stand upright with air around them. The rest of the gallery is laid out from the photos' own shapes | on staging | `components/catalog/ReferenzPage.tsx` | /projekte/greige-u-form-holzdecke, /projekte/kobaltblau-eichennische |
+| – | Photo viewer (not in the SieMatic list): a click on any photo of a house opens it on a dark full screen with caption, counter and arrows. Arrow keys, swipe, Escape. Browser dialog, no library; the two neighbours load ahead | on staging | `components/catalog/PhotoViewer.tsx`, `components/catalog/Frame.tsx` (moved out of `collections/parts.tsx`), `TriptychHero.tsx` | any project page |
 | A5 | Pinned wipe on project pages | dropped: Amine found the photo wipe cheap; motion stays rare | | |
 | D2 | Slider for "Ähnliche Häuser", HomeProjects, Presse | not built: three cards fit side by side; a slider adds nothing there | | |
-| C7 | Floor-plan line drawings for the six kitchen forms: on the chapters of /kuechen/formen, in the header of each form page, and as the "Weitere Küchenformen" cards | built (collections polish, below) | `components/catalog/shapes/PlanDrawing.tsx`, `clusters/ClusterPage.tsx`, `clusters/Formen.tsx` | /kuechen/formen, /kuechen/formen/u-form |
+| C7 | Floor-plan line drawings for the six kitchen forms: on the chapters of /kuechen/formen, in the header of each form page, and as the "Weitere Küchenformen" cards | on staging (collections polish, below) | `components/catalog/shapes/PlanDrawing.tsx`, `clusters/ClusterPage.tsx`, `clusters/Formen.tsx` | /kuechen/formen, /kuechen/formen/u-form |
 | C4 | "Das Material in dieser Küche" card on project pages | planned; needs projects tagged with materials in the CMS | | |
 | C9 | Calm photo between grid and text on topic pages | planned | | |
 
@@ -181,7 +181,7 @@ Before and after: `docs/design-reference/projects-before-after.html`.
 "Raum München" on 70 and empty on 16, so only 9 houses can show a place. With real places the archive
 could get a filter row by region.
 
-## Collections polish: hubs and their sub-pages (built 10 Nov, branch `design/collections-polish`, not merged)
+## Collections polish: hubs and their sub-pages (on staging since 10 Nov, merge `014a9a7`)
 
 A pass over every collection hub (Küchen with its five groups, Material, Geräte, Marken, Regionen, Möbel)
 and the pages under them. Before and after: `docs/design-reference/collections-polish-before-after.html`.
