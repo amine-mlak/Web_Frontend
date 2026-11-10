@@ -233,6 +233,111 @@ body {
     }
   }
 
+  /* Collection pages: one type scale for every hub, overview and single page.
+     These set face, size, line height and spacing only; the colour stays with the element.
+       t-display  the h1 of a hub or a world overview
+       t-title    the h1 of a single page
+       t-section  an h2 that opens a section
+       t-feature  a large row or card title
+       t-item     a small card or list title
+       t-lead     a statement in the reading flow. A paragraph, never a heading.
+       t-lede     the sentence under an h1 */
+  .t-display,
+  .t-title,
+  .t-section,
+  .t-feature,
+  .t-item,
+  .t-lead {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  .t-display {
+    font-size: 48px;
+    line-height: 0.94;
+    letter-spacing: -0.045em;
+  }
+
+  .t-title {
+    font-size: 44px;
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+  }
+
+  .t-section {
+    font-size: 32px;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .t-feature {
+    font-size: 28px;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+
+  .t-item {
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .t-lead {
+    font-size: 26px;
+    line-height: 1.28;
+    letter-spacing: -0.02em;
+  }
+
+  .t-lede {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 640px) {
+    .t-display {
+      font-size: 72px;
+    }
+
+    .t-title {
+      font-size: 60px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .t-section {
+      font-size: 44px;
+    }
+
+    .t-feature {
+      font-size: 34px;
+    }
+
+    .t-item {
+      font-size: 26px;
+    }
+
+    .t-lead {
+      font-size: 32px;
+    }
+
+    .t-lede {
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .t-display {
+      font-size: 96px;
+    }
+
+    .t-title {
+      font-size: 72px;
+    }
+  }
+
   /* VII Komponenten */
   .pill {
     display: inline-flex;
@@ -413,7 +518,20 @@ body {
 
 /* Cormorant has small letters. Serif text is set at the capital height of the upright serif
    from the design preview (B Editorial), about 14% larger than Cormorant on its own. */
-:is(.font-serif, .type-h1, .type-h2, .type-h3, .type-panel, .type-quote) {
+:is(
+  .font-serif,
+  .type-h1,
+  .type-h2,
+  .type-h3,
+  .type-panel,
+  .type-quote,
+  .t-display,
+  .t-title,
+  .t-section,
+  .t-feature,
+  .t-item,
+  .t-lead
+) {
   font-size-adjust: cap-height 0.72;
 }
 

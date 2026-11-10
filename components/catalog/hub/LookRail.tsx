@@ -18,7 +18,7 @@ export default function LookRail({
       <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
         <h2
           id="look-rail-heading"
-          className="max-w-2xl font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
+          className="t-section max-w-2xl text-ink"
         >
           {title}
         </h2>

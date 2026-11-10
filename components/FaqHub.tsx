@@ -81,7 +81,7 @@ export default function FaqHub({
       <FaqJsonLd items={items} />
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-16 md:pt-24" aria-labelledby="faq-hub-heading">
         {activeTheme ? (
-          <Breadcrumbs items={[{ href: "/faq", label: "FAQ" }]} current={title} locale={locale} />
+          <Breadcrumbs items={[{ href: "/faq", label: "FAQ" }]} current={title} locale={locale} tone="ink" />
         ) : null}
         <p className="type-eyebrow mt-8 mb-3 text-gold">FAQ</p>
         <h1 id="faq-hub-heading" className="type-h2 text-ink">

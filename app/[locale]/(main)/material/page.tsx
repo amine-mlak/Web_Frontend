@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
-import { fetchAppliances, fetchMaterials } from "@/lib/catalog-api";
+import { fetchAppliances, fetchMaterials, fetchProjects } from "@/lib/catalog-api";
 import {
   collectionHub,
   collectionHubMetadata,
   overlayBranchImages,
 } from "@/lib/collection-hubs";
-import { MATERIAL_KIND_ROUTES } from "@/lib/collection-entries";
+import { MATERIAL_KIND_ROUTES, materialArea, withAreaPhotos } from "@/lib/collection-entries";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -17,9 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function MaterialPage() {
   const locale = await getRequestLocale();
-  const [materials, appliances] = await Promise.all([
+  const [materials, appliances, projects] = await Promise.all([
     fetchMaterials(),
     fetchAppliances(),
+    fetchProjects(),
   ]);
   const images: Record<string, string> = {};
   for (const material of materials) {
@@ -41,7 +42,10 @@ export default async function MaterialPage() {
     if (route?.slug === "spuele" && tap) {
       items.push({ href: `/geraete/${tap.slug}`, title: tap.name, text: tap.intro, image: tap.image });
     }
-    return { ...branch, items };
+    // The area's photo is a kitchen we built with one of its materials; the samples stay in the list.
+    if (!route) return { ...branch, items };
+    const area = materialArea(route.slug, materials);
+    return withAreaPhotos({ ...branch, items }, area.slugs, projects, area.closeUp);
   });
   return <CollectionHub id="material" locale={locale} branches={branches} />;
 }

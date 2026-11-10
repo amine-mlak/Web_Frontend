@@ -45,7 +45,7 @@ export default async function AtelierVisit({
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-5 lg:px-14 lg:py-20">
           <h2
             id="atelier-visit-heading"
-            className="font-serif text-[32px] leading-[1.08] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
+            className="t-section text-ink"
           >
             {title || hub.visitPlace}
           </h2>

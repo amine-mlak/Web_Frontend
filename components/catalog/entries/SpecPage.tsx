@@ -1,13 +1,10 @@
 import CmsImage from "@/components/CmsImage";
+import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
+import { CloseBand, PhotoOpener, PhotoPair } from "@/components/catalog/PhotoStory";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import { Frame } from "@/components/catalog/collections/parts";
-import {
-  Crumbs,
-  QuoteLine,
-  RuledPoints,
-  SoftClose,
-} from "@/components/catalog/clusters/parts";
+import { PointsSection, QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
 import { APPLIANCE_BRANDS } from "@/lib/appliance-media";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cn } from "@/lib/utils";
@@ -17,24 +14,27 @@ function markFor(hub: PresentedTopic) {
   return APPLIANCE_BRANDS.find((brand) => brand.name.toLowerCase() === name);
 }
 
+/**
+ * An appliance or a brand: the name, three photos of it in one kitchen, its facts on dark, the
+ * points, two more photos, the kitchens, one close-up from edge to edge. Where no gallery photo
+ * shows it, the CMS image stands framed on the dark band as before.
+ */
 export default function SpecPage({ hub }: { hub: PresentedTopic }) {
   const mark = markFor(hub);
-  const houses =
-    hub.locale === "en" ? "Fitted in these houses" : "In diesen Häusern";
+  const houses = hub.locale === "en" ? "Fitted in these houses" : "In diesen Häusern";
+  // Photos that show the appliance or the brand in the built kitchens. Without any, the CMS image stands on the dark band.
+  const story = hub.story ?? {};
 
   return (
     <main className="bg-paper">
-      <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
-        <Crumbs hub={hub} />
-        <h1 className="mt-6 max-w-4xl font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[72px]">
-          {hub.title} <em className="italic">{hub.emphasis}</em>
-        </h1>
-        <p className="mt-5 max-w-xl font-sans text-[17px] leading-relaxed font-light text-muted">
-          {hub.lede}
-        </p>
-      </header>
+      <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
-      <section className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:px-14 lg:py-20">
+      {story.opener ? <PhotoOpener opener={story.opener} locale={hub.locale} /> : null}
+
+      <section
+        className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:mt-14 lg:px-14 lg:py-20"
+        aria-label={hub.locale === "en" ? "At a glance" : "Auf einen Blick"}
+      >
         {mark ? (
           <span className="relative mb-10 block h-8 w-40">
             <CmsImage
@@ -42,68 +42,45 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
               alt={mark.name}
               fill
               sizes="160px"
-              className={cn(
-                "object-contain object-left",
-                mark.invert && "brightness-0 invert",
-              )}
+              className={cn("object-contain object-left", mark.invert && "brightness-0 invert")}
             />
           </span>
         ) : null}
-        <Frame
-          src={hub.heroImage}
-          alt={hub.heroAlt}
-          className="mx-auto aspect-[16/10] max-w-5xl"
-          priority
-          sizes="(max-width: 1024px) 100vw, 64rem"
-        />
-        <p className="mx-auto mt-10 max-w-2xl text-center font-serif text-[24px] leading-snug text-paper italic md:text-[30px]">
-          {hub.ledgerLine}
-        </p>
+        {story.opener ? null : (
+          <Frame
+            src={hub.heroImage}
+            alt={hub.heroAlt}
+            className="mx-auto mb-10 aspect-[16/10] max-w-5xl"
+            priority
+            sizes="(max-width: 1024px) 100vw, 64rem"
+          />
+        )}
+        {hub.ledgerLine ? (
+          <p className="t-lead mx-auto max-w-2xl text-center text-paper">{hub.ledgerLine}</p>
+        ) : null}
         {hub.facts.length ? (
           <dl className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-px bg-paper/15 sm:grid-cols-4">
             {hub.facts.map((fact) => (
-              <div
-                key={`${fact.value}-${fact.label}`}
-                className="bg-nacht px-4 py-5"
-              >
-                <dt className="font-serif text-[22px] leading-none text-messing">
-                  {fact.value}
-                </dt>
-                <dd className="type-eyebrow mt-3 text-paper/55">
-                  {fact.label}
-                </dd>
+              <div key={`${fact.value}-${fact.label}`} className="bg-nacht px-4 py-5">
+                <dt className="t-item leading-none text-messing">{fact.value}</dt>
+                <dd className="type-eyebrow mt-3 text-paper/55">{fact.label}</dd>
               </div>
             ))}
           </dl>
         ) : null}
       </section>
 
-      <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <h2 className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
-          {hub.statement}
-        </h2>
-        <div className="lg:col-span-7">
-          <RuledPoints branches={hub.branches} />
-          {hub.statementNote ? (
-            <p className="mt-8 max-w-xl font-sans text-[15px] leading-relaxed text-muted">
-              {hub.statementNote}
-            </p>
-          ) : null}
-        </div>
-      </section>
-
+      <PointsSection hub={hub} />
+      {story.pair ? <PhotoPair pair={story.pair} locale={hub.locale} flip /> : null}
       <KitchenShowcase hub={hub} title={houses} />
+      {story.band ? <CloseBand photo={story.band} locale={hub.locale} /> : null}
       <TopicReading
         locale={hub.locale}
         cms={hub}
         // Only the CMS reading text: the shared fallback put the same Wolfersdorf paragraph on every page.
       />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <SoftClose
-        hub={hub}
-        tiles={hub.siblings}
-        tilesTitle={hub.siblingEyebrow}
-      />
+      <SoftClose hub={hub} tiles={hub.siblings} tilesTitle={hub.siblingEyebrow} />
     </main>
   );
 }

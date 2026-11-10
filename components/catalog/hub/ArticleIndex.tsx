@@ -36,7 +36,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
       <div className="mx-auto max-w-[90rem]">
         <h2
           id="ratgeber-index"
-          className="font-serif text-[40px] leading-[1] font-medium tracking-[-0.035em] text-ink md:text-[52px]"
+          className="t-section text-ink"
         >
           {copy.title}
         </h2>
@@ -47,7 +47,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
             <section key={group.slug} aria-labelledby={`ratgeber-${group.slug}`} className="grid gap-6 lg:grid-cols-12">
               <h3
                 id={`ratgeber-${group.slug}`}
-                className="font-serif text-[28px] leading-tight font-medium text-ink lg:col-span-3"
+                className="t-feature text-ink lg:col-span-3"
               >
                 {group.name}
                 <span className="ml-2 font-sans text-[15px] font-normal text-muted">{group.items.length}</span>

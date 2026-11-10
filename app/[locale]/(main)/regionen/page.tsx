@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
-import { fetchRegions } from "@/lib/catalog-api";
+import { fetchProjects, fetchRegions } from "@/lib/catalog-api";
+import { placeCover } from "@/lib/kitchen-photos";
 import {
   collectionHub,
   collectionHubMetadata,
@@ -23,11 +24,14 @@ const featuredSlugs = new Set([
 
 export default async function RegionenPage() {
   const locale = await getRequestLocale();
-  const regions = await fetchRegions();
+  const [regions, projects] = await Promise.all([fetchRegions(), fetchProjects()]);
+  // Each place is shown by a kitchen: one built there, else its own kitchen photo, else one from the workshop.
+  const covers = new Map(regions.map((region) => [region.slug, placeCover(region, projects)]));
   const images: Record<string, string> = {};
   for (const region of regions) {
-    if (region.image) {
-      images[`/regionen/${region.slug}`] = region.image;
+    const cover = covers.get(region.slug);
+    if (cover) {
+      images[`/regionen/${region.slug}`] = cover;
     }
   }
   const extras = regions
@@ -35,7 +39,7 @@ export default async function RegionenPage() {
     .map((region) => ({
       href: `/regionen/${region.slug}`,
       title: region.name,
-      image: region.image,
+      image: covers.get(region.slug) ?? region.image,
     }));
 
   return (

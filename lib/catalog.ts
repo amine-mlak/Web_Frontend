@@ -92,6 +92,8 @@ export type ProjectFrame = {
   src: string;
   srcSet?: string;
   alt: string;
+  /** Taller than wide. */
+  portrait?: boolean;
 };
 
 export type Project = {
@@ -165,6 +167,8 @@ export type Region = {
   name: string;
   intro: string;
   image?: string;
+  /** What the image shows, as written in the media library. */
+  imageAlt?: string;
   order: number;
   ueberschrift?: string;
   lesetext?: string;

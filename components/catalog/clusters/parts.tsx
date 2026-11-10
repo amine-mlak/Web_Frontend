@@ -7,7 +7,9 @@ import { absoluteUrl } from "@/lib/seo";
 import type { ClusterHouse, ClusterSibling } from "@/lib/collection-clusters";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 
-export function Crumbs({ hub }: { hub: PresentedHub }) {
+export type CrumbTone = "ink" | "paper";
+
+export function Crumbs({ hub, tone }: { hub: PresentedHub; tone?: CrumbTone }) {
   const crumbs = hub.crumbs ?? [];
   if (crumbs.length === 0 && !hub.parentHref) {
     return null;
@@ -17,22 +19,26 @@ export function Crumbs({ hub }: { hub: PresentedHub }) {
       ? crumbs
       : [{ href: hub.parentHref ?? "/kuechen", label: hub.parentLabel ?? "" }];
 
-  return <Breadcrumbs items={items} current={hub.title} locale={hub.locale} />;
+  return <Breadcrumbs items={items} current={hub.title} locale={hub.locale} tone={tone} />;
 }
 
 /**
- * The parent links plus the BreadcrumbList JSON-LD (Home → parents → this page). Not shown on
- * screen, by design: Google reads the structured data and the links, and screen readers still
- * announce the trail. Sighted visitors have the menu and the links at the end of each page.
+ * The parent links plus the BreadcrumbList JSON-LD (Home → parents → this page).
+ * With a `tone` the parents show as one quiet line above the page name ("Material / Arbeitsplatten"),
+ * so a visitor sees where the page sits and gets back in one click. Without a tone the trail is
+ * only there for Google and screen readers. This page itself is never in the visible line: its
+ * name is the h1 right below.
  */
 export function Breadcrumbs({
   items,
   current,
   locale,
+  tone,
 }: {
   items: { href: string; label: string }[];
   current?: string;
   locale: PresentedHub["locale"];
+  tone?: CrumbTone;
 }) {
   // The last item (this page) has no URL.
   const trail = {
@@ -51,15 +57,30 @@ export function Breadcrumbs({
   };
 
   return (
-    <nav aria-label={locale === "en" ? "Breadcrumb" : "Brotkrumen"} className="sr-only">
+    <nav
+      aria-label={locale === "en" ? "Breadcrumb" : "Brotkrumen"}
+      className={tone ? `type-eyebrow ${tone === "paper" ? "text-paper/85" : "text-muted"}` : "sr-only"}
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(trail) }}
       />
-      <ol>
-        {items.map((crumb) => (
-          <li key={`${crumb.href}-${crumb.label}`}>
-            <LocaleLink href={crumb.href}>{crumb.label}</LocaleLink>
+      <ol className={tone ? "flex flex-wrap items-center gap-x-2.5 gap-y-1" : undefined}>
+        {items.map((crumb, index) => (
+          <li key={`${crumb.href}-${crumb.label}`} className={tone ? "flex items-center gap-x-2.5" : undefined}>
+            {tone && index > 0 ? <span aria-hidden="true">/</span> : null}
+            <LocaleLink
+              href={crumb.href}
+              className={
+                tone
+                  ? `inline-flex min-h-6 items-center underline-offset-4 transition-colors hover:underline ${
+                      tone === "paper" ? "hover:text-paper" : "hover:text-ink"
+                    }`
+                  : undefined
+              }
+            >
+              {crumb.label}
+            </LocaleLink>
           </li>
         ))}
       </ol>
@@ -70,43 +91,75 @@ export function Breadcrumbs({
 export function QuoteLine({
   quote,
   source,
+  tone = "karte",
 }: {
   quote: string;
   source: string;
+  tone?: "karte" | "nacht";
 }) {
   if (!quote) {
     return null;
   }
+  const dark = tone === "nacht";
 
   return (
-    <figure className="border-t border-line bg-karte px-5 py-14 sm:px-8 lg:px-14 lg:py-20">
-      <blockquote className="max-w-3xl font-serif text-[26px] leading-snug font-medium tracking-[-0.03em] text-ink italic md:text-[34px]">
+    <figure
+      className={`border-t px-5 py-14 sm:px-8 lg:px-14 lg:py-20 ${dark ? "border-paper/12 bg-nacht" : "border-line bg-karte"}`}
+    >
+      <blockquote className={`t-lead max-w-3xl ${dark ? "text-paper" : "text-ink"}`}>
         {quote}
       </blockquote>
       {source ? (
-        <figcaption className="type-eyebrow mt-6 text-muted">{source}</figcaption>
+        <figcaption className={`type-eyebrow mt-6 ${dark ? "text-paper/70" : "text-muted"}`}>{source}</figcaption>
       ) : null}
     </figure>
   );
 }
 
+/**
+ * Up to four kitchens as cards. `sub` sets it under a section that already has its h2;
+ * `more` adds one link beside the heading (all projects).
+ */
 export function HouseLine({
   houses,
   title,
+  sub,
+  more,
 }: {
   houses: ClusterHouse[];
   title: string;
+  sub?: boolean;
+  more?: { href: string; label: string };
 }) {
+  const headingId = useId();
   const shown = houses.slice(0, 4);
   if (shown.length === 0) {
     return null;
   }
+  const Heading = sub ? "h3" : "h2";
 
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20">
-      <h2 className="font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]">
-        {title}
-      </h2>
+    <section
+      className={
+        sub
+          ? "px-5 pt-4 pb-16 sm:px-8 lg:px-14 lg:pb-24"
+          : "border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24"
+      }
+      aria-labelledby={headingId}
+    >
+      <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+        <Heading id={headingId} className={`${sub ? "t-feature" : "t-section"} text-ink`}>
+          {title}
+        </Heading>
+        {more ? (
+          <LocaleLink
+            href={more.href}
+            className="inline-flex min-h-6 items-center gap-2 font-sans text-[14px] text-ink underline underline-offset-4"
+          >
+            {more.label} <span aria-hidden="true">→</span>
+          </LocaleLink>
+        ) : null}
+      </div>
       <ul
         className={`mt-10 grid gap-8 ${
           shown.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : shown.length > 1 ? "sm:grid-cols-2 lg:grid-cols-3" : "max-w-xl"
@@ -121,14 +174,8 @@ export function HouseLine({
                 className="aspect-[4/5]"
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
-              <p className="mt-4 font-serif text-[22px] leading-snug font-medium text-ink">
-                {house.title}
-              </p>
-              {house.meta ? (
-                <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-                  {house.meta}
-                </p>
-              ) : null}
+              <p className="t-item mt-4 text-ink">{house.title}</p>
+              {house.meta ? <p className="type-eyebrow mt-2 text-muted">{house.meta}</p> : null}
             </LocaleLink>
           </li>
         ))}
@@ -151,9 +198,7 @@ export function RuledPoints({ branches }: { branches: PresentedBranch[] }) {
         >
           <span className="type-eyebrow pt-2 text-gold">{branch.kicker}</span>
           <div>
-            <h3 className="font-serif text-[26px] leading-tight font-medium tracking-[-0.02em] text-ink md:text-[30px]">
-              {branch.title}
-            </h3>
+            <h3 className="t-item text-ink">{branch.title}</h3>
             <p className="mt-3 max-w-xl font-sans text-[16px] leading-relaxed text-muted">
               {branch.text}
             </p>
@@ -176,6 +221,50 @@ export function RuledPoints({ branches }: { branches: PresentedBranch[] }) {
   );
 }
 
+/**
+ * What the page claims, then the points that back it. The sentence is the section's heading
+ * only when points follow; a sentence standing alone is a statement in the reading flow.
+ */
+export function PointsSection({ hub, className = "" }: { hub: PresentedHub; className?: string }) {
+  const headingId = useId();
+  if (!hub.statement && hub.branches.length === 0) {
+    return null;
+  }
+  if (hub.branches.length === 0) {
+    return (
+      <section className={`px-5 py-16 sm:px-8 lg:px-14 lg:py-24 ${className}`}>
+        <p className="t-lead max-w-3xl text-ink">{hub.statement}</p>
+        {hub.statementNote ? (
+          <p className="mt-6 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+        ) : null}
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className={`mx-auto grid max-w-[90rem] gap-x-12 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24 ${className}`}
+      aria-labelledby={hub.statement ? headingId : undefined}
+    >
+      <div className="lg:col-span-5">
+        <div className="lg:sticky lg:top-28">
+          {hub.statement ? (
+            <h2 id={headingId} className="t-feature text-ink">
+              {hub.statement}
+            </h2>
+          ) : null}
+          {hub.statementNote ? (
+            <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+          ) : null}
+        </div>
+      </div>
+      <div className="lg:col-span-7">
+        <RuledPoints branches={hub.branches} />
+      </div>
+    </section>
+  );
+}
+
 export function IndexRows({
   items,
   eyebrow,
@@ -195,7 +284,7 @@ export function IndexRows({
       <p className="type-eyebrow text-gold">{eyebrow}</p>
       <h2
         id={headingId}
-        className="mt-3 font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[40px]"
+        className="t-section mt-3 text-ink"
       >
         {title}
       </h2>
@@ -213,9 +302,7 @@ export function IndexRows({
                 sizes="88px"
               />
               <span>
-                <span className="block font-serif text-[24px] leading-tight font-medium text-ink md:text-[28px]">
-                  {item.title}
-                </span>
+                <span className="t-item block text-ink">{item.title}</span>
                 <span className="mt-1 block max-w-xl font-sans text-[15px] leading-relaxed text-muted">
                   {item.text}
                 </span>
@@ -271,7 +358,7 @@ export function SiblingCards({
     <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby={title ? id : undefined}>
       {eyebrow ? <p className="type-eyebrow text-gold">{eyebrow}</p> : null}
       {title ? (
-        <h2 id={id} className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[40px]">
+        <h2 id={id} className="t-section mt-3 text-ink">
           {title}
         </h2>
       ) : null}
@@ -285,7 +372,7 @@ export function SiblingCards({
                 className="aspect-[4/5]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
-              <span className="mt-4 block font-serif text-[22px] leading-snug font-medium text-ink">{sibling.title}</span>
+              <span className="t-item mt-4 block text-ink">{sibling.title}</span>
               {sibling.text ? <span className="mt-1 block font-sans text-[14px] leading-relaxed text-muted">{sibling.text}</span> : null}
             </LocaleLink>
           </li>

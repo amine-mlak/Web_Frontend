@@ -5,7 +5,7 @@ import type { PresentedHub } from "@/lib/collection-present";
 export default function MagazineOpen({ hub }: { hub: PresentedHub }) {
   return (
     <>
-      <CollectionHero hub={hub} />
+      <CollectionHero hub={hub} display />
       <StatementSpread hub={hub} />
     </>
   );

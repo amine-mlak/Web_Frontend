@@ -21,7 +21,7 @@ export default function CollectionSiblings({
         <p className="type-eyebrow text-muted">{eyebrow}</p>
         <h2
           id="collection-siblings-heading"
-          className="mt-3 font-serif text-[32px] font-medium tracking-[-0.03em] text-ink md:text-[42px]"
+          className="t-section mt-3 text-ink"
         >
           {title}
         </h2>
@@ -46,7 +46,7 @@ export default function CollectionSiblings({
                       <span className="block font-sans text-[10px] tracking-[0.18em] text-messing uppercase">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="mt-2 block font-serif text-[24px] leading-tight font-medium text-paper">
+                      <span className="t-item mt-2 block text-paper">
                         {item.title}
                       </span>
                       <span className="mt-1 block font-sans text-[13px] font-light text-paper/75">

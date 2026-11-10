@@ -1,5 +1,5 @@
 import { cmsLarge } from "@/lib/beer-photos";
-import type { Project } from "@/lib/catalog";
+import type { Project, Region } from "@/lib/catalog";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { resolveDevImage } from "@/lib/dev-images";
 import { isCodeGallery } from "@/lib/project-photos";
@@ -27,13 +27,20 @@ const OWN_SLOTS_FROM = 60;
  * fills in. `seed` (the page slug) turns the list of other projects to a different starting point
  * for each page, so pages without tagged kitchens do not all show the same photos.
  */
-export function kitchenPhotos(related: Project[], all: Project[], fallback: Photo, seed?: string): KitchenPhotos {
+export function kitchenPhotos(
+  related: Project[],
+  all: Project[],
+  fallback: Photo,
+  seed?: string,
+  /** Photos the page already shows elsewhere (its photo story): never handed out again. */
+  skip: string[] = [],
+): KitchenPhotos {
   const real = (project: Project) => !isCodeGallery(project.slug);
   const relatedSlugs = new Set(related.map((project) => project.slug));
   const others = all.filter((project) => !relatedSlugs.has(project.slug));
   const order = [...related, ...rotate(others, seed)].filter(real);
   const queue: string[] = [];
-  const queued = new Set<string>();
+  const queued = new Set<string>(skip.map((src) => photoKey(src)));
   for (const project of order) {
     for (const frame of project.gallery) {
       if (!frame.src || queued.has(photoKey(frame.src))) continue;
@@ -78,6 +85,41 @@ function rotate<T>(items: T[], seed?: string) {
   for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
   const start = hash % items.length;
   return [...items.slice(start), ...items.slice(0, start)];
+}
+
+/**
+ * Finished kitchens with a cover photo, starting at a different one for each page (`seed`).
+ * For pages that have no kitchens of their own to show.
+ */
+export function kitchenPool(all: Project[], seed?: string) {
+  return rotate(
+    all.filter((project) => project.image && !isCodeGallery(project.slug)),
+    seed,
+  );
+}
+
+/**
+ * The image of a place, but only when it shows a kitchen. Several places carry a wardrobe, a
+ * bathroom or an open drawer; a page named "Küchen in …" does not open on those. The media
+ * library description decides; an image without one is trusted.
+ */
+export function kitchenImageOf(region: Region) {
+  const alt = region.imageAlt ?? "";
+  if (!region.image) return undefined;
+  if (!alt) return region.image;
+  const kitchen = /küche|kitchen|zeile|insel|schrankwand/i.test(alt);
+  const other = /ankleide|schubkasten|schublade|essplatz|\bbad\b/i.test(alt);
+  return kitchen && !other ? region.image : undefined;
+}
+
+/** The photo that stands for a place: a kitchen built there, else its own kitchen image, else a kitchen from the workshop. */
+export function placeCover(region: Region, all: Project[]) {
+  const pool = kitchenPool(all, region.slug);
+  return (
+    coverOf(all, (project) => project.regions.some((entry) => entry.slug === region.slug)) ??
+    kitchenImageOf(region) ??
+    (pool[4] ?? pool[0])?.image
+  );
 }
 
 /** The cover of the first project that matches, for a card that links to another topic or place. */

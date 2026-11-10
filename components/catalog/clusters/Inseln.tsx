@@ -1,11 +1,8 @@
 import LocaleLink from "@/components/LocaleLink";
+import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import { Frame } from "@/components/catalog/collections/parts";
-import {
-  Crumbs,
-  RuledPoints,
-  SoftClose,
-} from "@/components/catalog/clusters/parts";
+import { PointsSection, SoftClose } from "@/components/catalog/clusters/parts";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
@@ -39,17 +36,9 @@ function Pedestal({
         className="aspect-[3/4]"
         sizes="(max-width: 1024px) 100vw, 33vw"
       />
-      {kicker ? (
-        <p className="mt-5 font-sans text-[11px] tracking-[0.22em] text-messing uppercase">
-          {kicker}
-        </p>
-      ) : null}
-      <h3 className="mt-2 font-serif text-[28px] leading-tight font-medium text-paper">
-        {title}
-      </h3>
-      <p className="mt-3 font-sans text-[15px] leading-relaxed font-light text-paper/70">
-        {text}
-      </p>
+      {kicker ? <p className="type-eyebrow mt-5 text-messing">{kicker}</p> : null}
+      <h3 className="t-feature mt-4 text-paper">{title}</h3>
+      <p className="mt-3 font-sans text-[15px] leading-relaxed font-light text-paper/70">{text}</p>
     </LocaleLink>
   );
 }
@@ -57,17 +46,12 @@ function Pedestal({
 export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
   return (
     <main className="bg-paper">
-      <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
-        <Crumbs hub={hub} />
-        <h1 className="mt-6 max-w-3xl font-serif text-[48px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[68px]">
-          {hub.title} <em className="italic">{hub.emphasis}</em>
-        </h1>
-        <p className="mt-5 max-w-xl font-sans text-[17px] leading-relaxed font-light text-muted">
-          {hub.lede}
-        </p>
-      </header>
+      <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
-      <section className="mt-10 bg-nacht px-5 py-12 sm:px-8 lg:px-14 lg:py-20">
+      <section
+        className="mt-10 bg-nacht px-5 py-12 sm:px-8 lg:mt-14 lg:px-14 lg:py-20"
+        aria-label={hub.heroAlt || hub.title}
+      >
         <Frame
           src={hub.heroImage}
           alt={hub.heroAlt}
@@ -75,34 +59,22 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
           priority
           sizes="(max-width: 1024px) 100vw, 64rem"
         />
-        <p className="mx-auto mt-10 max-w-2xl text-center font-serif text-[24px] leading-snug text-paper italic md:text-[30px]">
-          {hub.ledgerLine}
-        </p>
+        {hub.ledgerLine ? (
+          <p className="t-lead mx-auto mt-10 max-w-2xl text-center text-paper">{hub.ledgerLine}</p>
+        ) : null}
       </section>
 
-      <section className="mx-auto grid max-w-[90rem] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14">
-        <h2 className="font-serif text-[26px] leading-snug font-medium text-ink lg:col-span-5">
-          {hub.statement}
-        </h2>
-        <div className="lg:col-span-7">
-          <RuledPoints branches={hub.branches} />
-        </div>
-      </section>
+      <PointsSection hub={hub} />
 
       {hub.siblings.length > 0 ? (
-        <section className="bg-nacht px-5 py-16 sm:px-8 lg:px-14" aria-labelledby="inseln-siblings">
-          <h2 id="inseln-siblings" className="font-serif text-[32px] font-medium text-paper">
+        <section className="bg-nacht px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="inseln-siblings">
+          <h2 id="inseln-siblings" className="t-section text-paper">
             {hub.siblingTitle}
           </h2>
           <ul className="mt-10 grid gap-10 sm:grid-cols-2">
             {hub.siblings.map((item) => (
               <li key={item.href}>
-                <Pedestal
-                  href={item.href}
-                  title={item.title}
-                  text={item.text}
-                  image={item.image}
-                />
+                <Pedestal href={item.href} title={item.title} text={item.text} image={item.image} />
               </li>
             ))}
           </ul>

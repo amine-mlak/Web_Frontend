@@ -1,13 +1,10 @@
-import Accordion from "@/components/Accordion";
-import FaqJsonLd from "@/components/FaqJsonLd";
 import LocaleLink from "@/components/LocaleLink";
 import PageEnd from "@/components/catalog/PageEnd";
+import Questions from "@/components/catalog/Questions";
 import { Frame } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine } from "@/components/catalog/clusters/parts";
 import type { PagePoint, SitePage } from "@/lib/catalog";
 import type { PresentedTopic } from "@/lib/collection-topics";
-import { filterFaqItems } from "@/lib/faq";
-import { fetchFaqHub } from "@/lib/strapi";
 
 /**
  * A page told in photo sections: each CMS point is its own section with a large photo, a detail
@@ -19,8 +16,6 @@ const COPY = {
   de: {
     contents: "Auf dieser Seite",
     detail: "Detail",
-    faqEyebrow: "Häufige Fragen",
-    faqAll: "Alle Fragen zum Innenleben",
     houses: "Küchen mit diesem Innenleben",
     more: "Weitere Ebenen der Küche",
     secondaryHref: "/beratung",
@@ -29,8 +24,6 @@ const COPY = {
   en: {
     contents: "On this page",
     detail: "Detail",
-    faqEyebrow: "Frequent questions",
-    faqAll: "All questions on interiors",
     houses: "Kitchens with this interior",
     more: "Other planes of the kitchen",
     secondaryHref: "/beratung",
@@ -70,7 +63,7 @@ function PointText({ point, id, lang }: { point: ShownPoint; id: string; lang: s
       <h2
         id={id}
         lang={lang}
-        className="font-serif text-[36px] leading-[1.02] font-medium tracking-[-0.035em] text-ink hyphens-auto md:text-[48px]"
+        className="t-section text-ink"
       >
         {point.titel}
       </h2>
@@ -80,7 +73,7 @@ function PointText({ point, id, lang }: { point: ShownPoint; id: string; lang: s
             key={index}
             className={
               index === 0
-                ? "font-serif text-[21px] leading-snug text-ink/85"
+                ? "t-lede text-ink"
                 : "font-sans text-[16px] leading-relaxed text-muted"
             }
           >
@@ -179,7 +172,7 @@ export function PointSections({
   );
 }
 
-export default async function InteriorPage({
+export default function InteriorPage({
   hub,
   page,
   faqTheme,
@@ -193,9 +186,6 @@ export default async function InteriorPage({
   const locale = hub.locale === "en" ? "en" : "de";
   const copy = { ...COPY[locale], ...labels };
   const points = interiorPoints(page);
-  const faq = faqTheme ? await fetchFaqHub() : null;
-  const questions = faq ? filterFaqItems(faq.items, faqTheme).slice(0, 6) : [];
-  const theme = faq?.themes.find((item) => item.slug === faqTheme);
   const body = page.body
     .split(/\n{2,}/)
     .map((part) => part.trim())
@@ -206,16 +196,16 @@ export default async function InteriorPage({
     <main className="bg-paper">
       <section className="grid lg:min-h-[86svh] lg:grid-cols-12" aria-labelledby="innen-title">
         <div className="flex flex-col justify-end px-5 pt-10 pb-12 sm:px-8 lg:col-span-5 lg:px-14 lg:pt-16 lg:pb-20">
-          <Crumbs hub={hub} />
+          <Crumbs hub={hub} tone="ink" />
           <h1
             id="innen-title"
-            className="mt-10 font-serif text-[52px] leading-[0.92] font-medium tracking-[-0.04em] text-ink sm:text-[76px]"
+            className="t-title mt-10 text-ink"
           >
             {hub.title}
             {hub.emphasis ? <em className="italic"> {hub.emphasis}</em> : null}
           </h1>
           {page.intro ? (
-            <p className="mt-6 max-w-md font-serif text-[22px] leading-snug text-ink/80">{page.intro}</p>
+            <p className="t-lede mt-6 max-w-md text-muted">{page.intro}</p>
           ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
             <LocaleLink href={page.ctaUrl || "/beratung"} className="pill pill-primary">
@@ -241,7 +231,7 @@ export default async function InteriorPage({
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
               {hub.statement ? (
-                <h2 className="font-serif text-[30px] leading-snug font-medium tracking-[-0.025em] text-ink md:text-[38px]">
+                <h2 className="t-section text-ink">
                   {hub.statement}
                 </h2>
               ) : null}
@@ -280,25 +270,7 @@ export default async function InteriorPage({
 
       <HouseLine houses={hub.houses} title={copy.houses} />
 
-      {questions.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="innen-faq">
-          <FaqJsonLd items={questions} />
-          <div className="grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <p className="type-eyebrow text-gold">{copy.faqEyebrow}</p>
-              <h2 id="innen-faq" className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[38px]">
-                {theme?.name ?? hub.title}
-              </h2>
-              <LocaleLink href={`/faq/${faqTheme}`} className="mt-6 inline-flex min-h-6 items-center gap-2 font-sans text-[14px] text-ink underline underline-offset-4">
-                {copy.faqAll} <span aria-hidden="true">→</span>
-              </LocaleLink>
-            </div>
-            <div className="lg:col-span-8">
-              <Accordion items={questions.map((item) => ({ slug: item.slug, question: item.question, answer: item.answer }))} />
-            </div>
-          </div>
-        </section>
-      ) : null}
+      <Questions theme={faqTheme} title={hub.title} locale={hub.locale} limit={6} />
 
       <PageEnd
         title={hub.closeTitle}

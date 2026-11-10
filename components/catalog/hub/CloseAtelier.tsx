@@ -16,7 +16,7 @@ export default function CloseAtelier({ hub }: { hub: PresentedHub }) {
       </figure>
       <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:px-16">
         <span className="mb-8 block h-px w-12 bg-messing" aria-hidden="true" />
-        <h2 className="font-serif text-[36px] leading-[1.08] font-medium tracking-[-0.03em] text-paper md:text-[52px]">
+        <h2 className="t-section text-paper">
           {hub.closeTitle}
         </h2>
         <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80 md:text-[19px]">

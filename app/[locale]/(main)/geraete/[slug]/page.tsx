@@ -64,7 +64,7 @@ export default async function AppliancePage({
   if (isGeraeteKindRoute(slug)) {
     const page = await fetchSitePage(slug);
     return (
-      <CategoryPage hub={presentApplianceKind(slug, locale, items, projects, page)} faqTheme="geraete" />
+      <CategoryPage hub={presentApplianceKind(slug, locale, items, projects, page)} faqTheme="geraete" path={`/geraete/${slug}`} />
     );
   }
 

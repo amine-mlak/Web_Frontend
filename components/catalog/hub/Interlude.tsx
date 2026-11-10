@@ -8,7 +8,7 @@ export default function Interlude({
   return (
     <section className="border-y border-line bg-gold-soft">
       <blockquote className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20 lg:py-24">
-        <p className="font-serif text-[26px] leading-[1.3] font-medium tracking-[-0.02em] text-ink italic md:text-[34px]">
+        <p className="t-lead text-ink">
           „{quote}“
         </p>
         <footer className="mt-8 font-sans text-[14px] text-muted">{source}</footer>

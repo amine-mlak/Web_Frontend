@@ -62,7 +62,7 @@ function OtherStances({ hub }: { hub: PresentedTopic }) {
           <li key={item.href}>
             <LocaleLink
               href={item.href}
-              className="font-serif text-[26px] leading-none text-ink transition-opacity hover:opacity-50"
+              className="t-item leading-none text-ink transition-opacity hover:opacity-50"
             >
               {item.title}
             </LocaleLink>
@@ -108,12 +108,12 @@ function Modern({
     <main className="bg-paper">
       <section className="grid lg:min-h-[calc(100svh-3.5rem)] lg:grid-cols-12">
         <div className="flex flex-col justify-end px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
-          <Crumbs hub={hub} />
-          <h1 className="mt-10 font-serif text-[64px] leading-[0.86] font-medium tracking-[-0.05em] text-ink sm:text-[88px]">
+          <Crumbs hub={hub} tone="ink" />
+          <h1 className="t-title mt-10 text-ink">
             {hub.title}
             <em className="mt-2 block font-medium italic">{hub.emphasis}</em>
           </h1>
-          <p className="mt-8 max-w-sm font-sans text-[17px] leading-relaxed font-light text-muted">
+          <p className="t-lede mt-8 max-w-sm text-muted">
             {hub.lede}
           </p>
         </div>
@@ -126,7 +126,7 @@ function Modern({
         />
       </section>
       <Facts hub={hub} />
-      <p className="max-w-4xl px-5 py-16 font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink sm:px-8 md:text-[40px] lg:px-14 lg:py-24">
+      <p className="t-lead max-w-4xl px-5 py-16 text-ink sm:px-8 lg:px-14 lg:py-24">
         {hub.statement}
       </p>
       <ol className="border-t border-line">
@@ -138,7 +138,7 @@ function Modern({
             <p className="font-serif text-[40px] text-gold lg:col-span-2">
               {String(index + 1).padStart(2, "0")}
             </p>
-            <h2 className="font-serif text-[32px] leading-tight font-medium text-ink lg:col-span-4">
+            <h2 className="t-section text-ink lg:col-span-4">
               {branch.title}
             </h2>
             <p className="max-w-md font-sans text-[16px] leading-relaxed text-muted lg:col-span-6">
@@ -183,7 +183,7 @@ function Landhaus({
     <main className="bg-karte">
       <section className="px-4 pt-8 sm:px-6 lg:px-10">
         <div className="px-2 lg:px-4">
-          <Crumbs hub={hub} />
+          <Crumbs hub={hub} tone="ink" />
         </div>
         <div className="relative mt-6">
           <Frame
@@ -195,11 +195,11 @@ function Landhaus({
             sizes="100vw"
           />
           <div className="absolute bottom-4 left-4 z-10 max-w-xl bg-paper px-6 py-7 shadow-[0_24px_60px_rgba(20,20,20,0.08)] sm:bottom-8 sm:left-8 sm:px-10 sm:py-10">
-            <h1 className="font-serif text-[48px] leading-[0.9] font-medium tracking-[-0.04em] text-ink sm:text-[68px]">
+            <h1 className="t-title text-ink">
               {hub.title}
               <em className="mt-1 block italic">{hub.emphasis}</em>
             </h1>
-            <p className="mt-5 max-w-md font-sans text-[16px] leading-relaxed text-muted">{hub.lede}</p>
+            <p className="t-lede mt-5 max-w-md text-muted">{hub.lede}</p>
           </div>
         </div>
       </section>
@@ -207,13 +207,13 @@ function Landhaus({
         <Facts hub={hub} />
       </div>
       <section className="grid items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24">
-        <p className="font-serif text-[30px] leading-snug font-medium tracking-[-0.03em] text-ink italic lg:col-span-5 md:text-[38px]">
+        <p className="t-lead text-ink lg:col-span-5">
           {hub.statement}
         </p>
         <div className="lg:col-span-6 lg:col-start-7">
           {hub.branches.map((branch) => (
             <article key={branch.title} className="border-t border-line py-6 last:border-b">
-              <h2 className="font-serif text-[24px] font-medium text-ink">{branch.title}</h2>
+              <h2 className="t-item text-ink">{branch.title}</h2>
               <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
             </article>
           ))}
@@ -244,14 +244,14 @@ function Design({
   return (
     <main className="bg-paper">
       <header className="px-5 pt-12 sm:px-8 lg:px-14">
-        <Crumbs hub={hub} />
-        <h1 className="mt-8 max-w-5xl font-serif text-[64px] leading-[0.84] font-medium tracking-[-0.055em] text-ink sm:text-[104px]">
+        <Crumbs hub={hub} tone="ink" />
+        <h1 className="t-title mt-8 max-w-5xl text-ink">
           {hub.title}
           <em className="block italic">{hub.emphasis}</em>
         </h1>
       </header>
       <div className="mt-8 grid items-end lg:grid-cols-12">
-        <p className="px-5 pb-8 font-sans text-[17px] leading-relaxed font-light text-muted sm:px-8 lg:col-span-4 lg:px-14">
+        <p className="t-lede px-5 pb-8 text-muted sm:px-8 lg:col-span-4 lg:px-14">
           {hub.lede}
         </p>
         <Frame
@@ -263,7 +263,7 @@ function Design({
         />
       </div>
       <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-14 lg:py-24">
-        <p className="max-w-3xl font-serif text-[30px] leading-snug font-medium italic md:text-[40px]">
+        <p className="t-lead max-w-3xl">
           {hub.statement}
         </p>
         <ol className="mt-14 grid gap-12 lg:grid-cols-3">
@@ -272,7 +272,7 @@ function Design({
               <p className="font-sans text-[11px] tracking-[0.22em] text-messing uppercase">
                 {String(index + 1).padStart(2, "0")}
               </p>
-              <h2 className="mt-4 font-serif text-[28px] leading-tight font-medium">{branch.title}</h2>
+              <h2 className="t-feature mt-4">{branch.title}</h2>
               <p className="mt-3 font-sans text-[15px] leading-relaxed font-light text-paper/75">
                 {branch.text}
               </p>
@@ -305,13 +305,13 @@ function Holz({
   return (
     <main className="bg-paper">
       <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
-        <Crumbs hub={hub} />
+        <Crumbs hub={hub} tone="ink" />
         <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
-          <h1 className="font-serif text-[64px] leading-[0.86] font-medium tracking-[-0.05em] text-ink sm:text-[96px]">
+          <h1 className="t-title text-ink">
             {hub.title}
             <em className="mt-1 block italic">{hub.emphasis}</em>
           </h1>
-          <p className="max-w-xs font-sans text-[16px] leading-relaxed text-muted">{hub.lede}</p>
+          <p className="t-lede max-w-xs text-muted">{hub.lede}</p>
         </div>
       </header>
       <Frame
@@ -330,7 +330,7 @@ function Holz({
           sizes="(max-width: 1024px) 100vw, 42vw"
         />
         <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-7 lg:px-16">
-          <p className="font-serif text-[30px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[38px]">
+          <p className="t-lead text-ink">
             {hub.statement}
           </p>
           {hub.statementNote ? (
@@ -343,7 +343,7 @@ function Holz({
               <li key={branch.title} className="grid grid-cols-[3rem_minmax(0,1fr)] gap-4 border-b border-line py-5">
                 <span className="type-eyebrow pt-1 text-gold">{String(index + 1).padStart(2, "0")}</span>
                 <span>
-                  <span className="block font-serif text-[22px] font-medium text-ink">{branch.title}</span>
+                  <span className="t-item block text-ink">{branch.title}</span>
                   <span className="mt-1 block font-sans text-[15px] leading-relaxed text-muted">{branch.text}</span>
                 </span>
               </li>
@@ -373,12 +373,14 @@ function Purist({
   return (
     <main className="bg-paper">
       <header className="mx-auto max-w-3xl px-5 pt-20 text-center sm:pt-28">
-        <Crumbs hub={hub} />
-        <h1 className="mt-10 font-serif text-[64px] leading-[0.88] font-medium tracking-[-0.05em] text-ink sm:text-[92px]">
+        <div className="flex justify-center">
+          <Crumbs hub={hub} tone="ink" />
+        </div>
+        <h1 className="t-title mt-10 text-ink">
           {hub.title}
           <em className="mt-2 block italic">{hub.emphasis}</em>
         </h1>
-        <p className="mx-auto mt-8 max-w-md font-sans text-[17px] leading-relaxed font-light text-muted">
+        <p className="t-lede mx-auto mt-8 max-w-md text-muted">
           {hub.lede}
         </p>
       </header>
@@ -389,14 +391,14 @@ function Purist({
         priority
         sizes="(max-width: 1024px) 100vw, 64rem"
       />
-      <p className="mx-auto mt-16 max-w-2xl px-5 text-center font-serif text-[28px] leading-snug font-medium italic text-ink md:text-[36px]">
+      <p className="t-lead mx-auto mt-16 max-w-2xl px-5 text-center text-ink">
         {hub.statement}
       </p>
       <ol className="mx-auto mt-16 max-w-xl px-5">
         {hub.branches.map((branch, index) => (
           <li key={branch.title} className="border-t border-line py-8 text-center last:border-b">
             <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
-            <h2 className="mt-3 font-serif text-[26px] font-medium text-ink">{branch.title}</h2>
+            <h2 className="t-feature mt-3 text-ink">{branch.title}</h2>
             <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
           </li>
         ))}
@@ -426,12 +428,12 @@ function Luxus({
   return (
     <main className="bg-paper">
       <header className="px-5 pt-12 sm:px-8 lg:px-14 lg:pt-20">
-        <Crumbs hub={hub} />
-        <h1 className="mt-8 max-w-4xl font-serif text-[64px] leading-[0.86] font-medium tracking-[-0.05em] text-ink sm:text-[96px]">
+        <Crumbs hub={hub} tone="ink" />
+        <h1 className="t-title mt-8 max-w-4xl text-ink">
           {hub.title}
           <em className="mt-2 block italic">{hub.emphasis}</em>
         </h1>
-        <p className="mt-6 max-w-lg font-sans text-[17px] leading-relaxed font-light text-muted">{hub.lede}</p>
+        <p className="t-lede mt-6 max-w-lg text-muted">{hub.lede}</p>
       </header>
       <section className="mt-12 bg-nacht px-5 py-14 sm:px-8 lg:px-14 lg:py-20">
         <Frame
@@ -443,7 +445,7 @@ function Luxus({
         />
         {hub.quote ? (
           <>
-            <p className="mx-auto mt-12 max-w-3xl text-center font-serif text-[28px] leading-snug font-medium text-paper md:text-[36px]">
+            <p className="t-lead mx-auto mt-12 max-w-3xl text-center text-paper">
               {hub.quote}
             </p>
             <p className="mt-5 text-center font-sans text-[11px] tracking-[0.2em] text-messing uppercase">
@@ -457,7 +459,7 @@ function Luxus({
       </section>
       <section className="grid gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24">
         <div className="lg:col-span-5">
-          <p className="font-serif text-[28px] leading-snug font-medium text-ink">{hub.statement}</p>
+          <p className="t-lead text-ink">{hub.statement}</p>
           {hub.statementNote ? (
             <p className="mt-6 font-sans text-[15px] leading-relaxed text-muted">{hub.statementNote}</p>
           ) : null}
@@ -466,7 +468,7 @@ function Luxus({
           {hub.branches.map((branch, index) => (
             <li key={branch.title} className="border-t border-line py-6">
               <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
-              <h2 className="mt-2 font-serif text-[26px] font-medium text-ink">{branch.title}</h2>
+              <h2 className="t-feature mt-2 text-ink">{branch.title}</h2>
               <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
             </li>
           ))}

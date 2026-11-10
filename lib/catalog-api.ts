@@ -225,6 +225,7 @@ function mapRegion(entry: unknown): Region | null {
     intro: text(row, "intro"),
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
+    imageAlt: text(flattenEntity(row?.image), "alternativeText"),
     ...pageFields(row),
   };
 }
@@ -257,7 +258,9 @@ function mapGallery(row: Record<string, unknown> | null): ProjectFrame[] {
     }
     // Never a file name ("grifflose küchen_küchen kaufen.jpg"): the page then uses the project title.
     const alt = text(item, "alternativeText") || text(item, "caption");
-    return [{ src: image.src, srcSet: image.srcSet, alt }];
+    const media = item as StrapiMedia;
+    const portrait = Boolean(media.width && media.height && media.height > media.width);
+    return [{ src: image.src, srcSet: image.srcSet, alt, ...(portrait ? { portrait } : {}) }];
   });
 }
 

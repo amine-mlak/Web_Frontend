@@ -24,6 +24,7 @@ import type { Locale } from "@/lib/i18n";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { topicReading } from "@/lib/topic-reading";
 import { projectFeature, type ProjectFeatureData } from "@/lib/project-features";
+import type { PhotoStory, StoryPhoto } from "@/lib/photo-match";
 
 export type PresentedTopic = PresentedCluster & {
   lookTitle: string;
@@ -34,8 +35,14 @@ export type PresentedTopic = PresentedCluster & {
   taggedKitchens?: number;
   /** Every project tagged with this topic, newest first as loaded (colour pages list them all). */
   taggedHouses?: ClusterHouse[];
+  /** The houses are not from this place or topic: the page has none of its own and shows others from the workshop. */
+  housesElsewhere?: boolean;
   /** Kitchens shown one by one at the top of a colour page; the grid lists the rest. */
   features?: TopicFeature[];
+  /** Photos that show what the page is about, taken from the built kitchens (entry pages). */
+  story?: PhotoStory;
+  /** Category pages: the photo the page opens on, from a kitchen where one of its things stands. */
+  opening?: StoryPhoto;
 };
 
 export type TopicFeature = ProjectFeatureData;

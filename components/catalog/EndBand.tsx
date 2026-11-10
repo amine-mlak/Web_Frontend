@@ -27,11 +27,11 @@ export default function EndBand({
   tilesTitle?: string;
   locale: Locale;
 }) {
-  const shown = tiles.filter((tile) => tile.image).slice(0, 3);
+  const shown = tiles.filter((tile) => tile.image).slice(0, 4);
 
   return (
-    <section className="border-b border-paper/10 bg-nacht" aria-labelledby="end-band">
-      <div className="grid lg:grid-cols-12">
+    <div className="border-b border-paper/10 bg-nacht">
+      <section className="grid lg:grid-cols-12" aria-labelledby="end-band">
         {image ? (
           <div className="relative min-h-[18rem] overflow-hidden lg:order-2 lg:col-span-5 lg:min-h-[30rem]">
             <Frame src={image} alt="" className="absolute inset-0" sizes="(max-width: 1024px) 100vw, 42vw" />
@@ -40,25 +40,29 @@ export default function EndBand({
         <div data-rise="" className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:px-16 lg:py-24">
           <h2
             id="end-band"
-            className="max-w-2xl font-serif text-[36px] leading-[1.08] font-medium tracking-[-0.03em] text-paper md:text-[48px]"
+            className="t-section max-w-2xl text-paper"
           >
             {title}
           </h2>
           {text ? (
-            <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80">{text}</p>
+            <p className="t-lede mt-6 max-w-md text-paper/80">{text}</p>
           ) : null}
           <NextSteps primary={primary} locale={locale} tone="dark" className="mt-10" />
         </div>
-      </div>
+      </section>
 
       {shown.length ? (
-        <div className="px-3 pt-12 pb-3 sm:px-4 sm:pb-4 lg:pt-16">
+        <nav
+          className="px-3 pt-12 pb-3 sm:px-4 sm:pb-4 lg:pt-16"
+          aria-labelledby={tilesTitle ? "end-band-more" : undefined}
+          aria-label={tilesTitle ? undefined : locale === "en" ? "More pages" : "Weitere Seiten"}
+        >
           {tilesTitle ? (
-            <h3 className="px-3 font-serif text-[26px] leading-tight font-medium text-paper sm:px-6 md:text-[32px] lg:px-12">
+            <h2 id="end-band-more" className="t-feature px-2 text-paper sm:px-4 lg:px-10">
               {tilesTitle}
-            </h3>
+            </h2>
           ) : null}
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className={`mt-8 grid gap-3 sm:grid-cols-2 ${shown.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             {shown.map((tile) => (
               <li key={tile.href}>
                 <LocaleLink href={tile.href} className="group relative block overflow-hidden">
@@ -70,7 +74,7 @@ export default function EndBand({
                   />
                   <span className="hero-scrim absolute inset-0" aria-hidden />
                   <span className="absolute inset-x-0 bottom-0 p-6">
-                    <span className="block font-serif text-[28px] leading-tight font-medium text-paper">{tile.title}</span>
+                    <span className="t-feature block text-paper">{tile.title}</span>
                     {tile.text ? (
                       <span className="mt-2 block max-w-xs font-sans text-[14px] leading-relaxed text-paper/85 line-clamp-2">
                         {tile.text}
@@ -81,8 +85,8 @@ export default function EndBand({
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
       ) : null}
-    </section>
+    </div>
   );
 }

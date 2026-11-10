@@ -114,7 +114,7 @@ export default function ChapterSpread({
               {branch.kicker}
             </p>
             <Swatch hex={branch.hex} />
-            <h2 className="mt-4 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+            <h2 className="t-section mt-4 text-ink">
               {branch.href ? (
                 <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
               ) : (
@@ -149,7 +149,7 @@ export default function ChapterSpread({
           <div className="grid gap-8 bg-paper px-5 py-10 sm:px-8 md:grid-cols-12 md:items-end lg:px-14 lg:py-14">
             <div className="md:col-span-5">
               <Swatch hex={branch.hex} />
-              <h2 className="font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+              <h2 className="t-section text-ink">
                 {branch.href ? (
                   <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
                 ) : (
@@ -209,7 +209,7 @@ export default function ChapterSpread({
             {branch.kicker}
           </p>
           <Swatch hex={branch.hex} />
-          <h2 className="mt-4 font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+          <h2 className="t-section mt-4 text-ink">
             {branch.href ? (
               <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
             ) : (
@@ -242,7 +242,7 @@ export default function ChapterSpread({
         </figure>
         <div className="flex flex-col justify-center px-8 py-16 sm:px-12 lg:px-16">
           <Swatch hex={branch.hex} invert />
-          <h2 className="font-serif text-[34px] leading-[1.06] font-medium tracking-[-0.03em] text-paper italic md:text-[48px]">
+          <h2 className="t-section text-paper">
             {branch.href ? (
               <LocaleLink href={branch.href} className="hover:opacity-80">
                 {branch.title}
@@ -268,7 +268,7 @@ export default function ChapterSpread({
     >
       <div className="md:col-span-5 lg:pr-8">
         <Swatch hex={branch.hex} />
-        <h2 className="font-serif text-[32px] leading-[1.06] font-medium tracking-[-0.03em] text-ink md:text-[44px]">
+        <h2 className="t-section text-ink">
           {branch.href ? (
             <LocaleLink href={branch.href}>{branch.title}</LocaleLink>
           ) : (

@@ -43,11 +43,11 @@ export default function TopicReading({
           <p className="type-eyebrow text-gold">{places.eyebrow}</p>
           <h2
             id={`reading-${slug ?? "seite"}`}
-            className="mt-4 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.03em] text-ink md:text-[44px]"
+            className="t-section mt-4 text-ink"
           >
             {copy.heading}
           </h2>
-          <p className="mt-8 font-serif text-[22px] leading-snug text-ink">{places.title}</p>
+          <p className="t-item mt-8 text-ink">{places.title}</p>
           <p className="mt-4 max-w-sm font-sans text-[15px] leading-relaxed text-muted">{places.text}</p>
           <p className="type-eyebrow mt-8 text-muted">{places.linksLabel}</p>
           <ul className="mt-3 space-y-2">

@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
-import { Frame, HubEnd } from "@/components/catalog/collections/parts";
+import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
+import { QuoteLine } from "@/components/catalog/clusters/parts";
 
 export default function KuechenCollection({
   hub,
@@ -33,11 +34,11 @@ export default function KuechenCollection({
           <div className="max-w-xl bg-paper px-7 py-8 sm:px-10 sm:py-10">
             <h1
               id="kuechen-hero"
-              className="font-serif text-[42px] leading-[0.94] font-medium tracking-[-0.04em] text-ink sm:text-[64px]"
+              className="t-display text-ink"
             >
               {hub.title}
             </h1>
-            <p className="mt-5 font-sans text-[16px] leading-relaxed font-light text-muted">
+            <p className="t-lede mt-5 text-muted">
               {hub.lede}
             </p>
             <LocaleLink href={hub.ctaHref} className="btn-quiet mt-8 text-ink">
@@ -47,18 +48,11 @@ export default function KuechenCollection({
         </div>
       </section>
 
-      <section className="border-b border-line bg-karte px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-        <p className="max-w-3xl font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-ink md:text-[40px]">
-          {hub.statement}
-        </p>
-        <p className="mt-6 max-w-lg font-sans text-[15px] leading-relaxed text-muted">
-          {hub.statementNote}
-        </p>
-      </section>
+      <StatementBand statement={hub.statement} note={hub.statementNote} tone="karte" rule={false} />
 
       <section aria-labelledby="kuechen-doors" className="bg-paper">
         <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14">
-          <h2 id="kuechen-doors" className="type-h2">
+          <h2 id="kuechen-doors" className="t-section text-ink">
             {hub.indexEyebrow}
           </h2>
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
@@ -78,7 +72,7 @@ export default function KuechenCollection({
                       sizes={wide ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
                     />
                     <div className="mt-4">
-                      <h3 className="font-serif text-[22px] leading-tight font-medium text-ink md:text-[26px]">
+                      <h3 className="t-item text-ink">
                         {branch.title}
                       </h3>
                       <p className="mt-2 font-sans text-[14px] leading-relaxed text-muted">
@@ -94,14 +88,7 @@ export default function KuechenCollection({
       </section>
 
       {/* A quote only when the CMS has a real one with its source. */}
-      {hub.quote ? (
-        <section className="bg-nacht px-5 py-20 text-center sm:px-8 lg:py-28">
-          <p className="font-serif text-[28px] leading-snug font-medium tracking-[-0.03em] text-paper md:text-[36px]">
-            {hub.quote}
-          </p>
-          <p className="mt-6 font-sans text-[14px] text-paper/70">{hub.quoteSource}</p>
-        </section>
-      ) : null}
+      <QuoteLine quote={hub.quote} source={hub.quoteSource} tone="nacht" />
 
       <HubEnd hub={hub}>{children}</HubEnd>
     </main>

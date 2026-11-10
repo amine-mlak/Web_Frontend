@@ -31,6 +31,7 @@ export type PresentedBranch = CollectionBranch & {
   /** Overview pages: a real project in this topic and how many projects carry it. */
   cover?: string;
   count?: number;
+  imageSrcSet?: string;
 };
 
 export type HubCrumb = {

@@ -132,13 +132,18 @@ export default function RichText({
   source,
   className,
   anchors = false,
+  flat = false,
 }: {
   source: string;
   className?: string;
+  /** The text has no "##" headings: its "###" headings are the page's sections and render as h2. */
+  flat?: boolean;
   /** Give h2 headings ids (see richTextHeadings) and leave room under the sticky header. */
   anchors?: boolean;
 }) {
-  const blocks = parse(source);
+  const blocks = parse(source).map((block) =>
+    flat && block.type === "heading" ? { ...block, level: 2 as const } : block,
+  );
   return (
     <div className={cn("space-y-6", className)}>
       {blocks.map((block, index) => (
@@ -146,12 +151,12 @@ export default function RichText({
           {block.type === "heading" && block.level === 2 ? (
             <h2
               id={anchors ? anchor(block.text) : undefined}
-              className="scroll-mt-32 pt-6 font-serif text-[28px] leading-snug font-medium tracking-[-0.02em] text-ink md:text-[34px]">
+              className="t-feature scroll-mt-32 pt-6 text-ink">
               {inline(block.text)}
             </h2>
           ) : null}
           {block.type === "heading" && block.level === 3 ? (
-            <h3 className="pt-2 font-serif text-[22px] leading-snug font-medium text-ink md:text-[26px]">{inline(block.text)}</h3>
+            <h3 className="t-item pt-2 text-ink">{inline(block.text)}</h3>
           ) : null}
           {block.type === "paragraph" ? (
             <p className="type-body">

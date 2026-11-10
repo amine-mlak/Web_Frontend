@@ -70,7 +70,6 @@ export default async function FurniturePage({
         labels={{
           houses: en ? "From these houses" : "Aus diesen Häusern",
           more: en ? "More furniture from the workshop" : "Weitere Möbel aus der Werkstatt",
-          faqAll: en ? "All questions on furniture" : "Alle Fragen zu Möbeln",
           secondaryHref: "/ausstellung",
           secondaryLabel: en ? "Visit the showroom" : "Ausstellung besuchen",
         }}
