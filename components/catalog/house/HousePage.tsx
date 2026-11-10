@@ -27,7 +27,7 @@ import {
 const COPY = {
   de: {
     siblingEyebrow: "Die Manufaktur",
-    siblingTitle: "Andere Räume des Hauses.",
+    siblingTitle: "Mehr über BEER",
     peopleEyebrow: "Die Werkstatt",
     peopleTitle: "Wer aufmisst, fertigt, montiert.",
     galleryEyebrow: "Das Studio",
@@ -37,7 +37,7 @@ const COPY = {
   },
   en: {
     siblingEyebrow: "The manufactory",
-    siblingTitle: "Other rooms of the house.",
+    siblingTitle: "More about BEER",
     peopleEyebrow: "The workshop",
     peopleTitle: "Who surveys, makes, fits.",
     galleryEyebrow: "The studio",

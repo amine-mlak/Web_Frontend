@@ -73,6 +73,12 @@ function mediaImage(
   };
 }
 
+/**
+ * CMS point photos that show a person. The point's detail photo takes their place, because pages with
+ * BEER's work show no people. Remove a line once the CMS entry has a new photo.
+ */
+const POINT_PHOTOS_WITH_PEOPLE = ["moebel_arbeitsplatz_c32e9f15cc"];
+
 /** An optional photo inside a page point; undefined when the CMS has none. */
 function pointImage(row: Record<string, unknown>, key: string) {
   const media = row[key] as (StrapiMedia & { alternativeText?: string | null }) | undefined;
@@ -118,14 +124,19 @@ function pageFields(row: Record<string, unknown> | null) {
       b: text(item, "zeile"),
     })).map((item) => ({ wert: item.a, zeile: item.b })),
     punkte: flattenCollection(row?.punkte)
-      .map((item) => ({
-        titel: text(item, "titel"),
-        text: text(item, "text"),
-        bild: pointImage(item, "bild"),
-        detailbild: pointImage(item, "detailbild"),
-        linkText: text(item, "linkText") || undefined,
-        linkZiel: text(item, "linkZiel") || undefined,
-      }))
+      .map((item) => {
+        const bild = pointImage(item, "bild");
+        const detailbild = pointImage(item, "detailbild");
+        const person = Boolean(bild && POINT_PHOTOS_WITH_PEOPLE.some((file) => bild.src.includes(file)));
+        return {
+          titel: text(item, "titel"),
+          text: text(item, "text"),
+          bild: person ? detailbild : bild,
+          detailbild: person ? undefined : detailbild,
+          linkText: text(item, "linkText") || undefined,
+          linkZiel: text(item, "linkZiel") || undefined,
+        };
+      })
       .filter((item) => item.titel && item.text),
   };
 }
@@ -191,6 +202,23 @@ function mapAppliance(entry: unknown): Appliance | null {
   };
 }
 
+/**
+ * CMS photos that show a person, and the BEER project photo shown in their place. Pages with BEER's
+ * work show no people. Remove a line once the CMS entry has a new photo.
+ */
+const WITHOUT_PEOPLE: Record<string, string> = {
+  "moebel_wohnzimmer_27552d17cf.jpg": "grifflose_kuechen_moderne_kuechen_28f8a2078d.jpg",
+};
+
+function withoutPeople(image: { src: string; srcSet?: string }) {
+  const hit = Object.keys(WITHOUT_PEOPLE).find((file) => image.src.endsWith(`/${file}`));
+  if (!hit) {
+    return image;
+  }
+  const swap = (value: string) => value.split(hit).join(WITHOUT_PEOPLE[hit]);
+  return { src: swap(image.src), srcSet: image.srcSet ? swap(image.srcSet) : image.srcSet };
+}
+
 function mapFurniture(entry: unknown): Furniture | null {
   const row = flattenEntity(entry);
   const slug = text(row, "slug");
@@ -198,7 +226,7 @@ function mapFurniture(entry: unknown): Furniture | null {
   if (!slug || !name) {
     return null;
   }
-  const image = mediaImage(row, "image", stile("stile-holz.jpg"));
+  const image = withoutPeople(mediaImage(row, "image", stile("stile-holz.jpg")));
   return {
     slug,
     name,

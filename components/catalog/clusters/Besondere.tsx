@@ -7,7 +7,7 @@ import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
-  return locale === "en" ? "Where the grid ended" : "Wo das Raster endete";
+  return locale === "en" ? "Projects with this solution" : "Projekte mit dieser Lösung";
 }
 
 export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
@@ -16,13 +16,13 @@ export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: strin
       <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
       <div className="mt-10 border-t border-line lg:mt-14">
-        <AtelierFacts facts={hub.facts} kicker={hub.eyebrow} image={hub.heroImage} sentence={hub.ledgerLine} />
+        <AtelierFacts facts={hub.facts} kicker={hub.eyebrow} image={hub.heroImage} />
       </div>
 
       <PointsSection hub={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <IndexRows items={hub.siblings} eyebrow={hub.siblingEyebrow} title={hub.siblingTitle} />
+      <IndexRows items={hub.siblings} title={hub.siblingTitle} />
       <SoftClose hub={hub} />
     </main>
   );

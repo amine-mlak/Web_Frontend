@@ -6,6 +6,7 @@ import {
   type CollectionHubId,
 } from "@/lib/collection-hubs";
 import { cmsLarge } from "@/lib/beer-photos";
+import { HUB_VISIT, houseSrc } from "@/lib/house-photos";
 import { devPhoto, isStockPhoto, resolveDevImage } from "@/lib/dev-images";
 import { kitchenPhotos } from "@/lib/kitchen-photos";
 import type { Locale } from "@/lib/i18n";
@@ -328,12 +329,12 @@ const VISIT: Record<Locale, { place: string; line: string; note: string }> = {
   de: {
     place: "Ausstellung Wolfersdorf",
     line: "Badendorf 6 · 85395 Wolfersdorf bei Freising",
-    note: "Muster, Kanten, Licht. Mit Termin. Das Erstgespräch ist kostenlos — die Küche nicht.",
+    note: "Muster, Kanten, Licht. Mit Termin. Das Erstgespräch ist kostenlos.",
   },
   en: {
     place: "Wolfersdorf showroom",
     line: "Badendorf 6 · 85395 Wolfersdorf near Freising",
-    note: "Samples, edges, light. By appointment. The first talk is free — the kitchen is not.",
+    note: "Samples, edges, light. By appointment. The first talk is free.",
   },
 };
 
@@ -410,7 +411,7 @@ export function presentHub(
     statementImageB: photo(2, 1920),
     closeImage: photo(3, 2560),
     ledgerImage: photo(4, 1920),
-    visitImage: photo(5, 1920),
+    visitImage: HUB_VISIT[id] ? houseSrc(HUB_VISIT[id], 1920) : photo(5, 1920),
     filmstrip: [0, 1, 2, 3].map((slot) => ({
       src: photo(6 + slot, 1920),
       alt: copy.title,
@@ -432,8 +433,8 @@ export function presentHub(
     visitNote: visit.note,
     priceLine:
       locale === "en"
-        ? "The first conversation is free. The kitchen is not."
-        : "Das Erstgespräch ist kostenlos. Die Küche nicht.",
+        ? "The first conversation is free."
+        : "Das Erstgespräch ist kostenlos.",
     placeLine:
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"

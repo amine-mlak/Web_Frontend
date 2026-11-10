@@ -2,6 +2,7 @@ import { cmsLarge } from "@/lib/beer-photos";
 import type { Project, Region } from "@/lib/catalog";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { resolveDevImage } from "@/lib/dev-images";
+import { kindOf } from "@/lib/photo-match";
 import { isCodeGallery } from "@/lib/project-photos";
 import { photoKey } from "@/lib/utils";
 
@@ -122,6 +123,41 @@ export function placeCover(region: Region, all: Project[]) {
   );
 }
 
+/**
+ * A wide photo of the whole room from the galleries of these kitchens, taken in their order: the
+ * photo a page opens or closes on. The media library description decides what a photo shows.
+ * Covers stay with the project cards, and nothing in `taken` comes back.
+ */
+export function roomPhoto(projects: Project[], taken: string[] = []) {
+  const skip = new Set(taken.filter(Boolean).map((src) => photoKey(src)));
+  for (const project of projects) {
+    if (isCodeGallery(project.slug)) continue;
+    const cover = photoKey(project.image);
+    const frame = project.gallery.find(
+      (item) =>
+        item.src &&
+        !item.portrait &&
+        kindOf(item.alt) === "room" &&
+        photoKey(item.src) !== cover &&
+        !skip.has(photoKey(item.src)),
+    );
+    if (frame) return { src: frame.src, project };
+  }
+  return undefined;
+}
+
+/**
+ * The cover of a project that matches and is not on the page yet (`onPage` holds project slugs),
+ * else of the first that matches. The chosen project is added to `onPage`, so the next card
+ * takes another kitchen.
+ */
+export function freshCover(projects: Project[], matches: (project: Project) => boolean, onPage: Set<string>) {
+  const fitting = projects.filter((project) => project.image && matches(project));
+  const pick = fitting.find((project) => !onPage.has(project.slug)) ?? fitting[0];
+  if (pick) onPage.add(pick.slug);
+  return pick?.image;
+}
+
 /** The cover of the first project that matches, for a card that links to another topic or place. */
 export function coverOf(projects: Project[], matches: (project: Project) => boolean) {
   return projects.find((project) => project.image && matches(project))?.image;
@@ -134,7 +170,21 @@ export function coverOf(projects: Project[], matches: (project: Project) => bool
 export function uniquePagePhotos<T extends PresentedCluster>(page: T, photo: Photo): T {
   const spare = (photo as Partial<KitchenPhotos>).spare;
   if (!spare) return page;
-  const used = new Set<string>(page.houses.map((house) => photoKey(house.image)));
+  // Project cards, the kitchens shown one by one and the chapter covers keep their photos.
+  const own = page as T & {
+    taggedHouses?: { image: string }[];
+    features?: { image: string; detail?: { src: string } }[];
+  };
+  const used = new Set<string>(
+    [
+      ...page.houses.map((house) => house.image),
+      ...page.branches.map((branch) => branch.cover ?? ""),
+      ...(own.taggedHouses ?? []).map((house) => house.image),
+      ...(own.features ?? []).flatMap((feature) => [feature.image, feature.detail?.src ?? ""]),
+    ]
+      .filter(Boolean)
+      .map((src) => photoKey(src)),
+  );
   const keep = (src: string, width?: number) => {
     if (!src || !used.has(photoKey(src))) {
       if (src) used.add(photoKey(src));

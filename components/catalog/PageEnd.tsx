@@ -25,6 +25,13 @@ export default function PageEnd({
   locale: Locale;
 }) {
   const shown = tiles.filter((tile) => tile.image).slice(0, 4);
+  // One tile lies wide, two share the row, three and four stand side by side.
+  const layout = [
+    { grid: "", ratio: "aspect-[4/5] sm:aspect-[21/9]", sizes: "100vw" },
+    { grid: "sm:grid-cols-2", ratio: "aspect-[4/5] lg:aspect-[16/10]", sizes: "(max-width: 640px) 100vw, 50vw" },
+    { grid: "sm:grid-cols-2 lg:grid-cols-3", ratio: "aspect-[4/5]", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" },
+    { grid: "sm:grid-cols-2 lg:grid-cols-4", ratio: "aspect-[4/5]", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" },
+  ][Math.max(shown.length, 1) - 1];
   return (
     <>
       <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="page-end">
@@ -40,15 +47,15 @@ export default function PageEnd({
       </section>
       {shown.length ? (
         <nav className="px-3 pb-3 sm:px-4 sm:pb-4" aria-label={tilesTitle || (locale === "en" ? "More pages" : "Weitere Seiten")}>
-          <ul className={`grid gap-3 sm:grid-cols-2 ${shown.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+          <ul className={`grid gap-3 ${layout.grid}`}>
             {shown.map((tile) => (
               <li key={tile.href}>
                 <LocaleLink href={tile.href} className="group relative block">
                   <Frame
                     src={tile.image!}
                     alt=""
-                    className="aspect-[4/5]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className={layout.ratio}
+                    sizes={layout.sizes}
                   />
                   <span className="hero-scrim absolute inset-0" aria-hidden />
                   <span className="absolute inset-x-0 bottom-0 p-6">

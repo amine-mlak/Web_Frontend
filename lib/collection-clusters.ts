@@ -15,7 +15,7 @@ import {
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
-import { coverOf, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
+import { freshCover, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import { cmsPageText } from "@/lib/page-text";
@@ -89,12 +89,12 @@ const VISIT: Record<Locale, { place: string; line: string; note: string }> = {
   de: {
     place: "Ausstellung Wolfersdorf",
     line: "Badendorf 6 · 85395 Wolfersdorf bei Freising",
-    note: "Muster, Kanten, Licht. Mit Termin. Das Erstgespräch ist kostenlos — die Küche nicht.",
+    note: "Muster, Kanten, Licht. Mit Termin. Das Erstgespräch ist kostenlos.",
   },
   en: {
     place: "Wolfersdorf showroom",
     line: "Badendorf 6 · 85395 Wolfersdorf near Freising",
-    note: "Samples, edges, light. By appointment. The first talk is free — the kitchen is not.",
+    note: "Samples, edges, light. By appointment. The first talk is free.",
   },
 };
 
@@ -661,18 +661,18 @@ export function topicPoints(slug: string, locale: Locale) {
 
 const SIBLING_TEXT: Record<Locale, Record<KitchenClusterSlug, string>> = {
   de: {
-    formen: "Die Form folgt dem Grundriss.",
-    stile: "Haltung, die zum Haus passt.",
-    farben: "Farbe am Muster, unter Tageslicht.",
-    inseln: "Nur wenn der Raum Wege lässt.",
-    besondere: "Dort, wo das Raster endet.",
+    formen: "Zeile, L-Form, U-Form, Insel oder offene Küche.",
+    stile: "Modern, Landhaus, Design, Holz oder puristisch.",
+    farben: "Weiß, Salbei, Grau und Schwarz.",
+    inseln: "Kochinsel, Essinsel und Arbeitsinsel.",
+    besondere: "Raumhoch, grifflos, nach Maß und für draußen.",
   },
   en: {
-    formen: "The layout follows the plan.",
-    stile: "A stance that fits the house.",
-    farben: "Colour on a sample, in daylight.",
-    inseln: "Only if the room leaves paths.",
-    besondere: "Where the grid ends.",
+    formen: "Single line, L-shape, U-shape, island or open plan.",
+    stile: "Modern, country, design, wood or purist.",
+    farben: "White, sage, grey and black.",
+    inseln: "Cooking island, dining island and work island.",
+    besondere: "Full height, handleless, made to measure and outdoor.",
   },
 };
 
@@ -756,32 +756,49 @@ export function presentCluster(
 
   const filmCaptions = copy.film;
   const lookCaptions = copy.looks;
-  // One kitchen per topic (one white, one black …), then the next real ones, four in all.
-  const picked: Project[] = [];
-  for (const topic of topics) {
-    const first = tagged.find((project) => !picked.includes(project) && project.topics.some((item) => item.slug === topic.slug));
-    if (first) picked.push(first);
-  }
-  const houseProjects = [...picked, ...kitchens.filter((project) => !picked.includes(project))].slice(0, 4);
-  const houses = houseProjects.map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: [project.place, project.year].filter(Boolean).join(" · "),
-    image: resolveDevImage(project.image, photo(80 + index, 1200)),
-  }));
-  // Each topic shows a real kitchen of its own, none twice and none from the project row.
-  const usedCovers = new Set(houseProjects.map((project) => project.slug));
-  for (const branch of branches) {
+  // Each topic shows a real kitchen of its own on its chapter, none twice. A topic with one
+  // kitchen keeps it for the chapter, so the project row below takes other kitchens.
+  const usedCovers = new Set<string>();
+  const perBranch = branches.map((branch) => {
     const slugOfTopic = branch.href?.split("/").pop();
-    const inTopic = projects.filter((project) => project.topics.some((item) => item.slug === slugOfTopic));
+    return { branch, inTopic: projects.filter((project) => project.topics.some((item) => item.slug === slugOfTopic)) };
+  });
+  // The topic with the fewest kitchens chooses first: its one kitchen is not taken by a topic that has ten.
+  for (const { branch, inTopic } of [...perBranch].sort((a, b) => a.inTopic.length - b.inTopic.length)) {
     const cover =
       inTopic.find((project) => project.image && !usedCovers.has(project.slug)) ?? inTopic.find((project) => project.image);
     if (cover) usedCovers.add(cover.slug);
     branch.cover = cover?.image;
     branch.count = inTopic.length;
   }
+  // One kitchen per topic (one white, one black …), then the next real ones, four in all.
+  const free = (project: Project) => !usedCovers.has(project.slug);
+  const picked: Project[] = [];
+  for (const topic of topics) {
+    const first = tagged.find(
+      (project) => free(project) && !picked.includes(project) && project.topics.some((item) => item.slug === topic.slug),
+    );
+    if (first) picked.push(first);
+  }
+  const rest = kitchens.filter((project) => !picked.includes(project));
+  const houseProjects = [...picked, ...rest.filter(free), ...rest.filter((project) => !free(project))].slice(0, 4);
+  const houses = houseProjects.map((project, index) => ({
+    href: `/projekte/${project.slug}`,
+    title: project.title,
+    meta: [project.place, project.year].filter(Boolean).join(" · "),
+    image: resolveDevImage(project.image, photo(80 + index, 1200)),
+  }));
+  for (const project of houseProjects) usedCovers.add(project.slug);
   // The hero is a whole kitchen of this world too, not a topic's detail shot.
   const heroProject = tagged.find((project) => project.image && !usedCovers.has(project.slug));
+  // The cards that lead to the other kitchen worlds each show a kitchen that is not on the page yet.
+  const onPage = new Set([...usedCovers, ...(heroProject ? [heroProject.slug] : [])]);
+  const siblingCovers = new Map(
+    KITCHEN_CLUSTERS.filter((item) => item.slug !== slug).map((item) => [
+      item.slug,
+      freshCover(projects, (project) => project.topics.some((topic) => topic.cluster === item.slug), onPage),
+    ]),
+  );
   // The closing photo is none of the others on the page (houses, film, looks, chapters, hero).
   const shown = new Set(
     [
@@ -839,8 +856,8 @@ export function presentCluster(
     visitNote: visit.note,
     priceLine:
       locale === "en"
-        ? "The first conversation is free. The kitchen is not."
-        : "Das Erstgespräch ist kostenlos. Die Küche nicht.",
+        ? "The first conversation is free."
+        : "Das Erstgespräch ist kostenlos.",
     placeLine:
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"
@@ -850,9 +867,7 @@ export function presentCluster(
         href: `/kuechen/${item.slug}`,
         title: COPY[locale][item.slug].title,
         text: SIBLING_TEXT[locale][item.slug],
-        image:
-          coverOf(projects, (project) => project.topics.some((topic) => topic.cluster === item.slug)) ??
-          photo(70 + index, 1100),
+        image: siblingCovers.get(item.slug) ?? photo(70 + index, 1100),
       }),
     ),
     houses,

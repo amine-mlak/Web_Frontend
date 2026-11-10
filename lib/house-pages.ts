@@ -724,8 +724,8 @@ function emptyHub(locale: Locale, slug: string, voice: Voice, page: SitePage | n
     ...visit,
     priceLine:
       locale === "en"
-        ? "The first conversation is free. The kitchen is not."
-        : "Das Erstgespräch ist kostenlos. Die Küche nicht.",
+        ? "The first conversation is free."
+        : "Das Erstgespräch ist kostenlos.",
     placeLine:
       locale === "en"
         ? "Wolfersdorf · Freising · Munich"

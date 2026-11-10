@@ -70,7 +70,7 @@ const DE: Record<string, StileReadingCopy> = {
     heading: "Luxusküchen, am Stein und am Millimeter.",
     paragraphs: [
       "Luxus ist bei BEER Passgenauigkeit und Stein, nicht ein Beschlag, der gesehen werden will. Das Teure sitzt oft in der Platte, die wirklich aus dem Block kommt, und in der Zeit, die Wand, Nische und Fuge brauchen. Was man täglich nutzt, liegt in der Arbeitszone. Flächen, die nur posieren, bleiben ungezeichnet.",
-      "Stein wird gemustert, nicht vom Bild bestellt. Aderung, Kante, Becken und das Licht im Haus entscheiden gemeinsam. Das Erstgespräch in Wolfersdorf ist kostenlos. Die Küche nicht: der Preis folgt dem Aufmaß, dem Material und der Werkstattzeit. Dafür gibt es keine Prospektzahl und keine Vertragsküche.",
+      "Stein wird gemustert, nicht vom Bild bestellt. Aderung, Kante, Becken und das Licht im Haus entscheiden gemeinsam. Das Erstgespräch in Wolfersdorf ist kostenlos. Der Preis der Küche folgt dem Aufmaß, dem Material und der Werkstattzeit. Dafür gibt es keine Prospektzahl und keine Vertragsküche.",
       "Wir bauen das für wenige Häuser im Jahr, meist im Raum München, Freising und dem näheren Umland bis Augsburg und Ingolstadt, wenn der Weg stimmt. Aufmaß vor Ort, Fertigung in Wolfersdorf, Montage durch dieselben Leute. Liegt der Ort zu weit entfernt, sagen wir das, bevor Stein bestellt wird.",
     ],
   },
@@ -139,7 +139,7 @@ const EN: Record<string, StileReadingCopy> = {
     heading: "Luxury kitchens, settled in stone and millimetres.",
     paragraphs: [
       "Luxury at BEER is fit and stone, not a fitting that wants to be seen. The costly part is often the slab that really comes from the block, and the time wall, niche and joint require. What you use every day sits in the working zone. Faces that only pose stay undrawn.",
-      "Stone is sampled, not ordered from a picture. Grain, edge, sink and the light in the house decide together. The first conversation in Wolfersdorf is free. The kitchen is not: the price follows the survey, the material and the time in the workshop. There is no brochure figure and no tied kitchen.",
+      "Stone is sampled, not ordered from a picture. Grain, edge, sink and the light in the house decide together. The first conversation in Wolfersdorf is free. The price of the kitchen follows the survey, the material and the time in the workshop. There is no brochure figure and no tied kitchen.",
       "We build this for few houses a year, mostly around Munich, Freising and the nearer country out to Augsburg and Ingolstadt, when the road is right. Survey on site, making in Wolfersdorf, fitting by the same people. If the place is too far away, we say so before stone is ordered.",
     ],
   },
