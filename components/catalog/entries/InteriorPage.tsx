@@ -1,6 +1,6 @@
 import LocaleLink from "@/components/LocaleLink";
 import PageEnd from "@/components/catalog/PageEnd";
-import Questions from "@/components/catalog/Questions";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import { Frame } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine } from "@/components/catalog/clusters/parts";
 import type { PagePoint, SitePage } from "@/lib/catalog";
@@ -276,7 +276,8 @@ export default function InteriorPage({
 
       <HouseLine houses={hub.houses} title={copy.houses} />
 
-      <Questions theme={faqTheme} title={hub.title} locale={hub.locale} limit={6} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} theme={faqTheme} />
 
       <PageEnd
         title={hub.closeTitle}

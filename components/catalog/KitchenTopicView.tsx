@@ -20,7 +20,10 @@ export default function KitchenTopicView({
   projects: Project[];
   locale: Locale;
 }) {
-  const hub = presentTopic(cluster.slug, topic, locale, topics, projects);
+  const hub = {
+    ...presentTopic(cluster.slug, topic, locale, topics, projects),
+    depth: { path: `/kuechen/${cluster.slug}/${topic.slug}`, name: topic.name },
+  };
 
   switch (cluster.slug) {
     case "formen":

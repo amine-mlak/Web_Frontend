@@ -5,6 +5,7 @@ import { IndexRows, PointsSection, SoftClose } from "@/components/catalog/cluste
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Projects with this solution" : "Projekte mit dieser Lösung";
@@ -22,6 +23,8 @@ export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: strin
       <PointsSection hub={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <IndexRows items={hub.siblings} title={hub.siblingTitle} />
       <SoftClose hub={hub} />
     </main>

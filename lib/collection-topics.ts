@@ -48,6 +48,8 @@ export type PresentedTopic = PresentedCluster & {
   reading?: TopicReadingCopy | null;
   /** A place page's own address, so its text does not link to itself. */
   placeHref?: string;
+  /** The page's address and the name of its subject: lib/page-depth.ts lists by address what else the page shows. */
+  depth?: { path: string; name?: string };
 };
 
 export type TopicFeature = ProjectFeatureData;

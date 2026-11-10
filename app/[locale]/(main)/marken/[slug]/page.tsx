@@ -58,6 +58,11 @@ export default async function BrandPage({
   const houses = related.length > 0 ? related : projects.slice(0, 4);
 
   return (
-    <SpecPage hub={presentBrandItem(brand, locale, brands, houses, projects)} />
+    <SpecPage
+      hub={{
+        ...presentBrandItem(brand, locale, brands, houses, projects),
+        depth: { path: `/marken/${brand.slug}`, name: brand.name },
+      }}
+    />
   );
 }

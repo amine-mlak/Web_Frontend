@@ -59,6 +59,11 @@ export default async function RegionPage({
     notFound();
   }
   return (
-    <PlacePage hub={presentRegionItem(item, locale, regions, projectsForRegion(projects, item.slug), projects)} />
+    <PlacePage
+      hub={{
+        ...presentRegionItem(item, locale, regions, projectsForRegion(projects, item.slug), projects),
+        depth: { path: `/regionen/${item.slug}`, name: item.name },
+      }}
+    />
   );
 }

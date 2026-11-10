@@ -49,7 +49,10 @@ export default async function FurniturePage({
   if (!item) {
     notFound();
   }
-  const hub = presentFurnitureItem(item, locale, items, projects);
+  const hub = {
+    ...presentFurnitureItem(item, locale, items, projects),
+    depth: { path: `/moebel/${item.slug}`, name: item.name },
+  };
   // With CMS points that carry photos (in this language), each point is a room with its photos.
   const source = {
     intro: item.intro,

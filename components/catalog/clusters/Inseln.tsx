@@ -7,6 +7,7 @@ import type { PresentedCluster } from "@/lib/collection-clusters";
 import type { PresentedBranch } from "@/lib/collection-present";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
+import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 
 function housesTitle(locale: PresentedCluster["locale"]) {
   return locale === "en" ? "Projects with an island" : "Projekte mit Insel";
@@ -80,6 +81,8 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
 
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
       <SoftClose hub={hub} />
     </main>
   );

@@ -1,6 +1,7 @@
 import AtelierFacts from "@/components/catalog/hub/AtelierFacts";
 import EntryHeader from "@/components/catalog/EntryHeader";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
+import { PageCare, PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import { CloseBand, PhotoOpener, PhotoPair } from "@/components/catalog/PhotoStory";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
 import { Frame } from "@/components/catalog/collections/parts";
@@ -45,9 +46,14 @@ export default function SamplePage({ hub }: { hub: PresentedTopic }) {
         imageAlt={story.ledger?.alt}
       />
 
+      <PageCare hub={hub} />
+
       {story.pair ? <PhotoPair pair={story.pair} locale={hub.locale} /> : null}
 
       <KitchenShowcase hub={hub} title={houses} />
+
+      <PageGuide hub={hub} />
+      <PageQuestions hub={hub} />
 
       <QuoteLine quote={hub.quote} source={hub.quoteSource} />
       <SoftClose hub={hub} tiles={hub.siblings} tilesTitle={hub.siblingEyebrow} />
