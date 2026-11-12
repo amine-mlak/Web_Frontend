@@ -31,15 +31,20 @@ export function mauticEnabled() {
 }
 
 /** Posts one form to Mautic. Returns null when it went through, otherwise the reason. */
-async function submit(form: { id: number; name: string }, fields: Record<string, string>): Promise<string | null> {
+async function submit(form: { id: number; name: string }, fields: Record<string, string | string[]>): Promise<string | null> {
   const base = baseUrl();
   if (!base) {
     return "mautic_not_configured";
   }
   const body = new URLSearchParams();
   for (const [key, value] of Object.entries(fields)) {
-    // Mautic text fields hold 191 characters.
-    body.set(`mauticform[${key}]`, value.slice(0, 191));
+    if (Array.isArray(value)) {
+      // A ticked box: the value has to be the option's exact wording.
+      for (const item of value) body.append(`mauticform[${key}][]`, item);
+    } else {
+      // Mautic text fields hold 191 characters.
+      body.set(`mauticform[${key}]`, value.slice(0, 191));
+    }
   }
   body.set("mauticform[formId]", String(form.id));
   body.set("mauticform[formName]", form.name);
@@ -91,7 +96,18 @@ export function sendPlannerToMautic(
   });
 }
 
+/**
+ * The consent box of Mautic's form "Newsletter anmelden". The form requires it, and Mautic only
+ * takes this exact wording; the website calls this after the visitor agreed to its own wording.
+ */
+const NEWSLETTER_FORM_CONSENT =
+  "Ja, ich möchte den Newsletter der BEER Küchenmanufaktur mit Küchen, Projekten und Terminen per E-Mail erhalten. Die Einwilligung kann ich jederzeit über den Link in jedem Newsletter widerrufen.";
+
 /** Starts the double opt-in in Mautic: the address gets the confirmation mail from there. */
 export function sendNewsletterToMautic(signup: { email: string; vorname?: string }) {
-  return submit(NEWSLETTER_FORM, { email: signup.email, firstname: signup.vorname?.trim().slice(0, 60) ?? "" });
+  return submit(NEWSLETTER_FORM, {
+    email: signup.email,
+    firstname: signup.vorname?.trim().slice(0, 60) ?? "",
+    einwilligung: [NEWSLETTER_FORM_CONSENT],
+  });
 }
