@@ -130,3 +130,14 @@ Threshold for the call list: 40. The numbers are a first guess and get adjusted 
 - An API user for n8n in Mautic (Amine enters the credentials in n8n).
 - Who at BEER owns the monthly mail and keeps the stages current.
 - Website tracking by Mautic only after consent in the cookie banner; wording for the privacy page.
+
+## Mail template (2026-11-12)
+
+All eleven mails (1 to 3, 8, 9 to 15) share one layout: BEER emblem and name on white, a photo of a
+BEER kitchen with its description and a link to the project, a short headline and text, one black
+button, a ruled list "Mehr auf beer.de" with two to four further pages, and a footer with address,
+Impressum, Datenschutz and, on newsletter mails, the unsubscribe link. Logo and photos load from
+cms.beer.de, so they do not depend on Mautic's address. The Keramik mail shows the Dekton colour
+sample, because no project photo is described as a ceramic worktop. The greeting is fixed:
+planner mails use first and last name, newsletter mails open with "Guten Tag,".
+A sample with filled-in values: `docs/design-reference/mail-preview-planer.html` (not in git).
