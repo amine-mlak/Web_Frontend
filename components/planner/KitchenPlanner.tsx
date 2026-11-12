@@ -26,6 +26,23 @@ import { validateLeadFields } from "@/lib/lead-fields";
 import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
 import { cn } from "@/lib/utils";
 
+/** The frame grows or shrinks to the next question's height instead of snapping to it. */
+function growStage(stage: HTMLElement | null, from: number, timer: { current: number }) {
+  if (!stage || !from || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  window.clearTimeout(timer.current);
+  stage.style.cssText = "";
+  const to = stage.offsetHeight;
+  if (Math.abs(to - from) < 8) return;
+  stage.style.height = `${from}px`;
+  stage.style.overflow = "clip";
+  void stage.offsetHeight;
+  stage.style.transition = "height 500ms cubic-bezier(0.22, 1, 0.36, 1)";
+  stage.style.height = `${to}px`;
+  timer.current = window.setTimeout(() => {
+    stage.style.cssText = "";
+  }, 540);
+}
+
 /**
  * The kitchen planner, one question per screen (after SieMatic's planner):
  * a single-choice answer moves on by itself, multiple choice needs at least
@@ -162,6 +179,10 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const tracked = useRef(new Set<string>());
   const moved = useRef(false);
   const advanceTimer = useRef(0);
+  const leaveTimer = useRef(0);
+  const heightTimer = useRef(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const fromHeight = useRef(0);
   const preloaded = useRef(new Set<string>());
   const lenis = useLenis();
 
@@ -178,6 +199,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
 
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"forward" | "back">();
+  const [leaving, setLeaving] = useState(false);
   const [near, setNear] = useState(false);
   const [selection, setSelection] = useState<Selection>({});
   const [notes, setNotes] = useState<{ style: string; form: string; wishes: string }>({ style: "", form: "", wishes: "" });
@@ -258,6 +280,8 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     if (!moved.current) return;
     moved.current = false;
     screenHeading.current?.focus({ preventScroll: true });
+    growStage(stageRef.current, fromHeight.current, heightTimer);
+    fromHeight.current = 0;
     const top = (formRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 96;
     if (Math.abs(window.scrollY - top) <= 40) return;
     if (lenis) {
@@ -267,6 +291,25 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
       window.scrollTo({ top, behavior: "instant" });
     }
   }, [index, status, lenis]);
+
+  // The question on screen fades out first, then the next one comes in, as the header menu does.
+  function swap(towards: "forward" | "back", next: (current: number) => number) {
+    window.clearTimeout(leaveTimer.current);
+    const apply = () => {
+      moved.current = true;
+      fromHeight.current = stageRef.current?.offsetHeight ?? 0;
+      setLeaving(false);
+      setDirection(towards);
+      setIndex((current) => Math.max(0, Math.min(next(current), screens.length - 1)));
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      apply();
+      return;
+    }
+    setDirection(towards);
+    setLeaving(true);
+    leaveTimer.current = window.setTimeout(apply, 220);
+  }
 
   function screenKey(item: Screen) {
     return item.kind === "group" ? item.group.group : item.kind;
@@ -297,11 +340,9 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
         trackFormWizardStep(screenKey(screen));
       }
     }
-    moved.current = true;
     setError("");
     setStatus((current) => (current === "error" ? "idle" : current));
-    setDirection(next < index ? "back" : "forward");
-    setIndex(Math.max(0, Math.min(next, screens.length - 1)));
+    swap(next < index ? "back" : "forward", () => next);
   }
 
   function choose(group: PlannerGroup, option: PlannerOption) {
@@ -318,14 +359,12 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     if (!multi && !option.freeText) {
       window.clearTimeout(advanceTimer.current);
       advanceTimer.current = window.setTimeout(() => {
-        moved.current = true;
         if (!tracked.current.has(group.group)) {
           tracked.current.add(group.group);
           trackFormWizardStep(group.group);
         }
-        setDirection("forward");
-        setIndex((current) => Math.min(current + 1, screens.length - 1));
-      }, 240);
+        swap("forward", (current) => current + 1);
+      }, 180);
     }
   }
 
@@ -505,7 +544,8 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                 <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
               </div>
 
-              <div key={screenKey(screen)} data-direction={direction} className="planner-screen px-6 pt-8 pb-10 sm:px-10 sm:pt-12 md:pt-16 md:pb-14">
+              <div ref={stageRef}>
+              <div key={screenKey(screen)} data-direction={direction} data-leaving={leaving ? "" : undefined} className="planner-screen px-6 pt-8 pb-10 sm:px-10 sm:pt-12 md:pt-16 md:pb-14">
                 <div className="mx-auto max-w-3xl text-center">
                   <p className="type-eyebrow text-gold">{eyebrow}</p>
                   <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[30px] leading-[1.15] font-medium text-ink outline-none md:text-[40px]">
@@ -709,6 +749,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                     </div>
                   ) : null}
                 </div>
+              </div>
               </div>
             </>
           )}
