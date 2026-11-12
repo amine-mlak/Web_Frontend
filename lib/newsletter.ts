@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import { mauticEnabled, sendNewsletterToMautic } from "@/lib/mautic";
 
 /**
  * Newsletter sign-up: the consent wording, and the hand-over to the n8n workflow
@@ -46,6 +47,10 @@ export type NewsletterSignup = {
 
 /** Sends one sign-up to n8n. Returns why it failed, or null when n8n accepted it. */
 export async function sendNewsletterSignup(signup: NewsletterSignup): Promise<string | null> {
+  // Once Mautic is connected it runs the double opt-in; the n8n newsletter stays the fallback.
+  if (mauticEnabled()) {
+    return sendNewsletterToMautic(signup);
+  }
   const n8n = n8nConfig();
   if (!n8n) {
     return "n8n_not_configured";
