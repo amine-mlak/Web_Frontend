@@ -17,6 +17,7 @@ import {
   userAgentBlocked,
   validateLead,
 } from "@/lib/lead-guard";
+import { mauticEnabled, sendPlannerToMautic } from "@/lib/mautic";
 import { sendNewsletterSignup } from "@/lib/newsletter";
 import { PLAN_MAX_BYTES, planExtension } from "@/lib/plan-file";
 
@@ -124,7 +125,8 @@ export async function POST(request: Request) {
     return reject(request, 400, `${challenge.reason} ip=${ip === "unknown" ? "unknown" : "known"}`);
   }
 
-  const valid = validateLead(parsed.body, await getKitchenPlanner("de"));
+  const germanPlanner = await getKitchenPlanner("de");
+  const valid = validateLead(parsed.body, germanPlanner);
   if (!valid.ok) {
     return reject(request, 400, valid.reason);
   }
@@ -219,6 +221,15 @@ export async function POST(request: Request) {
   }
 
   console.info(`[lead] sent to n8n event=${eventId}${plan ? ` plan=${plan.size}b` : ""}`);
+  if (mauticEnabled()) {
+    // The contact and its planner answers also go to Mautic, which sends the follow-up mails.
+    // A hiccup there must not turn the lead into an error for the visitor.
+    const failed = await sendPlannerToMautic(
+      { name: valid.lead.name, email: valid.lead.email, phone: valid.lead.phone, details: valid.lead.details, hasPlan: Boolean(plan) },
+      germanPlanner,
+    );
+    console.info(`[lead] mautic ${failed ? `failed: ${failed}` : "contact sent"}`);
+  }
   if (parsed.body.newsletter === true) {
     // The lead is in; a newsletter hiccup must not turn it into an error for the visitor.
     const failed = await sendNewsletterSignup({
