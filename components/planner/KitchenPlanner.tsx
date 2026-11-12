@@ -3,6 +3,7 @@
 import { useLenis } from "lenis/react";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
+import { formatSize } from "@/lib/application-files";
 import { conversionContext } from "@/lib/conversion";
 import {
   apiErrorReason,
@@ -17,6 +18,8 @@ import {
 import type { Locale } from "@/lib/i18n";
 import {
   PLANNER_GROUPS,
+  budgetBands,
+  budgetLabel,
   type PlannerContent,
   type PlannerGroup,
   type PlannerGroupKey,
@@ -24,6 +27,7 @@ import {
 } from "@/lib/kitchen-planner-model";
 import { validateLeadFields } from "@/lib/lead-fields";
 import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
+import { PLAN_ACCEPT, PLAN_MAX_BYTES, planExtension } from "@/lib/plan-file";
 import { cn } from "@/lib/utils";
 
 /** The frame grows or shrinks to the next question's height instead of snapping to it. */
@@ -46,12 +50,13 @@ function growStage(stage: HTMLElement | null, from: number, timer: { current: nu
 /**
  * The kitchen planner, one question per screen (after SieMatic's planner):
  * a single-choice answer moves on by itself, multiple choice needs at least
- * one answer before "Weiter", the budget needs a value or "Keine Angabe".
+ * one answer before "Weiter", the budget needs a range or "Keine Angabe", and a floor plan
+ * can be added after the budget or skipped.
  */
 
 type Status = "idle" | "sending" | "done" | "error";
 type Selection = Partial<Record<PlannerGroupKey, string[]>>;
-type Screen = { kind: "group"; group: PlannerGroup } | { kind: "budget" } | { kind: "contact" };
+type Screen = { kind: "group"; group: PlannerGroup } | { kind: "budget" } | { kind: "plan" } | { kind: "contact" };
 
 const UI: Record<Locale, Record<string, string>> = {
   de: {
@@ -63,6 +68,15 @@ const UI: Record<Locale, Record<string, string>> = {
     pickOne: "Bitte wählen Sie mindestens eine Antwort.",
     budgetTitle: "Welchen Rahmen haben Sie sich für Ihre Küche vorgestellt?",
     budgetHint: "Ehrliche Zahlen helfen uns, realistisch zu planen. Alles bleibt unverbindlich.",
+    plan: "Grundriss",
+    planTitle: "Haben Sie einen Grundriss Ihrer Küche?",
+    planHint: "Wenn ja, laden Sie ihn gern hoch. Das ist freiwillig.",
+    planDrop: "Datei auswählen oder hierher ziehen",
+    planFormats: "PDF, JPG oder PNG, höchstens 8 MB",
+    planRemove: "Datei entfernen",
+    skip: "Überspringen",
+    errFileType: "Diese Datei können wir nicht annehmen. Bitte als PDF, JPG oder PNG.",
+    errFileSize: "Die Datei ist größer als 8 MB.",
     contactTitle: "Wie dürfen wir Sie erreichen?",
     newsletterOptional: "(Freiwillig; Sie erhalten dazu eine Bestätigungsmail.)",
     contactHint: "Ihre Antworten bereiten das Gespräch vor. Den Termin vereinbaren wir danach direkt mit Ihnen.",
@@ -75,7 +89,6 @@ const UI: Record<Locale, Record<string, string>> = {
     message: "Platz für alles, was Ihnen noch wichtig ist",
     required: "Pflichtfeld",
     noAnswer: "Keine Angabe",
-    budgetAbout: "ca.",
     wishes: "Wünsche",
     budget: "Budget",
     errName: "Bitte Ihren Namen angeben.",
@@ -93,6 +106,15 @@ const UI: Record<Locale, Record<string, string>> = {
     pickOne: "Please choose at least one answer.",
     budgetTitle: "What budget do you have in mind for your kitchen?",
     budgetHint: "Honest numbers help us plan realistically. Nothing is binding.",
+    plan: "Floor plan",
+    planTitle: "Do you have a floor plan of your kitchen?",
+    planHint: "If so, you are welcome to upload it. This is optional.",
+    planDrop: "Choose a file or drag it here",
+    planFormats: "PDF, JPG or PNG, 8 MB at most",
+    planRemove: "Remove file",
+    skip: "Skip",
+    errFileType: "We cannot accept this file. Please use PDF, JPG or PNG.",
+    errFileSize: "The file is larger than 8 MB.",
     contactTitle: "How can we reach you?",
     newsletterOptional: "(Optional; you will get a confirmation e-mail.)",
     contactHint: "Your answers prepare the conversation. We then arrange the appointment with you directly.",
@@ -105,7 +127,6 @@ const UI: Record<Locale, Record<string, string>> = {
     message: "Anything else that matters to you",
     required: "required",
     noAnswer: "Not specified",
-    budgetAbout: "approx.",
     wishes: "Wishes",
     budget: "Budget",
     errName: "Please enter your name.",
@@ -153,19 +174,6 @@ function msSince(timestamp: number) {
   return Date.now() - timestamp;
 }
 
-/** Slider position 0–100 → euros: 0–50 covers min–mid, 50–100 covers mid–max. */
-function budgetAt(position: number, budget: PlannerContent["budget"]) {
-  const raw =
-    position <= 50
-      ? budget.min + ((budget.mid - budget.min) * position) / 50
-      : budget.mid + ((budget.max - budget.mid) * (position - 50)) / 50;
-  return Math.round(raw / 1000) * 1000;
-}
-
-function formatEuros(value: number, locale: Locale, max: number) {
-  return `${value.toLocaleString(locale === "en" ? "en-GB" : "de-DE")} €${value >= max ? " +" : ""}`;
-}
-
 export default function KitchenPlanner({ content, headingLevel = "h2" }: { content: PlannerContent; headingLevel?: "h1" | "h2" }) {
   const locale = content.locale;
   const ui = UI[locale];
@@ -191,6 +199,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     () => [
       ...content.groups.filter((group) => group.group !== "wishes" && group.options.length > 0).map((group) => ({ kind: "group" as const, group })),
       { kind: "budget" },
+      { kind: "plan" },
       { kind: "contact" },
     ],
     [content.groups],
@@ -203,8 +212,10 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
   const [near, setNear] = useState(false);
   const [selection, setSelection] = useState<Selection>({});
   const [notes, setNotes] = useState<{ style: string; form: string; wishes: string }>({ style: "", form: "", wishes: "" });
-  const [budgetPos, setBudgetPos] = useState(50);
-  const [budgetState, setBudgetState] = useState<"untouched" | "set" | "none">("untouched");
+  // A budget range's id, "none" for "Keine Angabe", or null while nothing is picked.
+  const [budgetChoice, setBudgetChoice] = useState<string | null>(null);
+  const [plan, setPlan] = useState<File | null>(null);
+  const [dragging, setDragging] = useState(false);
   const [contact, setContact] = useState({ name: "", email: "", phone: "", place: "", message: "" });
   const [newsletter, setNewsletter] = useState(false);
   const [error, setError] = useState("");
@@ -213,7 +224,8 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
 
   const screen = screens[Math.min(index, screens.length - 1)];
   const last = index === screens.length - 1;
-  const budgetValue = budgetAt(budgetPos, content.budget);
+  const bands = useMemo(() => budgetBands(content.budget), [content.budget]);
+  const pickedBand = bands.find((band) => band.id === budgetChoice);
 
   useEffect(() => {
     mountedAt.current = Date.now();
@@ -323,7 +335,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
 
   function answered(item: Screen) {
     if (item.kind === "group") return (selection[item.group.group] ?? []).length > 0;
-    if (item.kind === "budget") return budgetState !== "untouched";
+    if (item.kind === "budget") return budgetChoice !== null;
     return true;
   }
 
@@ -387,9 +399,35 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
       key: "budget",
       at: screens.findIndex((item) => item.kind === "budget"),
       label: ui.budget,
-      value: budgetState === "set" ? `${ui.budgetAbout} ${formatEuros(budgetValue, locale, content.budget.max)}` : ui.noAnswer,
+      value: pickedBand ? budgetLabel(pickedBand, locale) : ui.noAnswer,
     },
+    ...(plan ? [{ key: "plan", at: screens.findIndex((item) => item.kind === "plan"), label: ui.plan, value: plan.name }] : []),
   ];
+
+  // One tap answers the budget and moves on, like the other single-choice questions.
+  function chooseBudget(id: string) {
+    markStart();
+    setError("");
+    setBudgetChoice(id);
+    window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = window.setTimeout(() => {
+      if (!tracked.current.has("budget")) {
+        tracked.current.add("budget");
+        trackFormWizardStep("budget");
+      }
+      swap("forward", (current) => current + 1);
+    }, 180);
+  }
+
+  /** Takes the picked or dropped floor plan, checked against the same limits as the server. */
+  function pickPlan(picked: File | undefined) {
+    if (!picked) return;
+    markStart();
+    if (!planExtension(picked.name)) return setError(ui.errFileType);
+    if (picked.size > PLAN_MAX_BYTES) return setError(ui.errFileSize);
+    setError("");
+    setPlan(picked);
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -426,27 +464,36 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
         if (wait > 0) await new Promise((resolve) => window.setTimeout(resolve, wait));
       }
 
+      const data = JSON.stringify({
+        challenge: token,
+        company_website: honeypot,
+        name: fields.name,
+        email: fields.email,
+        phone: fields.phone,
+        message: fields.message,
+        place: contact.place,
+        answers: selection,
+        notes,
+        budget_range: pickedBand?.id,
+        // Only when ticked: n8n then sends the newsletter confirmation mail (double opt-in).
+        newsletter: newsletter || undefined,
+        locale,
+        ...conversionContext(),
+      });
+      // With a floor plan the lead travels as a form: the answers in "payload", the file beside them.
+      let body: BodyInit = data;
+      if (plan) {
+        const upload = new FormData();
+        upload.append("payload", data);
+        upload.append("grundriss", plan, plan.name);
+        body = upload;
+      }
       const response = await fetch("/api/lead", {
         method: "POST",
         credentials: "same-origin",
         cache: "no-store",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          challenge: token,
-          company_website: honeypot,
-          name: fields.name,
-          email: fields.email,
-          phone: fields.phone,
-          message: fields.message,
-          place: contact.place,
-          answers: selection,
-          notes,
-          budget: budgetState === "set" ? budgetValue : null,
-          // Only when ticked: n8n then sends the newsletter confirmation mail (double opt-in).
-          newsletter: newsletter || undefined,
-          locale,
-          ...conversionContext(),
-        }),
+        headers: plan ? undefined : { "content-type": "application/json" },
+        body,
       });
       const payload: unknown = await response.json().catch(() => null);
       const ok = response.ok && payload && typeof payload === "object" && "ok" in payload && payload.ok === true;
@@ -474,12 +521,12 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
 
   const stepTitle = (key: string) => content.steps.find((item) => item.step === key)?.title ?? "";
   const eyebrow =
-    screen.kind === "group" ? stepTitle(PLANNER_GROUPS[screen.group.group].step) : screen.kind === "budget" ? stepTitle("budget") : stepTitle("kontakt");
-  const heading = screen.kind === "group" ? screen.group.label : screen.kind === "budget" ? ui.budgetTitle : ui.contactTitle;
+    screen.kind === "group" ? stepTitle(PLANNER_GROUPS[screen.group.group].step) : screen.kind === "budget" ? stepTitle("budget") : screen.kind === "plan" ? ui.plan : stepTitle("kontakt");
+  const heading = screen.kind === "group" ? screen.group.label : screen.kind === "budget" ? ui.budgetTitle : screen.kind === "plan" ? ui.planTitle : ui.contactTitle;
   const hint =
-    screen.kind === "group" ? (PLANNER_GROUPS[screen.group.group].multi ? screen.group.hint : undefined) : screen.kind === "budget" ? ui.budgetHint : ui.contactHint;
+    screen.kind === "group" ? (PLANNER_GROUPS[screen.group.group].multi ? screen.group.hint : undefined) : screen.kind === "budget" ? ui.budgetHint : screen.kind === "plan" ? ui.planHint : ui.contactHint;
   const needsNext =
-    screen.kind !== "group" || PLANNER_GROUPS[screen.group.group].multi || screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value));
+    screen.kind === "budget" ? false : screen.kind !== "group" || PLANNER_GROUPS[screen.group.group].multi || screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value));
   // On a phone the tiles are taller than the screen, so "Weiter" stays in reach at the bottom.
   // Not on the contact screen: there it would cover the fields while typing.
   const stickyNext = needsNext && !last;
@@ -607,51 +654,66 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   ) : null}
 
                   {screen.kind === "budget" ? (
-                    <div className="mx-auto max-w-xl bg-karte p-6 text-center sm:p-8">
-                      <label htmlFor={`${baseId}-budget`} className="sr-only">
-                        {ui.budgetTitle}
-                      </label>
-                      <p className="font-serif text-[34px] text-ink md:text-[40px]" aria-live="polite">
-                        {budgetState === "none"
-                          ? ui.noAnswer
-                          : budgetState === "set"
-                            ? `${ui.budgetAbout} ${formatEuros(budgetValue, locale, content.budget.max)}`
-                            : "—"}
-                      </p>
-                      <input
-                        id={`${baseId}-budget`}
-                        type="range"
-                        min={0}
-                        max={100}
-                        step={1}
-                        value={budgetPos}
-                        aria-valuetext={formatEuros(budgetValue, locale, content.budget.max)}
-                        onChange={(event) => {
-                          markStart();
-                          setError("");
-                          setBudgetPos(Number(event.target.value));
-                          setBudgetState("set");
+                    <div role="radiogroup" aria-labelledby={`${baseId}-screen`} className="mx-auto flex max-w-md flex-col gap-3">
+                      {[...bands.map((band) => ({ id: band.id, label: budgetLabel(band, locale) })), { id: "none", label: ui.noAnswer }].map((option) => (
+                        <button
+                          key={option.id}
+                          type="button"
+                          role="radio"
+                          aria-checked={budgetChoice === option.id}
+                          onClick={() => chooseBudget(option.id)}
+                          className={cn(
+                            "min-h-12 border px-6 font-sans text-[16px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
+                            budgetChoice === option.id
+                              ? "border-ink bg-ink text-paper"
+                              : option.id === "none"
+                                ? "border-line bg-paper text-muted hover:border-ink hover:text-ink"
+                                : "border-ink/40 bg-paper text-ink hover:border-ink",
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {screen.kind === "plan" ? (
+                    <div className="mx-auto max-w-xl text-center">
+                      <label
+                        htmlFor={`${baseId}-plan`}
+                        onDragOver={(event) => {
+                          event.preventDefault();
+                          setDragging(true);
                         }}
-                        className="mt-6 w-full cursor-pointer accent-[var(--color-primary)]"
-                      />
-                      <div className="mt-2 flex justify-between font-sans text-[12px] text-muted" aria-hidden="true">
-                        <span>{formatEuros(content.budget.min, locale, content.budget.max)}</span>
-                        <span>{formatEuros(content.budget.max, locale, content.budget.max)}</span>
-                      </div>
-                      <button
-                        type="button"
-                        aria-pressed={budgetState === "none"}
-                        onClick={() => {
-                          setError("");
-                          setBudgetState((current) => (current === "none" ? "untouched" : "none"));
+                        onDragLeave={() => setDragging(false)}
+                        onDrop={(event) => {
+                          event.preventDefault();
+                          setDragging(false);
+                          pickPlan(event.dataTransfer.files[0]);
                         }}
                         className={cn(
-                          "mt-6 inline-flex min-h-10 items-center rounded-full border px-5 font-sans text-[14px] text-ink transition-colors",
-                          budgetState === "none" ? "border-ink bg-paper ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink",
+                          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed px-6 py-10 transition-colors focus-within:border-ink focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
+                          dragging ? "border-ink bg-karte" : "border-ink/35 hover:border-ink",
                         )}
                       >
-                        {ui.noAnswer}
-                      </button>
+                        <input
+                          id={`${baseId}-plan`}
+                          type="file"
+                          accept={PLAN_ACCEPT}
+                          className="sr-only"
+                          onChange={(event) => {
+                            pickPlan(event.target.files?.[0]);
+                            event.target.value = "";
+                          }}
+                        />
+                        <span className="font-sans text-[16px] break-all text-ink">{plan ? plan.name : ui.planDrop}</span>
+                        <span className="font-sans text-[13px] text-muted">{plan ? formatSize(plan.size, locale) : ui.planFormats}</span>
+                      </label>
+                      {plan ? (
+                        <button type="button" onClick={() => setPlan(null)} className="mt-4 min-h-10 font-sans text-[14px] text-muted underline underline-offset-4 hover:text-ink">
+                          {ui.planRemove}
+                        </button>
+                      ) : null}
                     </div>
                   ) : null}
 
@@ -744,7 +806,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                             <path d="M8.25 13.25L10.6 15.6L15.5 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ) : null}
-                        <span>{last ? (status === "sending" ? ui.sending : ui.submit) : ui.next}</span>
+                        <span>{last ? (status === "sending" ? ui.sending : ui.submit) : screen.kind === "plan" && !plan ? ui.skip : ui.next}</span>
                       </button>
                     </div>
                   ) : null}
