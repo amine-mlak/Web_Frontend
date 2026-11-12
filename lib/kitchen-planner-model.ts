@@ -55,6 +55,32 @@ export type PlannerContent = {
   done: { title: string; text: string; linkLabel: string; linkHref: string };
 };
 
+export type BudgetBand = { id: string; from: number; to?: number };
+
+/** The budget answers: ranges cut from the planner's three budget numbers (lowest, middle, highest). */
+export function budgetBands(budget: PlannerContent["budget"]): BudgetBand[] {
+  const split = Math.round((budget.mid + budget.max) / 2 / 10000) * 10000;
+  const between =
+    split > budget.mid && split < budget.max
+      ? [
+          { id: `${budget.mid}-${split}`, from: budget.mid, to: split },
+          { id: `${split}-${budget.max}`, from: split, to: budget.max },
+        ]
+      : [{ id: `${budget.mid}-${budget.max}`, from: budget.mid, to: budget.max }];
+  return [{ id: `0-${budget.mid}`, from: 0, to: budget.mid }, ...between, { id: `${budget.max}-`, from: budget.max }];
+}
+
+export function budgetLabel(band: BudgetBand, locale: Locale) {
+  const amount = (value: number) => value.toLocaleString(locale === "en" ? "en-GB" : "de-DE");
+  if (band.to === undefined) {
+    return locale === "en" ? `over €${amount(band.from)}` : `über ${amount(band.from)} €`;
+  }
+  if (band.from === 0) {
+    return locale === "en" ? `up to €${amount(band.to)}` : `bis ${amount(band.to)} €`;
+  }
+  return locale === "en" ? `€${amount(band.from)} – €${amount(band.to)}` : `${amount(band.from)} – ${amount(band.to)} €`;
+}
+
 /** Option values the server accepts per question, from the same content the visitor saw. */
 export function allowedValues(content: PlannerContent) {
   const map = new Map<PlannerGroupKey, Set<string>>();

@@ -43,6 +43,7 @@ export type LeadBody = {
   answers?: unknown;
   notes?: unknown;
   budget?: unknown;
+  budget_range?: unknown;
   place?: string;
   event_id?: string;
   event_source_url?: string;

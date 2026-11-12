@@ -2,6 +2,8 @@ import { trimLead } from "@/lib/lead-fields";
 import {
   PLANNER_GROUPS,
   allowedValues,
+  budgetBands,
+  budgetLabel,
   type PlannerContent,
   type PlannerGroupKey,
 } from "@/lib/kitchen-planner-model";
@@ -11,6 +13,7 @@ export type PlannerAnswersInput = {
   answers?: unknown;
   notes?: unknown;
   budget?: unknown;
+  budget_range?: unknown;
   place?: unknown;
 };
 
@@ -19,6 +22,8 @@ export type PlannerAnswers = {
   notes: { style?: string; form?: string; wishes?: string };
   /** Rough budget in euros, or null for "Keine Angabe" / not touched. */
   budget: number | null;
+  /** The budget range the visitor picked, as shown in German ("35.000 – 70.000 €"). */
+  budgetRange?: string;
   /** Postcode or town the visitor typed (free text, optional). */
   place?: string;
 };
@@ -60,12 +65,17 @@ export function readPlannerAnswers(input: PlannerAnswersInput, content: PlannerC
     }
   }
 
+  // The planner sends the range it showed; its lower end is kept as the number.
+  const band = typeof input.budget_range === "string" ? budgetBands(content.budget).find((item) => item.id === input.budget_range) : undefined;
   const amount = typeof input.budget === "number" ? Math.round(input.budget) : NaN;
-  const budget =
-    Number.isFinite(amount) && amount >= content.budget.min && amount <= content.budget.max ? amount : null;
+  const budget = band
+    ? band.from || content.budget.min
+    : Number.isFinite(amount) && amount >= content.budget.min && amount <= content.budget.max
+      ? amount
+      : null;
   const place = trimLead(input.place, 80) || undefined;
 
-  return { answers, notes, budget, ...(place ? { place } : {}) };
+  return { answers, notes, budget, ...(band ? { budgetRange: budgetLabel(band, "de") } : {}), ...(place ? { place } : {}) };
 }
 
 const LINE_LABEL: Record<PlannerGroupKey, string> = {
@@ -107,7 +117,7 @@ export function composePlannerMessage(
     lines.push(`${LINE_LABEL[key]}: ${text}`);
   }
   lines.push(`Wünsche: ${input.notes.wishes || "—"}`);
-  lines.push(`Budget: ${input.budget ? euros(input.budget, germanContent.budget.max) : "Keine Angabe"}`);
+  lines.push(`Budget: ${input.budgetRange ?? (input.budget ? euros(input.budget, germanContent.budget.max) : "Keine Angabe")}`);
   if (input.place) {
     lines.push(`PLZ / Ort: ${input.place}`);
   }
