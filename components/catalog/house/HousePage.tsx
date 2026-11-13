@@ -1,4 +1,5 @@
-import AppointmentForm from "@/components/AppointmentForm";
+import BookingEmbed from "@/components/BookingEmbed";
+import ContactForm from "@/components/ContactForm";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import { Fragment, type ReactNode } from "react";
 import Faq from "@/components/Faq";
@@ -115,11 +116,14 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
     form: (
       <>
         {house.faq ? <Faq content={house.faq} /> : null}
-        {/* Karriere gets its job ads and the application form, Kontakt the appointment form, instead of the kitchen planner. */}
+        {/* Karriere gets its job ads and the application form, Kontakt the booking calendar and the message form, instead of the kitchen planner. */}
         {house.slug === "karriere" ? (
           <CareersSection jobs={house.jobs} locale={house.locale === "en" ? "en" : "de"} />
         ) : house.slug === "kontakt" ? (
-          <AppointmentForm locale={house.locale === "en" ? "en" : "de"} />
+          <>
+            <BookingEmbed locale={house.locale === "en" ? "en" : "de"} />
+            <ContactForm locale={house.locale === "en" ? "en" : "de"} />
+          </>
         ) : (
           <PlannerSection />
         )}

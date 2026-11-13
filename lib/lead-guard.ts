@@ -33,7 +33,7 @@ export type ClickIds = {
 };
 
 export type LeadBody = {
-  /** "termin" for the appointment form on /kontakt; anything else is the kitchen planner. */
+  /** "kontakt" for the message form on /kontakt ("termin" in its first version); anything else is the kitchen planner. */
   form?: unknown;
   /** Appointment form: the day or time the visitor would like. */
   wish?: unknown;
