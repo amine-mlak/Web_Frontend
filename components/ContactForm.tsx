@@ -3,40 +3,34 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { conversionContext } from "@/lib/conversion";
-import { MAIN_ACTIONS } from "@/lib/cta";
 import { trackLead } from "@/lib/form-tracking";
 import type { Locale } from "@/lib/i18n";
 import { validateLeadFields } from "@/lib/lead-fields";
 
 /**
- * The short way to BEER: name, phone, mail and a wish for the day. It sends to the same
- * endpoint as the kitchen planner, marked as an appointment request, so it reaches the team
- * the same way but without planner answers.
+ * The message form on /kontakt: name, mail, phone and a note. It sends to the same endpoint as
+ * the kitchen planner, marked as a contact request, so it reaches the team the same way but
+ * without planner answers. Appointments are booked in the calendar above it (BookingEmbed).
  */
 
 type Status = "idle" | "sending" | "done" | "error";
 
 const UI: Record<Locale, Record<string, string>> = {
   de: {
-    eyebrow: "Termin",
-    title: "Termin vereinbaren",
-    text: "Schreiben Sie uns, wann es Ihnen passt. Wir melden uns bei Ihnen und stimmen den Termin ab.",
-    call: "Oder rufen Sie an:",
-    phoneLabel: "08168 909910",
-    planner: "Erst Ideen sammeln? Zum Küchenplaner",
+    eyebrow: "Nachricht",
+    title: "Schreiben Sie uns",
+    text: "Eine Frage, ein Anliegen, ein Rückrufwunsch: Ihre Nachricht kommt bei uns in Wolfersdorf an.",
     name: "Name",
     phone: "Telefon",
     email: "E-Mail",
-    wish: "Wann passt es Ihnen?",
-    wishPlaceholder: "z. B. Samstagvormittag",
-    message: "Worum geht es? (freiwillig)",
+    message: "Nachricht",
     required: "Pflichtfeld",
     privacy: "Ihre Angaben verwenden wir, um Ihre Anfrage zu beantworten.",
     privacyLink: "Datenschutz",
-    submit: "Termin anfragen",
+    submit: "Nachricht senden",
     sending: "Wird gesendet …",
     doneTitle: "Danke, {name}.",
-    doneText: "Ihre Anfrage ist bei uns. Wir melden uns bei Ihnen.",
+    doneText: "Ihre Nachricht ist bei uns. Wir melden uns bei Ihnen.",
     errName: "Bitte Ihren Namen angeben.",
     errEmail: "Bitte eine gültige E-Mail-Adresse angeben.",
     errPhone: "Bitte eine Telefonnummer angeben.",
@@ -44,25 +38,20 @@ const UI: Record<Locale, Record<string, string>> = {
     errSend: "Das hat leider nicht geklappt. Bitte versuchen Sie es noch einmal oder rufen Sie uns an: 08168 909910.",
   },
   en: {
-    eyebrow: "Appointment",
-    title: "Book an appointment",
-    text: "Tell us when it suits you. We will get back to you and agree on the time.",
-    call: "Or call us:",
-    phoneLabel: "+49 8168 909910",
-    planner: "Collect ideas first? To the kitchen planner",
+    eyebrow: "Message",
+    title: "Write to us",
+    text: "A question, a request, a call back: your message reaches us in Wolfersdorf.",
     name: "Name",
     phone: "Phone",
     email: "Email",
-    wish: "When does it suit you?",
-    wishPlaceholder: "e.g. Saturday morning",
-    message: "What is it about? (optional)",
+    message: "Message",
     required: "required",
     privacy: "We use your details to answer your request.",
     privacyLink: "Privacy",
-    submit: "Request an appointment",
+    submit: "Send message",
     sending: "Sending …",
     doneTitle: "Thank you, {name}.",
-    doneText: "We have your request and will get back to you.",
+    doneText: "We have your message and will get back to you.",
     errName: "Please enter your name.",
     errEmail: "Please enter a valid email address.",
     errPhone: "Please enter a phone number.",
@@ -78,12 +67,12 @@ async function fetchChallenge() {
   return data && typeof data === "object" && "challenge" in data && typeof data.challenge === "string" ? data.challenge : "";
 }
 
-export default function AppointmentForm({ locale }: { locale: Locale }) {
+export default function ContactForm({ locale }: { locale: Locale }) {
   const ui = UI[locale];
   const baseId = useId();
   const doneHeading = useRef<HTMLHeadingElement>(null);
   const loadedAt = useRef(0);
-  const [fields, setFields] = useState({ name: "", phone: "", email: "", wish: "", message: "" });
+  const [fields, setFields] = useState({ name: "", phone: "", email: "", message: "" });
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [challenge, setChallenge] = useState("");
@@ -139,14 +128,13 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
         cache: "no-store",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          form: "termin",
+          form: "kontakt",
           challenge: token,
           company_website: honeypot,
           name: checked.name,
           email: checked.email,
           phone: checked.phone,
           message: checked.message,
-          wish: fields.wish,
           locale,
           ...conversionContext(),
         }),
@@ -160,7 +148,7 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
       }
       if (!honeypot) {
         const eventId = payload && typeof payload === "object" && "event_id" in payload && typeof payload.event_id === "string" ? payload.event_id : "";
-        void trackLead(eventId, { email: checked.email, phone: checked.phone, place: "" }, "termin");
+        void trackLead(eventId, { email: checked.email, phone: checked.phone, place: "" }, "kontakt");
       }
       setStatus("done");
       setChallenge("");
@@ -193,7 +181,7 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
   );
 
   return (
-    <section id="termin" className="scroll-mt-20 bg-karte px-5 py-16 sm:px-8 md:py-24 lg:px-gutter" aria-labelledby={`${baseId}-title`}>
+    <section id="nachricht" className="scroll-mt-20 bg-paper px-5 py-16 sm:px-8 md:py-24 lg:px-gutter" aria-labelledby={`${baseId}-title`}>
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
           <p className="type-eyebrow text-gold">{ui.eyebrow}</p>
@@ -201,18 +189,9 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
             {ui.title}
           </h2>
           <p className="mt-5 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{ui.text}</p>
-          <p className="mt-6 font-sans text-[16px] text-ink">
-            {ui.call}{" "}
-            <a href="tel:+498168909910" className="whitespace-nowrap underline underline-offset-4" data-umami-event="tel_click">
-              {ui.phoneLabel}
-            </a>
-          </p>
-          <LocaleLink href={MAIN_ACTIONS.planner.href} className="btn-quiet mt-6" data-umami-event="cta_planner" data-umami-event-placement="termin_form">
-            {ui.planner}
-          </LocaleLink>
         </div>
 
-        <div className="bg-paper px-6 py-8 sm:px-10 sm:py-10 lg:col-span-7">
+        <div className="bg-karte px-6 py-8 sm:px-10 sm:py-10 lg:col-span-7">
           {status === "done" ? (
             <div className="py-10 text-center">
               <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
@@ -232,22 +211,8 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
               </div>
               <div className="grid gap-x-7 gap-y-5 sm:grid-cols-2">
                 {field("name", "text", "name")}
-                {field("phone", "tel", "tel")}
                 {field("email", "email", "email")}
-                <div>
-                  <label htmlFor={`${baseId}-wish`} className={label}>
-                    {ui.wish}
-                  </label>
-                  <input
-                    id={`${baseId}-wish`}
-                    type="text"
-                    maxLength={160}
-                    placeholder={ui.wishPlaceholder}
-                    value={fields.wish}
-                    onChange={(event) => setFields((current) => ({ ...current, wish: event.target.value }))}
-                    className={input}
-                  />
-                </div>
+                {field("phone", "tel", "tel")}
               </div>
               <div className="mt-5">
                 <label htmlFor={`${baseId}-message`} className={label}>
@@ -255,7 +220,7 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
                 </label>
                 <textarea
                   id={`${baseId}-message`}
-                  rows={2}
+                  rows={3}
                   value={fields.message}
                   onChange={(event) => setFields((current) => ({ ...current, message: event.target.value }))}
                   className={`${input} max-h-40 resize-y [field-sizing:content]`}
@@ -265,7 +230,7 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
-                <button type="submit" disabled={status === "sending"} className="pill pill-primary" data-umami-event="termin_submit">
+                <button type="submit" disabled={status === "sending"} className="pill pill-primary" data-umami-event="contact_submit">
                   {status === "sending" ? ui.sending : ui.submit}
                 </button>
                 <p className="max-w-xs font-sans text-[13px] leading-5 text-muted">

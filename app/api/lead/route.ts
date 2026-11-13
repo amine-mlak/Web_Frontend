@@ -164,9 +164,10 @@ export async function POST(request: Request) {
     return reject(request, 503, "n8n_not_configured", "unavailable");
   }
 
-  // The appointment form on /kontakt: the same lead, but its text is the wish and the note, and
-  // it carries no planner answers.
-  const termin = parsed.body.form === "termin";
+  // The message form on /kontakt (earlier: an appointment request with a wished time): the same
+  // lead, but its text is the note, and it carries no planner answers.
+  const termin = parsed.body.form === "termin" || parsed.body.form === "kontakt";
+  const shortForm = parsed.body.form === "kontakt" ? "kontakt" : "termin";
   const wish = termin ? trimLead(parsed.body.wish, 160) : "";
   const terminMessage = [wish ? `Wunschtermin: ${wish}` : "", trimLead(parsed.body.message, 2000)].filter(Boolean).join("\n\n");
 
@@ -175,7 +176,7 @@ export async function POST(request: Request) {
     auth_secret: n8n.secret,
     event_name: "Lead",
     // Which form sent it; the n8n workflow reads `details` by this.
-    lead_source: termin ? "termin" : "kuechenplaner",
+    lead_source: termin ? shortForm : "kuechenplaner",
     event_id: eventId,
     event_time: Math.floor(Date.now() / 1000),
     action_source: "website",
@@ -193,7 +194,7 @@ export async function POST(request: Request) {
       client_ip: ip === "unknown" ? undefined : ip,
       user_agent: request.headers.get("user-agent") ?? undefined,
     },
-    details: termin ? { form: "termin", wish } : valid.lead.details,
+    details: termin ? { form: shortForm, wish } : valid.lead.details,
     // The visitor's floor plan, when they added one: file name, type, size and the file as base64.
     plan,
   };

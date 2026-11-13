@@ -1,10 +1,13 @@
 /**
- * The site's two main actions. An appointment is the short way (a few fields on /kontakt),
+ * The site's two main actions. An appointment is the short way (the booking calendar on /kontakt),
  * the planner the long one (twelve questions on /beratung). Every button that offers one of
  * them takes its address and wording from here, so they read the same on every page.
  */
 export const TERMIN_HREF = "/kontakt#termin";
 export const PLANNER_HREF = "/beratung";
+
+/** The team's Microsoft Bookings page: free times from their Outlook calendars (components/BookingEmbed.tsx). */
+export const BOOKING_URL = "https://outlook.office365.com/owa/calendar/BEERGmbH@beer.de/bookings/";
 
 export type MainAction = "termin" | "planner";
 
