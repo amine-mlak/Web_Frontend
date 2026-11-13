@@ -26,7 +26,7 @@ function Continue({
   return (
     <LocaleLink
       href={href}
-      className={`btn-quiet mt-10 ${invert ? "text-paper" : "text-ink"}`}
+      className={invert ? "pill pill-light mt-10" : "btn-quiet mt-10"}
     >
       {label}
     </LocaleLink>

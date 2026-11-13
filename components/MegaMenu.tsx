@@ -338,11 +338,11 @@ export default function MegaMenu({
                     })}
                   </div>
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2.5">
+                    <div className="flex flex-col gap-4">
                       <LocaleLink href={termin.href} onClick={closeMobile} className="pill pill-primary w-full" data-umami-event={termin.event} data-umami-event-placement="menu">
                         {termin.label[locale]}
                       </LocaleLink>
-                      <LocaleLink href={planner.href} onClick={closeMobile} className="pill pill-secondary w-full" data-umami-event={planner.event} data-umami-event-placement="menu">
+                      <LocaleLink href={planner.href} onClick={closeMobile} className="btn-quiet self-center" data-umami-event={planner.event} data-umami-event-placement="menu">
                         {planner.label[locale]}
                       </LocaleLink>
                     </div>

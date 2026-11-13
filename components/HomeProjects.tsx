@@ -43,7 +43,7 @@ export default async function HomeProjects() {
         <ProjectFeature key={project.slug} feature={projectFeature(project)} variant={index % 4} locale={locale} />
       ))}
       <div className="px-5 pb-20 sm:px-8 lg:px-gutter">
-        <LocaleLink href="/projekte" className="btn-quiet text-ink">
+        <LocaleLink href="/projekte" className="btn-quiet">
           {copy.all}
         </LocaleLink>
       </div>

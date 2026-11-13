@@ -84,7 +84,7 @@ export default function FullChapter({
           {/* On a card the link covers the whole card. */}
           <LocaleLink
             href={href}
-            className={`btn-quiet text-paper ${card ? "mt-5 after:absolute after:inset-0 after:content-['']" : "mt-7"}`}
+            className={`pill pill-light ${card ? "mt-5 after:absolute after:inset-0 after:content-['']" : "mt-7"}`}
           >
             {linkLabel}
             <span className="sr-only">: {title}</span>

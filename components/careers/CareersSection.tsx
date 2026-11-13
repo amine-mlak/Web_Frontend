@@ -47,7 +47,7 @@ export default function CareersSection({ jobs, locale }: { jobs: Job[]; locale: 
                     {job.title}
                   </span>
                   <span className="font-sans text-[16px] leading-relaxed text-muted md:col-span-3">{job.teaser}</span>
-                  <span className="btn-quiet justify-self-start text-ink group-hover:opacity-65 md:col-span-2 md:justify-self-end">
+                  <span className="btn-quiet justify-self-start group-hover:opacity-65 md:col-span-2 md:justify-self-end">
                     {copy.more}
                   </span>
                 </LocaleLink>

@@ -129,7 +129,7 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
       </ul>
       {rest.length ? (
         <details className="group/more mt-12">
-          <summary className="btn-quiet cursor-pointer list-none text-ink group-open/more:hidden [&::-webkit-details-marker]:hidden">
+          <summary className="btn-quiet cursor-pointer list-none group-open/more:hidden [&::-webkit-details-marker]:hidden">
             {en ? `Show all ${houses.length} projects` : `Alle ${houses.length} Projekte zeigen`}
           </summary>
           <ul className={GRID}>

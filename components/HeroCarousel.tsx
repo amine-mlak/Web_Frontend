@@ -1,7 +1,8 @@
 "use client";
 
+import { useLocale } from "@/components/LocaleProvider";
+import CtaPair from "@/components/CtaPair";
 import { useEffect, useState } from "react";
-import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import type { HeroSlide } from "@/lib/strapi";
 
@@ -18,6 +19,7 @@ const DWELL_MS = 3500;
 const ROLL_MS = 1200;
 
 function HeroIntro({ panel }: { panel: HeroPanel }) {
+  const locale = useLocale();
   return (
     <div className="absolute inset-0 z-10 flex items-end px-5 pb-10 sm:px-8 sm:pb-20 lg:px-gutter lg:pb-24">
       <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
@@ -33,12 +35,8 @@ function HeroIntro({ panel }: { panel: HeroPanel }) {
         <p className="mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]">
           {panel.text}
         </p>
-        <LocaleLink
-          href={panel.buttonHref}
-          className="btn-quiet mt-7 text-paper"
-        >
-          {panel.buttonLabel}
-        </LocaleLink>
+        {/* The way into the kitchens as the button, the appointment beside it. */}
+        <CtaPair href={panel.buttonHref} label={panel.buttonLabel} locale={locale} tone="image" second="termin" className="mt-7" />
       </div>
     </div>
   );

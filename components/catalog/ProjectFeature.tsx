@@ -32,7 +32,7 @@ function FeatureText({
         {feature.intro ? (
           <p className={`${wide ? "" : "mt-5"} max-w-md font-sans text-[16px] leading-relaxed text-muted`}>{feature.intro}</p>
         ) : null}
-        <LocaleLink href={feature.href} className="btn-quiet mt-7 text-ink">
+        <LocaleLink href={feature.href} className="btn-quiet mt-7">
           {en ? "View the project" : "Projekt ansehen"}
         </LocaleLink>
         {feature.links.length ? (

@@ -1,4 +1,4 @@
-import { ctaHref } from "@/lib/cta";
+import CtaPair from "@/components/CtaPair";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -24,9 +24,7 @@ export default function MoebelCollection({
           <p className="t-lede mt-6 max-w-md text-muted">
             {hub.lede}
           </p>
-          <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-10 w-fit text-ink">
-            {hub.ctaLabel}
-          </LocaleLink>
+          <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} className="mt-10" />
         </div>
         <Frame
           src={hub.heroImage}
@@ -78,7 +76,7 @@ export default function MoebelCollection({
                     </ul>
                   ) : null}
                   {branch.href ? (
-                    <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit text-ink">
+                    <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit">
                       {hub.locale === "en" ? `Open ${branch.title}` : `${branch.title} ansehen`}
                     </LocaleLink>
                   ) : null}

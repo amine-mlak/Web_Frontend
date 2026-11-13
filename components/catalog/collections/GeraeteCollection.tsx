@@ -1,4 +1,4 @@
-import { ctaHref } from "@/lib/cta";
+import CtaPair from "@/components/CtaPair";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
@@ -65,9 +65,7 @@ export default function GeraeteCollection({
             <p className="mt-6 font-sans text-[14px] leading-relaxed text-paper/55">
               {hub.statementNote}
             </p>
-            <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-8 text-paper">
-              {hub.ctaLabel}
-            </LocaleLink>
+            <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} tone="image" className="mt-8" />
           </div>
         </div>
         <Frame

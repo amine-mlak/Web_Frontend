@@ -87,11 +87,11 @@ export default function CategoryPage({
       ) : null}
 
       <EntryHeader hub={hub} emphasis={hub.emphasis}>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
           <LocaleLink href="/ausstellung" className="pill pill-primary">
             {copy.visit}
           </LocaleLink>
-          <LocaleLink href="/beratung" className="pill pill-secondary">
+          <LocaleLink href="/beratung" className="btn-quiet">
             {copy.plan}
           </LocaleLink>
         </div>

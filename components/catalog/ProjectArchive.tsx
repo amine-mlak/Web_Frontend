@@ -179,7 +179,7 @@ export default function ProjectArchive({
           <p className="font-sans text-[13px] text-muted tabular-nums">
             {shown} {copy.of} {matches.length}
           </p>
-          <button type="button" onClick={() => write(`${active?.slug ?? ""}|${limit + STEP}`)} className="btn-quiet text-ink">
+          <button type="button" onClick={() => write(`${active?.slug ?? ""}|${limit + STEP}`)} className="btn-quiet">
             {copy.more}
           </button>
         </div>

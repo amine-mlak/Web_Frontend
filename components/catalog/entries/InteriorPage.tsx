@@ -84,7 +84,7 @@ function PointText({ point, id, lang }: { point: ShownPoint; id: string; lang: s
         ))}
       </div>
       {point.linkText && point.linkZiel ? (
-        <LocaleLink href={point.linkZiel} className="btn-quiet mt-8 text-ink">
+        <LocaleLink href={point.linkZiel} className="btn-quiet mt-8">
           {point.linkText}
           <span className="sr-only">: {point.titel}</span>
         </LocaleLink>
@@ -214,11 +214,11 @@ export default function InteriorPage({
           {page.intro ? (
             <p className="t-lede mt-6 max-w-md text-muted">{page.intro}</p>
           ) : null}
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
             <LocaleLink href={ctaHref(page.ctaUrl, page.ctaLabel || "Termin")} className="pill pill-primary">
               {page.ctaLabel || (locale === "en" ? "Book an appointment" : "Termin vereinbaren")}
             </LocaleLink>
-            <LocaleLink href={copy.secondaryHref} className="pill pill-secondary">
+            <LocaleLink href={copy.secondaryHref} className="btn-quiet">
               {copy.secondaryLabel}
             </LocaleLink>
           </div>

@@ -1,4 +1,4 @@
-import { ctaHref } from "@/lib/cta";
+import CtaPair from "@/components/CtaPair";
 import type { ReactNode } from "react";
 import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
@@ -73,7 +73,7 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
             </ul>
           ) : null}
           {branch.href ? (
-            <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit text-ink">
+            <LocaleLink href={branch.href} className="btn-quiet mt-8 w-fit">
               {en ? `${branch.title}: the overview` : `${branch.title} im Überblick`}
             </LocaleLink>
           ) : null}
@@ -125,9 +125,7 @@ export default function MaterialCollection({
           </h1>
           <div className="lg:col-span-5 lg:pb-5">
             <p className="t-lede max-w-md text-muted">{hub.lede}</p>
-            <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-6 text-ink">
-              {hub.ctaLabel}
-            </LocaleLink>
+            <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} className="mt-6" />
           </div>
         </div>
       </section>

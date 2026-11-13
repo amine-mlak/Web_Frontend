@@ -1,4 +1,4 @@
-import { ctaHref } from "@/lib/cta";
+import CtaPair from "@/components/CtaPair";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -25,9 +25,7 @@ export default function MarkenCollection({
           </h1>
           <div className="lg:col-span-5 lg:pb-5">
             <p className="t-lede max-w-md text-muted">{hub.lede}</p>
-            <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-6 text-ink">
-              {hub.ctaLabel}
-            </LocaleLink>
+            <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} className="mt-6" />
           </div>
         </div>
       </section>

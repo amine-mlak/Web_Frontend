@@ -1,5 +1,4 @@
-import { ctaHref } from "@/lib/cta";
-import LocaleLink from "@/components/LocaleLink";
+import CtaPair from "@/components/CtaPair";
 import { Frame } from "@/components/catalog/collections/parts";
 import type { PresentedHouse } from "@/lib/house-pages";
 
@@ -29,9 +28,7 @@ export default function HouseBanner({
           <p className="max-w-md font-sans text-[16px] leading-relaxed font-light text-muted">
             {house.lede}
           </p>
-          <LocaleLink href={ctaHref(house.ctaHref, house.ctaLabel)} className="pill pill-primary mt-8">
-            {house.ctaLabel}
-          </LocaleLink>
+          <CtaPair href={house.ctaHref} label={house.ctaLabel} locale={house.locale} className="mt-8" />
         </div>
       </div>
       {bare ? null : (

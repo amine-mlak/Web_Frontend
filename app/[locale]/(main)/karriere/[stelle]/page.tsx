@@ -110,7 +110,7 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
         dangerouslySetInnerHTML={{ __html: JSON.stringify(posting).replace(/</g, "\\u003c") }}
       />
       <article className="px-5 pt-12 pb-20 sm:px-8 lg:px-gutter lg:pt-16">
-        <LocaleLink href="/karriere#stellen" className="btn-quiet text-ink">
+        <LocaleLink href="/karriere#stellen" className="btn-quiet">
           {copy.back}
         </LocaleLink>
         <p className="mt-12 type-eyebrow text-gold">
