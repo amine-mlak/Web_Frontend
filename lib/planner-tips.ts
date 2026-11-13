@@ -13,6 +13,14 @@ const UPLOADS = "https://cms.beer.de/uploads/";
 
 type Target = { title: string; path: string };
 
+/** Shown when the picked option has no photo, e.g. "decide on site". The mail needs one either way. */
+const FALLBACK_IMAGE = {
+  style: UPLOADS + "large_landhauskuechen_kuechen_ideen_b79ccce433.jpg",
+  front: UPLOADS + "large_Luxurioese_Kontrastkueche_7_da4eb5c38e.jpg",
+  top: UPLOADS + "large_076_Showroom_9551399c54.jpg",
+  form: "",
+};
+
 /** Answer of the planner -> page. The first entry of a group is used when nothing fits. */
 const TARGETS: Record<"style" | "front" | "top" | "form", { fallback: Target; byValue: Record<string, Target> }> = {
   style: {
@@ -70,7 +78,7 @@ export function plannerTips(details: PlannerAnswers, content: PlannerContent) {
     const value = picked.find((item) => TARGETS[key].byValue[item]);
     const target = value ? TARGETS[key].byValue[value] : TARGETS[key].fallback;
     const option = content.groups.find((group) => group.group === key)?.options.find((item) => item.value === (value ?? picked[0]));
-    return { title: target.title, link: SITE + target.path, image: mailImage(option?.image?.src) };
+    return { title: target.title, link: SITE + target.path, image: mailImage(option?.image?.src) || FALLBACK_IMAGE[key] };
   };
   return { style: tip("style"), front: tip("front"), top: tip("top"), form: tip("form") };
 }
