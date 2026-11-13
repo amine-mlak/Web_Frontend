@@ -11,8 +11,8 @@ export default function BookletPage({ booklet }: { booklet: Booklet }) {
   return (
     <main className="bg-paper">
       <section aria-labelledby="booklet-title" className="px-5 pt-10 pb-14 sm:px-8 lg:px-gutter lg:pt-16 lg:pb-20">
-        <div className="mx-auto grid max-w-[90rem] items-center gap-10 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-7">
+        <div className="mx-auto grid max-w-[90rem] items-center gap-8 lg:grid-cols-2 lg:gap-16">
+          <div>
             {booklet.eyebrow ? <p className="type-eyebrow text-gold">{booklet.eyebrow}</p> : null}
             <h1 id="booklet-title" className="type-h1 mt-3 text-ink">
               {booklet.title}
@@ -39,19 +39,32 @@ export default function BookletPage({ booklet }: { booklet: Booklet }) {
               </ul>
             ) : null}
           </div>
-          {booklet.cover || booklet.hero ? (
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden bg-karte">
+          {booklet.cover ? (
+            // The booklet mock-up sits on white; multiply lets the page colour show through it.
+            <div className="order-first lg:order-none">
+              <div className="relative mx-auto aspect-[2/3] w-full max-w-[15rem] sm:max-w-[20rem] lg:max-w-[28rem]">
                 <CmsImage
-                  src={(booklet.cover ?? booklet.hero)!.src}
-                  srcSet={(booklet.cover ?? booklet.hero)!.srcSet}
-                  alt={(booklet.cover ?? booklet.hero)!.alt}
+                  src={booklet.cover.src}
+                  srcSet={booklet.cover.srcSet}
+                  alt={booklet.cover.alt}
                   fill
                   priority
-                  sizes="(min-width: 1024px) 28rem, 100vw"
-                  className="object-cover"
+                  sizes="(min-width: 1024px) 28rem, (min-width: 640px) 20rem, 15rem"
+                  className="object-contain mix-blend-multiply"
                 />
               </div>
+            </div>
+          ) : booklet.hero ? (
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-karte">
+              <CmsImage
+                src={booklet.hero.src}
+                srcSet={booklet.hero.srcSet}
+                alt={booklet.hero.alt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
             </div>
           ) : null}
         </div>

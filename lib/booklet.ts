@@ -49,6 +49,19 @@ const DEFAULTS = {
   thanksText: "Ihr Booklet ist unterwegs.",
 };
 
+/** The booklet mock-up in the CMS media library (id 4261), used until the entry has its own cover. */
+const COVER_7_GEHEIMNISSE: StrapiMedia = {
+  url: "/uploads/booklet_7_geheimnisse_traumkueche_197f8090fa.png",
+  width: 1024,
+  height: 1536,
+  alternativeText: "Booklet „7 Geheimnisse zum Planen Ihrer Traumküche“ der BEER Küchenmanufaktur",
+  formats: {
+    small: { url: "/uploads/small_booklet_7_geheimnisse_traumkueche_197f8090fa.png", width: 333 },
+    medium: { url: "/uploads/medium_booklet_7_geheimnisse_traumkueche_197f8090fa.png", width: 500 },
+    large: { url: "/uploads/large_booklet_7_geheimnisse_traumkueche_197f8090fa.png", width: 667 },
+  },
+};
+
 const BOOKLET_FALLBACK: Record<string, Booklet> = {
   "7-geheimnisse": {
     slug: "7-geheimnisse",
@@ -59,7 +72,7 @@ const BOOKLET_FALLBACK: Record<string, Booklet> = {
       "Erleben Sie mit unserem kleinen Booklet, wie aus Raum, Licht und Material ein Ort entsteht, der mehr ist als eine Küche – ein Raum, der zu Ihnen passt, sich richtig anfühlt und jeden Tag Freude schenkt.",
     benefits: ["Fehler bei der Planung vermeiden", "Wissen, worauf es wirklich ankommt", "Räume erschaffen, die berühren"],
     hero: null,
-    cover: null,
+    cover: image(COVER_7_GEHEIMNISSE, 750),
     pdfUrl: "",
     ...DEFAULTS,
     seoTitle: "7 Geheimnisse zum Planen Ihrer Traumküche – kostenloses Booklet",
