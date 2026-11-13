@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { trimLead } from "@/lib/lead-fields";
 import { createHash, randomUUID } from "crypto";
 import { contentMatches, FILE_TYPES, safeFileName } from "@/lib/application-files";
 import { isLocale } from "@/lib/i18n";
@@ -163,12 +164,18 @@ export async function POST(request: Request) {
     return reject(request, 503, "n8n_not_configured", "unavailable");
   }
 
+  // The appointment form on /kontakt: the same lead, but its text is the wish and the note, and
+  // it carries no planner answers.
+  const termin = parsed.body.form === "termin";
+  const wish = termin ? trimLead(parsed.body.wish, 160) : "";
+  const terminMessage = [wish ? `Wunschtermin: ${wish}` : "", trimLead(parsed.body.message, 2000)].filter(Boolean).join("\n\n");
+
   const eventId = valid.lead.eventId || randomUUID();
   const payload = {
     auth_secret: n8n.secret,
     event_name: "Lead",
     // Which form sent it; the n8n workflow reads `details` by this.
-    lead_source: "kuechenplaner",
+    lead_source: termin ? "termin" : "kuechenplaner",
     event_id: eventId,
     event_time: Math.floor(Date.now() / 1000),
     action_source: "website",
@@ -182,11 +189,11 @@ export async function POST(request: Request) {
       name: valid.lead.name,
       email: valid.lead.email,
       phone: valid.lead.phone,
-      message: plan ? `${valid.lead.message}\n\nGrundriss hochgeladen: ${plan.name}` : valid.lead.message,
+      message: termin ? terminMessage : plan ? `${valid.lead.message}\n\nGrundriss hochgeladen: ${plan.name}` : valid.lead.message,
       client_ip: ip === "unknown" ? undefined : ip,
       user_agent: request.headers.get("user-agent") ?? undefined,
     },
-    details: valid.lead.details,
+    details: termin ? { form: "termin", wish } : valid.lead.details,
     // The visitor's floor plan, when they added one: file name, type, size and the file as base64.
     plan,
   };
@@ -221,7 +228,8 @@ export async function POST(request: Request) {
   }
 
   console.info(`[lead] sent to n8n event=${eventId}${plan ? ` plan=${plan.size}b` : ""}`);
-  if (mauticEnabled()) {
+  // Mautic sends the planner follow-up mail, so only planner leads go there.
+  if (mauticEnabled() && !termin) {
     // The contact and its planner answers also go to Mautic, which sends the follow-up mails.
     // A hiccup there must not turn the lead into an error for the visitor.
     const failed = await sendPlannerToMautic(
@@ -230,7 +238,7 @@ export async function POST(request: Request) {
     );
     console.info(`[lead] mautic ${failed ? `failed: ${failed}` : "contact sent"}`);
   }
-  if (parsed.body.newsletter === true) {
+  if (parsed.body.newsletter === true && !termin) {
     // The lead is in; a newsletter hiccup must not turn it into an error for the visitor.
     const failed = await sendNewsletterSignup({
       email: valid.lead.email,

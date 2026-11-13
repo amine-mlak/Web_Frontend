@@ -1,5 +1,6 @@
 "use client";
 
+import { MAIN_ACTIONS, ctaHref } from "@/lib/cta";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import BrandLogo from "@/components/BrandLogo";
@@ -34,7 +35,10 @@ export default function MegaMenu({
   logoSrc,
   logoAlt,
 }: MegaMenuProps) {
-  const copy = chromeCopy[useLocale()];
+  const locale = useLocale();
+  const copy = chromeCopy[locale];
+  const termin = MAIN_ACTIONS.termin;
+  const planner = MAIN_ACTIONS.planner;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileVisible, setMobileVisible] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
@@ -236,7 +240,12 @@ export default function MegaMenu({
 
             <div className="flex items-center justify-end gap-3">
               <LanguageSwitcher />
-              <HeaderActions />
+              {/* The number is written out only where the row has room for it beside the button. */}
+              <HeaderActions compact location={false} className="min-[1700px]:hidden" />
+              <HeaderActions className="hidden min-[1700px]:flex" />
+              <LocaleLink href={termin.href} className="pill pill-primary !px-5 !py-2 !text-[14px] whitespace-nowrap" data-umami-event={termin.event} data-umami-event-placement="header">
+                {termin.label[locale]}
+              </LocaleLink>
             </div>
           </div>
         </div>
@@ -309,7 +318,7 @@ export default function MegaMenu({
                                     key={`${group.title ?? "links"}-${link.label}`}
                                   >
                                     <LocaleLink
-                                      href={link.href}
+                                      href={ctaHref(link.href, link.label)}
                                       onClick={closeMobile}
                                       className={`type-body ${
                                         link.highlight
@@ -329,6 +338,14 @@ export default function MegaMenu({
                     })}
                   </div>
                   <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2.5">
+                      <LocaleLink href={termin.href} onClick={closeMobile} className="pill pill-primary w-full" data-umami-event={termin.event} data-umami-event-placement="menu">
+                        {termin.label[locale]}
+                      </LocaleLink>
+                      <LocaleLink href={planner.href} onClick={closeMobile} className="pill pill-secondary w-full" data-umami-event={planner.event} data-umami-event-placement="menu">
+                        {planner.label[locale]}
+                      </LocaleLink>
+                    </div>
                     <LanguageSwitcher />
                     <HeaderActions className="w-full" onNavigate={closeMobile} />
                   </div>
@@ -344,6 +361,9 @@ export default function MegaMenu({
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <HeaderActions compact />
+          <LocaleLink href={termin.href} className="pill pill-primary hidden !px-4 !py-2 !text-[14px] whitespace-nowrap md:inline-flex" data-umami-event={termin.event} data-umami-event-placement="header">
+            {termin.label[locale]}
+          </LocaleLink>
           <Button
             size="icon"
             variant="outline"

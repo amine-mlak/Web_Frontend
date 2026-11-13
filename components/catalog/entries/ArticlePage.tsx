@@ -339,7 +339,7 @@ export default function ArticlePage({
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="t-section">{copy.bandTitle}</h2>
           <p className="mx-auto mt-5 max-w-xl font-sans text-[16px] leading-relaxed font-light text-paper/80">{copy.bandText}</p>
-          <NextSteps locale={locale} tone="dark" className="mt-8 justify-center" />
+          <NextSteps locale={locale} tone="dark" lead="planner" className="mt-8 justify-center" />
         </div>
       </section>
     </main>

@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -23,7 +24,7 @@ export default function MoebelCollection({
           <p className="t-lede mt-6 max-w-md text-muted">
             {hub.lede}
           </p>
-          <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 w-fit text-ink">
+          <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-10 w-fit text-ink">
             {hub.ctaLabel}
           </LocaleLink>
         </div>

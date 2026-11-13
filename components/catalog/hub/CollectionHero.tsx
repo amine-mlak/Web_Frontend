@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import { Crumbs } from "@/components/catalog/clusters/parts";
@@ -54,7 +55,7 @@ export default function CollectionHero({
             {hub.lede}
           </p>
           <LocaleLink
-            href={hub.ctaHref}
+            href={ctaHref(hub.ctaHref, hub.ctaLabel)}
             className="btn-quiet mt-7 text-paper"
           >
             {hub.ctaLabel}

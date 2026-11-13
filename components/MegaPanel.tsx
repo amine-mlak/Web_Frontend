@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import type { MenuLink, MenuPanel } from "@/lib/navigation";
@@ -14,7 +15,7 @@ function PanelLink({
 }) {
   return (
     <LocaleLink
-      href={link.href}
+      href={ctaHref(link.href, link.label)}
       onClick={onNavigate}
       className={`group inline-flex w-fit flex-wrap items-baseline text-ink ${
         large ? "type-panel" : "type-body"

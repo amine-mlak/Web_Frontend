@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
@@ -38,7 +39,7 @@ export default function RegionenCollection({
           {hub.lede}
         </p>
         <p className="t-lede mx-auto mt-4 max-w-lg text-ink">{area}</p>
-        <LocaleLink href={hub.ctaHref} className="btn-quiet mt-10 text-ink">
+        <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-10 text-ink">
           {hub.ctaLabel}
         </LocaleLink>
       </section>

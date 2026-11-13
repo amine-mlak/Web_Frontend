@@ -1,3 +1,4 @@
+import { TERMIN_HREF } from "@/lib/cta";
 import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -83,7 +84,7 @@ export default async function AtelierVisit({
           </dl>
 
           <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-            <LocaleLink href="/beratung" className="btn-quiet text-ink">
+            <LocaleLink href={TERMIN_HREF} className="btn-quiet text-ink">
               {copy.book}
             </LocaleLink>
             <a href={maps} target="_blank" rel="noopener noreferrer" className="btn-quiet text-ink">

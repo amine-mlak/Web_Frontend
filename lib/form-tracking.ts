@@ -66,12 +66,12 @@ export function trackFormSubmit() {
  * goes along only with Marketing consent, and only hashed (lib/hash.ts).
  * NEXT_PUBLIC_LEAD_VALUE: optional value in EUR per lead, for value-based bidding.
  */
-export async function trackLead(eventId: string, contact: { email: string; phone: string; place: string }) {
+export async function trackLead(eventId: string, contact: { email: string; phone: string; place: string }, form: string = LEAD_FORM) {
   const value = Number(process.env.NEXT_PUBLIC_LEAD_VALUE);
   const entry: Record<string, unknown> = {
     event: "generate_lead",
     event_id: eventId,
-    form: LEAD_FORM,
+    form,
     ...(value > 0 ? { value, currency: "EUR" } : {}),
   };
   if (hasConsent("marketing")) {
