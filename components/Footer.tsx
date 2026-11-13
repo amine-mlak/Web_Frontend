@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import Image from "next/image";
 import LocaleLink from "@/components/LocaleLink";
 import FooterRegions from "@/components/FooterRegions";
@@ -55,7 +56,7 @@ export default async function Footer() {
               <ul className="mt-4">
                 {column.links.map((link) => (
                   <li key={`${column.title}-${link.label}`}>
-                    <LocaleLink href={link.href} className={linkClass}>
+                    <LocaleLink href={ctaHref(link.href, link.label)} className={linkClass}>
                       {link.label}
                     </LocaleLink>
                   </li>
@@ -85,7 +86,7 @@ export default async function Footer() {
           <ul className="mt-6 flex gap-8">
             {footer.shortcuts.map((link) => (
               <li key={link.label}>
-                <LocaleLink href={link.href} className={shortcutClass}>
+                <LocaleLink href={ctaHref(link.href, link.label)} className={shortcutClass}>
                   {link.label}
                 </LocaleLink>
               </li>

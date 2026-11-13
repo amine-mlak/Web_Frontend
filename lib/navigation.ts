@@ -124,7 +124,7 @@ export const menuPanels: MenuPanel[] = [
             label: "Küchenplaner – Welche Küche passt zu Ihnen?",
             highlight: true,
           },
-          { href: "/beratung", label: "Beratung & Termin" },
+          { href: "/kontakt#termin", label: "Beratung & Termin" },
         ],
       },
       {

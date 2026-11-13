@@ -15,10 +15,13 @@ const actionClass =
 
 export default function HeaderActions({
   compact = false,
+  location = true,
   className,
   onNavigate,
 }: {
   compact?: boolean;
+  /** The map pin; left out where the row is tight and the menu already leads to the showroom. */
+  location?: boolean;
   className?: string;
   onNavigate?: () => void;
 }) {
@@ -27,6 +30,7 @@ export default function HeaderActions({
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
+      {location ? (
       <a
         href={LOCATION_HREF}
         target="_blank"
@@ -39,6 +43,7 @@ export default function HeaderActions({
       >
         <MapPin className="size-4" strokeWidth={2} />
       </a>
+      ) : null}
       <a
         href={PHONE_HREF}
         onClick={onNavigate}

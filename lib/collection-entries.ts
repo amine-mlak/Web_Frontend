@@ -63,7 +63,7 @@ type Voice = {
 };
 
 const VISIT_CTA = "/ausstellung";
-const TALK_CTA = "/beratung";
+const TALK_CTA = "/kontakt#termin";
 
 export const MATERIAL_KIND_ROUTES: {
   slug: MaterialKindRoute;

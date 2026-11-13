@@ -1,3 +1,4 @@
+import { ctaHref } from "@/lib/cta";
 import LocaleLink from "@/components/LocaleLink";
 import PageEnd from "@/components/catalog/PageEnd";
 import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
@@ -214,7 +215,7 @@ export default function InteriorPage({
             <p className="t-lede mt-6 max-w-md text-muted">{page.intro}</p>
           ) : null}
           <div className="mt-8 flex flex-wrap gap-3">
-            <LocaleLink href={page.ctaUrl || "/beratung"} className="pill pill-primary">
+            <LocaleLink href={ctaHref(page.ctaUrl, page.ctaLabel || "Termin")} className="pill pill-primary">
               {page.ctaLabel || (locale === "en" ? "Book an appointment" : "Termin vereinbaren")}
             </LocaleLink>
             <LocaleLink href={copy.secondaryHref} className="pill pill-secondary">

@@ -33,6 +33,10 @@ export type ClickIds = {
 };
 
 export type LeadBody = {
+  /** "termin" for the appointment form on /kontakt; anything else is the kitchen planner. */
+  form?: unknown;
+  /** Appointment form: the day or time the visitor would like. */
+  wish?: unknown;
   challenge?: string;
   company_website?: string;
   name?: string;
@@ -293,7 +297,7 @@ export function validateLead(body: LeadBody, planner: PlannerContent) {
   };
 }
 
-function sanitizeClickIds(value: LeadBody["click_ids"]) {
+export function sanitizeClickIds(value: LeadBody["click_ids"]) {
   if (!value || typeof value !== "object") {
     return {};
   }
@@ -321,7 +325,7 @@ function sanitizeClickIds(value: LeadBody["click_ids"]) {
   return out;
 }
 
-function sanitizeUtm(value: LeadBody["utm"]) {
+export function sanitizeUtm(value: LeadBody["utm"]) {
   if (!value || typeof value !== "object") {
     return {};
   }

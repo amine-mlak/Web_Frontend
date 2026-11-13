@@ -133,7 +133,7 @@ export default function FaqHub({
             </a>
             .
           </p>
-          <NextSteps locale={locale} tone="dark" className="mt-8" />
+          <NextSteps locale={locale} tone="dark" lead="planner" className="mt-8" />
         </div>
       </section>
     </main>

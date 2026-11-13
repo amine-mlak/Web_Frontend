@@ -54,7 +54,7 @@ export const footerColumns: FooterColumn[] = [
       { href: "/ausstellung", label: "Ausstellung Wolfersdorf" },
       { href: "/beratung", label: "Küchenplaner" },
       { href: "/katalog", label: "Katalog bestellen" },
-      { href: "/beratung", label: "Beratung & Termin" },
+      { href: "/kontakt#termin", label: "Beratung & Termin" },
     ],
   },
   {
@@ -175,7 +175,7 @@ const englishFooter: FooterContent = {
         { href: "/ausstellung", label: "Wolfersdorf showroom" },
         { href: "/beratung", label: "Kitchen planner" },
         { href: "/katalog", label: "Order a catalogue" },
-        { href: "/beratung", label: "Advice & appointment" },
+        { href: "/kontakt#termin", label: "Advice & appointment" },
       ],
     },
     {
