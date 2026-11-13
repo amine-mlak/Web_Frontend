@@ -1,5 +1,6 @@
 import { PLANNER_GROUPS, type PlannerContent, type PlannerGroupKey } from "@/lib/kitchen-planner-model";
 import type { PlannerAnswers } from "@/lib/planner-lead";
+import { plannerTips } from "@/lib/planner-tips";
 
 /**
  * Hands planner leads and newsletter sign-ups to Mautic, which keeps the contacts and sends
@@ -8,7 +9,7 @@ import type { PlannerAnswers } from "@/lib/planner-lead";
  * own address and can send mail.
  *
  * Form ids and field names are those of the forms in Mautic ("Küchenplaner (Website)" and
- * "Newsletter anmelden"); see docs/mautic-plan.md.
+ * "Newsletter anmelden"); the field names there match the keys sent here.
  */
 const PLANNER_FORM = { id: 17, name: "kuchenplanerwebsite" };
 const NEWSLETTER_FORM = { id: 1, name: "newsletteranmelden" };
@@ -42,8 +43,8 @@ async function submit(form: { id: number; name: string }, fields: Record<string,
       // A ticked box: the value has to be the option's exact wording.
       for (const item of value) body.append(`mauticform[${key}][]`, item);
     } else {
-      // Mautic text fields hold 191 characters.
-      body.set(`mauticform[${key}]`, value.slice(0, 191));
+      // Mautic text fields hold 191 characters. An address is never cut: half a link is worse than none.
+      body.set(`mauticform[${key}]`, value.startsWith("https://") ? (value.length > 191 ? "" : value) : value.slice(0, 191));
     }
   }
   body.set("mauticform[formId]", String(form.id));
@@ -79,6 +80,8 @@ export function sendPlannerToMautic(
 ) {
   const [first, ...rest] = lead.name.trim().split(/\s+/);
   const labels = answerLabels(lead.details, germanContent);
+  // The pages the follow-up mail points to, picked from the answers.
+  const tips = plannerTips(lead.details, germanContent);
   return submit(PLANNER_FORM, {
     email: lead.email,
     vorname: rest.length ? first : "",
@@ -93,6 +96,17 @@ export function sendPlannerToMautic(
     beer_form: labels.form,
     beer_vorhaben: labels.project,
     beer_grundriss: lead.hasPlan ? "ja" : "nein",
+    beer_tipp_stil_titel: tips.style.title,
+    beer_tipp_stil_link: tips.style.link,
+    beer_tipp_stil_bild: tips.style.image,
+    beer_tipp_front_titel: tips.front.title,
+    beer_tipp_front_link: tips.front.link,
+    beer_tipp_front_bild: tips.front.image,
+    beer_tipp_platte_titel: tips.top.title,
+    beer_tipp_platte_link: tips.top.link,
+    beer_tipp_platte_bild: tips.top.image,
+    beer_tipp_form_titel: tips.form.title,
+    beer_tipp_form_link: tips.form.link,
   });
 }
 
