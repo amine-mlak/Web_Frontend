@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_booklet_vorteils",
+  "info": {
+    "displayName": "Booklet · Vorteil",
+    "description": "Eine kurze Zeile, was im Booklet steht. Zum Beispiel: Fehler bei der Planung vermeiden.",
+    "icon": "check"
+  },
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "maxLength": 90
+    }
+  }
+}

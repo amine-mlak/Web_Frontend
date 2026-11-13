@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "booklets",
+  "info": {
+    "singularName": "booklet",
+    "pluralName": "booklets",
+    "displayName": "Booklet",
+    "description": "Seiten, auf denen Besucher ein Booklet oder einen Katalog anfordern, digital, gedruckt oder beides. Gedruckt nur in Bayern und Baden-Württemberg. Die Adresse ist beer.de/ und dann die Kurzadresse, zum Beispiel beer.de/7-geheimnisse."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "titel": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "titelBetonung": {
+      "type": "string",
+      "maxLength": 60,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "titel",
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "kurzzeile": {
+      "type": "string",
+      "maxLength": 60,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "einleitung": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": { "preset": "beerPlain" },
+      "required": true,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "vorteile": {
+      "type": "component",
+      "repeatable": true,
+      "component": "booklet.vorteil",
+      "max": 6,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "titelbild": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": { "i18n": { "localized": false } }
+    },
+    "pdf": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["files"],
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "formTitel": {
+      "type": "string",
+      "maxLength": 80,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "hinweisDruck": {
+      "type": "string",
+      "maxLength": 140,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "dankeTitel": {
+      "type": "string",
+      "maxLength": 80,
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "dankeText": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": { "preset": "beerPlain" },
+      "pluginOptions": { "i18n": { "localized": true } }
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "pluginOptions": { "i18n": { "localized": true } }
+    }
+  }
+}

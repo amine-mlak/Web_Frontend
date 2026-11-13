@@ -2051,11 +2051,11 @@
   },
   {
    "source": "/pages/7-geheimnisse",
-   "destination": "/beratung"
+   "destination": "/7-geheimnisse"
   },
   {
    "source": "/en/pages/7-geheimnisse",
-   "destination": "/en/consultation"
+   "destination": "/7-geheimnisse"
   },
   {
    "source": "/pages/agbs",
