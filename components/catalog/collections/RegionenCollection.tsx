@@ -25,7 +25,7 @@ export default function RegionenCollection({
   return (
     <main className="bg-paper">
       <section
-        className="relative overflow-hidden px-5 pt-16 pb-20 text-center sm:px-8 lg:px-14 lg:pt-24 lg:pb-28"
+        className="relative overflow-hidden px-5 pt-16 pb-20 text-center sm:px-8 lg:px-gutter lg:pt-24 lg:pb-28"
         aria-labelledby="regionen-hero"
       >
         <h1
@@ -59,7 +59,7 @@ export default function RegionenCollection({
         </div>
       </div>
 
-      <section aria-labelledby="regionen-places" className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+      <section aria-labelledby="regionen-places" className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <h2 id="regionen-places" className="t-section text-ink">
           {hub.indexEyebrow}
         </h2>
@@ -75,7 +75,7 @@ export default function RegionenCollection({
                     {branch.title}
                   </h3>
                 </div>
-                <p className="font-sans text-[15px] leading-relaxed text-muted lg:col-span-4">
+                <p className="font-sans text-[16px] leading-relaxed text-muted lg:col-span-4">
                   {branch.text}
                 </p>
                 <Frame
@@ -92,7 +92,7 @@ export default function RegionenCollection({
       </section>
 
       {extras && extras.length > 0 ? (
-        <section className="border-b border-line bg-karte px-5 py-16 sm:px-8 lg:px-14">
+        <section className="border-b border-line bg-karte px-5 py-16 sm:px-8 lg:px-gutter">
           {extrasTitle ? (
             <h2 className="t-section text-ink">{extrasTitle}</h2>
           ) : null}

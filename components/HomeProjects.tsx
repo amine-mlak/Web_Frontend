@@ -33,16 +33,16 @@ export default async function HomeProjects() {
 
   return (
     <section aria-labelledby="home-projects" className="bg-paper">
-      <div className="px-5 pt-20 sm:px-8 lg:px-14 lg:pt-28">
-        <h2 data-rise="" id="home-projects" className="font-serif text-[40px] leading-[1.02] font-medium tracking-[-0.035em] text-ink md:text-[56px]">
+      <div className="px-5 pt-20 sm:px-8 lg:px-gutter lg:pt-28">
+        <h2 data-rise="" id="home-projects" className="font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
           {copy.title}
         </h2>
-        <p className="mt-5 max-w-xl font-sans text-[17px] leading-relaxed text-muted">{copy.text}</p>
+        <p className="mt-5 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{copy.text}</p>
       </div>
       {projects.map((project, index) => (
         <ProjectFeature key={project.slug} feature={projectFeature(project)} variant={index % 4} locale={locale} />
       ))}
-      <div className="px-5 pb-20 sm:px-8 lg:px-14">
+      <div className="px-5 pb-20 sm:px-8 lg:px-gutter">
         <LocaleLink href="/projekte" className="btn-quiet text-ink">
           {copy.all}
         </LocaleLink>

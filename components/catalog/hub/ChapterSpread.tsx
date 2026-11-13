@@ -97,7 +97,7 @@ export default function ChapterSpread({
 
   if (variant === 0) {
     return (
-      <article id={id} className="relative bg-paper px-5 py-16 sm:px-8 lg:px-14 lg:py-28">
+      <article id={id} className="relative bg-paper px-5 py-16 sm:px-8 lg:px-gutter lg:py-28">
         <div className="relative mx-auto max-w-[90rem]">
           <figure className="relative min-h-[78vh] overflow-hidden bg-nacht md:w-[70%]">
             <CmsImage
@@ -146,7 +146,7 @@ export default function ChapterSpread({
           aria-hidden="true"
         />
         <div className="relative z-10 flex min-h-[92vh] flex-col justify-end">
-          <div className="grid gap-8 bg-paper px-5 py-10 sm:px-8 md:grid-cols-12 md:items-end lg:px-14 lg:py-14">
+          <div className="grid gap-8 bg-paper px-5 py-10 sm:px-8 md:grid-cols-12 md:items-end lg:px-gutter lg:py-14">
             <div className="md:col-span-5">
               <Swatch hex={branch.hex} />
               <h2 className="t-section text-ink">
@@ -172,7 +172,7 @@ export default function ChapterSpread({
     return (
       <article
         id={id}
-        className="grid items-center gap-8 bg-karte px-5 py-16 sm:px-8 md:grid-cols-12 md:gap-10 lg:px-14 lg:py-28"
+        className="grid items-center gap-8 bg-karte px-5 py-16 sm:px-8 md:grid-cols-12 md:gap-10 lg:px-gutter lg:py-28"
       >
         <div className="grid grid-cols-2 gap-3 md:col-span-7">
           <figure className="relative col-span-2 aspect-[16/10] overflow-hidden bg-nacht">
@@ -240,7 +240,7 @@ export default function ChapterSpread({
             className="object-cover"
           />
         </figure>
-        <div className="flex flex-col justify-center px-8 py-16 sm:px-12 lg:px-16">
+        <div className="flex flex-col justify-center px-8 py-16 sm:px-12 lg:pr-edge lg:pl-16">
           <Swatch hex={branch.hex} invert />
           <h2 className="t-section text-paper">
             {branch.href ? (
@@ -264,7 +264,7 @@ export default function ChapterSpread({
   return (
     <article
       id={id}
-      className="grid items-center gap-10 bg-paper px-5 py-16 sm:px-8 md:grid-cols-12 lg:px-14 lg:py-28"
+      className="grid items-center gap-10 bg-paper px-5 py-16 sm:px-8 md:grid-cols-12 lg:px-gutter lg:py-28"
     >
       <div className="md:col-span-5 lg:pr-8">
         <Swatch hex={branch.hex} />

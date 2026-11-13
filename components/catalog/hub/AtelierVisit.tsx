@@ -42,7 +42,7 @@ export default async function AtelierVisit({
             className="object-cover"
           />
         </figure>
-        <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-5 lg:px-14 lg:py-20">
+        <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-5 lg:px-gutter lg:py-20">
           <h2
             id="atelier-visit-heading"
             className="t-section text-ink"
@@ -51,7 +51,7 @@ export default async function AtelierVisit({
           </h2>
           <p className="type-intro mt-5">{text || hub.visitNote}</p>
 
-          <dl className="mt-8 grid gap-6 border-t border-line pt-6 font-sans text-[15px] leading-relaxed text-ink sm:grid-cols-2">
+          <dl className="mt-8 grid gap-6 border-t border-line pt-6 font-sans text-[16px] leading-relaxed text-ink sm:grid-cols-2">
             <div>
               <dt className="font-sans text-[14px] text-muted">{copy.hours}</dt>
               <dd className="mt-2">

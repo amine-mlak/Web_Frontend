@@ -56,7 +56,7 @@ function OtherStances({ hub }: { hub: PresentedTopic }) {
   }
 
   return (
-    <nav className="border-t border-line px-5 py-12 sm:px-8 lg:px-14" aria-label={hub.siblingTitle}>
+    <nav className="border-t border-line px-5 py-12 sm:px-8 lg:px-gutter" aria-label={hub.siblingTitle}>
       <p className="type-eyebrow text-muted">{hub.siblingEyebrow}</p>
       <ul className="mt-5 flex flex-wrap gap-x-10 gap-y-3">
         {hub.siblings.map((item) => (
@@ -86,7 +86,7 @@ function Facts({ hub, invert }: { hub: PresentedTopic; invert?: boolean }) {
           key={`${fact.value}-${fact.label}`}
           className={invert ? "px-1 py-4" : "border-line px-5 py-8 sm:px-8 lg:border-l lg:px-8 lg:first:border-l-0"}
         >
-          <p className={`font-serif text-[28px] leading-none font-medium md:text-[34px] ${invert ? "text-paper" : "text-ink"}`}>
+          <p className={`font-serif text-[24px] md:text-[28px] xl:text-[32px] leading-none font-medium ${invert ? "text-paper" : "text-ink"}`}>
             {fact.value}
           </p>
           <p className={`type-eyebrow mt-3 ${invert ? "text-messing" : "text-muted"}`}>{fact.label}</p>
@@ -108,7 +108,7 @@ function Modern({
   return (
     <main className="bg-paper">
       <section className="grid lg:min-h-[calc(100svh-3.5rem)] lg:grid-cols-12">
-        <div className="flex flex-col justify-end px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
+        <div className="flex flex-col justify-end px-5 py-14 sm:px-8 lg:col-span-5 lg:px-gutter lg:py-20">
           <Crumbs hub={hub} tone="ink" />
           <h1 className="t-title mt-10 text-ink">
             {hub.title}
@@ -127,16 +127,16 @@ function Modern({
         />
       </section>
       <Facts hub={hub} />
-      <p className="t-lead max-w-4xl px-5 py-16 text-ink sm:px-8 lg:px-14 lg:py-24">
+      <p className="t-lead max-w-4xl px-5 py-16 text-ink sm:px-8 lg:px-gutter lg:py-24">
         {hub.statement}
       </p>
       <ol className="border-t border-line">
         {hub.branches.map((branch, index) => (
           <li
             key={branch.title}
-            className="grid items-center gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-14"
+            className="grid items-center gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-gutter"
           >
-            <p className="font-serif text-[40px] text-gold lg:col-span-2">
+            <p className="font-serif text-[24px] md:text-[32px] xl:text-[42px] text-gold lg:col-span-2">
               {String(index + 1).padStart(2, "0")}
             </p>
             <h2 className="t-section text-ink lg:col-span-4">
@@ -209,7 +209,7 @@ function Landhaus({
       <div className="mt-16 bg-paper">
         <Facts hub={hub} />
       </div>
-      <section className="grid items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24">
+      <section className="grid items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24">
         <p className="t-lead text-ink lg:col-span-5">
           {hub.statement}
         </p>
@@ -217,7 +217,7 @@ function Landhaus({
           {hub.branches.map((branch) => (
             <article key={branch.title} className="border-t border-line py-6 last:border-b">
               <h2 className="t-item text-ink">{branch.title}</h2>
-              <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
+              <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
             </article>
           ))}
         </div>
@@ -248,7 +248,7 @@ function Design({
 }) {
   return (
     <main className="bg-paper">
-      <header className="px-5 pt-12 sm:px-8 lg:px-14">
+      <header className="px-5 pt-12 sm:px-8 lg:px-gutter">
         <Crumbs hub={hub} tone="ink" />
         <h1 className="t-title mt-8 max-w-5xl text-ink">
           {hub.title}
@@ -256,7 +256,7 @@ function Design({
         </h1>
       </header>
       <div className="mt-8 grid items-end lg:grid-cols-12">
-        <p className="t-lede px-5 pb-8 text-muted sm:px-8 lg:col-span-4 lg:px-14">
+        <p className="t-lede px-5 pb-8 text-muted sm:px-8 lg:col-span-4 lg:px-gutter">
           {hub.lede}
         </p>
         <Frame
@@ -267,7 +267,7 @@ function Design({
           sizes="(max-width: 1024px) 100vw, 66vw"
         />
       </div>
-      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-14 lg:py-24">
+      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-gutter lg:py-24">
         <p className="t-lead max-w-3xl">
           {hub.statement}
         </p>
@@ -278,7 +278,7 @@ function Design({
                 {String(index + 1).padStart(2, "0")}
               </p>
               <h2 className="t-feature mt-4">{branch.title}</h2>
-              <p className="mt-3 font-sans text-[15px] leading-relaxed font-light text-paper/75">
+              <p className="mt-3 font-sans text-[16px] leading-relaxed font-light text-paper/75">
                 {branch.text}
               </p>
             </li>
@@ -311,7 +311,7 @@ function Holz({
 }) {
   return (
     <main className="bg-paper">
-      <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
+      <header className="px-5 pt-10 sm:px-8 lg:px-gutter lg:pt-16">
         <Crumbs hub={hub} tone="ink" />
         <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
           <h1 className="t-title text-ink">
@@ -336,7 +336,7 @@ function Holz({
           className="min-h-[24rem] lg:col-span-5 lg:min-h-[40rem]"
           sizes="(max-width: 1024px) 100vw, 42vw"
         />
-        <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-7 lg:px-16">
+        <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-7 lg:pr-edge lg:pl-16">
           <p className="t-lead text-ink">
             {hub.statement}
           </p>
@@ -351,7 +351,7 @@ function Holz({
                 <span className="type-eyebrow pt-1 text-gold">{String(index + 1).padStart(2, "0")}</span>
                 <span>
                   <span className="t-item block text-ink">{branch.title}</span>
-                  <span className="mt-1 block font-sans text-[15px] leading-relaxed text-muted">{branch.text}</span>
+                  <span className="mt-1 block font-sans text-[16px] leading-relaxed text-muted">{branch.text}</span>
                 </span>
               </li>
             ))}
@@ -408,7 +408,7 @@ function Purist({
           <li key={branch.title} className="border-t border-line py-8 text-center last:border-b">
             <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
             <h2 className="t-feature mt-3 text-ink">{branch.title}</h2>
-            <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
+            <p className="mt-2 font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
           </li>
         ))}
       </ol>
@@ -438,7 +438,7 @@ function Luxus({
 }) {
   return (
     <main className="bg-paper">
-      <header className="px-5 pt-12 sm:px-8 lg:px-14 lg:pt-20">
+      <header className="px-5 pt-12 sm:px-8 lg:px-gutter lg:pt-20">
         <Crumbs hub={hub} tone="ink" />
         <h1 className="t-title mt-8 max-w-4xl text-ink">
           {hub.title}
@@ -446,7 +446,7 @@ function Luxus({
         </h1>
         <p className="t-lede mt-6 max-w-lg text-muted">{hub.lede}</p>
       </header>
-      <section className="mt-12 bg-nacht px-5 py-14 sm:px-8 lg:px-14 lg:py-20">
+      <section className="mt-12 bg-nacht px-5 py-14 sm:px-8 lg:px-gutter lg:py-20">
         <Frame
           src={photos[0]}
           alt={hub.heroAlt}
@@ -468,11 +468,11 @@ function Luxus({
           <Facts hub={hub} invert />
         </div>
       </section>
-      <section className="grid gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24">
+      <section className="grid gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24">
         <div className="lg:col-span-5">
           <p className="t-lead text-ink">{hub.statement}</p>
           {hub.statementNote ? (
-            <p className="mt-6 font-sans text-[15px] leading-relaxed text-muted">{hub.statementNote}</p>
+            <p className="mt-6 font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
           ) : null}
         </div>
         <ol className="lg:col-span-6 lg:col-start-7">
@@ -480,7 +480,7 @@ function Luxus({
             <li key={branch.title} className="border-t border-line py-6">
               <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
               <h2 className="t-feature mt-2 text-ink">{branch.title}</h2>
-              <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
+              <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
             </li>
           ))}
         </ol>

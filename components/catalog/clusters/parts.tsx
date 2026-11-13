@@ -104,7 +104,7 @@ export function QuoteLine({
 
   return (
     <figure
-      className={`border-t px-5 py-14 sm:px-8 lg:px-14 lg:py-20 ${dark ? "border-paper/12 bg-nacht" : "border-line bg-karte"}`}
+      className={`border-t px-5 py-14 sm:px-8 lg:px-gutter lg:py-20 ${dark ? "border-paper/12 bg-nacht" : "border-line bg-karte"}`}
     >
       <blockquote className={`t-lead max-w-3xl ${dark ? "text-paper" : "text-ink"}`}>
         {quote}
@@ -142,8 +142,8 @@ export function HouseLine({
     <section
       className={
         sub
-          ? "px-5 pt-4 pb-16 sm:px-8 lg:px-14 lg:pb-24"
-          : "border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24"
+          ? "px-5 pt-4 pb-16 sm:px-8 lg:px-gutter lg:pb-24"
+          : "border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24"
       }
       aria-labelledby={headingId}
     >
@@ -213,7 +213,7 @@ export function RuledPoints({ branches }: { branches: PresentedBranch[] }) {
                 {branch.points.map((point) => (
                   <li
                     key={point}
-                    className="font-sans text-[15px] leading-relaxed text-ink/80"
+                    className="font-sans text-[16px] leading-relaxed text-ink/80"
                   >
                     {point}
                   </li>
@@ -238,7 +238,7 @@ export function PointsSection({ hub, className = "" }: { hub: PresentedHub; clas
   }
   if (hub.branches.length === 0) {
     return (
-      <section className={`px-5 py-16 sm:px-8 lg:px-14 lg:py-24 ${className}`}>
+      <section className={`px-5 py-16 sm:px-8 lg:px-gutter lg:py-24 ${className}`}>
         <p className="t-lead max-w-3xl text-ink">{hub.statement}</p>
         {hub.statementNote ? (
           <p className="mt-6 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
@@ -249,7 +249,7 @@ export function PointsSection({ hub, className = "" }: { hub: PresentedHub; clas
 
   return (
     <section
-      className={`mx-auto grid max-w-[90rem] gap-x-12 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-24 ${className}`}
+      className={`mx-auto grid max-w-[90rem] gap-x-12 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24 ${className}`}
       aria-labelledby={hub.statement ? headingId : undefined}
     >
       <div className="lg:col-span-5">
@@ -286,7 +286,7 @@ export function IndexRows({
   }
 
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14" aria-labelledby={headingId}>
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter" aria-labelledby={headingId}>
       {eyebrow ? <p className="type-eyebrow mb-3 text-gold">{eyebrow}</p> : null}
       <h2
         id={headingId}
@@ -309,7 +309,7 @@ export function IndexRows({
               />
               <span>
                 <span className="t-item block text-ink">{item.title}</span>
-                <span className="mt-1 block max-w-xl font-sans text-[15px] leading-relaxed text-muted">
+                <span className="mt-1 block max-w-xl font-sans text-[16px] leading-relaxed text-muted">
                   {item.text}
                 </span>
               </span>
@@ -361,7 +361,7 @@ export function SiblingCards({
     return null;
   }
   return (
-    <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby={title ? id : undefined}>
+    <section className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby={title ? id : undefined}>
       {eyebrow ? <p className="type-eyebrow text-gold">{eyebrow}</p> : null}
       {title ? (
         <h2 id={id} className="t-section mt-3 text-ink">

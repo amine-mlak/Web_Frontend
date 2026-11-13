@@ -136,16 +136,18 @@ const PAIRS = {
     row: "items-center",
     photo: "aspect-[4/3] lg:col-span-7",
     photoFlip: "lg:order-2",
-    text: "lg:col-span-5 lg:px-14 lg:py-16",
-    textFlip: "lg:order-1",
+    text: "lg:col-span-5 lg:py-16",
+    textSide: "lg:pr-edge lg:pl-14",
+    textFlip: "lg:order-1 lg:pr-14 lg:pl-edge",
     sizes: "(max-width: 1024px) 100vw, 58vw",
   },
   wider: {
     row: "items-end",
     photo: "aspect-[4/3] lg:col-span-8 lg:aspect-[3/2]",
     photoFlip: "lg:order-2",
-    text: "lg:col-span-4 lg:px-12 lg:pt-16 lg:pb-14",
-    textFlip: "lg:order-1",
+    text: "lg:col-span-4 lg:pt-16 lg:pb-14",
+    textSide: "lg:pr-edge lg:pl-12",
+    textFlip: "lg:order-1 lg:pr-12 lg:pl-edge",
     sizes: "(max-width: 1024px) 100vw, 67vw",
   },
   tall: {
@@ -153,6 +155,7 @@ const PAIRS = {
     photo: "mx-5 aspect-[4/5] sm:mx-8 lg:col-span-4 lg:col-start-2 lg:row-start-1 lg:mx-0",
     photoFlip: "lg:col-start-8",
     text: "lg:col-span-5 lg:col-start-7 lg:row-start-1 lg:px-0 lg:py-0",
+    textSide: "",
     textFlip: "lg:col-start-2",
     sizes: "(max-width: 1024px) 100vw, 34vw",
   },
@@ -261,7 +264,7 @@ export default function ReferenzPage({
     <main className="bg-paper">
       <PhotoViewer photos={photos} labels={copy.viewer}>
       <article>
-        <header className="px-5 pt-10 sm:px-8 lg:px-14 lg:pt-16">
+        <header className="px-5 pt-10 sm:px-8 lg:px-gutter lg:pt-16">
           <Breadcrumbs items={[{ href: "/projekte", label: copy.projects }]} current={project.title} locale={locale} tone="ink" />
           <div className="mt-6 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
             <p className="type-eyebrow text-gold">{copy.eyebrow}</p>
@@ -310,7 +313,7 @@ export default function ReferenzPage({
         {facts.length > 0 ? (
           <dl
             className={cn(
-              "grid grid-cols-2 gap-x-6 border-b border-line px-5 sm:grid-cols-3 sm:px-8 lg:px-14",
+              "grid grid-cols-2 gap-x-6 border-b border-line px-5 sm:grid-cols-3 sm:px-8 lg:px-gutter",
               SPEC_COLUMNS[Math.min(facts.length, 5)],
             )}
           >
@@ -321,7 +324,7 @@ export default function ReferenzPage({
               >
                 <dt className="font-sans text-[13px] text-muted">{fact.label}</dt>
                 <dd className="mt-1.5">
-                  {fact.value ? <span className="block font-serif text-[19px] leading-snug text-ink">{fact.value}</span> : null}
+                  {fact.value ? <span className="block font-serif text-[18px] leading-snug text-ink">{fact.value}</span> : null}
                   {fact.links.length > 0 ? (
                     <span className={cn("flex flex-wrap gap-x-3", fact.value && "mt-2")}>
                       {fact.links.map((link) => (
@@ -332,7 +335,7 @@ export default function ReferenzPage({
                             "underline decoration-line underline-offset-4 transition-colors hover:decoration-ink",
                             fact.value
                               ? "font-sans text-[14px] text-muted hover:text-ink"
-                              : "font-serif text-[19px] leading-snug text-ink",
+                              : "font-serif text-[18px] leading-snug text-ink",
                           )}
                         >
                           {link.name}
@@ -361,13 +364,13 @@ export default function ReferenzPage({
                 />
                 <div
                   data-rise=""
-                  className={cn("px-5 py-10 sm:px-8", item.layout.text, index % 2 === 1 && item.layout.textFlip)}
+                  className={cn("px-5 py-10 sm:px-8", item.layout.text, index % 2 === 1 ? item.layout.textFlip : item.layout.textSide)}
                 >
                   <p
                     className={
                       item.lead
                         ? "t-lead max-w-lg text-ink"
-                        : "max-w-md font-sans text-[17px] leading-[1.75] text-ink/80"
+                        : "max-w-md font-sans text-[16px] leading-[1.75] text-ink/80"
                     }
                   >
                     {item.text}
@@ -392,7 +395,7 @@ export default function ReferenzPage({
         ) : null}
 
         {rest.length > 0 ? (
-          <ul className="grid gap-3 px-5 pt-3 pb-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:pt-14">
+          <ul className="grid gap-3 px-5 pt-3 pb-8 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:pt-14">
             {restCells(rest).map(({ frame, cell, ratio, sizes }, index) => (
               <li key={`${frame.src}-${index}`} className={cell}>
                 <figure>
@@ -418,7 +421,7 @@ export default function ReferenzPage({
       </PhotoViewer>
 
       {others.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="referenz-others">
+        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="referenz-others">
           <h2
             id="referenz-others"
             className="t-section text-ink"
@@ -462,11 +465,11 @@ export default function ReferenzPage({
             />
           </figure>
         ) : null}
-        <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:px-16 lg:py-24">
+        <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:py-24 lg:pr-16 lg:pl-edge">
           <h2 className="t-section text-paper">
             {copy.close}
           </h2>
-          <p className="mt-6 max-w-md font-sans text-[17px] leading-relaxed font-light text-paper/80">
+          <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed font-light text-paper/80">
             {copy.closeText}
           </p>
           <NextSteps primary={{ href: "/beratung", label: copy.cta }} locale={locale} tone="dark" className="mt-10" />

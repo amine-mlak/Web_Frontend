@@ -17,7 +17,7 @@ export default function MarkenCollection({
 }) {
   return (
     <main className="bg-paper">
-      <section className="px-5 pt-12 pb-12 sm:px-8 lg:px-14 lg:pt-20 lg:pb-16" aria-labelledby="marken-hero">
+      <section className="px-5 pt-12 pb-12 sm:px-8 lg:px-gutter lg:pt-20 lg:pb-16" aria-labelledby="marken-hero">
         <div className="grid items-end gap-8 lg:grid-cols-12">
           <h1 id="marken-hero" className="t-display text-ink lg:col-span-7">
             {hub.title}
@@ -39,13 +39,13 @@ export default function MarkenCollection({
             <li key={branch.title} className="border-t border-line last:border-b">
               <LocaleLink
                 href={branch.href ?? "/beratung"}
-                className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-10"
+                className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-10"
               >
                 <div className="lg:col-span-8">
                   <h2 className="t-section text-ink">
                     {branch.title}
                   </h2>
-                  <p className="mt-4 max-w-xl font-sans text-[15px] leading-relaxed text-muted">
+                  <p className="mt-4 max-w-xl font-sans text-[16px] leading-relaxed text-muted">
                     {branch.text}
                   </p>
                 </div>
@@ -63,7 +63,7 @@ export default function MarkenCollection({
       </section>
 
       {extras && extras.length > 0 ? (
-        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20">
+        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20">
           {extrasTitle ? (
             <h2 className="t-section text-ink">
               {extrasTitle}

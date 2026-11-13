@@ -19,7 +19,7 @@ export default function EntryHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="px-5 pt-8 sm:px-8 lg:px-14 lg:pt-12">
+    <header className="px-5 pt-8 sm:px-8 lg:px-gutter lg:pt-12">
       <Crumbs hub={hub} tone="ink" />
       <div className="mt-6 grid items-end gap-x-12 gap-y-6 lg:mt-8 lg:grid-cols-12">
         <h1 className="t-title text-ink lg:col-span-7">

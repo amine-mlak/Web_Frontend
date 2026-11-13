@@ -34,8 +34,8 @@ export default async function PressePage() {
 
   return (
     <main className="bg-paper">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
-        <h1 className="font-serif text-[40px] leading-[0.95] font-medium tracking-[-0.03em] text-ink md:text-[56px]">
+      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
+        <h1 className="font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[0.95] font-medium tracking-[-0.03em] text-ink">
           {copy.title}
         </h1>
         <p className="type-intro mt-8 max-w-2xl">{copy.intro}</p>
@@ -45,12 +45,12 @@ export default async function PressePage() {
       </div>
 
       {guides.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="presse-guides">
+        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="presse-guides">
           <div className="mx-auto max-w-[90rem]">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="type-eyebrow text-gold">{locale === "en" ? "Guides" : "Ratgeber"}</p>
-                <h2 id="presse-guides" className="mt-3 font-serif text-[32px] leading-tight font-medium text-ink md:text-[40px]">
+                <h2 id="presse-guides" className="mt-3 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium text-ink">
                   {locale === "en" ? "Read before the conversation." : "Lesen vor dem Gespräch."}
                 </h2>
               </div>
@@ -65,10 +65,10 @@ export default async function PressePage() {
         </section>
       ) : null}
 
-      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-14 lg:py-20" aria-labelledby="presse-contact">
+      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="presse-contact">
         <div className="mx-auto grid max-w-[90rem] gap-10 lg:grid-cols-12">
           <div className="lg:col-span-6">
-            <h2 id="presse-contact" className="font-serif text-[32px] leading-tight font-medium md:text-[42px]">
+            <h2 id="presse-contact" className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium">
               {locale === "en" ? "Press enquiries" : "Presseanfragen"}
             </h2>
             <p className="mt-4 max-w-md font-sans text-[16px] leading-relaxed font-light text-paper/80">

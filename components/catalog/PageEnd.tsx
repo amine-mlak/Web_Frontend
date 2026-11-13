@@ -34,7 +34,7 @@ export default function PageEnd({
   ][Math.max(shown.length, 1) - 1];
   return (
     <>
-      <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="page-end">
+      <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="page-end">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div data-rise="" className="lg:col-span-7">
             <h2 id="page-end" className="t-section text-ink">

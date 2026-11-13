@@ -30,7 +30,7 @@ function FeatureText({
       </div>
       <div className={wide ? "lg:col-span-6 lg:col-start-7" : ""}>
         {feature.intro ? (
-          <p className={`${wide ? "" : "mt-5"} max-w-md font-sans text-[17px] leading-relaxed text-muted`}>{feature.intro}</p>
+          <p className={`${wide ? "" : "mt-5"} max-w-md font-sans text-[16px] leading-relaxed text-muted`}>{feature.intro}</p>
         ) : null}
         <LocaleLink href={feature.href} className="btn-quiet mt-7 text-ink">
           {en ? "View the project" : "Projekt ansehen"}
@@ -82,7 +82,7 @@ export default function ProjectFeature({
 
   if (variant === 1) {
     return (
-      <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+      <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-gutter lg:py-24">
         <div className="order-2 lg:order-1 lg:col-span-5">
           <FeatureText feature={feature} locale={locale} level={level} />
         </div>
@@ -100,8 +100,8 @@ export default function ProjectFeature({
   if (variant === 2) {
     return (
       <article className="py-14 lg:py-24">
-        <div className="px-5 sm:px-8 lg:px-14">{photo("aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]", "100vw")}</div>
-        <div className="mt-10 px-5 sm:px-8 lg:px-14">
+        <div className="px-5 sm:px-8 lg:px-gutter">{photo("aspect-[4/3] md:aspect-[16/9] lg:aspect-[21/9]", "100vw")}</div>
+        <div className="mt-10 px-5 sm:px-8 lg:px-gutter">
           <FeatureText feature={feature} locale={locale} level={level} wide />
         </div>
       </article>
@@ -109,7 +109,7 @@ export default function ProjectFeature({
   }
   if (variant === 3 && feature.detail) {
     return (
-      <article className="px-5 py-14 sm:px-8 lg:px-14 lg:py-24">
+      <article className="px-5 py-14 sm:px-8 lg:px-gutter lg:py-24">
         <div className="grid gap-6 sm:grid-cols-2">
           {photo("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
           {detail("aspect-[4/5]", "(max-width: 640px) 100vw, 50vw")}
@@ -121,7 +121,7 @@ export default function ProjectFeature({
     );
   }
   return (
-    <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-14 lg:py-24">
+    <article className="grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-gutter lg:py-24">
       <div className="lg:col-span-7">{photo("aspect-[4/3]", "(max-width: 1024px) 100vw, 58vw")}</div>
       <div className="lg:col-span-5">
         <FeatureText feature={feature} locale={locale} level={level} />

@@ -37,7 +37,7 @@ export function StatementBand({
   return (
     <div
       className={cn(
-        "px-5 py-16 sm:px-8 lg:px-14 lg:py-24",
+        "px-5 py-16 sm:px-8 lg:px-gutter lg:py-24",
         tone === "karte" && "bg-karte",
         dark && "bg-nacht",
         rule && (dark ? "border-t border-paper/12" : "border-t border-line"),

@@ -13,7 +13,7 @@ export default function MoebelCollection({
   return (
     <main className="bg-karte">
       <section className="grid min-h-[88svh] lg:grid-cols-12" aria-labelledby="moebel-hero">
-        <div className="flex flex-col justify-end px-5 py-16 sm:px-8 lg:col-span-5 lg:px-12 lg:py-24">
+        <div className="flex flex-col justify-end px-5 py-16 sm:px-8 lg:col-span-5 lg:py-24 lg:pr-12 lg:pl-edge">
           <h1
             id="moebel-hero"
             className="t-display text-ink"
@@ -56,7 +56,7 @@ export default function MoebelCollection({
                   sizes="(max-width: 1024px) 100vw, 58vw"
                 />
                 <div
-                  className={`flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 lg:px-12 ${reverse ? "lg:order-1" : ""}`}
+                  className={`flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 ${reverse ? "lg:order-1 lg:pr-12 lg:pl-edge" : "lg:pr-edge lg:pl-12"}`}
                 >
                   <h2 className="t-section text-ink">
                     {branch.title}

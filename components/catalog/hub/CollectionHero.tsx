@@ -26,7 +26,7 @@ export default function CollectionHero({
         className="object-cover object-center"
       />
 
-      <div className="absolute inset-0 z-10 flex items-end px-5 pb-16 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
+      <div className="absolute inset-0 z-10 flex items-end px-5 pb-16 sm:px-8 sm:pb-20 lg:px-gutter lg:pb-24">
         <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
         <div className="max-w-3xl text-paper">
           <Crumbs hub={hub} tone="paper" />
@@ -35,7 +35,7 @@ export default function CollectionHero({
             className={
               display
                 ? "t-display mt-4 text-paper"
-                : "mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px]"
+                : "mt-2 font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5"
             }
           >
             {hub.title}

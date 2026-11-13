@@ -35,13 +35,13 @@ export function PageCare({ hub, path }: Props) {
 
   return (
     <section className="bg-karte" aria-labelledby="page-care">
-      <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
+      <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
         <div className="lg:col-span-4">
           <p className="type-eyebrow text-gold">{en ? "From our care guide" : "Aus der Pflegeanleitung"}</p>
           <h2 id="page-care" data-rise="" className="t-section mt-3 text-ink">
             {en ? `${name}: everyday care` : `${name} pflegen`}
           </h2>
-          <p className="mt-5 max-w-md font-sans text-[17px] leading-[1.7] text-ink/85">{care.intro}</p>
+          <p className="mt-5 max-w-md font-sans text-[16px] leading-[1.7] text-ink/85">{care.intro}</p>
           <LocaleLink href="/faq/pflege" className="btn-quiet mt-7 text-ink">
             {en ? "All questions on care" : "Alle Fragen zur Pflege"} <span aria-hidden="true">→</span>
           </LocaleLink>
@@ -52,8 +52,8 @@ export function PageCare({ hub, path }: Props) {
               key={row.label}
               className="grid gap-2 border-t border-line py-6 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-8"
             >
-              <dt className="font-serif text-[20px] leading-[1.25] text-ink">{row.label}</dt>
-              <dd className="font-sans text-[17px] leading-[1.7] text-ink/85">{row.text}</dd>
+              <dt className="font-serif text-[18px] leading-[1.25] text-ink">{row.label}</dt>
+              <dd className="font-sans text-[16px] leading-[1.7] text-ink/85">{row.text}</dd>
             </div>
           ))}
         </dl>
@@ -88,7 +88,7 @@ function ArticleRows({ items, summary = false }: { items: Article[]; summary?: b
                 {item.title}
               </span>
               {summary && item.description ? (
-                <span className="mt-2.5 block max-w-2xl font-sans text-[17px] leading-[1.7] text-ink/85">
+                <span className="mt-2.5 block max-w-2xl font-sans text-[16px] leading-[1.7] text-ink/85">
                   {item.description}
                 </span>
               ) : null}
@@ -130,7 +130,7 @@ export async function PageGuide({ hub, path }: Props) {
   if (!excerpt) {
     return (
       <section className="border-t border-line bg-karte" aria-labelledby="page-guide">
-        <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
+        <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
           <div className="lg:col-span-4">
             <p className="type-eyebrow text-gold">Aus Ratgeber und Magazin</p>
             <h2 id="page-guide" data-rise="" className="t-section mt-3 text-ink">
@@ -159,7 +159,7 @@ export async function PageGuide({ hub, path }: Props) {
 
   return (
     <section className="border-t border-line bg-karte" aria-labelledby="page-guide">
-      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-14 lg:px-14 lg:py-24">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-14 lg:px-gutter lg:py-24">
         {image ? (
           <LocaleLink href={href} tabIndex={-1} aria-hidden="true" className="block lg:col-span-5 lg:row-start-1">
             <Frame
@@ -182,8 +182,8 @@ export async function PageGuide({ hub, path }: Props) {
               key={index}
               className={
                 index === 0
-                  ? `font-sans text-[19px] leading-[1.6] text-ink ${image ? "mt-7" : ""}`
-                  : "mt-6 font-sans text-[17px] leading-[1.7] text-ink/85"
+                  ? `font-sans text-[18px] leading-[1.6] text-ink ${image ? "mt-7" : ""}`
+                  : "mt-6 font-sans text-[16px] leading-[1.7] text-ink/85"
               }
             >
               {paragraph}

@@ -30,7 +30,7 @@ export default function KuechenCollection({
           className="absolute inset-0 bg-gradient-to-t from-nacht/80 via-transparent to-nacht/50"
           aria-hidden
         />
-        <div className="relative z-10 flex min-h-[100svh] items-end px-5 pb-10 sm:px-8 lg:px-14 lg:pb-16">
+        <div className="relative z-10 flex min-h-[100svh] items-end px-5 pb-10 sm:px-8 lg:px-gutter lg:pb-16">
           <div className="max-w-xl bg-paper px-7 py-8 sm:px-10 sm:py-10">
             <h1
               id="kuechen-hero"
@@ -51,7 +51,7 @@ export default function KuechenCollection({
       <StatementBand statement={hub.statement} note={hub.statementNote} tone="karte" rule={false} />
 
       <section aria-labelledby="kuechen-doors" className="bg-paper">
-        <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14">
+        <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter">
           <h2 id="kuechen-doors" className="t-section text-ink">
             {hub.indexEyebrow}
           </h2>

@@ -99,9 +99,9 @@ export default async function LegalPage({ house }: { house: PresentedHouse }) {
 
           <aside className="mt-16 grid gap-8 border-t border-line pt-8 sm:grid-cols-2" aria-label={copy.more}>
             <div>
-              <p className="font-serif text-[22px] leading-snug font-medium text-ink">{copy.questions}</p>
-              <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">{copy.questionsText}</p>
-              <p className="mt-4 flex flex-col gap-1 font-sans text-[15px] text-ink">
+              <p className="font-serif text-[24px] leading-snug font-medium text-ink">{copy.questions}</p>
+              <p className="mt-2 font-sans text-[16px] leading-relaxed text-muted">{copy.questionsText}</p>
+              <p className="mt-4 flex flex-col gap-1 font-sans text-[16px] text-ink">
                 <a href={`mailto:${settings.email}`} className="inline-flex min-h-6 w-fit items-center underline underline-offset-4">
                   {settings.email}
                 </a>
@@ -118,7 +118,7 @@ export default async function LegalPage({ house }: { house: PresentedHouse }) {
                     <LocaleLink
                       href={`/${page.slug}`}
                       aria-current={page.slug === house.slug ? "page" : undefined}
-                      className="inline-flex min-h-6 items-center font-sans text-[15px] text-ink underline-offset-4 hover:underline aria-[current=page]:text-muted"
+                      className="inline-flex min-h-6 items-center font-sans text-[16px] text-ink underline-offset-4 hover:underline aria-[current=page]:text-muted"
                     >
                       {page.label}
                     </LocaleLink>

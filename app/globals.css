@@ -61,14 +61,31 @@ body {
 body {
   font-family: var(--font-sans);
   font-weight: 400;
-  font-size: 17px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--color-muted);
 }
 
 ::selection {
   background: var(--color-ink);
   color: var(--color-paper);
+}
+
+/* Side gutter of a section on desktop: 3.5rem, growing on wide screens so the content stays
+   83rem wide and centred. Backgrounds and full-width photos still reach the screen edge. */
+@utility px-gutter {
+  padding-inline: max(3.5rem, calc((100% - 83rem) / 2));
+}
+@utility mx-gutter {
+  margin-inline: max(3.5rem, calc((100% - 83rem) / 2));
+}
+/* The same gutter on one side only, for the text half of a photo-and-text split: the photo runs
+   to the screen edge, the text stops where the other sections stop. */
+@utility pl-edge {
+  padding-left: max(3.5rem, calc((100vw - 83rem) / 2));
+}
+@utility pr-edge {
+  padding-right: max(3.5rem, calc((100vw - 83rem) / 2));
 }
 
 /* VI Typografie — only Cormorant Garamond + Figtree */
@@ -99,13 +116,27 @@ body {
     background: linear-gradient(to top, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0.38) 40%, rgb(0 0 0 / 0) 72%);
   }
 
-  .type-h1 {
+  /* Type scale. Three steps: phone, tablet (768) and desktop (1280).
+       display   42 / 60 / 72   the h1 of a hub
+       title     32 / 42 / 60   every other h1, and the h2 that opens a section
+       feature   24 / 32 / 42   h3, large row and card titles
+       item      24             small card and list titles
+       body      16 / 24        running text at every width */
+  .type-h1,
+  .type-h2,
+  .type-h3,
+  .type-panel,
+  .type-quote {
     font-family: var(--font-serif);
     font-weight: 500;
-    font-size: 40px;
+    color: var(--color-ink);
+  }
+
+  .type-h1,
+  .type-h2 {
+    font-size: 32px;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    color: var(--color-ink);
   }
 
   .type-h1 em {
@@ -113,38 +144,21 @@ body {
     font-weight: inherit;
   }
 
-  .type-h2 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 32px;
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-    color: var(--color-ink);
-  }
-
   .type-h3 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 26px;
-    line-height: 1.2;
-    color: var(--color-ink);
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
   }
 
   .type-panel {
-    font-family: var(--font-serif);
-    font-weight: 500;
     font-size: 24px;
-    line-height: 1.25;
-    color: var(--color-ink);
+    line-height: 1.2;
   }
 
   .type-quote {
-    font-family: var(--font-serif);
-    font-weight: 500;
     font-style: italic;
     font-size: 24px;
-    line-height: 1.4;
-    color: var(--color-ink);
+    line-height: 1.3;
   }
 
   .type-eyebrow {
@@ -160,8 +174,8 @@ body {
   .type-body {
     font-family: var(--font-sans);
     font-weight: 400;
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.5;
     color: var(--color-muted);
   }
 
@@ -169,23 +183,20 @@ body {
     font-family: var(--font-sans);
     font-weight: 300;
     font-size: 18px;
-    line-height: 1.7;
+    line-height: 1.55;
     color: var(--color-muted);
   }
 
   .type-nav {
     font-family: var(--font-sans);
     font-weight: 400;
-    font-size: 17px;
+    font-size: 18px;
     line-height: 1.4;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
   }
 
   @media (min-width: 768px) {
-    .type-h1 {
-      font-size: 64px;
-    }
-
+    .type-h1,
     .type-h2 {
       font-size: 42px;
     }
@@ -194,50 +205,29 @@ body {
       font-size: 32px;
     }
 
-    .type-panel {
-      font-size: 30px;
-    }
-
+    .type-panel,
     .type-quote {
       font-size: 28px;
-    }
-
-    .type-eyebrow {
-      font-size: 13px;
-    }
-
-    .type-body {
-      font-size: 18px;
-    }
-
-    .type-intro {
-      font-size: 20px;
-    }
-
-    .type-nav {
-      font-size: 19px;
     }
   }
 
   @media (min-width: 1280px) {
-    .type-h1 {
-      font-size: 72px;
-    }
-
+    .type-h1,
     .type-h2 {
-      font-size: 48px;
+      font-size: 60px;
     }
 
-    .type-panel {
-      font-size: 34px;
+    .type-h3 {
+      font-size: 42px;
     }
 
-    .type-nav {
-      font-size: 21px;
+    .type-panel,
+    .type-quote {
+      font-size: 32px;
     }
   }
 
-  /* Collection pages: one type scale for every hub, overview and single page.
+  /* Collection pages use the same scale.
      These set face, size, line height and spacing only; the colour stays with the element.
        t-display  the h1 of a hub or a world overview
        t-title    the h1 of a single page
@@ -258,87 +248,78 @@ body {
   }
 
   .t-display {
-    font-size: 48px;
-    line-height: 0.94;
-    letter-spacing: -0.045em;
-  }
-
-  .t-title {
-    font-size: 44px;
-    line-height: 0.96;
-    letter-spacing: -0.04em;
-  }
-
-  .t-section {
-    font-size: 32px;
-    line-height: 1.08;
+    font-size: 42px;
+    line-height: 1.05;
     letter-spacing: -0.03em;
   }
 
+  .t-title,
+  .t-section {
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
   .t-feature {
-    font-size: 28px;
-    line-height: 1.12;
-    letter-spacing: -0.025em;
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
   }
 
   .t-item {
     font-size: 24px;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
+    line-height: 1.17;
+    letter-spacing: -0.01em;
   }
 
   .t-lead {
-    font-size: 26px;
-    line-height: 1.28;
-    letter-spacing: -0.02em;
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
   }
 
   .t-lede {
     font-family: var(--font-sans);
     font-weight: 300;
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 18px;
+    line-height: 1.55;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
+    .t-display {
+      font-size: 60px;
+    }
+
+    .t-title,
+    .t-section {
+      font-size: 42px;
+    }
+
+    .t-feature {
+      font-size: 32px;
+    }
+
+    .t-lead {
+      font-size: 28px;
+    }
+  }
+
+  @media (min-width: 1280px) {
     .t-display {
       font-size: 72px;
     }
 
-    .t-title {
-      font-size: 60px;
-    }
-  }
-
-  @media (min-width: 768px) {
+    .t-title,
     .t-section {
-      font-size: 44px;
+      font-size: 60px;
     }
 
     .t-feature {
-      font-size: 34px;
-    }
-
-    .t-item {
-      font-size: 26px;
+      font-size: 42px;
     }
 
     .t-lead {
       font-size: 32px;
-    }
-
-    .t-lede {
-      font-size: 18px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .t-display {
-      font-size: 96px;
-    }
-
-    .t-title {
-      font-size: 72px;
     }
   }
 
@@ -350,9 +331,9 @@ body {
     border-radius: var(--btn-radius, 0);
     padding: 0.85rem 1.6rem;
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     line-height: 1.2;
     transition:
       background-color 0.2s ease,

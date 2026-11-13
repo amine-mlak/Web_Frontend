@@ -197,7 +197,7 @@ export default function ApplicationForm({
 
   if (status === "done") {
     return (
-      <p role="status" className="max-w-xl font-serif text-[26px] leading-snug text-ink">
+      <p role="status" className="max-w-xl font-serif text-[24px] leading-snug text-ink">
         {ui.done}
       </p>
     );
@@ -260,7 +260,7 @@ export default function ApplicationForm({
         {files.length ? (
           <ul className="mt-4 border-t border-line" aria-labelledby={`${baseId}-files`}>
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`} className="flex items-baseline justify-between gap-4 border-b border-line py-3 font-sans text-[15px] text-ink">
+              <li key={`${file.name}-${index}`} className="flex items-baseline justify-between gap-4 border-b border-line py-3 font-sans text-[16px] text-ink">
                 <span className="min-w-0 truncate">{file.name}</span>
                 <span className="flex shrink-0 items-baseline gap-4">
                   <span className="text-[13px] text-muted">{formatSize(file.size, locale)}</span>

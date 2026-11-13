@@ -44,7 +44,7 @@ export default function EndBand({
             <Frame src={image} alt="" className="absolute inset-0" sizes="(max-width: 1024px) 100vw, 42vw" />
           </div>
         ) : null}
-        <div data-rise="" className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:px-16 lg:py-24">
+        <div data-rise="" className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:py-24 lg:pr-16 lg:pl-edge">
           <h2
             id="end-band"
             className="t-section max-w-2xl text-paper"

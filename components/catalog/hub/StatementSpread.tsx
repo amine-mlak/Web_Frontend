@@ -4,7 +4,7 @@ import type { PresentedHub } from "@/lib/collection-present";
 export default function StatementSpread({ hub }: { hub: PresentedHub }) {
   return (
     <div className="overflow-hidden bg-karte">
-      <div className="mx-auto grid max-w-[90rem] items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-6 lg:px-14 lg:py-28">
+      <div className="mx-auto grid max-w-[90rem] items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-6 lg:px-gutter lg:py-28">
         <div className="relative lg:col-span-6 lg:min-h-[40rem]">
           <figure className="relative aspect-[4/5] overflow-hidden bg-nacht lg:absolute lg:inset-y-0 lg:left-0 lg:w-[72%]">
             <CmsImage

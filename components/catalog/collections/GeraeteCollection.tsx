@@ -49,7 +49,7 @@ export default function GeraeteCollection({
 
   return (
     <main className="bg-nacht text-paper">
-      <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-14 lg:pt-20" aria-labelledby="geraete-hero">
+      <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-gutter lg:pt-20" aria-labelledby="geraete-hero">
         <div className="grid gap-10 lg:grid-cols-12">
           <h1
             id="geraete-hero"
@@ -80,7 +80,7 @@ export default function GeraeteCollection({
       </section>
 
       <section
-        className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-14"
+        className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-gutter"
         aria-labelledby="geraete-partners"
       >
         <h2 id="geraete-partners" className="t-item text-paper">
@@ -108,7 +108,7 @@ export default function GeraeteCollection({
               <li key={branch.title} className="border-t border-paper/12">
                 <LocaleLink
                   href={branch.href ?? "/beratung"}
-                  className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-10"
+                  className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-10"
                 >
                   <p className="t-feature text-messing lg:col-span-1">
                     {branch.kicker}
@@ -118,7 +118,7 @@ export default function GeraeteCollection({
                       {branch.title}
                     </h2>
                   </div>
-                  <p className="font-sans text-[15px] leading-relaxed font-light text-paper/65 lg:col-span-3">
+                  <p className="font-sans text-[16px] leading-relaxed font-light text-paper/65 lg:col-span-3">
                     {branch.text}
                   </p>
                   <Frame

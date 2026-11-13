@@ -39,7 +39,7 @@ export default function ChapterIndex({
             className="object-cover"
           />
         </figure>
-        <div className="px-5 py-12 sm:px-8 lg:col-span-7 lg:px-14 lg:py-16">
+        <div className="px-5 py-12 sm:px-8 lg:col-span-7 lg:px-gutter lg:py-16">
           <h2
             id="collection-index-heading"
             className="t-section text-ink"
@@ -53,14 +53,14 @@ export default function ChapterIndex({
                   href={hashHref(branch.href, index)}
                   className="group flex items-baseline gap-5 py-5 transition-colors hover:bg-karte sm:gap-8 sm:py-6"
                 >
-                  <span className="w-10 shrink-0 font-serif text-[22px] text-gold">
+                  <span className="w-10 shrink-0 font-serif text-[24px] text-gold">
                     {branch.kicker}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="t-item block text-ink">
                       {branch.title}
                     </span>
-                    <span className="mt-2 block max-w-xl font-sans text-[15px] leading-relaxed font-light text-muted">
+                    <span className="mt-2 block max-w-xl font-sans text-[16px] leading-relaxed font-light text-muted">
                       {branch.text}
                     </span>
                   </span>

@@ -123,7 +123,7 @@ export default function FaqHub({
 
       <section className="bg-nacht px-6 py-16 text-paper lg:py-20" aria-labelledby="faq-ask">
         <div className="mx-auto max-w-3xl">
-          <h2 id="faq-ask" className="font-serif text-[32px] leading-tight font-medium md:text-[42px]">
+          <h2 id="faq-ask" className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium">
             {copy.askTitle}
           </h2>
           <p className="mt-4 max-w-xl font-sans text-[16px] leading-relaxed font-light text-paper/80">

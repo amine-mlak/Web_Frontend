@@ -118,7 +118,7 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
       ? `${hub.heroAlt} from our projects`
       : `${hub.heroAlt} aus unseren Projekten`;
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="farben-projekte">
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="farben-projekte">
       <h2 id="farben-projekte" className="t-section text-ink">
         {heading}
       </h2>
@@ -156,7 +156,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
     <main className="bg-paper">
       <section style={{ backgroundColor: hex }} aria-labelledby="farben-topic">
         <div className="grid items-end lg:grid-cols-12">
-          <div className="px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20">
+          <div className="px-5 py-14 sm:px-8 lg:col-span-5 lg:px-gutter lg:py-20">
             <Crumbs hub={hub} tone={light ? "ink" : "paper"} />
             <h1
               id="farben-topic"
@@ -190,12 +190,12 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       ))}
 
       <ColourProjects hub={hub} more={features.length > 0} />
-      <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-14" aria-labelledby="farben-andere">
+      <section className="border-t border-line px-5 pt-16 sm:px-8 lg:px-gutter" aria-labelledby="farben-andere">
         <h2 id="farben-andere" className="t-section text-ink">
           {hub.locale === "en" ? "Other colours" : "Andere Farben"}
         </h2>
       </section>
-      <div className="px-5 pt-10 pb-16 sm:px-8 lg:px-14">
+      <div className="px-5 pt-10 pb-16 sm:px-8 lg:px-gutter">
         <SwatchField
           swatches={hub.swatches.filter((swatch) => !swatch.href.endsWith(`/${slug}`))}
           label={hub.locale === "en" ? "Other colours" : "Andere Farben"}
@@ -204,7 +204,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       </div>
 
       {/* The fixed texts at the end: the statement with its points, then the longer text. */}
-      <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="farben-wissen">
+      <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="farben-wissen">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-5">
             <h2 id="farben-wissen" className="t-section text-ink">
@@ -219,9 +219,9 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
               {hub.branches.map((branch, index) => (
                 <li key={`${branch.title}-${index}`} className="border-t border-line pt-5">
                   <h3 className="t-item text-ink">{branch.title}</h3>
-                  <p className="mt-3 font-sans text-[15px] leading-relaxed text-muted">{branch.text}</p>
+                  <p className="mt-3 font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
                   {branch.points.length ? (
-                    <ul className="mt-2 space-y-1 font-sans text-[15px] leading-relaxed text-ink/80">
+                    <ul className="mt-2 space-y-1 font-sans text-[16px] leading-relaxed text-ink/80">
                       {branch.points.map((point) => (
                         <li key={point}>{point}</li>
                       ))}
@@ -234,7 +234,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         </div>
       </section>
       {reading.length ? (
-        <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24" aria-labelledby="farben-lesen">
+        <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24" aria-labelledby="farben-lesen">
           <h2
             id="farben-lesen"
             className="t-section text-ink lg:col-span-4"
@@ -243,7 +243,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
           </h2>
           <div className="max-w-2xl space-y-6 lg:col-span-7 lg:col-start-6">
             {reading.map((paragraph, index) => (
-              <p key={index} className="font-sans text-[17px] leading-[1.7] text-ink/85">
+              <p key={index} className="font-sans text-[16px] leading-[1.7] text-ink/85">
                 {paragraph}
               </p>
             ))}

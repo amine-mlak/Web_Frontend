@@ -40,7 +40,7 @@ export default function Accordion({
                   setOpenIndex((current) => (current === index ? null : index))
                 }
               >
-                <span className="font-sans text-[16px] leading-snug font-normal text-ink md:text-[17px]">
+                <span className="font-sans text-[16px] leading-snug font-normal text-ink">
                   {item.question}
                 </span>
                 <span

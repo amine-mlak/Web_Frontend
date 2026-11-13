@@ -14,7 +14,7 @@ const headingClass =
 
 // inline-flex + min height: same look, but a tap target of at least 24px (WCAG 2.2).
 const linkClass =
-  "inline-flex min-h-7 items-center text-[15px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
+  "inline-flex min-h-7 items-center text-[16px] leading-7 text-[#e4e0d8] transition-colors hover:text-white";
 
 const shortcutClass = `inline-flex min-h-6 items-center ${headingClass}`;
 
@@ -75,7 +75,7 @@ export default async function Footer() {
 
         <section className="mt-14 md:mt-16">
           <h2 className={headingClass}>{footer.contactTitle}</h2>
-          <address className="mt-4 text-[15px] leading-7 text-[#e4e0d8] not-italic">
+          <address className="mt-4 text-[16px] leading-7 text-[#e4e0d8] not-italic">
             {footer.contactLines.map((line) => (
               <span key={line} className="block">
                 {line}
