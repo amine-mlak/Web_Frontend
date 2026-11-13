@@ -45,47 +45,57 @@ function TeaserStrip({
     return null;
   }
 
-  const single = panel.teasers.length === 1;
+  // At most three images. Whatever the count, they fill the same box, so every menu has the same
+  // weight on the right: one wide image, or tall cards side by side.
+  const teasers = panel.teasers.slice(0, 3);
+  const single = teasers.length === 1;
 
   return (
     <ul
-      className={
-        single
-          ? "max-w-sm"
-          : "grid grid-cols-3 items-start gap-4 lg:gap-6"
-      }
+      className={cn(
+        "grid aspect-[16/9] w-full gap-3 lg:gap-4",
+        teasers.length === 3 ? "grid-cols-3" : teasers.length === 2 ? "grid-cols-2" : "grid-cols-1",
+      )}
     >
-      {panel.teasers.map((teaser) => (
-        <li key={teaser.caption}>
-          <LocaleLink href={teaser.href} onClick={onNavigate} className="group block">
-            <div className="relative aspect-[3/4] overflow-hidden bg-stone">
-              <CmsImage
-                src={teaser.image}
-                srcSet={teaser.srcSet}
-                alt={teaser.alt}
-                fill
-                loading="lazy"
-                sizes={
-                  single
-                    ? "(max-width: 1024px) 80vw, 40vw"
-                    : "(max-width: 1024px) 60vw, 33vw"
-                }
-                className="object-cover"
-                style={{ objectPosition: teaser.objectPosition ?? "center" }}
-              />
-              {/* The writing is real text from the CMS: it stays sharp, editable and translated. */}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent px-4 pt-20 pb-4 lg:px-5 lg:pb-5">
-                <p className={cn("flex items-baseline justify-between gap-3 font-serif leading-[1.1] font-medium text-paper", single ? "text-[24px] md:text-[28px] xl:text-[32px]" : "text-[24px]")}>
-                  <span>{teaser.caption}</span>
-                  <span aria-hidden="true" className="font-sans text-[18px] font-light">→</span>
-                </p>
-              </div>
-            </div>
+      {teasers.map((teaser) => (
+        <li key={teaser.href + teaser.caption} className="h-full min-h-0">
+          {/* The whole image leads to its collection. The menu already names it, so the image only
+              carries a small button; the name stays in the link for screen readers. */}
+          <LocaleLink
+            href={teaser.href}
+            onClick={onNavigate}
+            aria-label={teaser.caption}
+            className="group relative block h-full overflow-hidden bg-stone"
+          >
+            <CmsImage
+              src={teaser.image}
+              srcSet={teaser.srcSet}
+              alt=""
+              fill
+              loading="lazy"
+              sizes={single ? "(max-width: 1024px) 80vw, 55vw" : "(max-width: 1024px) 30vw, 19vw"}
+              className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+              style={{ objectPosition: teaser.objectPosition ?? "center" }}
+            />
+            <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent" />
+            <span
+              aria-hidden="true"
+              className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-black/25 px-3.5 py-1.5 font-sans text-[13px] tracking-[0.02em] text-white backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-ink lg:right-4 lg:bottom-4"
+            >
+              {single ? "Entdecken" : shortLabel(teaser.caption)}
+              <span className="text-[12px]">→</span>
+            </span>
           </LocaleLink>
         </li>
       ))}
     </ul>
   );
+}
+
+/** "Küchenformen" → "Formen": on the image the menu context is clear, so the button stays short. */
+function shortLabel(caption: string) {
+  const rest = caption.replace(/^Küchen(?=[A-ZÄÖÜ]|[a-zäöü])/, "");
+  return rest ? rest.charAt(0).toUpperCase() + rest.slice(1) : caption;
 }
 
 export default function MegaPanel({
@@ -105,7 +115,7 @@ export default function MegaPanel({
         <div
           className={
             hasTeasers
-              ? "grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-12"
+              ? "grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16"
               : "max-w-xl"
           }
         >
