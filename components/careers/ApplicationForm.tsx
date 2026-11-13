@@ -278,7 +278,7 @@ export default function ApplicationForm({
           </ul>
         ) : null}
         {files.length < MAX_FILES ? (
-          <label className="btn-quiet mt-5 cursor-pointer text-ink focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-ink">
+          <label className="btn-quiet mt-5 cursor-pointer focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-ink">
             {files.length ? ui.addMore : ui.addFiles}
             <input type="file" multiple accept={FILE_ACCEPT} onChange={pick} className="sr-only" />
           </label>

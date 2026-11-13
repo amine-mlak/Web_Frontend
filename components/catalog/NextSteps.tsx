@@ -35,7 +35,7 @@ export default function NextSteps({
   const main = own ?? { href: MAIN_ACTIONS[lead].href, label: MAIN_ACTIONS[lead].label[locale] };
   const mainKind = mainAction(main.href);
   const others = (["termin", "planner"] as const).filter((kind) => kind !== mainKind);
-  const link = tone === "dark" ? "text-link text-link-dark" : "text-link text-gold";
+  const link = tone === "dark" ? "btn-quiet text-paper" : "btn-quiet";
 
   return (
     <div className={cn("flex flex-wrap items-center gap-x-7 gap-y-4", className)}>

@@ -1,5 +1,4 @@
-import { ctaHref } from "@/lib/cta";
-import LocaleLink from "@/components/LocaleLink";
+import CtaPair from "@/components/CtaPair";
 import CmsImage from "@/components/CmsImage";
 import { Crumbs } from "@/components/catalog/clusters/parts";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -54,12 +53,7 @@ export default function CollectionHero({
           <p className={display ? "t-lede mt-5 max-w-lg text-paper/90" : "mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]"}>
             {hub.lede}
           </p>
-          <LocaleLink
-            href={ctaHref(hub.ctaHref, hub.ctaLabel)}
-            className="btn-quiet mt-7 text-paper"
-          >
-            {hub.ctaLabel}
-          </LocaleLink>
+          <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} tone="image" className="mt-7" />
         </div>
       </div>
     </section>

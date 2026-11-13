@@ -84,10 +84,10 @@ export default async function AtelierVisit({
           </dl>
 
           <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-            <LocaleLink href={TERMIN_HREF} className="btn-quiet text-ink">
+            <LocaleLink href={TERMIN_HREF} className="btn-quiet">
               {copy.book}
             </LocaleLink>
-            <a href={maps} target="_blank" rel="noopener noreferrer" className="btn-quiet text-ink">
+            <a href={maps} target="_blank" rel="noopener noreferrer" className="btn-quiet">
               {copy.route}
               <span className="sr-only"> (Google Maps)</span>
             </a>

@@ -207,7 +207,7 @@ export default function AppointmentForm({ locale }: { locale: Locale }) {
               {ui.phoneLabel}
             </a>
           </p>
-          <LocaleLink href={MAIN_ACTIONS.planner.href} className="text-link mt-6 inline-block text-gold" data-umami-event="cta_planner" data-umami-event-placement="termin_form">
+          <LocaleLink href={MAIN_ACTIONS.planner.href} className="btn-quiet mt-6" data-umami-event="cta_planner" data-umami-event-placement="termin_form">
             {ui.planner}
           </LocaleLink>
         </div>

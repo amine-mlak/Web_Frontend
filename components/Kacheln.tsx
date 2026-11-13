@@ -185,7 +185,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           <LocaleLink
             href={tile.href}
             aria-label={`${buttonLabel}: ${title}`}
-            className={`btn-quiet mt-8 ${light ? "text-ink" : "text-paper"}`}
+            className={light ? "btn-quiet mt-8" : "pill pill-light mt-8"}
           >
             {buttonLabel}
           </LocaleLink>

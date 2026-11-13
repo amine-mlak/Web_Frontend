@@ -62,7 +62,7 @@ export default function Process({
               {data.title}
             </h2>
           </div>
-          <Pill href={data.buttonHref} variant="secondary">
+          <Pill href={data.buttonHref}>
             {data.buttonLabel}
           </Pill>
         </div>

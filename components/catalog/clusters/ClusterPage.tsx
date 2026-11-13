@@ -121,7 +121,7 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
         <HouseLine houses={hub.houses} title={copy.houses} />
       </div>
       <div className="px-5 pb-4 sm:px-8 lg:px-gutter">
-        <LocaleLink href="/projekte" className="btn-quiet text-ink">
+        <LocaleLink href="/projekte" className="btn-quiet">
           {copy.allProjects}
         </LocaleLink>
       </div>

@@ -42,7 +42,7 @@ export function PageCare({ hub, path }: Props) {
             {en ? `${name}: everyday care` : `${name} pflegen`}
           </h2>
           <p className="mt-5 max-w-md font-sans text-[16px] leading-[1.7] text-ink/85">{care.intro}</p>
-          <LocaleLink href="/faq/pflege" className="btn-quiet mt-7 text-ink">
+          <LocaleLink href="/faq/pflege" className="btn-quiet mt-7">
             {en ? "All questions on care" : "Alle Fragen zur Pflege"} <span aria-hidden="true">→</span>
           </LocaleLink>
         </div>
@@ -206,7 +206,7 @@ export async function PageGuide({ hub, path }: Props) {
             </div>
           ) : null}
 
-          <LocaleLink href={href} className="btn-quiet mt-9 text-ink">
+          <LocaleLink href={href} className="btn-quiet mt-9">
             Ganzen Beitrag lesen <span aria-hidden="true">→</span>
           </LocaleLink>
         </div>

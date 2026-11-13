@@ -590,7 +590,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
               </h3>
               <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{content.done.text}</p>
               {content.done.linkHref ? (
-                <LocaleLink href={content.done.linkHref} className="pill pill-secondary mt-8">
+                <LocaleLink href={content.done.linkHref} className="btn-quiet mt-8">
                   {content.done.linkLabel}
                 </LocaleLink>
               ) : null}

@@ -1,4 +1,4 @@
-import { ctaHref } from "@/lib/cta";
+import CtaPair from "@/components/CtaPair";
 import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
@@ -42,9 +42,7 @@ export default function KuechenCollection({
             <p className="t-lede mt-5 text-muted">
               {hub.lede}
             </p>
-            <LocaleLink href={ctaHref(hub.ctaHref, hub.ctaLabel)} className="btn-quiet mt-8 text-ink">
-              {hub.ctaLabel}
-            </LocaleLink>
+            <CtaPair href={hub.ctaHref} label={hub.ctaLabel} locale={hub.locale} className="mt-8" />
           </div>
         </div>
       </section>
