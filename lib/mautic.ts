@@ -111,6 +111,44 @@ export function sendPlannerToMautic(
 }
 
 /**
+ * Mautic form "Booklet (Website)" (segment "Booklet – 7 Geheimnisse"). Mautic only sends the delivery
+ * mail (campaign "Booklet zustellen", only for digital or both and only with a PDF link); the form, the
+ * thank-you page and every confirmation live on the website.
+ */
+const BOOKLET_FORM = { id: 18, name: "bookletwebsite" };
+
+const SALUTATION_LABEL: Record<string, string> = { frau: "Frau", herr: "Herr", divers: "" };
+const DELIVERY_LABEL: Record<string, string> = { digital: "digital", print: "gedruckt", both: "beides" };
+
+export function sendBookletToMautic(request: {
+  booklet: string;
+  pdfUrl: string;
+  delivery: string;
+  salutation: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  plz: string;
+  street: string;
+  city: string;
+}) {
+  return submit(BOOKLET_FORM, {
+    email: request.email,
+    anrede: SALUTATION_LABEL[request.salutation] ?? "",
+    vorname: request.firstName,
+    nachname: request.lastName,
+    telefon: request.phone,
+    plz: request.plz,
+    strasse: request.street,
+    ort: request.city,
+    beer_booklet: request.booklet,
+    beer_booklet_versand: DELIVERY_LABEL[request.delivery] ?? request.delivery,
+    beer_booklet_pdf: request.pdfUrl,
+  });
+}
+
+/**
  * The consent box of Mautic's form "Newsletter anmelden". The form requires it, and Mautic only
  * takes this exact wording; the website calls this after the visitor agreed to its own wording.
  */

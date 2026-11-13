@@ -6,10 +6,12 @@ import Kacheln from "@/components/Kacheln";
 import PlannerSection from "@/components/planner/PlannerSection";
 import Process from "@/components/Process";
 import HouseScreen from "@/components/catalog/house/HouseScreen";
+import BookletPage from "@/components/booklet/BookletPage";
 import type { Metadata } from "next";
 import { houseMetadata } from "@/lib/house-pages";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { fetchLandingBySlug } from "@/lib/strapi";
+import { fetchBooklet } from "@/lib/booklet";
 
 export const revalidate = 120;
 
@@ -37,6 +39,18 @@ export async function generateMetadata({
       path: `/${slug}`,
       image: landing.heroSlides[0]?.src,
     });
+  }
+
+  const booklet = await fetchBooklet(slug);
+  if (booklet) {
+    const meta = await pageMetadata({
+      title: brandedTitle(booklet.seoTitle),
+      description: booklet.seoDescription || undefined,
+      path: `/${slug}`,
+      image: booklet.cover?.src ?? booklet.hero?.src,
+    });
+    // Ad landing pages stay out of Google unless the CMS entry says otherwise.
+    return booklet.noIndex ? { ...meta, robots: { index: false, follow: true } } : meta;
   }
 
   return houseMetadata(slug);
@@ -67,6 +81,11 @@ export default async function LandingSlugPage({
         {landing.beratung ? <PlannerSection /> : null}
       </main>
     );
+  }
+
+  const booklet = await fetchBooklet(slug);
+  if (booklet) {
+    return <BookletPage booklet={booklet} />;
   }
 
   return <HouseScreen slug={slug} />;
