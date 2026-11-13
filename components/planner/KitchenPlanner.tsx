@@ -1,7 +1,7 @@
 "use client";
 
 import { useLenis } from "lenis/react";
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { formatSize } from "@/lib/application-files";
 import { conversionContext } from "@/lib/conversion";
@@ -294,7 +294,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     screenHeading.current?.focus({ preventScroll: true });
     growStage(stageRef.current, fromHeight.current, heightTimer);
     fromHeight.current = 0;
-    const top = (formRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 96;
+    const top = (formRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY - 56;
     if (Math.abs(window.scrollY - top) <= 40) return;
     if (lenis) {
       lenis.resize();
@@ -519,31 +519,61 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
     }
   }
 
-  const stepTitle = (key: string) => content.steps.find((item) => item.step === key)?.title ?? "";
-  const eyebrow =
-    screen.kind === "group" ? stepTitle(PLANNER_GROUPS[screen.group.group].step) : screen.kind === "budget" ? stepTitle("budget") : screen.kind === "plan" ? ui.plan : stepTitle("kontakt");
   const heading = screen.kind === "group" ? screen.group.label : screen.kind === "budget" ? ui.budgetTitle : screen.kind === "plan" ? ui.planTitle : ui.contactTitle;
   const hint =
     screen.kind === "group" ? (PLANNER_GROUPS[screen.group.group].multi ? screen.group.hint : undefined) : screen.kind === "budget" ? ui.budgetHint : screen.kind === "plan" ? ui.planHint : ui.contactHint;
   const needsNext =
     screen.kind === "budget" ? false : screen.kind !== "group" || PLANNER_GROUPS[screen.group.group].multi || screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value));
-  // On a phone the tiles are taller than the screen, so "Weiter" stays in reach at the bottom.
+  // Where a question is taller than a small screen, "Weiter" stays in reach at the bottom.
   // Not on the contact screen: there it would cover the fields while typing.
   const stickyNext = needsNext && !last;
+  // On its own page the planner is the page: it starts under the header and fills the screen.
+  const page = headingLevel === "h1";
+
+  // Each answer is one row and one button: tapping it goes back to that question.
+  const summaryRows = (
+    <ul>
+      {summary.map((row) => (
+        <li key={row.key} className="border-b border-line">
+          <button
+            type="button"
+            onClick={() => goTo(row.at)}
+            className="grid min-h-9 w-full grid-cols-[6.5rem_minmax(0,1fr)_auto] items-center gap-x-3 py-1 text-left font-sans text-[13px] leading-snug hover:bg-paper/60 lg:min-h-0 lg:py-[3px]"
+          >
+            <span className="text-muted">{row.label}</span>
+            <span className="text-ink">{row.value}</span>
+            <span className="text-[12px] text-muted underline underline-offset-4">{ui.change}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
-    <section id="planer" className="scroll-mt-24 bg-karte px-5 py-14 sm:px-8 md:py-28 lg:px-12" aria-labelledby={`${baseId}-title`}>
-      <div className="mx-auto max-w-[70rem]">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="type-eyebrow text-gold">{content.eyebrow}</p>
-          <Heading id={`${baseId}-title`} className="mt-4 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium text-ink">
-            {content.title} {content.titleEmphasis ? <em>{content.titleEmphasis}</em> : null}
+    <section id="planer" className={cn("scroll-mt-14", page ? "bg-paper" : "bg-karte px-5 py-14 sm:px-8 md:py-20 lg:px-12")} aria-labelledby={`${baseId}-title`}>
+      <div className={page ? undefined : "mx-auto max-w-[70rem]"}>
+        {page ? (
+          <Heading id={`${baseId}-title`} className="sr-only">
+            {content.title} {content.titleEmphasis}
           </Heading>
-          <p className="mt-4 font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
-        </div>
+        ) : (
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="type-eyebrow text-gold">{content.eyebrow}</p>
+            <Heading id={`${baseId}-title`} className="mt-4 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium text-ink">
+              {content.title} {content.titleEmphasis ? <em>{content.titleEmphasis}</em> : null}
+            </Heading>
+            <p className="mt-4 font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
+          </div>
+        )}
 
-        {/* At least a screen high, so a short question does not pull the footer up and back. */}
-        <form ref={formRef} onSubmit={submit} noValidate className="relative mt-10 min-h-[calc(100svh-6rem)] bg-paper md:mt-14">
+        {/* One question fills one screen: the form is as high as the window under the header, and
+            the answers share whatever height the heading and the button leave. */}
+        <form
+          ref={formRef}
+          onSubmit={submit}
+          noValidate
+          className={cn("relative flex flex-col bg-paper", page ? "min-h-[calc(100svh-var(--header-space))]" : "mt-10 min-h-[calc(100svh-3.5rem)] md:mt-14")}
+        >
           {/* Honeypot for bots; hidden from people and screen readers. */}
           <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
             <label>
@@ -553,7 +583,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           </div>
 
           {status === "done" ? (
-            <div className="px-6 py-20 text-center sm:px-10">
+            <div className="my-auto px-6 py-16 text-center sm:px-10">
               <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
               <h3 ref={screenHeading} tabIndex={-1} className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium text-ink outline-none">
                 {content.done.title.replace("{name}", contact.name.trim().split(/\s+/)[0] ?? "")}
@@ -568,7 +598,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           ) : (
             <>
               {/* Back + thin progress bar across the full width, as at SieMatic. */}
-              <div className="flex min-h-12 items-center justify-between px-6 pt-2 sm:min-h-14 sm:px-10 sm:pt-4">
+              <div className="flex min-h-11 shrink-0 items-center justify-between px-5 pt-1 sm:px-10 sm:pt-2">
                 {index > 0 ? (
                   <button type="button" onClick={() => goTo(index - 1)} className="inline-flex min-h-10 items-center gap-2 font-sans text-[14px] text-ink hover:opacity-70">
                     <span aria-hidden="true">←</span> {ui.back}
@@ -581,7 +611,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                 </p>
               </div>
               <div
-                className="mt-3 h-1 bg-line"
+                className="mt-1 h-1 shrink-0 bg-line"
                 role="progressbar"
                 aria-valuemin={1}
                 aria-valuemax={screens.length}
@@ -591,17 +621,16 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                 <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
               </div>
 
-              <div ref={stageRef}>
-              <div key={screenKey(screen)} data-direction={direction} data-leaving={leaving ? "" : undefined} className="planner-screen px-6 pt-8 pb-10 sm:px-10 sm:pt-12 md:pt-16 md:pb-14">
-                <div className="mx-auto max-w-3xl text-center">
-                  <p className="type-eyebrow text-gold">{eyebrow}</p>
-                  <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium text-ink outline-none">
+              <div ref={stageRef} className="flex min-h-0 flex-1 flex-col">
+              <div key={screenKey(screen)} data-direction={direction} data-leaving={leaving ? "" : undefined} className="planner-screen flex min-h-0 flex-1 flex-col px-5 pt-5 pb-4 sm:px-10 sm:pt-6 sm:pb-5">
+                <div className="mx-auto max-w-3xl shrink-0 text-center">
+                  <h3 ref={screenHeading} tabIndex={-1} className="font-serif text-[24px] leading-[1.15] font-medium text-ink outline-none md:text-[32px]">
                     {heading}
                   </h3>
-                  {hint ? <p className="mt-3 font-sans text-[14px] leading-relaxed text-muted">{hint}</p> : null}
+                  {hint ? <p className="mt-1.5 font-sans text-[14px] leading-snug text-muted">{hint}</p> : null}
                 </div>
 
-                <div className="mx-auto mt-8 max-w-[58rem] md:mt-12">
+                <div className="mx-auto mt-4 flex min-h-0 w-full max-w-[64rem] flex-1 flex-col sm:mt-6">
                   {screen.kind === "group" ? (
                     <>
                       <PlannerChoices
@@ -615,7 +644,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                         lazy={index === 0 && headingLevel === "h2"}
                       />
                       {screen.group.options.some((option) => option.freeText && (selection[screen.group.group] ?? []).includes(option.value)) ? (
-                        <div className="mx-auto mt-10 max-w-xl">
+                        <div className="mx-auto mt-3 w-full max-w-xl shrink-0">
                           <label htmlFor={`${baseId}-other`} className="sr-only">
                             {screen.group.placeholder ?? screen.group.label}
                           </label>
@@ -628,25 +657,26 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, [screen.group.group === "form" ? "form" : "style"]: value }));
                             }}
-                            className="w-full border-0 border-b border-line bg-transparent py-3 text-center font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                            className="w-full border-0 border-b border-line bg-transparent py-2 text-center font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
                           />
                         </div>
                       ) : null}
                       {screen.group.group === "appliances" && wishes ? (
-                        <div className="mx-auto mt-12 max-w-xl">
-                          <label htmlFor={`${baseId}-wishes`} className="block text-center font-serif text-[24px] text-ink">
+                        <div className="mx-auto mt-2 w-full max-w-xl shrink-0 sm:mt-6">
+                          <label htmlFor={`${baseId}-wishes`} className="block text-center font-serif text-[22px] text-ink max-sm:sr-only">
                             {wishes.label}
                           </label>
                           <textarea
                             id={`${baseId}-wishes`}
-                            rows={3}
+                            // One line that grows with the text, so the question stays on one screen.
+                            rows={1}
                             placeholder={wishes.placeholder}
                             value={notes.wishes}
                             onChange={(event) => {
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, wishes: value }));
                             }}
-                            className="mt-3 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                            className="mt-1 max-h-32 w-full resize-y border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none [field-sizing:content] placeholder:text-muted focus:border-ink"
                           />
                         </div>
                       ) : null}
@@ -654,7 +684,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   ) : null}
 
                   {screen.kind === "budget" ? (
-                    <div role="radiogroup" aria-labelledby={`${baseId}-screen`} className="mx-auto flex max-w-md flex-col gap-3">
+                    <div role="radiogroup" aria-labelledby={`${baseId}-screen`} className="mx-auto flex w-full max-w-md flex-col gap-2.5">
                       {[...bands.map((band) => ({ id: band.id, label: budgetLabel(band, locale) })), { id: "none", label: ui.noAnswer }].map((option) => (
                         <button
                           key={option.id}
@@ -678,7 +708,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   ) : null}
 
                   {screen.kind === "plan" ? (
-                    <div className="mx-auto max-w-xl text-center">
+                    <div className="mx-auto w-full max-w-xl text-center">
                       <label
                         htmlFor={`${baseId}-plan`}
                         onDragOver={(event) => {
@@ -692,7 +722,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                           pickPlan(event.dataTransfer.files[0]);
                         }}
                         className={cn(
-                          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed px-6 py-10 transition-colors focus-within:border-ink focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
+                          "flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 border border-dashed px-6 py-8 transition-colors focus-within:border-ink focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink",
                           dragging ? "border-ink bg-karte" : "border-ink/35 hover:border-ink",
                         )}
                       >
@@ -710,7 +740,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                         <span className="font-sans text-[13px] text-muted">{plan ? formatSize(plan.size, locale) : ui.planFormats}</span>
                       </label>
                       {plan ? (
-                        <button type="button" onClick={() => setPlan(null)} className="mt-4 min-h-10 font-sans text-[14px] text-muted underline underline-offset-4 hover:text-ink">
+                        <button type="button" onClick={() => setPlan(null)} className="mt-3 min-h-10 font-sans text-[14px] text-muted underline underline-offset-4 hover:text-ink">
                           {ui.planRemove}
                         </button>
                       ) : null}
@@ -718,81 +748,79 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                   ) : null}
 
                   {screen.kind === "contact" ? (
-                    <div className="mx-auto max-w-2xl">
-                      <div className="bg-karte px-6 py-6">
-                        <p className="type-eyebrow text-gold">{ui.summary}</p>
-                        <dl className="mt-3.5">
-                          {summary.map((row) => (
-                            <div key={row.key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-b border-line py-2.5 font-sans text-[14px] sm:grid-cols-[8.5rem_minmax(0,1fr)_auto]">
-                              <dt className="text-muted">{row.label}</dt>
-                              <dd className="col-start-1 text-ink sm:col-start-2">{row.value}</dd>
-                              <dd className="col-start-2 row-span-2 row-start-1 self-center sm:col-start-3 sm:row-span-1">
-                                <button type="button" onClick={() => goTo(row.at)} className="min-h-10 text-[13px] text-muted underline underline-offset-4 hover:text-ink sm:min-h-6">
-                                  {ui.change}
-                                  <span className="sr-only">: {row.label}</span>
-                                </button>
-                              </dd>
-                            </div>
-                          ))}
-                        </dl>
+                    // Wide screens: the answers on the left, the fields on the right, both in view.
+                    // Narrow screens: the answers fold away, so the fields come first.
+                    <div className="mx-auto grid w-full max-w-2xl gap-5 lg:max-w-none lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-10">
+                      <details className="bg-karte px-5 py-1 lg:hidden">
+                        <summary className="type-eyebrow flex min-h-11 cursor-pointer items-center justify-between text-gold">
+                          {ui.summary}
+                          <span aria-hidden="true" className="font-sans text-[18px] leading-none">+</span>
+                        </summary>
+                        <div className="pb-3">{summaryRows}</div>
+                      </details>
+                      <div className="hidden self-start bg-karte px-6 py-4 lg:block">
+                        <p className="type-eyebrow mb-2 text-gold">{ui.summary}</p>
+                        {summaryRows}
                       </div>
 
-                      <div className="mt-10 grid gap-x-7 gap-y-5 sm:grid-cols-2">
-                        {(["name", "email", "phone", "place"] as const).map((field) => (
-                          <PlannerField
-                            key={field}
-                            id={`${baseId}-${field}`}
-                            label={ui[field]}
-                            required={field !== "place"}
-                            requiredLabel={ui.required}
-                            type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
-                            autoComplete={field === "name" ? "name" : field === "email" ? "email" : field === "phone" ? "tel" : "postal-code"}
-                            value={contact[field]}
-                            onChange={(value) => {
-                              markStart();
-                              setContact((current) => ({ ...current, [field]: value }));
-                            }}
+                      <div>
+                        <div className="grid gap-x-7 gap-y-3 sm:grid-cols-2">
+                          {(["name", "email", "phone", "place"] as const).map((field) => (
+                            <PlannerField
+                              key={field}
+                              id={`${baseId}-${field}`}
+                              label={ui[field]}
+                              required={field !== "place"}
+                              requiredLabel={ui.required}
+                              type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+                              autoComplete={field === "name" ? "name" : field === "email" ? "email" : field === "phone" ? "tel" : "postal-code"}
+                              value={contact[field]}
+                              onChange={(value) => {
+                                markStart();
+                                setContact((current) => ({ ...current, [field]: value }));
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="mt-3">
+                          <label htmlFor={`${baseId}-message`} className="font-sans text-[13px] text-muted">
+                            {ui.message}
+                          </label>
+                          <textarea
+                            id={`${baseId}-message`}
+                            rows={1}
+                            value={contact.message}
+                            onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
+                            className="mt-1 max-h-32 w-full resize-y border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none [field-sizing:content] focus:border-ink"
                           />
-                        ))}
-                      </div>
-                      <div className="mt-5">
-                        <label htmlFor={`${baseId}-message`} className="font-sans text-[13px] text-muted">
-                          {ui.message}
+                        </div>
+                        <label htmlFor={`${baseId}-newsletter`} className="mt-3 flex gap-3 font-sans text-[13px] leading-5 text-muted">
+                          <input
+                            id={`${baseId}-newsletter`}
+                            type="checkbox"
+                            checked={newsletter}
+                            onChange={(event) => setNewsletter(event.target.checked)}
+                            className="mt-0.5 h-4 w-4 shrink-0 accent-[#1d1d1b]"
+                          />
+                          <span>{NEWSLETTER_CONSENT[locale]} {ui.newsletterOptional}</span>
                         </label>
-                        <textarea
-                          id={`${baseId}-message`}
-                          rows={3}
-                          value={contact.message}
-                          onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
-                          className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none focus:border-ink"
-                        />
                       </div>
-                      <label htmlFor={`${baseId}-newsletter`} className="mt-6 flex gap-3 font-sans text-[13px] leading-6 text-muted">
-                        <input
-                          id={`${baseId}-newsletter`}
-                          type="checkbox"
-                          checked={newsletter}
-                          onChange={(event) => setNewsletter(event.target.checked)}
-                          className="mt-1 h-4 w-4 shrink-0 accent-[#1d1d1b]"
-                        />
-                        <span>{NEWSLETTER_CONSENT[locale]} {ui.newsletterOptional}</span>
-                      </label>
                     </div>
                   ) : null}
                 </div>
 
                 <div
                   className={cn(
-                    "mt-8",
-                    stickyNext && "sticky bottom-0 z-10 -mx-6 border-t border-line bg-paper px-6 py-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0",
+                    "shrink-0 pt-3 sm:pt-5",
+                    stickyNext && "sticky bottom-0 z-10 -mx-5 border-t border-line bg-paper px-5 pb-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0",
                   )}
                 >
-                  <p role="alert" className={cn("text-center font-sans text-[14px] text-destructive", stickyNext ? "empty:hidden sm:min-h-5 sm:empty:block" : "min-h-5")}>
+                  <p role="alert" className="mb-2 text-center font-sans text-[14px] text-destructive empty:hidden">
                     {error}
                   </p>
 
                   {needsNext ? (
-                    <div className={cn("flex justify-center", stickyNext ? "mt-2 sm:mt-6" : "mt-6")}>
+                    <div className="flex justify-center">
                       <button
                         type="submit"
                         aria-disabled={!answered(screen)}
@@ -840,76 +868,86 @@ function PlannerChoices({
   lazy: boolean;
 }) {
   const { kind, multi } = PLANNER_GROUPS[group.group];
-  // Few answers sit centred in a narrower row, like SieMatic's three-up grid.
-  const columns = group.options.length <= 2 ? "sm:grid-cols-2 max-w-xl" : group.options.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3";
+  const count = group.options.length;
+
+  const items = group.options.map((option) => {
+    const on = selected.includes(option.value);
+    const tile = cn(
+      "flex h-full w-full border text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
+      on ? "border-ink bg-karte ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink/40",
+    );
+    const state = multi ? { "aria-pressed": on } : { role: "radio", "aria-checked": on };
+    return (
+      <li key={option.value} role={multi ? undefined : "none"} className="min-h-0">
+        <button
+          type="button"
+          {...state}
+          onClick={() => onChoose(option)}
+          className={cn(tile, kind === "chips" ? "min-h-10 items-center justify-center px-2 py-1.5 sm:min-h-12 sm:px-4 sm:py-2" : "flex-col")}
+        >
+          {kind === "images" ? (
+            <>
+              <span className="relative block min-h-0 w-full flex-1 overflow-hidden bg-karte">
+                {option.image ? <PlannerPhoto image={option.image} fade={!first} lazy={lazy} /> : null}
+              </span>
+              <span className="planner-label">
+                <span className="line-clamp-2 font-serif text-[15px] leading-[1.15] font-medium text-ink sm:text-[17px]">{option.label}</span>
+                {option.subtitle ? <span className="planner-sub font-sans text-[12px] leading-[1.35] font-light text-muted">{option.subtitle}</span> : null}
+              </span>
+            </>
+          ) : kind === "icons" ? (
+            <>
+              <span className="relative block min-h-0 w-full flex-1">
+                {option.image ? (
+                  // Icons ship at 2× with deliberate whitespace: show them whole, never cropped,
+                  // and never larger than drawn.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={option.image.src}
+                    alt=""
+                    width={option.iconSize ?? 120}
+                    height={option.iconSize ?? 120}
+                    loading={lazy ? "lazy" : "eager"}
+                    decoding="async"
+                    className="absolute inset-0 m-auto h-full w-full object-contain p-1.5"
+                    style={{ maxWidth: option.iconSize ?? 120, maxHeight: option.iconSize ?? 120 }}
+                  />
+                ) : null}
+              </span>
+              <span className="planner-label">
+                <span className="line-clamp-2 font-sans text-[14px] leading-[1.2] text-ink sm:text-[16px]">{option.label}</span>
+                {option.subtitle ? <span className="planner-sub font-sans text-[12px] leading-[1.35] font-light text-muted">{option.subtitle}</span> : null}
+              </span>
+            </>
+          ) : (
+            <span className="font-sans text-[13px] leading-[1.25] text-ink sm:text-[15px]">{option.label}</span>
+          )}
+        </button>
+      </li>
+    );
+  });
+
+  if (kind === "chips") {
+    return (
+      <ul role={multi ? "group" : "radiogroup"} aria-labelledby={labelledBy} className="mx-auto grid w-full grid-cols-2 gap-1 sm:auto-rows-fr sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+        {items}
+      </ul>
+    );
+  }
+
+  // Columns and rows per answer count, so the grid can share out the height that is left:
+  // phones stack in two columns, wider screens use up to two rows, like SieMatic's three-up grid.
+  const small = count <= 3 ? { cols: Math.max(count, 1), rows: 1 } : { cols: 2, rows: Math.ceil(count / 2) };
+  const perRow = count <= 4 ? Math.max(count, 1) : count <= 6 ? 3 : 4;
+  const large = { cols: perRow, rows: Math.ceil(count / perRow) };
+  const grid = { "--cols-s": small.cols, "--rows-s": small.rows, "--cols-l": large.cols, "--rows-l": large.rows } as CSSProperties;
 
   return (
-    <ul
-      role={multi ? "group" : "radiogroup"}
-      aria-labelledby={labelledBy}
-      className={cn(
-        "mx-auto grid gap-3 sm:gap-5",
-        kind === "images" && cn("grid-cols-2", columns),
-        kind === "icons" && cn("auto-rows-fr grid-cols-2", columns),
-        kind === "chips" && "auto-rows-fr grid-cols-1 gap-2 min-[480px]:grid-cols-2 sm:grid-cols-3",
-      )}
-    >
-      {group.options.map((option) => {
-        const on = selected.includes(option.value);
-        const tile = cn(
-          "flex h-full w-full border text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
-          on ? "border-ink bg-karte ring-1 ring-ink ring-inset" : "border-line bg-paper hover:border-ink/40",
-        );
-        const state = multi ? { "aria-pressed": on } : { role: "radio", "aria-checked": on };
-        return (
-          <li key={option.value} role={multi ? undefined : "none"}>
-            <button
-              type="button"
-              {...state}
-              onClick={() => onChoose(option)}
-              className={cn(tile, kind === "images" ? "flex-col" : kind === "icons" ? "flex-col items-center px-3 py-7" : "min-h-14 items-center justify-center px-5 py-3 sm:min-h-[4.5rem] sm:py-3.5")}
-            >
-              {kind === "images" ? (
-                <>
-                  <span className="relative block aspect-[4/3] w-full overflow-hidden bg-karte">
-                    {option.image ? <PlannerPhoto image={option.image} fade={!first} lazy={lazy} /> : null}
-                  </span>
-                  <span className="flex flex-col gap-1.5 px-3 pt-3 pb-4 sm:px-4 sm:pt-4 sm:pb-5">
-                    <span className="font-serif text-[18px] leading-snug font-medium text-ink">{option.label}</span>
-                    {option.subtitle ? (
-                      <span className="font-sans text-[12px] leading-[1.5] font-light text-muted sm:text-[13px]">{option.subtitle}</span>
-                    ) : null}
-                  </span>
-                </>
-              ) : kind === "icons" ? (
-                <>
-                  {option.image ? (
-                    // Icons ship at 2× with deliberate whitespace: show them whole, never cropped.
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={option.image.src}
-                      alt=""
-                      width={option.iconSize ?? 120}
-                      height={option.iconSize ?? 120}
-                      loading={lazy ? "lazy" : "eager"}
-                      decoding="async"
-                      className="max-w-full object-contain"
-                      style={{ width: option.iconSize ?? 120, height: option.iconSize ?? 120 }}
-                    />
-                  ) : null}
-                  <span className="mt-4 font-sans text-[16px] text-ink">{option.label}</span>
-                  {option.subtitle ? (
-                    <span className="mt-1 font-sans text-[12px] leading-snug font-light text-muted">{option.subtitle}</span>
-                  ) : null}
-                </>
-              ) : (
-                <span className="font-sans text-[16px] leading-snug text-ink">{option.label}</span>
-              )}
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+    <div className="planner-fit" data-kind={kind} style={grid}>
+      <ul role={multi ? "group" : "radiogroup"} aria-labelledby={labelledBy} className="planner-grid">
+        {items}
+      </ul>
+    </div>
   );
 }
 
@@ -975,7 +1013,7 @@ function PlannerField({
         aria-required={required}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-1 w-full border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none focus:border-ink"
+        className="mt-0.5 w-full border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none focus:border-ink"
       />
     </div>
   );
