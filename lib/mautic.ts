@@ -111,10 +111,11 @@ export function sendPlannerToMautic(
 }
 
 /**
- * Mautic form "Booklet (Website)". Mautic only sends the delivery mail (campaign "Booklet zustellen");
- * the form, the thank-you page and every confirmation live on the website. id 0 = not set up yet.
+ * Mautic form "Booklet (Website)" (segment "Booklet – 7 Geheimnisse"). Mautic only sends the delivery
+ * mail (campaign "Booklet zustellen", only for digital or both and only with a PDF link); the form, the
+ * thank-you page and every confirmation live on the website.
  */
-const BOOKLET_FORM = { id: Number(process.env.MAUTIC_BOOKLET_FORM_ID) || 0, name: "bookletwebsite" };
+const BOOKLET_FORM = { id: 18, name: "bookletwebsite" };
 
 const SALUTATION_LABEL: Record<string, string> = { frau: "Frau", herr: "Herr", divers: "" };
 const DELIVERY_LABEL: Record<string, string> = { digital: "digital", print: "gedruckt", both: "beides" };
@@ -132,9 +133,6 @@ export function sendBookletToMautic(request: {
   street: string;
   city: string;
 }) {
-  if (!BOOKLET_FORM.id) {
-    return Promise.resolve("mautic_booklet_form_not_set");
-  }
   return submit(BOOKLET_FORM, {
     email: request.email,
     anrede: SALUTATION_LABEL[request.salutation] ?? "",
