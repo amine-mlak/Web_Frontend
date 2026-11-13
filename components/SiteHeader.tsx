@@ -79,7 +79,7 @@ export default function SiteHeader({
         {children}
       </div>
       {/* Space for the fixed header: navigation 3.5rem, plus 2.25rem for the announcement bar. */}
-      <div className={top ? "h-[5.75rem]" : "h-14"} aria-hidden="true" />
+      <div className={top ? "h-[5.75rem]" : "h-14"} data-header-bar={top ? "" : undefined} aria-hidden="true" />
     </>
   );
 }

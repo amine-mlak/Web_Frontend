@@ -492,6 +492,101 @@ body {
   }
 }
 
+/* Height of the space the fixed header takes at the top of a page (SiteHeader.tsx). */
+:root {
+  --header-space: 3.5rem;
+}
+
+:root:has([data-header-bar]) {
+  --header-space: 5.75rem;
+}
+
+/* Kitchen planner, answers with a picture: the grid takes the height the question leaves on
+   screen and divides it between its rows, so a question never needs scrolling. Columns and rows
+   come from the component (--cols-s/--rows-s for phones, --cols-l/--rows-l from 640px). Below
+   --row-min per row the grid stops shrinking and the page scrolls instead. */
+.planner-fit {
+  --cols: var(--cols-s);
+  --rows: var(--rows-s);
+  --gap: 0.5rem;
+  --row-min: 6.5rem;
+  --row-max: 15rem;
+  container-type: size;
+  flex: 1 1 0;
+  min-height: calc(var(--rows) * var(--row-min) + (var(--rows) - 1) * var(--gap));
+}
+
+.planner-grid {
+  --label: 2.75rem;
+  --ratio: 1.3333;
+  /* The height on offer, capped by --row-max and by the height the pictures have at full width. */
+  --height: min(
+    100cqh,
+    calc(var(--rows) * var(--row-max) + (var(--rows) - 1) * var(--gap)),
+    calc(var(--rows) * ((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols) / var(--ratio) + var(--label)) + (var(--rows) - 1) * var(--gap))
+  );
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+  height: var(--height);
+  margin-inline: auto;
+}
+
+.planner-fit[data-kind="icons"] .planner-grid {
+  --ratio: 1.15;
+}
+
+.planner-label {
+  display: flex;
+  height: var(--label);
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding-inline: 0.5rem;
+}
+
+.planner-sub {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .planner-fit {
+    --cols: var(--cols-l);
+    --rows: var(--rows-l);
+    --gap: 1rem;
+    --row-max: 20rem;
+  }
+
+  .planner-fit[data-kind="icons"] {
+    --row-max: 15rem;
+  }
+
+  /* As wide as the pictures need at this height, so they keep their shape. */
+  .planner-grid {
+    width: min(
+      100%,
+      calc(((var(--height) - (var(--rows) - 1) * var(--gap)) / var(--rows) - var(--label)) * var(--ratio) * var(--cols) + (var(--cols) - 1) * var(--gap))
+    );
+  }
+}
+
+/* Room for the second line under each picture only where the tiles are large enough. */
+@container (min-width: 44rem) and (min-height: 34rem) {
+  .planner-grid {
+    --label: 5.5rem;
+  }
+
+  .planner-sub {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
 /* Announcement bar: seamless loop of two identical tracks (components/AnnouncementBar.tsx). */
 @keyframes announce-scroll {
   to {
