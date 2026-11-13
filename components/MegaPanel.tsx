@@ -74,7 +74,7 @@ function TeaserStrip({
               />
               {/* The writing is real text from the CMS: it stays sharp, editable and translated. */}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent px-4 pt-20 pb-4 lg:px-5 lg:pb-5">
-                <p className={cn("flex items-baseline justify-between gap-3 font-serif leading-[1.1] font-medium text-paper", single ? "text-[32px]" : "text-[22px] lg:text-[27px]")}>
+                <p className={cn("flex items-baseline justify-between gap-3 font-serif leading-[1.1] font-medium text-paper", single ? "text-[24px] md:text-[28px] xl:text-[32px]" : "text-[24px]")}>
                   <span>{teaser.caption}</span>
                   <span aria-hidden="true" className="font-sans text-[18px] font-light">→</span>
                 </p>

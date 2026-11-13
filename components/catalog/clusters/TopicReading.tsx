@@ -58,7 +58,7 @@ export default function TopicReading({
 
   return (
     <section className="border-t border-line bg-paper" aria-labelledby={id}>
-      <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-14 lg:py-24">
+      <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
         <div className="lg:col-span-4">
           <h2 id={id} data-rise="" className="t-section text-ink lg:sticky lg:top-32">
             {copy.heading}
@@ -71,14 +71,14 @@ export default function TopicReading({
                 {paragraph.slice(3)}
               </h3>
             ) : index === first ? (
-              <p key={index} className="font-sans text-[19px] leading-[1.6] text-ink">
+              <p key={index} className="font-sans text-[18px] leading-[1.6] text-ink">
                 {linkPlaces(paragraph, locale, seen, self)}
               </p>
             ) : (
               <p
                 key={index}
                 className={cn(
-                  "font-sans text-[17px] leading-[1.7] text-ink/85",
+                  "font-sans text-[16px] leading-[1.7] text-ink/85",
                   paragraphs[index - 1]?.startsWith("## ") ? "mt-3" : "mt-6",
                 )}
               >

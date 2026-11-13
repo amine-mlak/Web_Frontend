@@ -114,7 +114,7 @@ export default function CategoryPage({
       )}
 
       {options.length > 0 ? (
-        <section className="px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="category-choice">
+        <section className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="category-choice">
           <h2 id="category-choice" className="t-section text-ink">
             {copy.choiceTitle}
           </h2>
@@ -154,7 +154,7 @@ export default function CategoryPage({
                   </div>
                   <h3 className={`t-item text-ink ${option.inset ? "mt-9 pr-[38%]" : "mt-5"}`}>{option.title}</h3>
                   {option.text ? (
-                    <p className="mt-2 max-w-md font-sans text-[15px] leading-relaxed text-muted">{option.text}</p>
+                    <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{option.text}</p>
                   ) : null}
                   <span className="mt-4 inline-flex min-h-6 items-center gap-2 font-sans text-[14px] text-ink underline decoration-line underline-offset-4 group-hover:decoration-ink">
                     {copy.more}

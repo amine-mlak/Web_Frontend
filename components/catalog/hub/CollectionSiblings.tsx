@@ -17,7 +17,7 @@ export default function CollectionSiblings({
 
   return (
     <section className="border-y border-line bg-paper" aria-labelledby="collection-siblings-heading">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <p className="type-eyebrow text-muted">{eyebrow}</p>
         <h2
           id="collection-siblings-heading"

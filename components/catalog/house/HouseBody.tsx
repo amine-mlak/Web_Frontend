@@ -15,7 +15,7 @@ export default function HouseBody({
 
   return (
     <section className="bg-paper" aria-labelledby={title ? "house-body-heading" : undefined}>
-      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-14 lg:py-28">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-gutter lg:py-28">
         {/* No heading (the CMS text brings its own): no side column with a lone line. */}
         {title || eyebrow ? (
           <div className="lg:col-span-4">
@@ -24,7 +24,7 @@ export default function HouseBody({
             {title ? (
               <h2
                 id="house-body-heading"
-                className="mt-3 max-w-sm font-serif text-[28px] leading-[1.12] font-medium tracking-[-0.03em] text-ink sm:text-[34px]"
+                className="mt-3 max-w-sm font-serif text-[24px] md:text-[28px] xl:text-[32px] leading-[1.12] font-medium tracking-[-0.03em] text-ink"
               >
                 {title}
               </h2>

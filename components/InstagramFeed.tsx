@@ -47,7 +47,7 @@ export default async function InstagramFeed() {
             </p>
             <h2
               id="instagram-heading"
-              className="mt-3 font-serif text-[32px] leading-[1.12] font-medium tracking-[-0.02em] text-ink md:text-[40px]"
+              className="mt-3 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.12] font-medium tracking-[-0.02em] text-ink"
             >
               {copy.instagramTitle} {INSTAGRAM_LABEL}
             </h2>

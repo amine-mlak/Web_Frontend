@@ -19,7 +19,7 @@ const ROLL_MS = 1200;
 
 function HeroIntro({ panel }: { panel: HeroPanel }) {
   return (
-    <div className="absolute inset-0 z-10 flex items-end px-5 pb-10 sm:px-8 sm:pb-20 lg:px-14 lg:pb-24">
+    <div className="absolute inset-0 z-10 flex items-end px-5 pb-10 sm:px-8 sm:pb-20 lg:px-gutter lg:pb-24">
       <div className="hero-scrim pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
       {/* Below laptop size the text fills most of the shorter picture, so more of it needs the shade. */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/40 via-black/25 to-black/5 lg:hidden" aria-hidden="true" />
@@ -27,7 +27,7 @@ function HeroIntro({ panel }: { panel: HeroPanel }) {
         <p className="font-sans text-[11px] font-medium tracking-[0.22em] text-paper uppercase">
           {panel.eyebrow}
         </p>
-        <h1 className="mt-2 font-serif text-[36px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 sm:text-[44px] lg:text-[52px] min-[1400px]:whitespace-nowrap">
+        <h1 className="mt-2 font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.05] font-medium tracking-[-0.02em] text-paper sm:mt-2.5 min-[1400px]:whitespace-nowrap">
           {panel.title}{panel.emphasis ? ` ${panel.emphasis}` : ""}
         </h1>
         <p className="mt-3 max-w-lg font-sans text-[16px] leading-relaxed font-light text-paper md:text-[18px]">

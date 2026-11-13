@@ -32,7 +32,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
   const dateFormat = new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "de-DE", { month: "long", year: "numeric" });
 
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="ratgeber-index">
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="ratgeber-index">
       <div className="mx-auto max-w-[90rem]">
         <h2
           id="ratgeber-index"
@@ -40,7 +40,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
         >
           {copy.title}
         </h2>
-        <p className="mt-4 font-sans text-[17px] leading-relaxed text-muted">{copy.text(articles.length)}</p>
+        <p className="mt-4 font-sans text-[16px] leading-relaxed text-muted">{copy.text(articles.length)}</p>
 
         <div className="mt-14 space-y-16">
           {ordered.map((group) => (
@@ -50,7 +50,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
                 className="t-feature text-ink lg:col-span-3"
               >
                 {group.name}
-                <span className="ml-2 font-sans text-[15px] font-normal text-muted">{group.items.length}</span>
+                <span className="ml-2 font-sans text-[16px] font-normal text-muted">{group.items.length}</span>
               </h3>
               <ul className="border-t border-line lg:col-span-9 lg:grid lg:grid-cols-2 lg:gap-x-10">
                 {group.items.map((item) => (
@@ -62,7 +62,7 @@ export default function ArticleIndex({ articles, locale }: { articles: Article[]
                         </span>
                       ) : null}
                       <span className="min-w-0 flex-1">
-                        <span className="block font-serif text-[19px] leading-snug text-ink">{item.title}</span>
+                        <span className="block font-serif text-[18px] leading-snug text-ink">{item.title}</span>
                         {item.publishedAt ? (
                           <span className="mt-1 block font-sans text-[13px] text-muted">
                             {dateFormat.format(new Date(item.publishedAt))}

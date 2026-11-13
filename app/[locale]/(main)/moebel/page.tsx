@@ -52,7 +52,7 @@ export default async function MoebelPage() {
     >
       {houses.length > 0 ? (
         <section aria-labelledby="moebel-houses">
-          <div className="border-b border-line bg-paper px-5 pt-16 pb-4 sm:px-8 lg:px-14 lg:pt-24">
+          <div className="border-b border-line bg-paper px-5 pt-16 pb-4 sm:px-8 lg:px-gutter lg:pt-24">
             <h2
               id="moebel-houses"
               className="t-section max-w-3xl text-ink"

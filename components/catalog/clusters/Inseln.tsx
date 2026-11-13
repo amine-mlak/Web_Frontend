@@ -39,7 +39,7 @@ function Pedestal({
       />
       {kicker ? <p className="type-eyebrow mt-5 text-messing">{kicker}</p> : null}
       <h3 className="t-feature mt-4 text-paper">{title}</h3>
-      <p className="mt-3 font-sans text-[15px] leading-relaxed font-light text-paper/70">{text}</p>
+      <p className="mt-3 font-sans text-[16px] leading-relaxed font-light text-paper/70">{text}</p>
     </LocaleLink>
   );
 }
@@ -50,7 +50,7 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
       <section
-        className="mt-10 bg-nacht px-5 py-12 sm:px-8 lg:mt-14 lg:px-14 lg:py-20"
+        className="mt-10 bg-nacht px-5 py-12 sm:px-8 lg:mt-14 lg:px-gutter lg:py-20"
         aria-label={hub.heroAlt || hub.title}
       >
         <Frame
@@ -65,7 +65,7 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       <PointsSection hub={hub} />
 
       {hub.siblings.length > 0 ? (
-        <section className="bg-nacht px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="inseln-siblings">
+        <section className="bg-nacht px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="inseln-siblings">
           <h2 id="inseln-siblings" className="t-section text-paper">
             {hub.siblingTitle}
           </h2>

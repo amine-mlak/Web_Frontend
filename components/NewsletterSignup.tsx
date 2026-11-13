@@ -51,7 +51,7 @@ function msSince(timestamp: number) {
 }
 
 const FIELD =
-  "w-full border-0 border-b border-white/30 bg-transparent py-3 font-sans text-[15px] text-white outline-none placeholder:text-[#9c9892] focus:border-white";
+  "w-full border-0 border-b border-white/30 bg-transparent py-3 font-sans text-[16px] text-white outline-none placeholder:text-[#9c9892] focus:border-white";
 
 /**
  * Newsletter sign-up in the footer. Sends to /api/newsletter, which passes it to n8n;
@@ -131,12 +131,12 @@ export default function NewsletterSignup({ consent, headingClass }: { consent: s
         <h2 id={`${baseId}-title`} className={`${headingClass} uppercase`}>
           {ui.title}
         </h2>
-        <p className="mt-4 max-w-sm text-[15px] leading-7 text-[#e4e0d8]">{ui.text}</p>
+        <p className="mt-4 max-w-sm text-[16px] leading-7 text-[#e4e0d8]">{ui.text}</p>
       </div>
       {status === "done" ? (
         <div role="status" className="md:col-span-7">
-          <p className="font-serif text-[26px] leading-snug text-white">{ui.doneTitle}</p>
-          <p className="mt-3 max-w-lg text-[15px] leading-7 text-[#e4e0d8]">{ui.done}</p>
+          <p className="font-serif text-[24px] leading-snug text-white">{ui.doneTitle}</p>
+          <p className="mt-3 max-w-lg text-[16px] leading-7 text-[#e4e0d8]">{ui.done}</p>
         </div>
       ) : (
         <form onSubmit={submit} onFocus={started} noValidate className="relative md:col-span-7">

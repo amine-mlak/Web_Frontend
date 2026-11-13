@@ -117,7 +117,7 @@ export default async function Faq({ content }: { content: FaqContent | null }) {
         <h2
           data-rise=""
           id="faq-heading"
-          className="font-serif text-[34px] leading-[1.15] font-medium tracking-[-0.02em] text-ink md:text-[42px]"
+          className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium tracking-[-0.02em] text-ink"
         >
           {data.title}
         </h2>

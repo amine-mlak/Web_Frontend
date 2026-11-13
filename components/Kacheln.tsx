@@ -163,7 +163,7 @@ function TileCard({ tile }: { tile: KachelTile }) {
           />
         </div>
         <div
-          className="flex flex-col items-start justify-center px-8 py-12 sm:px-12 lg:px-16"
+          className="flex flex-col items-start justify-center px-8 py-12 sm:px-12 lg:pr-edge lg:pl-16"
           style={{ backgroundColor: tile.color }}
         >
           <h3

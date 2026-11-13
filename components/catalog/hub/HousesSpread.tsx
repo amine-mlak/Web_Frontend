@@ -15,7 +15,7 @@ export default function HousesSpread({
 
   return (
     <section className="border-b border-line bg-karte">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         {title ? (
           <h2 className="t-section text-ink">
             {title}

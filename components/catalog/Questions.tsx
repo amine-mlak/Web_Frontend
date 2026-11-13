@@ -61,7 +61,7 @@ export default async function Questions({
   const headingId = `questions-${theme ?? "seite"}`;
 
   return (
-    <section className="border-t border-line bg-paper px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby={headingId}>
+    <section className="border-t border-line bg-paper px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby={headingId}>
       <FaqJsonLd items={questions} />
       <div className={`grid gap-10 lg:grid-cols-12 ${narrow ? "mx-auto max-w-6xl" : ""}`}>
         <div className="lg:col-span-4">

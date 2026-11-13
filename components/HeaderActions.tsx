@@ -51,7 +51,7 @@ export default function HeaderActions({
         {compact ? (
           <span className="sr-only">{PHONE_LABEL}</span>
         ) : (
-          <span className="type-nav !text-[13px] font-normal tracking-[0.02em] xl:!text-[14px]">
+          <span className="type-nav !text-[14px] font-normal tracking-[0.02em]">
             {PHONE_LABEL}
           </span>
         )}

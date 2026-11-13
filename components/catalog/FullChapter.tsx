@@ -58,7 +58,7 @@ export default function FullChapter({
         className={
           card
             ? "relative z-10 flex h-full items-end px-6 pb-8 sm:px-8 lg:px-10 lg:pb-10"
-            : `relative z-10 flex min-h-[78svh] items-end px-5 pb-12 sm:px-8 lg:px-14 lg:pb-16 ${right ? "lg:justify-end" : ""}`
+            : `relative z-10 flex min-h-[78svh] items-end px-5 pb-12 sm:px-8 lg:px-gutter lg:pb-16 ${right ? "lg:justify-end" : ""}`
         }
       >
         <div className="max-w-2xl">

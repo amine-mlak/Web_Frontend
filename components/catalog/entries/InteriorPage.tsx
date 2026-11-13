@@ -108,7 +108,7 @@ function PointSection({ point, index, lang, detailLabel }: { point: ShownPoint; 
           sizes="(max-width: 1024px) 100vw, 58vw"
         />
         <div
-          className={`flex flex-col justify-between gap-12 px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20 ${flip ? "lg:order-1" : ""}`}
+          className={`flex flex-col justify-between gap-12 px-5 py-14 sm:px-8 lg:col-span-5 lg:py-20 ${flip ? "lg:order-1 lg:pr-14 lg:pl-edge" : "lg:pr-edge lg:pl-14"}`}
         >
           <PointText point={point} id={id} lang={lang} />
           {detail?.src ? (
@@ -150,7 +150,7 @@ export function PointSections({
   return (
     <>
       {navLabel ? (
-        <nav className="border-t border-line px-5 py-8 sm:px-8 lg:px-14" aria-label={navLabel}>
+        <nav className="border-t border-line px-5 py-8 sm:px-8 lg:px-gutter" aria-label={navLabel}>
           <p className="font-sans text-[14px] text-muted">{navLabel}</p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {shown.map((point, index) => (
@@ -201,7 +201,7 @@ export default function InteriorPage({
   return (
     <main className="bg-paper">
       <section className="grid lg:min-h-[86svh] lg:grid-cols-12" aria-labelledby="innen-title">
-        <div className="flex flex-col justify-end px-5 pt-10 pb-12 sm:px-8 lg:col-span-5 lg:px-14 lg:pt-16 lg:pb-20">
+        <div className="flex flex-col justify-end px-5 pt-10 pb-12 sm:px-8 lg:col-span-5 lg:px-gutter lg:pt-16 lg:pb-20">
           <Crumbs hub={hub} tone="ink" />
           <h1
             id="innen-title"
@@ -233,7 +233,7 @@ export default function InteriorPage({
       </section>
 
       {hub.statement || body.length ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-6">
               {hub.statement ? (
@@ -247,7 +247,7 @@ export default function InteriorPage({
             </div>
             <div className="space-y-6 lg:col-span-5 lg:col-start-8">
               {body.map((paragraph, index) => (
-                <p key={index} className="font-sans text-[17px] leading-[1.7] text-ink/85">
+                <p key={index} className="font-sans text-[16px] leading-[1.7] text-ink/85">
                   {paragraph}
                 </p>
               ))}

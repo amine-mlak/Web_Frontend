@@ -100,13 +100,13 @@ export default function ProjectArchive({
   const choose = (next: string) => write(`${next}|${STEP}`);
   const chip = (pressed: boolean) =>
     cn(
-      "py-1.5 font-sans text-[15px] underline decoration-1 underline-offset-8 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink",
+      "py-1.5 font-sans text-[16px] underline decoration-1 underline-offset-8 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink",
       pressed ? "text-ink decoration-gold" : "text-muted decoration-transparent hover:text-ink hover:decoration-line",
     );
 
   return (
     <section
-      className="border-b border-line bg-paper px-5 py-16 sm:px-8 lg:px-14 lg:py-24"
+      className="border-b border-line bg-paper px-5 py-16 sm:px-8 lg:px-gutter lg:py-24"
       aria-labelledby="projekte-archiv"
     >
       <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">

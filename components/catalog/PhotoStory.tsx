@@ -56,7 +56,7 @@ export function PhotoOpener({ opener, locale }: { opener: NonNullable<PhotoStory
           ))}
         </div>
       </div>
-      <p className={`flex flex-wrap items-baseline justify-between gap-x-10 gap-y-1 px-5 pt-4 sm:px-8 lg:px-14 ${NOTE}`}>
+      <p className={`flex flex-wrap items-baseline justify-between gap-x-10 gap-y-1 px-5 pt-4 sm:px-8 lg:px-gutter ${NOTE}`}>
         <span>
           {caption(big)}
           {big.place ? ` · ${big.place}` : ""}
@@ -91,7 +91,7 @@ export function CloseBand({
         priority={priority}
         sizes="100vw"
       />
-      <p className={`flex flex-wrap items-baseline justify-between gap-x-10 gap-y-1 px-5 pt-4 sm:px-8 lg:px-14 ${NOTE}`}>
+      <p className={`flex flex-wrap items-baseline justify-between gap-x-10 gap-y-1 px-5 pt-4 sm:px-8 lg:px-gutter ${NOTE}`}>
         <span>
           {caption(photo)}
           {photo.place ? ` · ${photo.place}` : ""}
@@ -115,7 +115,7 @@ export function PhotoPair({
 }) {
   const [wide, small] = pair;
   return (
-    <section className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-14 lg:py-24">
+    <section className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
       <div className="grid gap-x-10 gap-y-10 lg:grid-cols-12 lg:items-start">
         <div className={flip ? "lg:order-2 lg:col-span-7 lg:col-start-6" : "lg:col-span-7"}>
           <Frame

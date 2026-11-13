@@ -536,7 +536,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
       <div className="mx-auto max-w-[70rem]">
         <div className="mx-auto max-w-2xl text-center">
           <p className="type-eyebrow text-gold">{content.eyebrow}</p>
-          <Heading id={`${baseId}-title`} className="mt-4 font-serif text-[34px] leading-[1.15] font-medium text-ink md:text-[42px]">
+          <Heading id={`${baseId}-title`} className="mt-4 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium text-ink">
             {content.title} {content.titleEmphasis ? <em>{content.titleEmphasis}</em> : null}
           </Heading>
           <p className="mt-4 font-sans text-[16px] leading-[1.75] font-light text-ink/85">{content.intro}</p>
@@ -555,7 +555,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
           {status === "done" ? (
             <div className="px-6 py-20 text-center sm:px-10">
               <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
-              <h3 ref={screenHeading} tabIndex={-1} className="font-serif text-[30px] leading-tight font-medium text-ink outline-none md:text-[38px]">
+              <h3 ref={screenHeading} tabIndex={-1} className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium text-ink outline-none">
                 {content.done.title.replace("{name}", contact.name.trim().split(/\s+/)[0] ?? "")}
               </h3>
               <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{content.done.text}</p>
@@ -595,7 +595,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
               <div key={screenKey(screen)} data-direction={direction} data-leaving={leaving ? "" : undefined} className="planner-screen px-6 pt-8 pb-10 sm:px-10 sm:pt-12 md:pt-16 md:pb-14">
                 <div className="mx-auto max-w-3xl text-center">
                   <p className="type-eyebrow text-gold">{eyebrow}</p>
-                  <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[30px] leading-[1.15] font-medium text-ink outline-none md:text-[40px]">
+                  <h3 ref={screenHeading} tabIndex={-1} className="mt-3 font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium text-ink outline-none">
                     {heading}
                   </h3>
                   {hint ? <p className="mt-3 font-sans text-[14px] leading-relaxed text-muted">{hint}</p> : null}
@@ -628,13 +628,13 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, [screen.group.group === "form" ? "form" : "style"]: value }));
                             }}
-                            className="w-full border-0 border-b border-line bg-transparent py-3 text-center font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                            className="w-full border-0 border-b border-line bg-transparent py-3 text-center font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
                           />
                         </div>
                       ) : null}
                       {screen.group.group === "appliances" && wishes ? (
                         <div className="mx-auto mt-12 max-w-xl">
-                          <label htmlFor={`${baseId}-wishes`} className="block text-center font-serif text-[22px] text-ink">
+                          <label htmlFor={`${baseId}-wishes`} className="block text-center font-serif text-[24px] text-ink">
                             {wishes.label}
                           </label>
                           <textarea
@@ -646,7 +646,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, wishes: value }));
                             }}
-                            className="mt-3 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                            className="mt-3 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
                           />
                         </div>
                       ) : null}
@@ -764,7 +764,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                           rows={3}
                           value={contact.message}
                           onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
-                          className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none focus:border-ink"
+                          className="mt-1 w-full resize-y border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none focus:border-ink"
                         />
                       </div>
                       <label htmlFor={`${baseId}-newsletter`} className="mt-6 flex gap-3 font-sans text-[13px] leading-6 text-muted">
@@ -875,7 +875,7 @@ function PlannerChoices({
                     {option.image ? <PlannerPhoto image={option.image} fade={!first} lazy={lazy} /> : null}
                   </span>
                   <span className="flex flex-col gap-1.5 px-3 pt-3 pb-4 sm:px-4 sm:pt-4 sm:pb-5">
-                    <span className="font-serif text-[18px] leading-snug font-medium text-ink sm:text-[21px]">{option.label}</span>
+                    <span className="font-serif text-[18px] leading-snug font-medium text-ink">{option.label}</span>
                     {option.subtitle ? (
                       <span className="font-sans text-[12px] leading-[1.5] font-light text-muted sm:text-[13px]">{option.subtitle}</span>
                     ) : null}
@@ -897,13 +897,13 @@ function PlannerChoices({
                       style={{ width: option.iconSize ?? 120, height: option.iconSize ?? 120 }}
                     />
                   ) : null}
-                  <span className="mt-4 font-sans text-[15px] text-ink">{option.label}</span>
+                  <span className="mt-4 font-sans text-[16px] text-ink">{option.label}</span>
                   {option.subtitle ? (
                     <span className="mt-1 font-sans text-[12px] leading-snug font-light text-muted">{option.subtitle}</span>
                   ) : null}
                 </>
               ) : (
-                <span className="font-sans text-[15px] leading-snug text-ink">{option.label}</span>
+                <span className="font-sans text-[16px] leading-snug text-ink">{option.label}</span>
               )}
             </button>
           </li>
@@ -975,7 +975,7 @@ function PlannerField({
         aria-required={required}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-1 w-full border-0 border-b border-line bg-transparent py-3 font-sans text-[15px] text-ink outline-none focus:border-ink"
+        className="mt-1 w-full border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none focus:border-ink"
       />
     </div>
   );

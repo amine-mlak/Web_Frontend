@@ -298,7 +298,7 @@ export default function ArticlePage({
       <Questions theme={theme} title={item.category?.name} locale={locale} limit={4} narrow />
 
       {related.length > 0 ? (
-        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="article-more">
+        <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="article-more">
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
@@ -325,7 +325,7 @@ export default function ArticlePage({
                     {other.category?.name ? <p className="type-eyebrow mt-5 text-muted">{other.category.name}</p> : null}
                     <h3 className="t-item mt-2 text-ink">{other.title}</h3>
                     {other.description ? (
-                      <p className="mt-2 font-sans text-[15px] leading-relaxed text-muted">{other.description}</p>
+                      <p className="mt-2 font-sans text-[16px] leading-relaxed text-muted">{other.description}</p>
                     ) : null}
                   </LocaleLink>
                 </li>
@@ -335,7 +335,7 @@ export default function ArticlePage({
         </section>
       ) : null}
 
-      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-14 lg:py-24">
+      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-gutter lg:py-24">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="t-section">{copy.bandTitle}</h2>
           <p className="mx-auto mt-5 max-w-xl font-sans text-[16px] leading-relaxed font-light text-paper/80">{copy.bandText}</p>

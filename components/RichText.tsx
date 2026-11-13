@@ -184,7 +184,7 @@ export default function RichText({
             )
           ) : null}
           {block.type === "quote" ? (
-            <blockquote className="border-l-2 border-messing pl-6 font-serif text-[22px] leading-snug text-ink italic">
+            <blockquote className="border-l-2 border-messing pl-6 font-serif text-[24px] leading-snug text-ink italic">
               {inline(block.text)}
             </blockquote>
           ) : null}

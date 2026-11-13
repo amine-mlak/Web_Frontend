@@ -176,7 +176,7 @@ export default function MegaMenu({
     >
       <NavigationMenu
         viewport={false}
-        className="relative hidden w-full max-w-none lg:flex"
+        className="relative hidden w-full max-w-none xl:flex"
         delayDuration={400}
         skipDelayDuration={80}
         value={menuValue}
@@ -213,7 +213,7 @@ export default function MegaMenu({
           </div>
 
           <div
-            className="relative z-10 grid h-14 w-full grid-cols-[1fr_auto_1fr] items-center px-5 lg:px-8"
+            className="relative z-10 grid h-14 w-full grid-cols-[1fr_auto_1fr] items-center px-8"
             onMouseEnter={openMenuHover}
           >
             <div className="justify-self-start">
@@ -223,7 +223,7 @@ export default function MegaMenu({
             <NavigationMenuList className="relative h-full items-stretch justify-center space-x-0">
               {panels.map((panel) => (
                 <NavigationMenuItem key={panel.id} value={panel.id} className="flex h-full">
-                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3 !text-[16px] font-normal tracking-[0.06em] text-black xl:!text-[17px] hover:bg-transparent hover:text-black focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-black after:absolute after:inset-x-0 after:top-full after:z-50 after:h-8 after:content-[''] [&>svg]:hidden">
+                  <NavigationMenuTrigger className="type-nav relative z-20 h-full whitespace-nowrap rounded-none bg-transparent px-3.5 !text-[18px] font-normal text-black hover:bg-transparent hover:text-black focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-black after:absolute after:inset-x-0 after:top-full after:z-50 after:h-8 after:content-[''] [&>svg]:hidden">
                     {panel.label}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-full md:w-full">
@@ -244,7 +244,7 @@ export default function MegaMenu({
 
       <div
         className={cn(
-          "absolute inset-x-0 top-0 z-0 grid origin-top bg-white transition-[grid-template-rows,box-shadow] duration-500 lg:hidden",
+          "absolute inset-x-0 top-0 z-0 grid origin-top bg-white transition-[grid-template-rows,box-shadow] duration-500 xl:hidden",
           sheetEase,
           solid ? "pointer-events-auto grid-rows-[1fr]" : "pointer-events-none grid-rows-[0fr]",
           solid && mobileOpen ? "shadow-[0_18px_40px_rgba(17,17,17,0.08)]" : "shadow-none",
@@ -263,7 +263,7 @@ export default function MegaMenu({
               id={`${panelId}-mobile`}
               className="min-h-0 overflow-hidden bg-white"
             >
-              <div className="max-h-[min(80vh,640px)] overflow-y-auto p-6">
+              <div className="max-h-[min(80vh,640px)] overflow-y-auto p-6 md:px-7">
                 <div className="flex flex-col justify-between gap-6">
                   <div>
                     {panels.map((panel) => {
@@ -339,7 +339,7 @@ export default function MegaMenu({
         </div>
       </div>
 
-      <div className="relative z-10 flex h-14 w-full items-center justify-between gap-2 px-4 lg:hidden">
+      <div className="relative z-10 flex h-14 w-full items-center justify-between gap-2 px-5 md:px-7 xl:hidden">
         <BrandLogo src={logoSrc} alt={logoAlt} />
         <div className="flex items-center gap-2">
           <LanguageSwitcher />

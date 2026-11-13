@@ -26,7 +26,7 @@ function OtherForms({ hub }: { hub: PresentedTopic }) {
   }
 
   return (
-    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-24" aria-labelledby="other-forms">
+    <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="other-forms">
       <h2 id="other-forms" className="t-section text-ink">
         {hub.siblingTitle}
       </h2>

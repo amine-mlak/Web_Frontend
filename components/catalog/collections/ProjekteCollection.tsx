@@ -19,7 +19,7 @@ export default function ProjekteCollection({
 
   return (
     <main className="bg-paper">
-      <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-14 lg:pt-16" aria-labelledby="projekte-hero">
+      <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-gutter lg:pt-16" aria-labelledby="projekte-hero">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <h1
             id="projekte-hero"
@@ -44,7 +44,7 @@ export default function ProjekteCollection({
               priority
               sizes="100vw"
             />
-            <div className="grid gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-14 lg:py-14">
+            <div className="grid gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-14">
               {lead.meta ? (
                 <p className="font-sans text-[14px] text-muted lg:col-span-3">{lead.meta}</p>
               ) : null}
@@ -88,12 +88,12 @@ export default function ProjekteCollection({
                     className="aspect-[16/10] lg:col-span-6 lg:aspect-[16/9]"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
-                  <div className="flex flex-col justify-center px-5 py-10 sm:px-8 lg:col-span-6 lg:px-14">
+                  <div className="flex flex-col justify-center px-5 py-10 sm:px-8 lg:col-span-6 lg:pr-edge lg:pl-14">
                     {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
                     <h2 className="t-feature text-ink">
                       {branch.title}
                     </h2>
-                    <p className="mt-4 max-w-md font-sans text-[15px] leading-relaxed text-muted">
+                    <p className="mt-4 max-w-md font-sans text-[16px] leading-relaxed text-muted">
                       {branch.text}
                     </p>
                   </div>
@@ -108,7 +108,7 @@ export default function ProjekteCollection({
       <QuoteLine quote={hub.quote} source={hub.quoteSource} tone="nacht" />
 
       {extras && extras.length > 0 ? (
-        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-14 lg:py-20" aria-labelledby="projekte-more">
+        <section className="border-b border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="projekte-more">
           {extrasTitle ? (
             <h2
               id="projekte-more"

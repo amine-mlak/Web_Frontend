@@ -30,7 +30,7 @@ export default function KitchenShowcase({
 
   return (
     <section aria-labelledby={headingId}>
-      <h2 id={headingId} className="t-section px-5 pt-16 text-ink sm:px-8 lg:px-14 lg:pt-24">
+      <h2 id={headingId} className="t-section px-5 pt-16 text-ink sm:px-8 lg:px-gutter lg:pt-24">
         {title}
       </h2>
       {/* The section title already gives the first kitchen its air. */}

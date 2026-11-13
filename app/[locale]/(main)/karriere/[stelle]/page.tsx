@@ -109,25 +109,25 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(posting).replace(/</g, "\\u003c") }}
       />
-      <article className="px-5 pt-12 pb-20 sm:px-8 lg:px-14 lg:pt-16">
+      <article className="px-5 pt-12 pb-20 sm:px-8 lg:px-gutter lg:pt-16">
         <LocaleLink href="/karriere#stellen" className="btn-quiet text-ink">
           {copy.back}
         </LocaleLink>
         <p className="mt-12 type-eyebrow text-gold">
           {copy.eyebrow} · {jobKindLabel(job.kind, locale)}
         </p>
-        <h1 className="mt-4 max-w-4xl font-serif text-[40px] leading-[1.05] font-medium tracking-[-0.03em] text-ink sm:text-[56px]">
+        <h1 className="mt-4 max-w-4xl font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
           {job.title}
         </h1>
         {job.teaser ? (
-          <p className="mt-6 max-w-2xl font-sans text-[19px] leading-relaxed font-light text-muted">{job.teaser}</p>
+          <p className="mt-6 max-w-2xl font-sans text-[18px] leading-relaxed font-light text-muted">{job.teaser}</p>
         ) : null}
         <RichText source={job.body} className="mt-14 max-w-2xl" />
       </article>
-      <section id="bewerbung" className="scroll-mt-24 bg-karte px-5 py-20 sm:px-8 md:py-24 lg:px-14" aria-labelledby="bewerbung-title">
+      <section id="bewerbung" className="scroll-mt-24 bg-karte px-5 py-20 sm:px-8 md:py-24 lg:px-gutter" aria-labelledby="bewerbung-title">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
-            <h2 id="bewerbung-title" className="font-serif text-[34px] leading-tight font-medium tracking-[-0.02em] text-ink md:text-[40px]">
+            <h2 id="bewerbung-title" className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium tracking-[-0.02em] text-ink">
               {copy.apply}
             </h2>
             <p className="mt-5 max-w-sm font-sans text-[16px] leading-relaxed text-muted">{copy.applyText}</p>

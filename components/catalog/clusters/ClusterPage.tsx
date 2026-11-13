@@ -87,7 +87,7 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
       <section data-site-hero="" className="relative isolate -mt-14 min-h-[88svh] bg-nacht" aria-labelledby="cluster-hero">
         <Frame src={hero} alt={hub.heroAlt} className="absolute inset-0" priority sizes="100vw" />
         <div className="hero-scrim absolute inset-0" aria-hidden />
-        <div className="relative z-10 flex min-h-[88svh] items-end px-5 pb-12 sm:px-8 lg:px-14 lg:pb-16">
+        <div className="relative z-10 flex min-h-[88svh] items-end px-5 pb-12 sm:px-8 lg:px-gutter lg:pb-16">
           <div className="max-w-2xl">
             <Crumbs hub={hub} tone="paper" />
             <h1
@@ -120,7 +120,7 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
       <div className="mt-12">
         <HouseLine houses={hub.houses} title={copy.houses} />
       </div>
-      <div className="px-5 pb-4 sm:px-8 lg:px-14">
+      <div className="px-5 pb-4 sm:px-8 lg:px-gutter">
         <LocaleLink href="/projekte" className="btn-quiet text-ink">
           {copy.allProjects}
         </LocaleLink>

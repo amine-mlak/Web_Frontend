@@ -39,14 +39,14 @@ function Area({ branch, index, en }: { branch: PresentedBranch; index: number; e
             />
           ) : null}
         </div>
-        <div className={`flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-5 lg:px-14 lg:py-20 ${flip ? "lg:order-1" : ""}`}>
+        <div className={`flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-5 lg:py-20 ${flip ? "lg:order-1 lg:pr-14 lg:pl-edge" : "lg:pr-edge lg:pl-14"}`}>
           <h2
             id={`${id}-title`}
             className="t-section text-ink"
           >
             {branch.title}
           </h2>
-          <p className="mt-5 max-w-md font-sans text-[17px] leading-relaxed text-muted">{branch.text}</p>
+          <p className="mt-5 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
           {items.length > 0 ? (
             <ul className="mt-10 border-t border-line">
               {items.map((item) => (
@@ -114,7 +114,7 @@ export default function MaterialCollection({
 
   return (
     <main className="bg-paper">
-      <section className="px-5 pt-12 sm:px-8 lg:px-14 lg:pt-20" aria-labelledby="material-hero">
+      <section className="px-5 pt-12 sm:px-8 lg:px-gutter lg:pt-20" aria-labelledby="material-hero">
         <div className="grid items-end gap-8 lg:grid-cols-12">
           <h1
             id="material-hero"

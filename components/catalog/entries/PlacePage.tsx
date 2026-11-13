@@ -30,7 +30,7 @@ export default function PlacePage({ hub }: { hub: PresentedTopic }) {
       </EntryHeader>
 
       {hub.facts.length ? (
-        <dl className="mx-5 mt-10 grid grid-cols-2 border-t border-line sm:mx-8 sm:grid-cols-4 lg:mx-14 lg:mt-14">
+        <dl className="mx-5 mt-10 grid grid-cols-2 border-t border-line sm:mx-8 sm:grid-cols-4 lg:mx-gutter lg:mt-14">
           {hub.facts.map((fact) => (
             <div
               key={`${fact.value}-${fact.label}`}

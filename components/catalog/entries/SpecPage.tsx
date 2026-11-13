@@ -45,7 +45,7 @@ export default function SpecPage({ hub }: { hub: PresentedTopic }) {
 
       {mark || !story.opener || hub.facts.length ? (
         <section
-          className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:mt-14 lg:px-14 lg:py-20"
+          className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:mt-14 lg:px-gutter lg:py-20"
           aria-label={hub.locale === "en" ? "At a glance" : "Auf einen Blick"}
         >
           {mark ? (

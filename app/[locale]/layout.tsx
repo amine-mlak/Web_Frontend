@@ -6,7 +6,6 @@ import ConsentBanner from "@/components/ConsentBanner";
 import LinkTracking from "@/components/LinkTracking";
 import TagManager from "@/components/TagManager";
 import { LocaleProvider } from "@/components/LocaleProvider";
-import SmoothScroll from "@/components/SmoothScroll";
 import RevealObserver from "@/components/RevealObserver";
 import Umami from "@/components/Umami";
 import { isLocale, LOCALES } from "@/lib/i18n";
@@ -89,7 +88,6 @@ export default async function RootLayout({
         {/* Consent Mode defaults first, before anything can push to the dataLayer. */}
         <TagManager />
         <LocaleProvider locale={locale}>
-          <SmoothScroll />
           <RevealObserver />
           <ConsentBanner />
           <ClickIds />

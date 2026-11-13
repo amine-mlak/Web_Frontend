@@ -47,9 +47,9 @@ export default function GutZuWissen({
           ))}
         </ul>
       </div>
-      <div className="flex items-center bg-[#c9ae8c] px-8 py-14 sm:px-12 md:min-h-[18rem] md:px-16 lg:px-20">
+      <div className="flex items-center bg-[#c9ae8c] px-8 py-14 sm:px-12 md:min-h-[18rem] md:px-16 lg:pr-edge lg:pl-20">
         <blockquote>
-          <p className="max-w-2xl font-serif text-[24px] leading-[1.35] font-medium text-[#f7f1e8] italic md:text-[30px] lg:text-[32px]">
+          <p className="max-w-2xl font-serif text-[24px] md:text-[28px] xl:text-[32px] leading-[1.35] font-medium text-[#f7f1e8] italic">
             „{data.quote}“
           </p>
           <footer className="mt-6 font-sans text-[13px] leading-relaxed text-[#f7f1e8]/80 md:text-[14px]">
