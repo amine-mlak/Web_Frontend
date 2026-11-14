@@ -10,6 +10,7 @@ import {
   honeypotFilled,
   jsonError,
   leadLimits,
+  n8nConfig,
   noStoreHeaders,
   originAllowed,
   parseLeadBody,
@@ -46,23 +47,6 @@ function reject(request: Request, status: number, reason: string, body = GENERIC
     `[lead] refused ${status} ${reason} origin=${hostOf(request.headers.get("origin"))} referer=${hostOf(request.headers.get("referer"))}`,
   );
   return jsonError(status, body);
-}
-
-function n8nConfig() {
-  const url = process.env.N8N_WEBHOOK_URL?.trim();
-  const secret = process.env.N8N_WEBHOOK_SECRET?.trim();
-  if (!url || !secret) {
-    return null;
-  }
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== "https:") {
-      return null;
-    }
-    return { url, secret };
-  } catch {
-    return null;
-  }
 }
 
 export async function POST(request: Request) {
