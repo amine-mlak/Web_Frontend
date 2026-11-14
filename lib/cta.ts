@@ -6,8 +6,8 @@
 export const TERMIN_HREF = "/kontakt#termin";
 export const PLANNER_HREF = "/beratung";
 
-/** The team's Microsoft Bookings page: free times from their Outlook calendars (components/BookingEmbed.tsx). */
-export const BOOKING_URL = "https://outlook.office365.com/owa/calendar/BEERGmbH@beer.de/bookings/";
+/** The team's Microsoft Bookings page. The site shows the same calendar in its own design (components/BookingPanel.tsx); this is the way round it when that fails. */
+export const BOOKING_URL = "https://bookings.cloud.microsoft/book/BEERGmbH@beer.de/";
 
 export type MainAction = "termin" | "planner";
 

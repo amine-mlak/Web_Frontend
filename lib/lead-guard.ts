@@ -345,6 +345,24 @@ export function sanitizeUtm(value: LeadBody["utm"]) {
   return out;
 }
 
+/** Where leads go: the n8n webhook and its shared secret, or null when they are not set. */
+export function n8nConfig() {
+  const url = process.env.N8N_WEBHOOK_URL?.trim();
+  const secret = process.env.N8N_WEBHOOK_SECRET?.trim();
+  if (!url || !secret) {
+    return null;
+  }
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:") {
+      return null;
+    }
+    return { url, secret };
+  } catch {
+    return null;
+  }
+}
+
 export const leadLimits = {
   LEAD_WINDOW_MS,
   LEAD_MAX_PER_IP,

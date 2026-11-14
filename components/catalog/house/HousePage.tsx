@@ -1,4 +1,4 @@
-import BookingEmbed from "@/components/BookingEmbed";
+import BookingPanel from "@/components/BookingPanel";
 import ContactForm from "@/components/ContactForm";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import { Fragment, type ReactNode } from "react";
@@ -121,7 +121,7 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
           <CareersSection jobs={house.jobs} locale={house.locale === "en" ? "en" : "de"} />
         ) : house.slug === "kontakt" ? (
           <>
-            <BookingEmbed locale={house.locale === "en" ? "en" : "de"} />
+            <BookingPanel locale={house.locale === "en" ? "en" : "de"} />
             <ContactForm locale={house.locale === "en" ? "en" : "de"} />
           </>
         ) : (
