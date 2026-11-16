@@ -107,26 +107,36 @@ const CREW = {
   table: u("beer_hebauf_werk2_mitarbeiter_essen_44852ab4f9.jpg"),
 };
 
+/**
+ * Team portraits: the studio series from beer.de (same wall, same light), in the order of the
+ * team text in the CMS. Names are full names, so lib/team-voices.ts matches them exactly.
+ */
 const PEOPLE: HousePerson[] = [
-  { src: u("beer_kuechen_mitarbeiter_a_beer_23cffd2e13.jpg"), name: "A. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_c_beer_bf930a4cc3.jpg"), name: "C. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_j_beer_5efafb8961.jpg"), name: "J. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_a_wagner_8efc9e4bf2.jpg"), name: "A. Wagner" },
-  { src: u("beer_kuechen_mitarbeiter_a_hilgers_3b3ee2f0be.jpg"), name: "A. Hilgers" },
-  { src: u("beer_kuechen_mitarbeiter_benedikt_h_neu_c81c42696f.jpg"), name: "Benedikt H." },
-  { src: u("beer_kuechen_mitarbeiter_c_fellner_bfd9b8bdea.jpg"), name: "C. Fellner" },
-  { src: u("beer_kuechen_mitarbeiter_d_ciglaric_neu_444c56cd1f.jpg"), name: "D. Ciglaric" },
-  { src: u("beer_kuechen_mitarbeiter_d_vogl_384cf65a31.jpg"), name: "D. Vogl" },
-  { src: u("beer_kuechen_mitarbeiter_j_mirlach_d81cec0fdf.jpg"), name: "J. Mirlach" },
-  { src: u("beer_kuechen_mitarbeiter_j_sperrer_77470e7e96.jpg"), name: "J. Sperrer" },
-  { src: u("beer_kuechen_mitarbeiter_r_geier_acd98e783d.jpg"), name: "R. Geier" },
-  { src: u("beer_kuechen_mitarbeiter_r_huber_27fcadb598.jpg"), name: "R. Huber" },
-  { src: u("beer_kuechen_mitarbeiter_r_pecho_115fc16ed5.jpg"), name: "R. Pecho" },
-  { src: u("beer_kuechen_mitarbeiter_r_stauber_2f1af7bd56.jpg"), name: "R. Stauber" },
-  { src: u("beer_kuechen_mitarbeiter_r_vater_c846f62245.jpg"), name: "R. Vater" },
-  { src: u("beer_kuechen_mitarbeiter_s_ostertag_917ca9232a.jpg"), name: "S. Ostertag" },
-  { src: u("beer_kuechen_mitarbeiter_thomas_l_c840172867.jpg"), name: "Thomas L." },
-  { src: u("beer_kuechen_mitarbeiter_v_fuerbacher_3f322dc099.jpg"), name: "V. Fürbacher" },
+  { src: u("beer_team_christian_beer_17e412823c.jpg"), name: "Christian Beer" },
+  { src: u("beer_team_ingeborg_beer_72a9c70b74.jpg"), name: "Ingeborg Beer" },
+  { src: u("beer_team_anton_beer_ea09020ef9.jpg"), name: "Anton Beer" },
+  { src: u("beer_team_julia_beer_af91772220.jpg"), name: "Julia Beer" },
+  { src: u("beer_team_johannes_sperrer_b5ccbf9987.jpg"), name: "Johannes Sperrer" },
+  { src: u("beer_team_christian_fellner_156f977359.jpg"), name: "Christian Fellner" },
+  { src: u("beer_team_robert_pecho_8e50d73e3e.jpg"), name: "Robert Pecho" },
+  { src: u("beer_team_robert_stauber_2e1b172919.jpg"), name: "Robert Stauber" },
+  { src: u("beer_team_kathrin_stampfl_9ca93a3ed4.jpg"), name: "Kathrin Stampfl" },
+  { src: u("beer_team_simon_ostertag_940788ae8f.jpg"), name: "Simon Ostertag" },
+  // Not in the 2024 studio series yet: the older portrait.
+  { src: u("beer_kuechen_mitarbeiter_a_wagner_8efc9e4bf2.jpg"), name: "Andreas Wagner" },
+  { src: u("beer_team_richard_geier_fa333d3dbd.jpg"), name: "Richard Geier" },
+  { src: u("beer_team_dominik_vogl_a0310a7c6d.jpg"), name: "Dominik Vogl" },
+  { src: u("beer_team_robert_vater_b3afa3c7b7.jpg"), name: "Robert Vater" },
+  { src: u("beer_team_michael_sasse_6f9a5add37.jpg"), name: "Michael Sasse" },
+  { src: u("beer_team_robert_huber_1261412dc7.jpg"), name: "Robert Huber" },
+  { src: u("beer_team_josef_mirlach_57889a5d5b.jpg"), name: "Josef Mirlach" },
+  { src: u("beer_team_benedikt_holzmaier_2e90aacf88.jpg"), name: "Benedikt Holzmaier" },
+  { src: u("beer_team_avi_geisel_0b103e23a1.jpg"), name: "Avi Geisel" },
+  { src: u("beer_team_bruno_bauer_3cfb1922f3.jpg"), name: "Bruno Bauer" },
+  { src: u("beer_team_alexander_hilgers_7ee93ae9f6.jpg"), name: "Alexander Hilgers" },
+  { src: u("beer_team_darko_ciglaric_1e784c96e0.jpg"), name: "Darko Ciglaric" },
+  { src: u("beer_team_thomas_lang_1e7e47e3cf.jpg"), name: "Thomas Lang" },
+  { src: u("beer_team_veronika_fuerbacher_e6299b39a9.jpg"), name: "Veronika Fürbacher" },
 ];
 
 function shot(src: string, alt: string): HouseShot {
