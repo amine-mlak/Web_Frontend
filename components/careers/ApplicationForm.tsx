@@ -11,7 +11,10 @@ import {
   MAX_FILES,
   MAX_TOTAL_BYTES,
 } from "@/lib/application-files";
+import { useRouter } from "next/navigation";
+import { withLocale } from "@/lib/i18n";
 import { validateLeadFields } from "@/lib/lead-fields";
+import { saveThanks } from "@/lib/thanks";
 
 export const INITIATIVE = "initiativ";
 
@@ -103,6 +106,7 @@ export default function ApplicationForm({
 }) {
   const locale = useLocale();
   const ui = UI[locale];
+  const router = useRouter();
   const baseId = useId();
   // The signed challenge is fetched when someone starts filling in the form; the server only
   // accepts it once it is 1.5 s old, which a person typing always exceeds.
@@ -189,6 +193,9 @@ export default function ApplicationForm({
         return;
       }
       setStatus("done");
+      // The thank-you page (/karriere/danke) is the end of the application, as the contract asks.
+      saveThanks("application", { name: fields.name.trim().split(/\s+/)[0] ?? "" });
+      router.push(withLocale("/karriere/danke", locale));
     } catch {
       setStatus("error");
       setError(ui.errSend);

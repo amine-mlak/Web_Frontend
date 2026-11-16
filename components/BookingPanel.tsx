@@ -6,7 +6,9 @@ import type { BookingDays, BookingService, BookingSetup } from "@/lib/bookings";
 import { conversionContext } from "@/lib/conversion";
 import { BOOKING_URL, MAIN_ACTIONS } from "@/lib/cta";
 import { trackCompletion, trackLead } from "@/lib/form-tracking";
-import type { Locale } from "@/lib/i18n";
+import { useRouter } from "next/navigation";
+import { withLocale, type Locale } from "@/lib/i18n";
+import { saveThanks } from "@/lib/thanks";
 import { validateLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
 
@@ -172,6 +174,7 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
   const ui = UI[locale];
   const tr = (value: string) => (locale === "en" ? (EN_TEXT[value] ?? value) : value);
   const baseId = useId();
+  const router = useRouter();
   const screenHeading = useRef<HTMLHeadingElement>(null);
   const loadedAt = useRef(0);
   const browsed = useRef(false);
@@ -418,17 +421,24 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
       if (!honeypot) {
         const eventId = typeof result.event_id === "string" ? result.event_id : "";
         trackCompletion("booking_complete", eventId, { form: "termin", service: tr(service.title) });
-        void trackLead(eventId, { email: checked.email, phone: checked.phone, place: "" }, "termin");
+        await trackLead(eventId, { email: checked.email, phone: checked.phone, place: "" }, "termin");
       }
-      setBooked({
+      const staffName = typeof result.staff === "string" ? result.staff : "";
+      const summary = {
         service: tr(service.title),
         when: whenLabel(activeDate, activeTime),
-        staff: typeof result.staff === "string" ? result.staff : "",
+        staff: staffName,
         name: fields.name.trim().split(/\s+/)[0] ?? "",
-      });
+      };
+      setBooked(summary);
       moved.current = true;
       setStatus("done");
       setChallenge("");
+      if (!honeypot) {
+        // The thank-you page (/kontakt/danke) shows what was booked, as the contract asks.
+        saveThanks("booking", { name: summary.name, lines: [summary.service, `${summary.when}${staffName ? `, ${ui.doneWith} ${staffName}` : ""}`] });
+        router.push(withLocale("/kontakt/danke", locale));
+      }
     } catch {
       setStatus("error");
       setError(ui.errSend);
