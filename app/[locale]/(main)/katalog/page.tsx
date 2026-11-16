@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
-import HouseScreen from "@/components/catalog/house/HouseScreen";
-import { houseMetadata } from "@/lib/house-pages";
+import { permanentRedirect } from "next/navigation";
+import { withLocale } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
 
-export const revalidate = 120;
-
-export function generateMetadata(): Promise<Metadata> {
-  return houseMetadata("katalog");
-}
-
-export default function KatalogPage() {
-  return <HouseScreen slug="katalog" />;
+/**
+ * BEER's printed piece is the booklet, so "Katalog bestellen" is the booklet page. Old links,
+ * the menu and the footer keep pointing here; this sends them on for good.
+ */
+export default async function KatalogPage() {
+  permanentRedirect(withLocale("/7-geheimnisse", await getRequestLocale()));
 }

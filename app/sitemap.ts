@@ -29,7 +29,6 @@ const HUBS = [
   "/nachhaltigkeit",
   "/karriere",
   "/ausstellung",
-  "/katalog",
   "/kontakt",
   "/faq",
   "/beratung",
@@ -37,7 +36,7 @@ const HUBS = [
 ] as const;
 
 /** CMS pages that only forward elsewhere (next.config.ts) and so never belong in the sitemap. */
-const FORWARDED = new Set(["kueche-planen"]);
+const FORWARDED = new Set(["kueche-planen", "katalog"]);
 
 type Entry = { lastModified?: string; seo?: CmsSeo };
 
