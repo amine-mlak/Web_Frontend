@@ -413,6 +413,39 @@ function isEmptyStrapiPayload(payload: unknown) {
   return Array.isArray(data) && data.length === 0;
 }
 
+/**
+ * Collections whose English entries the website already uses. For every other collection an English page
+ * reads the German entries (and its English texts from code) until that type's English versions exist in
+ * the CMS; then the type is added here.
+ */
+const EN_FROM_CMS = new Set(["/api/faq-themes", "/api/faq-items", "/api/landings"]);
+
+type StrapiRow = { documentId?: string };
+
+/**
+ * An English list in the German order: each German entry is replaced by its English version where one
+ * exists. (Asking Strapi for English alone would hide every entry that has no English version yet.)
+ */
+async function mergeEnglish<T>(
+  german: T,
+  query: Record<string, string>,
+  locale: string,
+  load: (query: Record<string, string>) => Promise<T | null>,
+): Promise<T> {
+  const rows = (german as { data?: StrapiRow[] }).data ?? [];
+  const ids = rows.map((row) => row.documentId).filter((id): id is string => Boolean(id));
+  if (ids.length === 0) {
+    return german;
+  }
+  const englishQuery: Record<string, string> = { ...query, locale, "pagination[page]": "1", "pagination[pageSize]": String(ids.length) };
+  ids.forEach((id, index) => {
+    englishQuery[`filters[documentId][$in][${index}]`] = id;
+  });
+  const english = await load(englishQuery);
+  const byId = new Map(((english as { data?: StrapiRow[] } | null)?.data ?? []).map((row) => [row.documentId, row]));
+  return { ...german, data: rows.map((row) => byId.get(row.documentId) ?? row) };
+}
+
 export async function strapiGet<T>(path: string, query: Record<string, string> = {}) {
   const preview = await previewDraftEnabled();
   let locale = query.locale;
@@ -436,12 +469,16 @@ export async function strapiGet<T>(path: string, query: Record<string, string> =
   };
 
   try {
-    const queryWithLocale = { ...query, locale };
-    const payload = await load(queryWithLocale);
-    if (locale !== DEFAULT_LOCALE && isEmptyStrapiPayload(payload)) {
-      return load({ ...query, locale: DEFAULT_LOCALE });
+    if (locale === DEFAULT_LOCALE) {
+      return await load({ ...query, locale });
     }
-    return payload;
+    const german = await load({ ...query, locale: DEFAULT_LOCALE });
+    if (german && Array.isArray((german as { data?: unknown }).data)) {
+      return EN_FROM_CMS.has(path) ? await mergeEnglish(german, query, locale, load) : german;
+    }
+    // A single type (header, footer, planner …): its English version when there is one.
+    const english = await load({ ...query, locale });
+    return isEmptyStrapiPayload(english) ? german : english;
   } catch {
     return null;
   }

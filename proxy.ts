@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cmsRedirect } from "@/lib/cms-redirects";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { localizePath, toInternalSegments } from "@/lib/routes";
 
@@ -10,9 +11,16 @@ import { localizePath, toInternalSegments } from "@/lib/routes";
  *   /en/kitchens/colours/weiss     → rewrite /en/kuechen/farben/weiss
  *   /en/kuechen/farben/weiss       → 301 /en/kitchens/colours/weiss
  *   /de/kuechen/...                → 301 /kuechen/...
+ *   an address in the CMS "Weiterleitungen" → 301 (or 302) to its new address
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const moved = await cmsRedirect(pathname);
+  if (moved) {
+    return NextResponse.redirect(new URL(moved.to, request.nextUrl), moved.permanent ? 301 : 302);
+  }
+
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
 
