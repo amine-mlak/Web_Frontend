@@ -11,7 +11,7 @@ const strapiHost = new URL(strapiUrl).hostname;
 const allowIndexing = process.env.ALLOW_INDEXING === "true";
 
 function frameAncestorsCsp() {
-  const origins = new Set<string>(["'self'"]);
+  const origins = new Set<string>(["'self'", "https://stats.beer.de"]);
 
   for (const raw of [
     process.env.NEXT_PUBLIC_UMAMI_URL,

@@ -24,6 +24,7 @@ export default function Umami() {
         defer
         src={src}
         data-website-id={websiteId}
+        data-performance="true"
         {...(domains ? { "data-domains": domains } : {})}
       />
       {/* The session recorder is added by UmamiClient, only after Statistik consent. */}

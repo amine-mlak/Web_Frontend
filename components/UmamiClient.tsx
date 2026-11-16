@@ -12,6 +12,7 @@ function injectScript(src: string, websiteId: string, domains?: string) {
   el.src = src;
   el.defer = true;
   el.setAttribute("data-website-id", websiteId);
+  el.setAttribute("data-performance", "true");
   if (domains) {
     el.setAttribute("data-domains", domains);
   }
