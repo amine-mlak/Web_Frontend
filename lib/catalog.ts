@@ -4,6 +4,7 @@ import {
   projectGalleryFor,
 } from "@/lib/project-photos";
 import type { CmsSeo } from "@/lib/cms-seo";
+import type { ProjectBlocks } from "@/lib/project-blocks";
 import type { FaqContent } from "@/lib/strapi";
 
 export type KitchenClusterSlug =
@@ -118,6 +119,8 @@ export type Project = {
   seoDescription?: string;
   seo?: CmsSeo;
   updatedAt?: string;
+  /** The page blocks from the CMS, once the project has been moved into them. */
+  blocks?: ProjectBlocks;
   gallery: ProjectFrame[];
   topics: KitchenTopic[];
   brands: Brand[];

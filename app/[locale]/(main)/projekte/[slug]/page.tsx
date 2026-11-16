@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReferenzPage from "@/components/catalog/ReferenzPage";
+import { projectBlocks } from "@/lib/project-blocks";
 import { findBySlug, type Project } from "@/lib/catalog";
 import { fetchProjects } from "@/lib/catalog-api";
 import { seoFor } from "@/lib/cms-seo";
@@ -47,29 +48,10 @@ export default async function ProjectPage({
     notFound();
   }
 
-  return (
-    <ReferenzPage
-      project={project}
-      others={similarProjects(project, projects)}
-      locale={locale}
-    />
-  );
-}
+  const blocks = projectBlocks(project, projects, locale === "en" ? "en" : "de");
+  const others = blocks.similar
+    .map((item) => findBySlug(projects, item))
+    .filter((item): item is Project => Boolean(item));
 
-/** Projects sharing the most themes, materials, brands and places, newest first on a tie. */
-function similarProjects(project: Project, projects: Project[]) {
-  const traits = (item: Project) =>
-    new Set([
-      ...item.topics.map((topic) => `t:${topic.slug}`),
-      ...item.materials.map((material) => `m:${material.slug}`),
-      ...item.brands.map((brand) => `b:${brand.slug}`),
-      ...item.regions.map((region) => `r:${region.slug}`),
-    ]);
-  const own = traits(project);
-  return projects
-    .filter((item) => item.slug !== project.slug)
-    .map((item) => ({ item, score: [...traits(item)].filter((trait) => own.has(trait)).length }))
-    .sort((a, b) => b.score - a.score || Number(b.item.year || 0) - Number(a.item.year || 0))
-    .slice(0, 3)
-    .map(({ item }) => item);
+  return <ReferenzPage project={project} blocks={blocks} others={others} locale={locale} />;
 }

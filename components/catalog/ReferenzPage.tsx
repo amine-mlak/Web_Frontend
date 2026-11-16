@@ -7,7 +7,8 @@ import PhotoViewer, { type ViewerPhoto } from "@/components/catalog/PhotoViewer"
 import TriptychHero from "@/components/catalog/TriptychHero";
 import type { KitchenClusterSlug, Project, ProjectFrame } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
-import { cn, photoKey } from "@/lib/utils";
+import type { ProjectBlocks } from "@/lib/project-blocks";
+import { cn } from "@/lib/utils";
 
 const COPY = {
   de: {
@@ -20,10 +21,6 @@ const COPY = {
     region: "Region",
     cluster: { farben: "Farbe", stile: "Stil", formen: "Form", inseln: "Insel", besondere: "Besonderheit" },
     others: "Ähnliche Häuser",
-    close: "Ihr Haus ist keines davon.",
-    closeText:
-      "Die Akte zeigt, was gebaut wurde. Was bei Ihnen entsteht, folgt dem Aufmaß.",
-    cta: "Ähnliches planen",
     zoom: "Foto groß ansehen",
     viewer: { close: "Schließen", previous: "Vorheriges Foto", next: "Nächstes Foto", of: "von", title: "Fotos dieser Küche" },
   },
@@ -37,20 +34,10 @@ const COPY = {
     region: "Region",
     cluster: { farben: "Colour", stile: "Style", formen: "Layout", inseln: "Island", besondere: "Feature" },
     others: "Similar houses",
-    close: "Your house is none of these.",
-    closeText: "The file shows what was built. What is made for you follows the survey.",
-    cta: "Plan something similar",
     zoom: "View photo large",
     viewer: { close: "Close", previous: "Previous photo", next: "Next photo", of: "of", title: "Photos of this kitchen" },
   },
 } as const;
-
-function paragraphs(body: string) {
-  return body
-    .split(/\n{2,}/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-}
 
 /** An alt text that describes the photo, not a file name or an old list of search words. */
 function describes(alt: string) {
@@ -90,8 +77,8 @@ type Fact = { label: string; value?: string; links: FactLink[] };
  * shows: "Form: Eckküche mit Halbinsel" carries the link to L-Form. A link with no matching fact
  * becomes its own fact, named once ("Stil: Landhausküchen").
  */
-function projectFacts(project: Project, copy: (typeof COPY)["de" | "en"]): Fact[] {
-  const facts: Fact[] = project.specs.map((spec) => ({ label: spec.label, value: spec.value, links: [] }));
+function projectFacts(project: Project, rows: ProjectBlocks["facts"], copy: (typeof COPY)["de" | "en"]): Fact[] {
+  const facts: Fact[] = rows.map((row) => ({ label: row.label, value: row.value, links: [] }));
   const attach = (link: FactLink, kind: string, match: (fact: Fact) => boolean) => {
     const fact = facts.find((item) => item.value && match(item));
     if (fact) {
@@ -199,44 +186,35 @@ function restCells(frames: ProjectFrame[]): RestCell[] {
   return cells;
 }
 
-const CLOSE_UP = /^(Kante|Ecke|Bedienknebel|Geöffnete?|Eingelassene?|Griff|Griffmulde|Detail|Nahaufnahme|Messerleiste|Armatur|Blick in)/i;
-
 export default function ReferenzPage({
   project,
+  blocks,
   others,
   locale,
 }: {
   project: Project;
+  /** The page's blocks (lib/project-blocks.ts): every photo sits where the editor put it. */
+  blocks: ProjectBlocks;
   others: Project[];
   locale: Locale;
 }) {
   const copy = COPY[locale === "en" ? "en" : "de"];
   const meta = [project.place, project.year].filter(Boolean).join(" · ");
-  const body = paragraphs(project.body);
-  // The hero photo is not repeated in the gallery, and no photo appears twice.
-  const seen = new Set(project.image ? [photoKey(project.image)] : []);
-  const gallery = project.gallery.filter((frame) => {
-    const key = photoKey(frame.src);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-  // Close-ups (an edge, a corner, knobs, an open drawer) carry the opener: the title on one,
-  // the other beside it. The alt texts describe each photo, so they tell which ones are close-ups.
-  const closeUps = gallery.filter((frame) => CLOSE_UP.test(frame.alt ?? ""));
+  const heroPhoto = blocks.hero.photo;
+  // Two detail photos beside the title photo make the three-photo opener.
   const opener =
-    project.image && closeUps.length >= 2 ? { close: closeUps[0], detail: closeUps[1] } : null;
-  if (opener) {
-    for (const used of [opener.close, opener.detail]) gallery.splice(gallery.indexOf(used), 1);
-  }
-  // The last frame moves to the closing band instead of being shown twice.
-  const closePhoto = gallery.length > 3 ? gallery.pop()! : null;
-  // The intro and each paragraph stand beside a gallery photo, in gallery order; the rest follow below.
-  const texts = [...(project.intro ? [{ lead: true, text: project.intro }] : []), ...body.map((text) => ({ lead: false, text }))];
-  const story = texts.slice(0, gallery.length).map((item, index) => ({ ...item, frame: gallery[index] }));
-  const moreText = texts.slice(story.length);
-  const rest = gallery.slice(story.length);
-  const facts = projectFacts(project, copy);
+    heroPhoto && blocks.hero.detailLeft && blocks.hero.detailRight
+      ? { close: blocks.hero.detailLeft, detail: blocks.hero.detailRight }
+      : null;
+  const closePhoto = blocks.close.photo ?? null;
+  // The intro and each section, each beside its photo.
+  const story = [
+    ...(blocks.intro ? [{ lead: true, ...blocks.intro }] : []),
+    ...blocks.sections.map((section) => ({ lead: false, ...section })),
+  ].map(({ photo, ...item }) => ({ ...item, frame: photo }));
+  const moreText = blocks.textOnly;
+  const rest = blocks.morePhotos;
+  const facts = projectFacts(project, blocks.facts, copy);
   // Landscape photos take turns between the two edge layouts; upright ones always stand free.
   const pairs = story.map((item, index) => {
     const before = story.slice(0, index).filter((other) => !other.frame.portrait).length;
@@ -245,9 +223,10 @@ export default function ReferenzPage({
   // Every photo of the page in reading order, for the full-screen viewer.
   const altOf = (alt: string | undefined) => (alt && describes(alt) ? alt : project.title);
   const photos: ViewerPhoto[] = [
-    ...(project.image ? [{ src: project.image, srcSet: project.srcSet, alt: project.title }] : []),
+    ...(heroPhoto ? [{ ...heroPhoto, alt: project.title }] : []),
     ...(opener ? [opener.close, opener.detail] : []),
-    ...gallery,
+    ...story.flatMap((item) => (item.photo2 ? [item.frame, item.photo2] : [item.frame])),
+    ...rest,
     ...(closePhoto ? [closePhoto] : []),
   ].map((frame) => ({
     src: frame.src,
@@ -284,9 +263,9 @@ export default function ReferenzPage({
           )}
         </header>
 
-        {opener && project.image ? (
+        {opener && heroPhoto ? (
           <TriptychHero
-            room={{ src: project.image, srcSet: project.srcSet, alt: project.title, zoom: zoom(project.image) }}
+            room={{ src: heroPhoto.src, srcSet: heroPhoto.srcSet, alt: project.title, zoom: zoom(heroPhoto.src) }}
             close={{ src: opener.close.src, srcSet: opener.close.srcSet, alt: opener.close.alt ?? "" }}
             detail={{
               src: opener.detail.src,
@@ -297,15 +276,15 @@ export default function ReferenzPage({
             title={project.title}
             meta={meta}
           />
-        ) : project.image ? (
+        ) : heroPhoto ? (
           <Frame
-            src={project.image}
+            src={heroPhoto.src}
             alt={project.title}
-            srcSet={project.srcSet}
+            srcSet={heroPhoto.srcSet}
             className="mt-10 aspect-[16/9] w-full lg:mt-14 lg:aspect-[2/1]"
             priority
             sizes="100vw"
-            zoom={zoom(project.image)}
+            zoom={zoom(heroPhoto.src)}
           />
         ) : null}
 
@@ -366,6 +345,7 @@ export default function ReferenzPage({
                   data-rise=""
                   className={cn("px-5 py-10 sm:px-8", item.layout.text, index % 2 === 1 ? item.layout.textFlip : item.layout.textSide)}
                 >
+                  {item.heading ? <h2 className="t-item mb-4 max-w-md text-ink">{item.heading}</h2> : null}
                   <p
                     className={
                       item.lead
@@ -375,6 +355,17 @@ export default function ReferenzPage({
                   >
                     {item.text}
                   </p>
+                  {/* "Text mit zwei Fotos": the second photo stands small under the text. */}
+                  {item.photo2 ? (
+                    <Frame
+                      src={item.photo2.src}
+                      srcSet={item.photo2.srcSet}
+                      alt={altOf(item.photo2.alt)}
+                      className={cn("mt-8 w-full max-w-xs", item.photo2.portrait ? "aspect-[4/5]" : "aspect-[4/3]")}
+                      sizes="(max-width: 1024px) 80vw, 20vw"
+                      zoom={zoom(item.photo2.src)}
+                    />
+                  ) : null}
                 </div>
               </section>
             ))}
@@ -467,12 +458,17 @@ export default function ReferenzPage({
         ) : null}
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:py-24 lg:pr-16 lg:pl-edge">
           <h2 className="t-section text-paper">
-            {copy.close}
+            {blocks.close.title}
           </h2>
           <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed font-light text-paper/80">
-            {copy.closeText}
+            {blocks.close.text}
           </p>
-          <NextSteps primary={{ href: "/beratung", label: copy.cta }} locale={locale} tone="dark" className="mt-10" />
+          <NextSteps
+            primary={{ href: blocks.close.buttonHref, label: blocks.close.buttonText }}
+            locale={locale}
+            tone="dark"
+            className="mt-10"
+          />
         </div>
       </section>
     </main>
