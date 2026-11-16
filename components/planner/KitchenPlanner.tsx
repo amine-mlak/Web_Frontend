@@ -16,7 +16,9 @@ import {
   trackCompletion,
   trackLead,
 } from "@/lib/form-tracking";
-import type { Locale } from "@/lib/i18n";
+import { useRouter } from "next/navigation";
+import { withLocale, type Locale } from "@/lib/i18n";
+import { saveThanks } from "@/lib/thanks";
 import {
   PLANNER_GROUPS,
   budgetBands,
@@ -177,6 +179,7 @@ function msSince(timestamp: number) {
 
 export default function KitchenPlanner({ content, headingLevel = "h2" }: { content: PlannerContent; headingLevel?: "h1" | "h2" }) {
   const locale = content.locale;
+  const router = useRouter();
   const ui = UI[locale];
   const Heading = headingLevel;
   const baseId = useId();
@@ -509,7 +512,10 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
         trackFormSubmit();
         const eventId = payload && typeof payload === "object" && "event_id" in payload && typeof payload.event_id === "string" ? payload.event_id : "";
         trackCompletion("quiz_complete", eventId, { form: LEAD_FORM });
-        void trackLead(eventId, { email: fields.email, phone: fields.phone, place: contact.place });
+        await trackLead(eventId, { email: fields.email, phone: fields.phone, place: contact.place });
+        // The thank-you page (/beratung/danke) is the end of the planner, as the contract asks.
+        saveThanks("planner", { name: contact.name.trim().split(/\s+/)[0] ?? "" });
+        router.push(withLocale("/beratung/danke", locale));
       }
       moved.current = true;
       setStatus("done");

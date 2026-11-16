@@ -231,16 +231,14 @@ fbq('track', 'PageView');
 </script>`;
 tag("meta", "Meta - Base + PageView", "html", html(META_BASE), [ALL_PAGES], "ad_storage");
 tag("meta", "Meta - PageView (navigation)", "html", html(`<script>window.fbq && fbq('track', 'PageView');</script>`), [T.spa], "ad_storage");
+// No second fbq('init') with the hashed contact data: Meta reports a re-init as a pixel error.
+// Matching data goes to Meta server-side (Conversions API, same eventID, so it is counted once).
 tag("meta", "Meta - Lead", "html", html(`<script>
 if (window.fbq) {
-  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}}, zp = {{DLV - user_data.address.postal_code}};
-  var am = {};
-  if (em) am.em = em;
-  if (ph) am.ph = ph.replace(/^\\+/, '');
-  if (zp) am.zp = zp;
-  if (em || ph) fbq('init', '{{Meta Pixel ID}}', am);
   var v = {{DLV - value}};
-  fbq('track', 'Lead', v ? { value: v, currency: 'EUR' } : {}, { eventID: {{DLV - event_id}} });
+  var data = { content_category: {{DLV - form}} };
+  if (v) { data.value = v; data.currency = 'EUR'; }
+  fbq('track', 'Lead', data, { eventID: {{DLV - event_id}} });
 }
 </script>`), [T.lead], "ad_storage");
 tag("meta", "Meta - Contact", "html", html(`<script>window.fbq && fbq('track', 'Contact', { content_category: {{DLV - method}} });</script>`), [T.contact], "ad_storage");
@@ -259,7 +257,7 @@ tag("pinterest", "Pinterest - Lead", "html", html(`<script>
 if (window.pintrk) {
   var em = {{DLV - user_data.sha256_email_address}};
   if (em) pintrk('set', { em: em });
-  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: 'Kuechenplaner' });
+  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: {{DLV - form}} || 'lead' });
 }
 </script>`), [T.lead], "ad_storage");
 
@@ -273,7 +271,7 @@ tag("microsoft", "Microsoft UET - Lead", "html", html(`<script>
 window.uetq = window.uetq || [];
 var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};
 if (em || ph) window.uetq.push('set', { pid: { em: em || undefined, ph: ph || undefined } });
-window.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: 'Kuechenplaner', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });
+window.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: {{DLV - form}} || 'lead', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });
 </script>`), [T.lead], "ad_storage");
 tag("microsoft", "Microsoft UET - Contact", "html", html(`<script>window.uetq = window.uetq || []; window.uetq.push('event', 'contact', { event_label: {{DLV - method}} });</script>`), [T.contact], "ad_storage");
 

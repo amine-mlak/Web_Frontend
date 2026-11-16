@@ -1,6 +1,6 @@
 {
   "exportFormatVersion": 2,
-  "exportTime": "2026-11-16 02:54:47",
+  "exportTime": "2026-11-16 04:58:37",
   "containerVersion": {
     "path": "accounts/0/containers/0/versions/0",
     "accountId": "0",
@@ -1073,7 +1073,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script>\nif (window.fbq) {\n  var em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}}, zp = {{DLV - user_data.address.postal_code}};\n  var am = {};\n  if (em) am.em = em;\n  if (ph) am.ph = ph.replace(/^\\+/, '');\n  if (zp) am.zp = zp;\n  if (em || ph) fbq('init', '{{Meta Pixel ID}}', am);\n  var v = {{DLV - value}};\n  fbq('track', 'Lead', v ? { value: v, currency: 'EUR' } : {}, { eventID: {{DLV - event_id}} });\n}\n</script>"
+            "value": "<script>\nif (window.fbq) {\n  var v = {{DLV - value}};\n  var data = { content_category: {{DLV - form}} };\n  if (v) { data.value = v; data.currency = 'EUR'; }\n  fbq('track', 'Lead', data, { eventID: {{DLV - event_id}} });\n}\n</script>"
           },
           {
             "type": "BOOLEAN",
@@ -1277,7 +1277,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script>\nif (window.pintrk) {\n  var em = {{DLV - user_data.sha256_email_address}};\n  if (em) pintrk('set', { em: em });\n  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: 'Kuechenplaner' });\n}\n</script>"
+            "value": "<script>\nif (window.pintrk) {\n  var em = {{DLV - user_data.sha256_email_address}};\n  if (em) pintrk('set', { em: em });\n  pintrk('track', 'lead', { event_id: {{DLV - event_id}}, lead_type: {{DLV - form}} || 'lead' });\n}\n</script>"
           },
           {
             "type": "BOOLEAN",
@@ -1345,7 +1345,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script>\nwindow.uetq = window.uetq || [];\nvar em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};\nif (em || ph) window.uetq.push('set', { pid: { em: em || undefined, ph: ph || undefined } });\nwindow.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: 'Kuechenplaner', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });\n</script>"
+            "value": "<script>\nwindow.uetq = window.uetq || [];\nvar em = {{DLV - user_data.sha256_email_address}}, ph = {{DLV - user_data.sha256_phone_number}};\nif (em || ph) window.uetq.push('set', { pid: { em: em || undefined, ph: ph || undefined } });\nwindow.uetq.push('event', 'submit_lead_form', { event_category: 'lead', event_label: {{DLV - form}} || 'lead', revenue_value: {{DLV - value}} || 0, currency: 'EUR' });\n</script>"
           },
           {
             "type": "BOOLEAN",

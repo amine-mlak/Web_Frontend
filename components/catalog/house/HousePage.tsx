@@ -1,4 +1,5 @@
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
+import KatalogOrder from "@/components/catalog/house/KatalogOrder";
 import { Fragment, type ReactNode } from "react";
 import Faq from "@/components/Faq";
 import PlannerSection from "@/components/planner/PlannerSection";
@@ -114,9 +115,11 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
     form: (
       <>
         {house.faq ? <Faq content={house.faq} /> : null}
-        {/* Karriere gets its job ads and the application form instead of the kitchen planner. Kontakt has its own page (app/[locale]/(main)/kontakt). */}
+        {/* Karriere gets its job ads and the application form, Katalog the order form, instead of the kitchen planner. Kontakt has its own page (app/[locale]/(main)/kontakt). */}
         {house.slug === "karriere" ? (
           <CareersSection jobs={house.jobs} locale={house.locale === "en" ? "en" : "de"} />
+        ) : house.slug === "katalog" ? (
+          <KatalogOrder />
         ) : (
           <PlannerSection />
         )}
