@@ -41,6 +41,7 @@ import {
   strapiResponsiveImage,
   type StrapiMedia,
 } from "@/lib/strapi";
+import { mapSeo, SEO_POPULATE } from "@/lib/cms-seo";
 import legacyRedirects from "@/lib/legacy-redirects.json";
 
 /** Addresses that redirect elsewhere (next.config.ts); an article living at one is never listed. */
@@ -118,7 +119,10 @@ function pageFields(row: Record<string, unknown> | null) {
     schlussText: text(row, "schlussText"),
     seoTitle: seo ? text(seo, "metaTitle") : "",
     seoDescription: seo ? text(seo, "metaDescription") : "",
+    seo: mapSeo(seo),
     contentLocale: text(row, "locale"),
+    /** Last change in the CMS (sitemap lastModified). */
+    updatedAt: text(row, "updatedAt") || undefined,
     stichworte: repeaters(row, "stichworte", (item) => ({
       a: text(item, "wert"),
       b: text(item, "zeile"),
@@ -403,6 +407,8 @@ function mapArticle(entry: unknown): Article | null {
     portrait: Boolean(cover?.width && cover?.height && cover.height > cover.width),
     category: mapCategory(row?.category) ?? undefined,
     blocks,
+    seo: mapSeo(row?.seo),
+    contentLocale: text(row, "locale"),
     // "Erschienen am" when set (the beer.de posts keep their original date), else the publish time.
     publishedAt: text(row, "erschienenAm") || text(row, "publishedAt") || undefined,
     updatedAt: text(row, "updatedAt") || undefined,
@@ -431,7 +437,6 @@ async function mapPage(entry: unknown): Promise<SitePage | null> {
     srcSet: image.srcSet,
     ctaLabel: text(row, "ctaLabel"),
     ctaUrl: text(row, "ctaUrl"),
-    updatedAt: text(row, "updatedAt") || undefined,
     ...pageFields(row),
     faq: await resolveFaqBlock(row.faq),
   };
@@ -491,11 +496,11 @@ const PROJECT_POPULATE = {
   "populate[materials][populate]": "image",
   "populate[appliances][populate]": "image",
   "populate[regions][populate]": "image",
-  "populate[seo]": "true",
+  ...SEO_POPULATE,
 };
 
 const SEO_QUERY = {
-  "populate[seo]": "true",
+  ...SEO_POPULATE,
   "populate[stichworte]": "true",
   "populate[punkte]": "true",
 };
@@ -506,7 +511,7 @@ export async function fetchKitchenTopics() {
     {
       ...LIST_QUERY,
       "populate[image]": "true",
-      "populate[seo]": "true",
+      ...SEO_POPULATE,
       "populate[stichworte]": "true",
       "populate[punkte]": "true",
     },
@@ -584,6 +589,7 @@ export async function fetchArticles() {
       "populate[cover]": "true",
       "populate[category]": "true",
       "populate[blocks][populate]": "*",
+      ...SEO_POPULATE,
     },
     mapArticle,
     FALLBACK_ARTICLES,
@@ -610,7 +616,7 @@ export async function fetchSitePages() {
       sort: "title:asc",
       "pagination[pageSize]": "50",
       "populate[image]": "true",
-      "populate[seo]": "true",
+      ...SEO_POPULATE,
       "populate[stichworte]": "true",
       // Points may carry a photo, a detail photo and a link (Innenleben shows each as a section).
       "populate[punkte][populate]": "*",

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ReferenzPage from "@/components/catalog/ReferenzPage";
 import { findBySlug, type Project } from "@/lib/catalog";
 import { fetchProjects } from "@/lib/catalog-api";
+import { seoFor } from "@/lib/cms-seo";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
@@ -29,6 +30,7 @@ export async function generateMetadata({
     description: project.intro,
     path: `/projekte/${project.slug}`,
     image: project.image,
+    cms: seoFor(await getRequestLocale(), project),
   });
 }
 

@@ -3,6 +3,7 @@ import {
   enrichProjectBody,
   projectGalleryFor,
 } from "@/lib/project-photos";
+import type { CmsSeo } from "@/lib/cms-seo";
 import type { FaqContent } from "@/lib/strapi";
 
 export type KitchenClusterSlug =
@@ -40,7 +41,9 @@ export type KitchenTopic = {
   schlussText?: string;
   seoTitle?: string;
   seoDescription?: string;
+  seo?: CmsSeo;
   contentLocale?: string;
+  updatedAt?: string;
   stichworte?: { wert: string; zeile: string }[];
   punkte?: PagePoint[];
 };
@@ -84,6 +87,10 @@ export type CmsPageFields = {
   /** The CMS "SEO" component: written for search results, may differ from the intro. */
   seoTitle?: string;
   seoDescription?: string;
+  /** The whole SEO block: title, description, share photo, noindex, canonical. */
+  seo?: CmsSeo;
+  /** Last change in the CMS. */
+  updatedAt?: string;
 };
 
 export type CatalogSpec = { label: string; value: string };
@@ -109,6 +116,8 @@ export type Project = {
   lesetext?: string;
   seoTitle?: string;
   seoDescription?: string;
+  seo?: CmsSeo;
+  updatedAt?: string;
   gallery: ProjectFrame[];
   topics: KitchenTopic[];
   brands: Brand[];
@@ -209,6 +218,8 @@ export type Article = {
   srcSet?: string;
   category?: ArticleCategory;
   blocks?: ArticleBlock[];
+  seo?: CmsSeo;
+  contentLocale?: string;
   publishedAt?: string;
   updatedAt?: string;
   /** True when the date is the original one ("Erschienen am"); the CMS update time then says nothing. */

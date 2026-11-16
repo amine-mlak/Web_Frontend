@@ -4,10 +4,12 @@ import {
   KITCHEN_CLUSTERS,
 } from "@/lib/catalog";
 import { fetchCatalog, fetchOpenJobs } from "@/lib/catalog-api";
+import type { CmsSeo } from "@/lib/cms-seo";
 import {
   GERAETE_KIND_ROUTES,
   MATERIAL_KIND_ROUTES,
 } from "@/lib/collection-entries";
+import { HELPER_PAGES } from "@/lib/helper-pages";
 import { absoluteUrl } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
 import { allowSearchIndexing } from "@/lib/umami";
@@ -34,21 +36,27 @@ const HUBS = [
   "/presse",
 ] as const;
 
+/** CMS pages that only forward elsewhere (next.config.ts) and so never belong in the sitemap. */
+const FORWARDED = new Set(["kueche-planen"]);
+
+type Entry = { lastModified?: string; seo?: CmsSeo };
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!allowSearchIndexing()) {
     return [];
   }
 
-  const paths = new Set<string>(HUBS);
+  const pages = new Map<string, Entry>(HUBS.map((path) => [path, {}]));
+  const add = (path: string, entry: Entry = {}) => pages.set(path, { ...pages.get(path), ...entry });
 
   for (const cluster of KITCHEN_CLUSTERS) {
-    paths.add(`/kuechen/${cluster.slug}`);
+    add(`/kuechen/${cluster.slug}`);
   }
   for (const route of MATERIAL_KIND_ROUTES) {
-    paths.add(route.href);
+    add(route.href);
   }
   for (const route of GERAETE_KIND_ROUTES) {
-    paths.add(route.href);
+    add(route.href);
   }
 
   const [catalog, faq] = await Promise.all([
@@ -56,50 +64,62 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchFaqHub(),
   ]);
 
+  const entry = (item: { updatedAt?: string; seo?: CmsSeo }): Entry => ({
+    lastModified: item.updatedAt,
+    seo: item.seo,
+  });
+
   for (const topic of catalog.topics) {
-    paths.add(`/kuechen/${topic.cluster}/${topic.slug}`);
+    add(`/kuechen/${topic.cluster}/${topic.slug}`, entry(topic));
   }
   for (const project of catalog.projects) {
-    paths.add(`/projekte/${project.slug}`);
+    add(`/projekte/${project.slug}`, entry(project));
   }
   for (const brand of catalog.brands) {
-    paths.add(`/marken/${brand.slug}`);
+    add(`/marken/${brand.slug}`, entry(brand));
   }
   for (const appliance of catalog.appliances) {
-    paths.add(`/geraete/${appliance.slug}`);
+    add(`/geraete/${appliance.slug}`, entry(appliance));
   }
   for (const item of catalog.furniture) {
-    paths.add(`/moebel/${item.slug}`);
+    add(`/moebel/${item.slug}`, entry(item));
   }
   for (const region of catalog.regions) {
-    paths.add(`/regionen/${region.slug}`);
+    add(`/regionen/${region.slug}`, entry(region));
   }
   for (const material of catalog.materials) {
-    paths.add(`/material/${material.slug}`);
+    add(`/material/${material.slug}`, entry(material));
   }
   for (const article of catalog.articles) {
-    paths.add(articleHref(article));
+    add(articleHref(article), entry(article));
   }
   for (const job of await fetchOpenJobs(catalog.pages.find((page) => page.slug === "karriere"))) {
-    paths.add(`/karriere/${job.slug}`);
+    add(`/karriere/${job.slug}`);
   }
   for (const page of catalog.pages) {
-    if (page.slug && page.slug !== "home") {
-      paths.add(`/${page.slug}`);
+    if (!page.slug || page.slug === "home" || FORWARDED.has(page.slug)) {
+      continue;
     }
+    // A helper page (stile, fronten …) feeds another address; that address is listed instead.
+    const helper = HELPER_PAGES[page.slug];
+    add(helper ?? `/${page.slug}`, entry(page));
   }
   for (const theme of faq.themes) {
-    paths.add(`/faq/${theme.slug}`);
+    add(`/faq/${theme.slug}`, { seo: theme.seo });
   }
 
-  return [...paths].map((path) => ({
-    url: absoluteUrl(path),
-    changeFrequency: path === "/" ? "weekly" : "monthly",
-    alternates: {
-      languages: {
-        de: absoluteUrl(path, "de"),
-        en: absoluteUrl(path, "en"),
+  return [...pages]
+    // A page marked "noindex", or one that names another address as the original, stays out.
+    .filter(([path, item]) => !item.seo?.noindex && (!item.seo?.canonicalPath || item.seo.canonicalPath === path))
+    .map(([path, item]) => ({
+      url: absoluteUrl(path),
+      ...(item.lastModified ? { lastModified: item.lastModified } : {}),
+      changeFrequency: path === "/" ? "weekly" : "monthly",
+      alternates: {
+        languages: {
+          de: absoluteUrl(path, "de"),
+          en: absoluteUrl(path, "en"),
+        },
       },
-    },
-  }));
+    }));
 }

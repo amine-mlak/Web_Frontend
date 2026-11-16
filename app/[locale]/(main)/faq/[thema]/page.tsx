@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FaqHub from "@/components/FaqHub";
 import { filterFaqItems } from "@/lib/faq";
+import { seoFor } from "@/lib/cms-seo";
 import { getRequestLocale } from "@/lib/locale";
 import { pageMetadata } from "@/lib/seo";
 import { fetchFaqHub } from "@/lib/strapi";
@@ -35,6 +36,7 @@ export async function generateMetadata({
       theme.seoDescription ||
       `${count} Fragen zu ${theme.name} – Küchenmanufaktur BEER in Wolfersdorf.`,
     path: `/faq/${theme.slug}`,
+    cms: seoFor(await getRequestLocale(), theme),
   });
 }
 

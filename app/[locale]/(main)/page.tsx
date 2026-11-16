@@ -9,6 +9,7 @@ import PlannerSection from "@/components/planner/PlannerSection";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import Process from "@/components/Process";
 import { getRequestLocale } from "@/lib/locale";
+import { seoFor } from "@/lib/cms-seo";
 import { pageMetadata } from "@/lib/seo";
 import { fetchHomeCms, type HeroIntroContent } from "@/lib/strapi";
 
@@ -16,13 +17,15 @@ export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  const { heroPanel, heroSlides } = await fetchHomeCms();
+  const home = await fetchHomeCms();
+  const { heroPanel, heroSlides } = home;
   const panel = heroPanel ?? fallbackHeroPanel[locale];
   return pageMetadata({
     title: "BEER Küchenmanufaktur | Wolfersdorf bei Freising",
     description: panel.text,
     path: "/",
     image: heroSlides[0]?.src,
+    cms: seoFor(locale, home),
   });
 }
 

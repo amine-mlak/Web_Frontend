@@ -6,6 +6,7 @@ import {
   type FaqEntry,
   type FaqTheme,
 } from "@/lib/faq";
+import { mapSeo, SEO_POPULATE, type CmsSeo } from "@/lib/cms-seo";
 import { footerFallback, type FooterContent, type SocialIcon } from "@/lib/footer";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
@@ -119,6 +120,9 @@ export type HeroIntroContent = {
 export type HomeCms = {
   title?: string;
   slug?: string;
+  /** The landing's SEO block and the language it was written in. */
+  seo?: CmsSeo;
+  contentLocale?: string;
   heroSlides: HeroSlide[];
   heroPanel: HeroIntroContent | null;
   kacheln: KachelnContent | null;
@@ -192,6 +196,8 @@ type StrapiFaqBlock = {
 type StrapiLandingEntry = {
   title?: string;
   slug?: string;
+  locale?: string;
+  seo?: unknown;
   hero?: {
     eyebrow?: string;
     title?: string;
@@ -615,6 +621,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     "populate[faq][populate][questions][populate]": "item",
     "populate[faq][populate][items]": "true",
     "populate[beratung]": "true",
+    ...SEO_POPULATE,
   });
   const entry = Array.isArray(payload?.data) ? payload.data[0] : payload?.data;
 
@@ -642,6 +649,8 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     return {
       title: entry.title?.trim(),
       slug: entry.slug?.trim(),
+      seo: mapSeo(entry.seo),
+      contentLocale: entry.locale,
       heroSlides: [],
       heroPanel,
       kacheln: null,
@@ -655,6 +664,8 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   return {
     title: entry.title?.trim(),
     slug: entry.slug?.trim(),
+    seo: mapSeo(entry.seo),
+    contentLocale: entry.locale,
     heroSlides,
     heroPanel,
     kacheln,
@@ -741,6 +752,8 @@ function mapFaqTheme(entry: unknown): FaqTheme | null {
     description: String(row.description ?? "").trim(),
     seoTitle: String(row.seoTitle ?? "").trim() || name,
     seoDescription: String(row.seoDescription ?? "").trim(),
+    seo: mapSeo(row.seo),
+    contentLocale: String(row.locale ?? "").trim() || undefined,
     order: Number(row.order ?? 0) || 0,
   };
 }
@@ -886,6 +899,7 @@ export async function fetchFaqHub(): Promise<{
     strapiGet<{ data?: unknown }>("/api/faq-themes", {
       sort: "order:asc",
       "pagination[pageSize]": "100",
+      ...SEO_POPULATE,
     }),
     fetchAllFaqItems(),
   ]);

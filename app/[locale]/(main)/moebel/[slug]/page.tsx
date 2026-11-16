@@ -5,6 +5,7 @@ import SamplePage from "@/components/catalog/entries/SamplePage";
 import { cmsValue, findBySlug } from "@/lib/catalog";
 import { fetchFurniture, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentFurnitureItem } from "@/lib/collection-entries";
+import { seoFor } from "@/lib/cms-seo";
 import { entryReading } from "@/lib/entry-reading";
 import { getRequestLocale } from "@/lib/locale";
 
@@ -31,6 +32,7 @@ export async function generateMetadata({
     cmsValue(locale, item, item.seoDescription) || reading.description,
     `/moebel/${item.slug}`,
     item.image,
+    seoFor(locale, item),
   );
 }
 

@@ -22,6 +22,7 @@ import { coverOf, freshCover, kitchenPhotos, roomPhoto, uniquePagePhotos } from 
 import { cmsLarge } from "@/lib/beer-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
+import { seoFor } from "@/lib/cms-seo";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { topicReading, type TopicReadingCopy } from "@/lib/topic-reading";
 import { projectFeature, type ProjectFeatureData } from "@/lib/project-features";
@@ -1827,5 +1828,6 @@ export async function topicMetadata(topic: KitchenTopic): Promise<Metadata> {
     description: cmsValue(locale, topic, topic.seoDescription) || reading?.description || local.intro,
     path: `/kuechen/${topic.cluster}/${topic.slug}`,
     image: topic.image,
+    cms: seoFor(locale, topic),
   });
 }

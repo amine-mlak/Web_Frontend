@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: `${heading} | BEER Küchenmanufaktur`,
     description: planner.intro,
     path: "/beratung",
+    cms: planner.seo,
   });
 }
 

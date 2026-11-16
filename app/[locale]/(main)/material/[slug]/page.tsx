@@ -14,7 +14,8 @@ import {
   presentMaterialKind,
 } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
-import { isSeededDescription, isSeededTitle, pageReading, pageTitle } from "@/lib/page-reading";
+import { seoFor } from "@/lib/cms-seo";
+import { isSeededDescription, isSeededTitle, pageReading, pageTitle, withoutSeeds } from "@/lib/page-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 // FAQ theme in the CMS that answers questions about each category.
@@ -61,6 +62,7 @@ export async function generateMetadata({
       : cmsValue(locale, item, item.seoDescription),
     `/material/${item.slug}`,
     item.image,
+    withoutSeeds(seoFor(locale, item)),
   );
 }
 

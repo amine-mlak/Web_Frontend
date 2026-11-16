@@ -12,6 +12,7 @@ import {
   type PlannerMediaFile,
   type PlannerMediaName,
 } from "@/lib/kitchen-planner-media";
+import { mapSeo, SEO_POPULATE } from "@/lib/cms-seo";
 import { strapiGet, strapiMediaUrl } from "@/lib/strapi";
 
 /**
@@ -286,6 +287,7 @@ type StrapiMediaRef = {
 } | null;
 type StrapiPlanner = {
   locale?: string;
+  seo?: unknown;
   eyebrow?: string;
   title?: string;
   titleEmphasis?: string;
@@ -349,6 +351,7 @@ function mapPlanner(cms: StrapiPlanner, locale: Locale): PlannerContent | null {
 
   return {
     locale,
+    seo: mapSeo(cms.seo),
     eyebrow: cms.eyebrow?.trim() || fallback.eyebrow,
     title: cms.title?.trim() || fallback.title,
     titleEmphasis: cms.titleEmphasis?.trim() ?? fallback.titleEmphasis,
@@ -374,6 +377,7 @@ export async function getKitchenPlanner(locale: Locale): Promise<PlannerContent>
     locale,
     "populate[steps]": "true",
     "populate[groups][populate][options][populate]": "image",
+    ...SEO_POPULATE,
   });
   const cms = payload?.data;
   // strapiGet falls back to German when English is empty; keep the English
