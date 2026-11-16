@@ -73,7 +73,9 @@ function TeaserStrip({
               alt=""
               fill
               loading="lazy"
-              sizes={single ? "(max-width: 1024px) 80vw, 55vw" : "(max-width: 1024px) 30vw, 19vw"}
+              // Tall tiles crop landscape photos to their height, so the photo shown is wider than the
+              // tile: ask for that width, or the browser loads a small version and it looks soft.
+              sizes={single ? "(max-width: 1024px) 80vw, 55vw" : teasers.length === 2 ? "(max-width: 1024px) 50vw, 38vw" : "(max-width: 1024px) 40vw, 26vw"}
               className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
               style={{ objectPosition: teaser.objectPosition ?? "center" }}
             />
