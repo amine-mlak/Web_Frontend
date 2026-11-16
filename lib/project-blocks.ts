@@ -75,7 +75,11 @@ export function similarProjects(project: Project, projects: Project[]) {
 
 /** The page's blocks: from the CMS when filled there, else built from the old fields. */
 export function projectBlocks(project: Project, projects: Project[], locale: "de" | "en"): ProjectBlocks {
-  return project.blocks ?? legacyProjectBlocks(project, similarProjects(project, projects).map((item) => item.slug), locale);
+  // Blocks written in another language (German blocks on an English page) wait for their translation.
+  if (project.blocks && (project.contentLocale || "de") === locale) {
+    return project.blocks;
+  }
+  return legacyProjectBlocks(project, similarProjects(project, projects).map((item) => item.slug), locale);
 }
 
 /** Close-ups (an edge, a corner, knobs, an open drawer), told apart by their alt texts. */
