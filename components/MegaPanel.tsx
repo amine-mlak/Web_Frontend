@@ -79,7 +79,22 @@ function TeaserStrip({
               className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
               style={{ objectPosition: teaser.objectPosition ?? "center" }}
             />
-            <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent" />
+            {single && teaser.caption !== panel.label ? (
+              // A single photo whose caption is more than the menu's name (e.g. "Welche Küche passt
+              // zu Ihnen?") carries it as a large white line, magazine style. The caption stays in
+              // the CMS, so it is editable and translated; tiles named like their menu stay clean.
+              <>
+                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-5 left-5 max-w-[70%] font-serif text-[30px] leading-[1.05] font-medium tracking-[-0.01em] text-white lg:bottom-7 lg:left-7 lg:text-[40px] xl:text-[48px]"
+                >
+                  {teaser.caption}
+                </span>
+              </>
+            ) : (
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/35 to-transparent" />
+            )}
             <span
               aria-hidden="true"
               className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-black/25 px-3.5 py-1.5 font-sans text-[13px] tracking-[0.02em] text-white backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-ink lg:right-4 lg:bottom-4"
