@@ -14,7 +14,7 @@ import HouseBanner from "@/components/catalog/house/HouseBanner";
 import HouseBody from "@/components/catalog/house/HouseBody";
 import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
-import { parseTeamVoices } from "@/lib/team-voices";
+import { parseTeamVoices, type TeamVoice } from "@/lib/team-voices";
 import LegalPage from "@/components/catalog/house/LegalPage";
 import { PointSections } from "@/components/catalog/entries/InteriorPage";
 import {
@@ -48,12 +48,13 @@ const COPY = {
   },
 } as const;
 
-export default function HousePage({ house: presented }: { house: PresentedHouse }) {
+export default function HousePage({ house: presented, team = [] }: { house: PresentedHouse; team?: TeamVoice[] }) {
   const house = withUniquePhotos(presented);
   const copy = COPY[house.locale === "en" ? "en" : "de"];
   const paragraphs = houseParagraphs(house.body);
-  // Team: the CMS text is one block per person; it shows inside the people cards, not as a list.
-  const voices = house.layout === "people" ? parseTeamVoices(house.body, house.people) : [];
+  // Team: people from the CMS collection "Team". Only if it is empty or unreachable, the page
+  // text (one block per person) still becomes cards, without photos.
+  const voices = team.length ? team : house.layout === "people" ? parseTeamVoices(house.body, []) : [];
 
   if (house.kind === "legal" || house.layout === "legal") {
     return <LegalPage house={house} />;

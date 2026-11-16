@@ -107,27 +107,6 @@ const CREW = {
   table: u("beer_hebauf_werk2_mitarbeiter_essen_44852ab4f9.jpg"),
 };
 
-const PEOPLE: HousePerson[] = [
-  { src: u("beer_kuechen_mitarbeiter_a_beer_23cffd2e13.jpg"), name: "A. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_c_beer_bf930a4cc3.jpg"), name: "C. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_j_beer_5efafb8961.jpg"), name: "J. Beer" },
-  { src: u("beer_kuechen_mitarbeiter_a_wagner_8efc9e4bf2.jpg"), name: "A. Wagner" },
-  { src: u("beer_kuechen_mitarbeiter_a_hilgers_3b3ee2f0be.jpg"), name: "A. Hilgers" },
-  { src: u("beer_kuechen_mitarbeiter_benedikt_h_neu_c81c42696f.jpg"), name: "Benedikt H." },
-  { src: u("beer_kuechen_mitarbeiter_c_fellner_bfd9b8bdea.jpg"), name: "C. Fellner" },
-  { src: u("beer_kuechen_mitarbeiter_d_ciglaric_neu_444c56cd1f.jpg"), name: "D. Ciglaric" },
-  { src: u("beer_kuechen_mitarbeiter_d_vogl_384cf65a31.jpg"), name: "D. Vogl" },
-  { src: u("beer_kuechen_mitarbeiter_j_mirlach_d81cec0fdf.jpg"), name: "J. Mirlach" },
-  { src: u("beer_kuechen_mitarbeiter_j_sperrer_77470e7e96.jpg"), name: "J. Sperrer" },
-  { src: u("beer_kuechen_mitarbeiter_r_geier_acd98e783d.jpg"), name: "R. Geier" },
-  { src: u("beer_kuechen_mitarbeiter_r_huber_27fcadb598.jpg"), name: "R. Huber" },
-  { src: u("beer_kuechen_mitarbeiter_r_pecho_115fc16ed5.jpg"), name: "R. Pecho" },
-  { src: u("beer_kuechen_mitarbeiter_r_stauber_2f1af7bd56.jpg"), name: "R. Stauber" },
-  { src: u("beer_kuechen_mitarbeiter_r_vater_c846f62245.jpg"), name: "R. Vater" },
-  { src: u("beer_kuechen_mitarbeiter_s_ostertag_917ca9232a.jpg"), name: "S. Ostertag" },
-  { src: u("beer_kuechen_mitarbeiter_thomas_l_c840172867.jpg"), name: "Thomas L." },
-  { src: u("beer_kuechen_mitarbeiter_v_fuerbacher_3f322dc099.jpg"), name: "V. Fürbacher" },
-];
 
 function shot(src: string, alt: string): HouseShot {
   return { src, alt };
@@ -188,7 +167,8 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     visit: ROOM.r0058,
     gallery: [shot(CREW.group, "Team in der Manufaktur"), shot(CREW.table, "Werkstatt")],
     chapters: [],
-    people: PEOPLE,
+    // The people come from the CMS collection "Team" (lib/team-members.ts).
+    people: [],
   },
   nachhaltigkeit: {
     layout: "lasting",
@@ -216,7 +196,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     visit: ROOM.r0002,
     gallery: [shot(WORKSHOP.two, "Werkstatt"), shot(CREW.group, "Team")],
     chapters: [],
-    people: PEOPLE.slice(0, 8),
+    people: [],
   },
   kontakt: {
     layout: "place",
