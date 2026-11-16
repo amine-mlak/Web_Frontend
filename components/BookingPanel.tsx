@@ -13,27 +13,31 @@ import { cn } from "@/lib/utils";
 /**
  * Booking an appointment on /kontakt: the team's Microsoft Bookings calendar in the site's own
  * design. Services, people and free times are read live through /api/booking (lib/bookings.ts),
- * and the booking lands in the same calendar as one made on Microsoft's page. The steps follow
- * that page: what, with whom, day, time, contact details.
+ * and the booking lands in the same calendar as one made on Microsoft's page.
+ *
+ * Built like the kitchen planner: one step per screen (what, with whom, when, details), a thin
+ * progress bar, and each step slides in from the right (the `planner-screen` styles in globals.css).
+ * The screen is as high as the window under the header, so nothing below jumps while it changes.
  */
 
 type Status = "idle" | "sending" | "done" | "error";
 type Booked = { service: string; when: string; staff: string; name: string };
+type Step = "service" | "staff" | "when" | "details";
 
 const UI: Record<Locale, Record<string, string>> = {
   de: {
-    eyebrow: "Erstgespräch",
     title: "Termin vereinbaren",
-    text: "Planung im Showroom oder ein kurzer Anruf vorab: Wählen Sie, was passt, und buchen Sie Tag und Uhrzeit direkt im Kalender unseres Teams.",
-    call: "Oder rufen Sie an:",
+    progress: "Schritt {n} von {total}",
+    back: "Zurück",
+    stepService: "Was möchten Sie vereinbaren?",
+    hintService: "Kostenlos und unverbindlich, direkt im Kalender unseres Teams.",
+    stepStaff: "Mit wem möchten Sie sprechen?",
+    anyone: "Wer gerade frei ist",
+    stepWhen: "Wann passt es Ihnen?",
+    stepDetails: "Ihre Angaben",
+    call: "Lieber anrufen?",
     phoneLabel: "08168 909910",
     planner: "Erst Ideen sammeln? Zum Küchenplaner",
-    stepService: "Was möchten Sie vereinbaren?",
-    stepStaff: "Mit wem?",
-    anyone: "Wer gerade frei ist",
-    stepDate: "Tag",
-    stepTime: "Uhrzeit",
-    stepDetails: "Ihre Angaben",
     phoneCall: "am Telefon",
     hour: "Stunde",
     hours: "Stunden",
@@ -42,7 +46,6 @@ const UI: Record<Locale, Record<string, string>> = {
     next: "Nächster Monat",
     loading: "Freie Zeiten werden geladen …",
     noneMonth: "In diesem Monat ist nichts mehr frei.",
-    noneDay: "Bitte zuerst einen Tag wählen.",
     monthError: "Die freien Zeiten konnten nicht geladen werden.",
     retry: "Noch einmal versuchen",
     zone: "Alle Zeiten in deutscher Zeit.",
@@ -69,18 +72,18 @@ const UI: Record<Locale, Record<string, string>> = {
     external: "Kalender bei Microsoft öffnen",
   },
   en: {
-    eyebrow: "First conversation",
     title: "Book an appointment",
-    text: "Planning in the showroom or a short call first: choose what suits you and book the day and time directly in our team's calendar.",
-    call: "Or call us:",
+    progress: "Step {n} of {total}",
+    back: "Back",
+    stepService: "What would you like to book?",
+    hintService: "Free and without obligation, directly in our team's calendar.",
+    stepStaff: "Who would you like to talk to?",
+    anyone: "Whoever is free",
+    stepWhen: "When suits you?",
+    stepDetails: "Your details",
+    call: "Rather call?",
     phoneLabel: "+49 8168 909910",
     planner: "Collect ideas first? To the kitchen planner",
-    stepService: "What would you like to book?",
-    stepStaff: "With whom?",
-    anyone: "Whoever is free",
-    stepDate: "Day",
-    stepTime: "Time",
-    stepDetails: "Your details",
     phoneCall: "by phone",
     hour: "hour",
     hours: "hours",
@@ -89,7 +92,6 @@ const UI: Record<Locale, Record<string, string>> = {
     next: "Next month",
     loading: "Loading free times …",
     noneMonth: "Nothing is free in this month any more.",
-    noneDay: "Please choose a day first.",
     monthError: "The free times could not be loaded.",
     retry: "Try again",
     zone: "All times are German time.",
@@ -134,6 +136,11 @@ const WEEKDAYS: Record<Locale, string[]> = {
   en: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
 };
 
+/** Pause after a tap before the next step slides in, as in the planner. */
+const ADVANCE_MS = 180;
+/** Length of the leaving animation (`planner-out`). */
+const LEAVE_MS = 220;
+
 function pad(value: number) {
   return String(value).padStart(2, "0");
 }
@@ -165,9 +172,12 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
   const ui = UI[locale];
   const tr = (value: string) => (locale === "en" ? (EN_TEXT[value] ?? value) : value);
   const baseId = useId();
-  const doneHeading = useRef<HTMLHeadingElement>(null);
+  const screenHeading = useRef<HTMLHeadingElement>(null);
   const loadedAt = useRef(0);
   const browsed = useRef(false);
+  const moved = useRef(false);
+  const advanceTimer = useRef(0);
+  const leaveTimer = useRef(0);
 
   /** undefined: loading, null: not reachable. */
   const [setup, setSetup] = useState<BookingSetup | null | undefined>(undefined);
@@ -184,6 +194,9 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
   const [challenge, setChallenge] = useState("");
   const [booked, setBooked] = useState<Booked | null>(null);
   const [today] = useState(() => new Date());
+  const [step, setStep] = useState<Step>("service");
+  const [direction, setDirection] = useState<"forward" | "back" | undefined>(undefined);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -240,9 +253,18 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
     };
   }, [serviceId]);
 
+  // After a step change (not on the first view) the new heading takes the focus, for keyboards and screen readers.
   useEffect(() => {
-    if (status === "done") doneHeading.current?.focus();
-  }, [status]);
+    if (moved.current && !leaving) screenHeading.current?.focus({ preventScroll: true });
+  }, [step, status, leaving]);
+
+  useEffect(
+    () => () => {
+      window.clearTimeout(advanceTimer.current);
+      window.clearTimeout(leaveTimer.current);
+    },
+    [],
+  );
 
   const days = loaded && loaded !== "error" ? loaded : {};
   const slotsOf = (day: string) => (days[day] ?? []).filter((slot) => !staffId || slot.s.includes(staffId));
@@ -252,25 +274,73 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
   const activeDate = freeDays.includes(date) ? date : (freeDays[0] ?? "");
   const slots = activeDate ? slotsOf(activeDate) : [];
   const activeTime = slots.some((slot) => slot.t === time) ? time : "";
-  const people = service ? (setup?.staff ?? []).filter((person) => service.staff.includes(person.id)) : [];
+  const peopleOf = (item: BookingService | undefined) => (item ? (setup?.staff ?? []).filter((person) => item.staff.includes(person.id)) : []);
+  const people = peopleOf(service);
+
+  // The "with whom" step only exists when the chosen service (or, before a choice, any service) has more than one person.
+  const hasStaffStep = service ? people.length > 1 : (setup?.services ?? []).some((item) => peopleOf(item).length > 1);
+  const steps: Step[] = ["service", ...(hasStaffStep ? (["staff"] as const) : []), "when", "details"];
+  const index = Math.max(0, steps.indexOf(step));
 
   const intl = locale === "de" ? "de-DE" : "en-GB";
   const monthLabel = (value: string) => {
-    const [year, index] = value.split("-").map(Number);
-    return new Intl.DateTimeFormat(intl, { month: "long", year: "numeric", timeZone: "UTC" }).format(Date.UTC(year, index - 1, 1));
+    const [year, at] = value.split("-").map(Number);
+    return new Intl.DateTimeFormat(intl, { month: "long", year: "numeric", timeZone: "UTC" }).format(Date.UTC(year, at - 1, 1));
   };
   const dayLabel = (value: string) => new Intl.DateTimeFormat(intl, { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(Date.parse(`${value}T00:00:00Z`));
-  const whenLabel = (day: string, clock: string) => `${dayLabel(day)}, ${clock}${ui.clock ? ` ${ui.clock}` : ""}`;
+  const whenLabel = (day: string, at: string) => `${dayLabel(day)}, ${at}${ui.clock ? ` ${ui.clock}` : ""}`;
   const length = (minutes: number) => (minutes % 60 === 0 ? `${minutes / 60} ${minutes === 60 ? ui.hour : ui.hours}` : `${minutes} ${ui.minutes}`);
 
+  /** Moves to another step: the current one slides out, the next slides in from the side it comes from. */
+  function goTo(next: Step, towards: "forward" | "back") {
+    window.clearTimeout(advanceTimer.current);
+    window.clearTimeout(leaveTimer.current);
+    const apply = () => {
+      moved.current = true;
+      setLeaving(false);
+      setDirection(towards);
+      setStep(next);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      apply();
+      return;
+    }
+    setDirection(towards);
+    setLeaving(true);
+    leaveTimer.current = window.setTimeout(apply, LEAVE_MS);
+  }
+  /** A tap that answers the step moves on after a short pause, so the choice is seen first. */
+  function advance(next: Step) {
+    window.clearTimeout(advanceTimer.current);
+    advanceTimer.current = window.setTimeout(() => goTo(next, "forward"), ADVANCE_MS);
+  }
+  function back() {
+    if (index > 0) goTo(steps[index - 1], "back");
+  }
+
   function chooseService(id: string) {
-    browsed.current = false;
-    setServiceId(id);
-    setStaffId("");
-    setMonth(firstMonth);
-    setDate("");
-    setTime("");
+    const chosen = setup?.services.find((item) => item.id === id);
+    if (id !== serviceId) {
+      browsed.current = false;
+      setServiceId(id);
+      setStaffId("");
+      setMonth(firstMonth);
+      setDate("");
+      setTime("");
+    }
     setError("");
+    advance(peopleOf(chosen).length > 1 ? "staff" : "when");
+  }
+  function chooseStaff(id: string) {
+    setStaffId(id);
+    setTime("");
+    advance("when");
+  }
+  function chooseTime(value: string) {
+    setDate(activeDate);
+    setTime(value);
+    setError("");
+    advance("details");
   }
   function turnMonth(by: number) {
     browsed.current = true;
@@ -335,10 +405,11 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
         setStatus("error");
         setChallenge("");
         if (result.error === "slot_taken") {
-          // Someone was quicker: load the month afresh and let the visitor pick again.
+          // Someone was quicker: load the month afresh and send the visitor back to pick again.
           setError(ui.errTaken);
           setTime("");
           setMonths((current) => Object.fromEntries(Object.entries(current).filter(([entry]) => entry !== key)));
+          goTo("when", "back");
         } else {
           setError(ui.errSend);
         }
@@ -355,6 +426,7 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
         staff: typeof result.staff === "string" ? result.staff : "",
         name: fields.name.trim().split(/\s+/)[0] ?? "",
       });
+      moved.current = true;
       setStatus("done");
       setChallenge("");
     } catch {
@@ -363,12 +435,11 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
     }
   }
 
-  const stepTitle = "font-sans text-[13px] tracking-[0.08em] text-muted uppercase";
   const input = "mt-0.5 w-full border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink";
   const label = "font-sans text-[13px] text-muted";
   const chip = (on: boolean) =>
     cn(
-      "min-h-11 border px-3 py-2 font-sans text-[15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
+      "min-h-12 border px-4 py-2 font-sans text-[15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
       on ? "border-ink bg-ink text-paper" : "border-line bg-paper text-ink hover:border-ink",
     );
 
@@ -393,11 +464,13 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
   );
 
   function calendar() {
-    const [year, index] = month.split("-").map(Number);
-    const lead = (new Date(Date.UTC(year, index - 1, 1)).getUTCDay() + 6) % 7;
-    const count = new Date(Date.UTC(year, index, 0)).getUTCDate();
+    const [year, at] = month.split("-").map(Number);
+    const lead = (new Date(Date.UTC(year, at - 1, 1)).getUTCDay() + 6) % 7;
+    const count = new Date(Date.UTC(year, at, 0)).getUTCDate();
+    // Always six weeks, so the calendar keeps its height from month to month.
     const cells: (string | null)[] = [...Array<null>(lead).fill(null), ...Array.from({ length: count }, (_, day) => `${month}-${pad(day + 1)}`)];
-    const arrow = "flex h-10 w-10 items-center justify-center text-ink transition-opacity hover:opacity-60 disabled:opacity-25";
+    while (cells.length < 42) cells.push(null);
+    const arrow = "flex h-11 w-11 items-center justify-center text-ink transition-opacity hover:opacity-60 disabled:opacity-25";
     return (
       <div>
         <div className="flex items-center justify-between">
@@ -418,9 +491,9 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
             </span>
           ))}
         </div>
-        <div className={cn("grid grid-cols-7 justify-items-center gap-y-1", loaded === undefined && "opacity-40")}>
+        <div className={cn("grid grid-cols-7 justify-items-center gap-y-1 transition-opacity", loaded === undefined && "opacity-40")}>
           {cells.map((day, position) => {
-            if (!day) return <span key={`blank-${position}`} />;
+            if (!day) return <span key={`blank-${position}`} className="h-10 w-10" />;
             const free = freeDays.includes(day);
             const on = day === activeDate;
             return (
@@ -448,196 +521,224 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
     );
   }
 
-  return (
-    <section id="termin" className="scroll-mt-20 bg-karte px-5 py-16 sm:px-8 md:py-24 lg:px-gutter" aria-labelledby="termin-title">
-      <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-4">
-          <p className="type-eyebrow text-gold">{ui.eyebrow}</p>
-          <h2 id="termin-title" className="t-section mt-4 text-ink">
-            {ui.title}
-          </h2>
-          <p className="mt-5 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{ui.text}</p>
-          <p className="mt-6 font-sans text-[16px] text-ink">
-            {ui.call}{" "}
-            <a href="tel:+498168909910" className="whitespace-nowrap underline underline-offset-4" data-umami-event="tel_click">
-              {ui.phoneLabel}
-            </a>
-          </p>
-          <LocaleLink href={MAIN_ACTIONS.planner.href} className="btn-quiet mt-6" data-umami-event="cta_planner" data-umami-event-placement="booking">
-            {ui.planner}
-          </LocaleLink>
-        </div>
+  const headings: Record<Step, string> = { service: ui.stepService, staff: ui.stepStaff, when: ui.stepWhen, details: ui.stepDetails };
+  const progress = ui.progress.replace("{n}", String(index + 1)).replace("{total}", String(steps.length));
+  const centered = "my-auto px-6 py-16 text-center sm:px-10";
 
-        <div className="bg-paper px-5 py-8 sm:px-10 sm:py-10 lg:col-span-8">
-          {status === "done" && booked ? (
-            <div className="py-10 text-center">
-              <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
-              <h3 ref={doneHeading} tabIndex={-1} className="t-feature text-ink outline-none">
-                {ui.doneTitle.replace("{name}", booked.name)}
-              </h3>
-              <p className="mx-auto mt-5 max-w-md font-sans text-[17px] leading-[1.6] text-ink">
-                {booked.service}
-                <br />
-                {booked.when}
-                {booked.staff ? `, ${ui.doneWith} ${booked.staff}` : ""}
-              </p>
-              <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{ui.doneText}</p>
-            </div>
-          ) : setup === null ? (
-            <div className="py-6">
-              <p className="max-w-md font-sans text-[16px] leading-[1.7] text-ink">{ui.down}</p>
-              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="pill pill-primary mt-7" data-umami-event="booking_new_tab">
-                {ui.external}
+  function screenBody() {
+    if (step === "service") {
+      return (
+        <>
+          <div role="radiogroup" aria-labelledby={`${baseId}-screen`} className="mx-auto grid w-full max-w-5xl gap-5 sm:grid-cols-2 sm:gap-8 lg:gap-12">
+            {setup === undefined
+              ? [0, 1].map((item) => <div key={item} className="h-32 animate-pulse border border-line bg-karte motion-reduce:animate-none sm:h-72" />)
+              : (setup?.services ?? []).map((item) => {
+                  const on = item.id === serviceId;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      onClick={() => chooseService(item.id)}
+                      data-umami-event="booking_service"
+                      className={cn(
+                        "flex flex-col items-start border p-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:min-h-72 sm:p-10",
+                        on ? "border-ink bg-karte" : "border-line hover:border-ink hover:bg-karte/50",
+                      )}
+                    >
+                      <span className="font-serif text-[22px] leading-snug text-ink sm:text-[26px]">{tr(item.title)}</span>
+                      <span className="mt-3 hidden font-sans text-[15px] leading-[1.65] font-light text-ink/85 sm:block">{tr(item.description)}</span>
+                      <span className="mt-auto pt-3 font-sans sm:pt-6 text-[13px] tracking-[0.08em] text-gold uppercase">
+                        {length(item.minutes)} · {item.place || ui.phoneCall}
+                      </span>
+                    </button>
+                  );
+                })}
+          </div>
+          <p className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-center font-sans text-[14px] text-muted">
+            <span>
+              {ui.call}{" "}
+              <a href="tel:+498168909910" className="whitespace-nowrap text-ink underline underline-offset-4" data-umami-event="tel_click">
+                {ui.phoneLabel}
               </a>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-10">
-              <div role="radiogroup" aria-labelledby={`${baseId}-service`}>
-                <h3 id={`${baseId}-service`} className={stepTitle}>
-                  {ui.stepService}
-                </h3>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {setup === undefined
-                    ? [0, 1].map((item) => <div key={item} className="h-40 animate-pulse border border-line bg-karte motion-reduce:animate-none" />)
-                    : setup.services.map((item) => {
-                        const on = item.id === serviceId;
-                        return (
-                          <button
-                            key={item.id}
-                            type="button"
-                            role="radio"
-                            aria-checked={on}
-                            onClick={() => chooseService(item.id)}
-                            data-umami-event="booking_service"
-                            className={cn(
-                              "flex flex-col items-start border p-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
-                              on ? "border-ink bg-karte" : "border-line hover:border-ink",
-                            )}
-                          >
-                            <span className="font-sans text-[18px] leading-snug text-ink">{tr(item.title)}</span>
-                            <span className="mt-2 font-sans text-[14px] leading-[1.6] font-light text-ink/85">{tr(item.description)}</span>
-                            <span className="mt-auto pt-4 font-sans text-[13px] text-gold">
-                              {length(item.minutes)} · {item.place || ui.phoneCall}
-                            </span>
-                          </button>
-                        );
-                      })}
-                </div>
+            </span>
+            <LocaleLink href={MAIN_ACTIONS.planner.href} className="underline underline-offset-4 hover:text-ink" data-umami-event="cta_planner" data-umami-event-placement="booking">
+              {ui.planner}
+            </LocaleLink>
+          </p>
+        </>
+      );
+    }
+
+    if (step === "staff") {
+      return (
+        <div role="radiogroup" aria-labelledby={`${baseId}-screen`} className="mx-auto grid w-full max-w-3xl gap-3 sm:grid-cols-2 sm:gap-4">
+          {[{ id: "", name: ui.anyone }, ...people].map((person) => (
+            <button key={person.id || "any"} type="button" role="radio" aria-checked={staffId === person.id} onClick={() => chooseStaff(person.id)} className={cn(chip(staffId === person.id), "min-h-14 text-[16px]")}>
+              {person.name}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    if (step === "when") {
+      return (
+        <div className="mx-auto grid w-full max-w-4xl gap-10 md:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] md:gap-14">
+          <div>{calendar()}</div>
+          {/* A fixed height for the times, so a day with many or few slots does not move the page. */}
+          <div className="md:min-h-[22rem]" aria-live="polite">
+            {loaded === undefined ? (
+              <p className="font-sans text-[15px] text-muted">{ui.loading}</p>
+            ) : loaded === "error" ? (
+              <div>
+                <p className="font-sans text-[15px] text-ink">{ui.monthError}</p>
+                <button type="button" className="btn-quiet mt-4" onClick={() => setMonths((current) => Object.fromEntries(Object.entries(current).filter(([entry]) => entry !== key)))}>
+                  {ui.retry}
+                </button>
               </div>
+            ) : freeDays.length === 0 ? (
+              <p className="font-sans text-[15px] text-muted">{ui.noneMonth}</p>
+            ) : (
+              <>
+                <p className="font-sans text-[16px] text-ink">{dayLabel(activeDate)}</p>
+                <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4" role="radiogroup" aria-label={ui.stepWhen}>
+                  {slots.map((slot) => (
+                    <button key={slot.t} type="button" role="radio" aria-checked={slot.t === activeTime} onClick={() => chooseTime(slot.t)} className={chip(slot.t === activeTime)}>
+                      {slot.t}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-4 font-sans text-[13px] text-muted">{ui.zone}</p>
+              </>
+            )}
+            <p role="alert" className="mt-4 font-sans text-[14px] text-destructive empty:hidden">
+              {error}
+            </p>
+          </div>
+        </div>
+      );
+    }
 
-              {service ? (
-                <>
-                  {people.length > 1 ? (
-                    <div role="radiogroup" aria-labelledby={`${baseId}-staff`}>
-                      <h3 id={`${baseId}-staff`} className={stepTitle}>
-                        {ui.stepStaff}
-                      </h3>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {[{ id: "", name: ui.anyone }, ...people].map((person) => (
-                          <button key={person.id || "any"} type="button" role="radio" aria-checked={staffId === person.id} onClick={() => setStaffId(person.id)} className={chip(staffId === person.id)}>
-                            {person.name}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <div className="grid gap-10 md:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] md:gap-12">
-                    <div>
-                      <h3 className={stepTitle}>{ui.stepDate}</h3>
-                      <div className="mt-3">{calendar()}</div>
-                    </div>
-                    <div>
-                      <h3 className={stepTitle}>{ui.stepTime}</h3>
-                      <div className="mt-4" aria-live="polite">
-                        {loaded === undefined ? (
-                          <p className="font-sans text-[15px] text-muted">{ui.loading}</p>
-                        ) : loaded === "error" ? (
-                          <div>
-                            <p className="font-sans text-[15px] text-ink">{ui.monthError}</p>
-                            <button type="button" className="btn-quiet mt-4" onClick={() => setMonths((current) => Object.fromEntries(Object.entries(current).filter(([entry]) => entry !== key)))}>
-                              {ui.retry}
-                            </button>
-                          </div>
-                        ) : freeDays.length === 0 ? (
-                          <p className="font-sans text-[15px] text-muted">{ui.noneMonth}</p>
-                        ) : (
-                          <>
-                            <p className="font-sans text-[16px] text-ink">{dayLabel(activeDate)}</p>
-                            <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-3 xl:grid-cols-4" role="radiogroup" aria-label={ui.stepTime}>
-                              {slots.map((slot) => (
-                                <button key={slot.t} type="button" role="radio" aria-checked={slot.t === activeTime} onClick={() => setTime(slot.t)} className={chip(slot.t === activeTime)}>
-                                  {slot.t}
-                                </button>
-                              ))}
-                            </div>
-                            <p className="mt-4 font-sans text-[13px] text-muted">{ui.zone}</p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {activeTime ? (
-                    <form onSubmit={submit} noValidate className="relative">
-                      <h3 className={stepTitle}>{ui.stepDetails}</h3>
-                      <p className="mt-3 font-sans text-[16px] text-ink">
-                        {tr(service.title)} · {whenLabel(activeDate, activeTime)}
-                      </p>
-                      {/* Honeypot for bots; hidden from people and screen readers. */}
-                      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-                        <label>
-                          Website
-                          <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
-                        </label>
-                      </div>
-                      <div className="mt-6 grid gap-x-7 gap-y-5 sm:grid-cols-2">
-                        {field("name", "text", "name")}
-                        {field("email", "email", "email")}
-                        {field("phone", "tel", "tel")}
-                      </div>
-                      {service.questions.map((question) => (
-                        <div key={question.id} className="mt-5">
-                          <label htmlFor={`${baseId}-q-${question.id}`} className={label}>
-                            {tr(question.text)}
-                            {question.required ? <span aria-hidden="true"> *</span> : null}
-                          </label>
-                          <textarea
-                            id={`${baseId}-q-${question.id}`}
-                            rows={1}
-                            maxLength={1000}
-                            value={answers[question.id] ?? ""}
-                            onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
-                            className={`${input} max-h-40 resize-none [field-sizing:content]`}
-                          />
-                        </div>
-                      ))}
-                      <p role="alert" className="mt-4 font-sans text-[14px] text-destructive empty:hidden">
-                        {error}
-                      </p>
-                      <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
-                        <button type="submit" disabled={status === "sending"} className="pill pill-primary" data-umami-event="booking_submit">
-                          {status === "sending" ? ui.sending : ui.submit}
-                        </button>
-                        <p className="max-w-sm font-sans text-[13px] leading-5 text-muted">
-                          {ui.privacy}{" "}
-                          <LocaleLink href="/datenschutz" className="underline underline-offset-4 hover:text-ink">
-                            {ui.privacyLink}
-                          </LocaleLink>
-                        </p>
-                      </div>
-                    </form>
-                  ) : (
-                    <p role="alert" className="font-sans text-[14px] text-destructive empty:hidden">
-                      {error}
-                    </p>
-                  )}
-                </>
-              ) : null}
-            </div>
-          )}
+    // Details.
+    return service && activeTime ? (
+      <div className="mx-auto w-full max-w-3xl">
+        <p className="text-center font-sans text-[16px] text-ink">
+          {tr(service.title)}
+          <br />
+          <span className="text-muted">{whenLabel(activeDate, activeTime)}</span>
+        </p>
+        <div className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+          {field("name", "text", "name")}
+          {field("email", "email", "email")}
+          {field("phone", "tel", "tel")}
+        </div>
+        {service.questions.map((question) => (
+          <div key={question.id} className="mt-5">
+            <label htmlFor={`${baseId}-q-${question.id}`} className={label}>
+              {tr(question.text)}
+              {question.required ? <span aria-hidden="true"> *</span> : null}
+            </label>
+            <textarea
+              id={`${baseId}-q-${question.id}`}
+              rows={1}
+              maxLength={1000}
+              value={answers[question.id] ?? ""}
+              onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
+              className={`${input} max-h-32 resize-none [field-sizing:content]`}
+            />
+          </div>
+        ))}
+        <p role="alert" className="mt-4 font-sans text-[14px] text-destructive empty:hidden">
+          {error}
+        </p>
+        <div className="mt-8 flex flex-col items-center gap-4 text-center">
+          <button type="submit" disabled={status === "sending"} className="pill pill-primary" data-umami-event="booking_submit">
+            {status === "sending" ? ui.sending : ui.submit}
+          </button>
+          <p className="max-w-md font-sans text-[13px] leading-5 text-muted">
+            {ui.privacy}{" "}
+            <LocaleLink href="/datenschutz" className="underline underline-offset-4 hover:text-ink">
+              {ui.privacyLink}
+            </LocaleLink>
+          </p>
         </div>
       </div>
+    ) : null;
+  }
+
+  return (
+    <section id="termin" className="scroll-mt-14 bg-paper" aria-labelledby={`${baseId}-title`}>
+      <h1 id={`${baseId}-title`} className="sr-only">
+        {ui.title}
+      </h1>
+      {/* One step fills one screen: as high as the window under the header. */}
+      <form onSubmit={submit} noValidate className="relative flex min-h-[calc(100svh-var(--header-space))] flex-col bg-paper">
+        {/* Honeypot for bots; hidden from people and screen readers. */}
+        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label>
+            Website
+            <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+
+        {status === "done" && booked ? (
+          <div className={centered}>
+            <div aria-hidden="true" className="mx-auto mb-7 h-px w-14 bg-messing" />
+            <h2 ref={screenHeading} tabIndex={-1} className="font-serif text-[24px] leading-tight font-medium text-ink outline-none md:text-[32px] xl:text-[42px]">
+              {ui.doneTitle.replace("{name}", booked.name)}
+            </h2>
+            <p className="mx-auto mt-5 max-w-md font-sans text-[17px] leading-[1.6] text-ink">
+              {booked.service}
+              <br />
+              {booked.when}
+              {booked.staff ? `, ${ui.doneWith} ${booked.staff}` : ""}
+            </p>
+            <p className="mx-auto mt-4 max-w-md font-sans text-[16px] leading-[1.7] font-light text-ink/85">{ui.doneText}</p>
+          </div>
+        ) : setup === null ? (
+          <div className={centered}>
+            <h2 className="font-serif text-[24px] leading-tight font-medium text-ink md:text-[32px]">{ui.title}</h2>
+            <p className="mx-auto mt-5 max-w-md font-sans text-[16px] leading-[1.7] text-ink">{ui.down}</p>
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="pill pill-primary mt-7" data-umami-event="booking_new_tab">
+              {ui.external}
+            </a>
+          </div>
+        ) : (
+          <>
+            {/* Back + thin progress bar across the full width, as in the planner. */}
+            <div className="flex min-h-11 shrink-0 items-center justify-between px-5 pt-1 sm:px-10 sm:pt-2">
+              {index > 0 ? (
+                <button type="button" onClick={back} className="inline-flex min-h-10 items-center gap-2 font-sans text-[14px] text-ink hover:opacity-70">
+                  <span aria-hidden="true">←</span> {ui.back}
+                </button>
+              ) : (
+                <span />
+              )}
+              <p className="font-sans text-[12px] tracking-[0.16em] text-muted uppercase">{progress}</p>
+            </div>
+            <div className="mt-1 h-1 shrink-0 bg-line" role="progressbar" aria-valuemin={1} aria-valuemax={steps.length} aria-valuenow={index + 1} aria-label={progress}>
+              <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / steps.length) * 100}%` }} />
+            </div>
+
+            <div
+              key={step}
+              data-direction={direction}
+              data-leaving={leaving ? "" : undefined}
+              className="planner-screen flex flex-1 flex-col px-5 pt-6 pb-10 sm:px-10 sm:pt-12 lg:pt-16"
+            >
+              <div className="mx-auto max-w-3xl shrink-0 text-center">
+                <h2 id={`${baseId}-screen`} ref={screenHeading} tabIndex={-1} className="font-serif text-[26px] leading-[1.15] font-medium text-ink outline-none md:text-[36px]">
+                  {headings[step]}
+                </h2>
+                {step === "service" ? <p className="mt-2 font-sans text-[15px] leading-snug text-muted">{ui.hintService}</p> : null}
+              </div>
+              <div className="mt-6 flex w-full flex-col sm:mt-12">{screenBody()}</div>
+            </div>
+          </>
+        )}
+      </form>
     </section>
   );
 }
