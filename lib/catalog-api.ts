@@ -791,9 +791,11 @@ async function loadMapped<T>(
 }
 
 const PROJECT_POPULATE = {
-  // Second key keeps the order stable across pages when years are equal or empty.
+  // Then the order the projects were created in: it stays put when a project is published again
+  // (publishing gives the entry a new id, so sorting by id moved it to the end).
   "sort[0]": "year:desc",
-  "sort[1]": "id:asc",
+  "sort[1]": "createdAt:asc",
+  "sort[2]": "id:asc",
   "populate[image]": "true",
   "populate[gallery]": "true",
   "populate[specs]": "true",
