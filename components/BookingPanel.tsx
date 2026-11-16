@@ -5,7 +5,7 @@ import LocaleLink from "@/components/LocaleLink";
 import type { BookingDays, BookingService, BookingSetup } from "@/lib/bookings";
 import { conversionContext } from "@/lib/conversion";
 import { BOOKING_URL, MAIN_ACTIONS } from "@/lib/cta";
-import { trackLead } from "@/lib/form-tracking";
+import { trackCompletion, trackLead } from "@/lib/form-tracking";
 import type { Locale } from "@/lib/i18n";
 import { validateLeadFields } from "@/lib/lead-fields";
 import { cn } from "@/lib/utils";
@@ -345,7 +345,9 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
         return;
       }
       if (!honeypot) {
-        void trackLead(typeof result.event_id === "string" ? result.event_id : "", { email: checked.email, phone: checked.phone, place: "" }, "termin");
+        const eventId = typeof result.event_id === "string" ? result.event_id : "";
+        trackCompletion("booking_complete", eventId, { form: "termin", service: tr(service.title) });
+        void trackLead(eventId, { email: checked.email, phone: checked.phone, place: "" }, "termin");
       }
       setBooked({
         service: tr(service.title),

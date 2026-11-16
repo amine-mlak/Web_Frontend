@@ -13,6 +13,7 @@ import {
   trackFormSubmit,
   trackFormView,
   trackFormWizardStep,
+  trackCompletion,
   trackLead,
 } from "@/lib/form-tracking";
 import type { Locale } from "@/lib/i18n";
@@ -25,7 +26,7 @@ import {
   type PlannerGroupKey,
   type PlannerOption,
 } from "@/lib/kitchen-planner-model";
-import { validateLeadFields } from "@/lib/lead-fields";
+import { LEAD_FORM, validateLeadFields } from "@/lib/lead-fields";
 import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
 import { PLAN_ACCEPT, PLAN_MAX_BYTES, planExtension } from "@/lib/plan-file";
 import { cn } from "@/lib/utils";
@@ -507,6 +508,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
         trackFormWizardStep("kontakt");
         trackFormSubmit();
         const eventId = payload && typeof payload === "object" && "event_id" in payload && typeof payload.event_id === "string" ? payload.event_id : "";
+        trackCompletion("quiz_complete", eventId, { form: LEAD_FORM });
         void trackLead(eventId, { email: fields.email, phone: fields.phone, place: contact.place });
       }
       moved.current = true;

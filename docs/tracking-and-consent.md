@@ -51,12 +51,15 @@ GTM setting, no code change.
 | Moment | Event | GA4 | Google Ads | Meta | Pinterest | Microsoft | LinkedIn |
 |---|---|---|---|---|---|---|---|
 | Planner funnel | `form_view/start/step/attempt/error/submit` | funnel | – | – | – | – | – |
-| Planner sent (the lead) | `generate_lead` + `event_id`, `value`, `user_data` (hashes only, Marketing only) | `generate_lead` | primary conversion + enhanced conversions | `Lead` | `lead` | `submit_lead_form` | conversion |
+| Planner, booklet or booking sent (the lead) | `generate_lead` + `event_id`, `form` (`beratung`, `booklet`, `termin`), `value`, `user_data` (hashes only, Marketing only) | `generate_lead` | primary conversion + enhanced conversions | `Lead` | `lead` | `submit_lead_form` | conversion |
+| Planner finished (offer: quiz) | `quiz_complete` + `event_id`, `form` | `quiz_complete` | – (counted by `generate_lead`) | – | – | – | – |
+| Booklet / catalogue ordered | `katalog_order` + `event_id`, `booklet`, `delivery` | `katalog_order` | – (counted by `generate_lead`) | – | – | – | – |
+| Appointment booked (Bookings calendar on /kontakt) | `booking_complete` + `event_id`, `service` | `booking_complete` | – (counted by `generate_lead`) | `Schedule` | – | – | – |
 | Phone / e-mail click | `contact` (`method`, `placement`) | `contact` | secondary (phone) | `Contact` | – | `contact` | – |
 | Route | `get_directions` | `get_directions` | secondary | `FindLocation` | – | – | – |
 | Social link | `social_click` (`network`) | `social_click` | – | – | – | – | – |
 | Navigation | `page_view_spa` | (enhanced measurement) | remarketing | `PageView` | `page` | (auto) | (auto) |
-| Later: appointment, signed order | n8n → sGTM webhook (phase 2) | | offline conversion | `Schedule` / `Purchase` | | | |
+| Later: signed order | n8n → sGTM / Data Manager API | | offline conversion | `Purchase` | | | |
 
 `user_data` = `sha256_email_address`, `sha256_phone_number` (E.164, +49 default),
 `address.postal_code`, `address.country` (`lib/hash.ts`). The raw e-mail and phone
