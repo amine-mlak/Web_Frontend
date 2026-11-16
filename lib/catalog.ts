@@ -4,6 +4,7 @@ import {
   projectGalleryFor,
 } from "@/lib/project-photos";
 import type { CmsSeo } from "@/lib/cms-seo";
+import type { PageBlocks } from "@/lib/page-blocks";
 import type { ProjectBlocks } from "@/lib/project-blocks";
 import type { FaqContent } from "@/lib/strapi";
 
@@ -47,6 +48,8 @@ export type KitchenTopic = {
   updatedAt?: string;
   stichworte?: { wert: string; zeile: string }[];
   punkte?: PagePoint[];
+  /** The page blocks from the Küchen collections (Formen, Stile, Farben, Inseln, Besondere). */
+  blocks?: PageBlocks;
 };
 
 export function cmsValue(

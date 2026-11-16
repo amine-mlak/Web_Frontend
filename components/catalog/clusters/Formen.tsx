@@ -71,7 +71,7 @@ export function FormenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
 
       <PointsSection hub={hub} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={hub.showcaseTitle || housesTitle(hub.locale)} />
       <PageGuide hub={hub} />
       <PageQuestions hub={hub} />
       <OtherForms hub={hub} />

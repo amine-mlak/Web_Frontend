@@ -27,6 +27,7 @@ import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { topicReading, type TopicReadingCopy } from "@/lib/topic-reading";
 import { projectFeature, type ProjectFeatureData } from "@/lib/project-features";
 import type { PhotoStory, StoryPhoto } from "@/lib/photo-match";
+import type { GuidePick, PageBlocks, PortraitPick, QuestionPick } from "@/lib/page-blocks";
 
 export type PresentedTopic = PresentedCluster & {
   lookTitle: string;
@@ -51,6 +52,20 @@ export type PresentedTopic = PresentedCluster & {
   placeHref?: string;
   /** The page's address and the name of its subject: lib/page-depth.ts lists by address what else the page shows. */
   depth?: { path: string; name?: string };
+  /** The page is built from its CMS blocks (lib/page-blocks.ts): every photo and list is the editor's. */
+  fromBlocks?: boolean;
+  /** The reading text is the CMS block as it stands: no paragraph added, no check for seeded text. */
+  readingFromBlocks?: boolean;
+  /** "Küchen im Porträt": the heading over the kitchens. */
+  showcaseTitle?: string;
+  /** "Weitere Küchen": the heading over the cards after the portraits. */
+  moreHousesTitle?: string;
+  /** Colour pages: the heading over every kitchen in the colour. */
+  allHousesTitle?: string;
+  /** "Ratgeber" picked in the CMS (article slugs); without it lib/page-depth.ts decides. */
+  guidePick?: GuidePick;
+  /** "Häufige Fragen" picked in the CMS; without it lib/page-depth.ts decides. */
+  questionPick?: QuestionPick;
 };
 
 export type TopicFeature = ProjectFeatureData;
@@ -1816,7 +1831,136 @@ export function presentTopic(
     siblingEyebrow: siblingHead.eyebrow,
     siblingTitle: siblingHead.title,
   };
-  return uniquePagePhotos(page, photo);
+  return withBlocks(uniquePagePhotos(page, photo), cluster, topic.slug, cms?.blocks, clusterTopics, projects, locale);
+}
+
+const houseOf = (project: Project): ClusterHouse => ({
+  href: `/projekte/${project.slug}`,
+  title: project.title,
+  meta: [project.place, project.year].filter(Boolean).join(" · "),
+  image: project.image,
+});
+
+/** A kitchen of "Küchen im Porträt" with the two photos the editor chose for it. */
+function portraitFeature(project: Project, pick: PortraitPick): TopicFeature {
+  const base = projectFeature(project);
+  return {
+    ...base,
+    image: pick.photo?.src ?? base.image,
+    srcSet: pick.photo ? pick.photo.srcSet : base.srcSet,
+    detail: pick.detail ? { src: pick.detail.src, srcSet: pick.detail.srcSet, alt: pick.detail.alt || project.title } : undefined,
+  };
+}
+
+/**
+ * The page from its CMS blocks: each block replaces what the presenter worked out in code (texts,
+ * photos, lists). Blocks that are missing leave the presenter's value, so a page can move over
+ * block by block.
+ */
+function withBlocks(
+  page: PresentedTopic,
+  cluster: KitchenClusterSlug,
+  slug: string,
+  blocks: PageBlocks | undefined,
+  clusterTopics: KitchenTopic[],
+  projects: Project[],
+  locale: Locale,
+): PresentedTopic {
+  if (!blocks) {
+    return page;
+  }
+  const next: PresentedTopic = { ...page, fromBlocks: true };
+  const bySlug = new Map(projects.map((project) => [project.slug, project]));
+  if (blocks.head) {
+    next.title = blocks.head.title;
+    next.emphasis = blocks.head.emphasis;
+    next.lede = blocks.head.lede;
+    if (blocks.head.photo) next.heroImage = cmsLarge(blocks.head.photo.src, 2560);
+    if (blocks.head.hex) next.hex = blocks.head.hex;
+  }
+  if (blocks.facts) {
+    next.facts = blocks.facts.rows;
+    // "Eckdaten mit Foto" carries the page's first photo.
+    if (blocks.facts.photo) next.heroImage = cmsLarge(blocks.facts.photo.src, 2560);
+  }
+  if (blocks.statement) {
+    next.statement = blocks.statement.text;
+    next.statementNote = blocks.statement.note;
+    next.branches = blocks.statement.points.map((point, index) => ({
+      ...(page.branches[index] ?? page.branches[0]),
+      title: point.title,
+      text: point.text,
+      alt: point.title,
+      kicker: String(index + 1).padStart(2, "0"),
+      points: [],
+      caption: point.title,
+    }));
+  }
+  if (blocks.twoPhotos?.left) next.statementImage = cmsLarge(blocks.twoPhotos.left.src, 1800);
+  if (blocks.twoPhotos?.right) next.statementImageB = cmsLarge(blocks.twoPhotos.right.src, 1800);
+  if (blocks.reading) {
+    next.ueberschrift = blocks.reading.heading;
+    next.lesetext = blocks.reading.text;
+    next.readingFromBlocks = true;
+  }
+  if (blocks.portraits) {
+    next.showcaseTitle = blocks.portraits.title;
+    next.features = blocks.portraits.items.flatMap((pick) => {
+      const project = bySlug.get(pick.slug);
+      return project ? [portraitFeature(project, pick)] : [];
+    });
+  }
+  const featured = new Set((next.features ?? []).map((feature) => feature.href));
+  if (cluster === "farben") {
+    // Every kitchen in this colour comes by itself; the portraits above are not repeated.
+    next.taggedHouses = projects
+      .filter((project) => project.topics.some((item) => item.slug === slug))
+      .map(houseOf)
+      .filter((house) => !featured.has(house.href));
+    if (blocks.allHousesTitle) next.allHousesTitle = blocks.allHousesTitle;
+  } else if (blocks.houses) {
+    next.moreHousesTitle = blocks.houses.title;
+    const houses = blocks.houses.slugs.flatMap((slug) => {
+      const project = bySlug.get(slug);
+      return project ? [houseOf(project)] : [];
+    });
+    next.taggedHouses = houses;
+    next.houses = houses;
+  }
+  if (blocks.siblings) {
+    const picks = blocks.siblings.flatMap((pick) => {
+      const target = clusterTopics.find((item) => item.slug === pick.slug);
+      return target ? [{ pick, target }] : [];
+    });
+    next.siblings = picks.map(({ pick, target }) => {
+      const copy = topicCopy(target, locale);
+      return {
+        href: `/kuechen/${cluster}/${target.slug}`,
+        title: copy.name,
+        text: copy.intro,
+        image: pick.photo?.src ?? target.image,
+      };
+    });
+    if (cluster === "farben") {
+      next.swatches = picks.map(({ pick, target }) => ({
+        href: `/kuechen/${cluster}/${target.slug}`,
+        title: topicCopy(target, locale).name,
+        hex: target.hex,
+        image: pick.photo?.src ?? target.image,
+        count: projects.filter((project) => project.topics.some((item) => item.slug === target.slug)).length,
+      }));
+    }
+  }
+  if (blocks.guide) next.guidePick = blocks.guide;
+  if (blocks.questions) next.questionPick = blocks.questions;
+  if (blocks.close) {
+    next.closeTitle = blocks.close.title;
+    next.closeText = blocks.close.text;
+    if (blocks.close.photo) next.closeImage = cmsLarge(blocks.close.photo.src, 1920);
+    if (blocks.close.buttonText) next.ctaLabel = blocks.close.buttonText;
+    if (blocks.close.buttonHref) next.ctaHref = blocks.close.buttonHref;
+  }
+  return next;
 }
 
 export async function topicMetadata(topic: KitchenTopic): Promise<Metadata> {

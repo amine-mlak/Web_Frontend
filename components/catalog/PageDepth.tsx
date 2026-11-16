@@ -110,14 +110,17 @@ function ArticleRows({ items, summary = false }: { items: Article[]; summary?: b
  * The articles exist in German only, so the block is left out in English.
  */
 export async function PageGuide({ hub, path }: Props) {
-  const depth = depthOf({ hub, path });
+  // The articles picked in the page's "Ratgeber" block; pages without it follow lib/page-depth.ts.
+  const pick = hub.guidePick;
+  const depth = pick ? { guide: pick.main, more: pick.more } : depthOf({ hub, path });
   if (!depth || hub.locale === "en" || (!depth.guide && !depth.more?.length)) {
     return null;
   }
 
   const articles = await fetchArticles();
+  const find = (key?: string) => (pick ? articles.find((item) => item.slug === key) : findArticle(articles, key));
   const picked = [depth.guide, ...(depth.more ?? [])]
-    .map((key) => findArticle(articles, key))
+    .map((key) => find(key))
     .filter((item): item is Article => Boolean(item));
   const list = picked.filter((item, index) => picked.findIndex((other) => other.slug === item.slug) === index);
   const feature = list[0];
@@ -125,7 +128,7 @@ export async function PageGuide({ hub, path }: Props) {
     return null;
   }
   // Only the article named as the page's guide is quoted; the others are linked.
-  const excerpt = depth.guide && findArticle(articles, depth.guide) === feature ? guideExcerpt(feature.body) : null;
+  const excerpt = depth.guide && find(depth.guide) === feature ? guideExcerpt(feature.body) : null;
 
   if (!excerpt) {
     return (
@@ -237,6 +240,22 @@ export function PageQuestions({
   limit?: number;
   narrow?: boolean;
 }) {
+  // The questions picked in the page's "Häufige Fragen" block, exactly those and in that order.
+  const pick = hub.questionPick;
+  if (pick) {
+    return (
+      <Questions
+        slugs={pick.slugs}
+        theme={pick.theme}
+        name={pick.title || hub.depth?.name}
+        title={hub.title}
+        locale={hub.locale}
+        limit={pick.slugs.length}
+        fillUp={false}
+        narrow={narrow}
+      />
+    );
+  }
   const depth = depthOf({ hub, path });
   return (
     <Questions

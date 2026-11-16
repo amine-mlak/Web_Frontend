@@ -80,7 +80,7 @@ export function InselnTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
       ) : null}
 
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={hub.showcaseTitle || housesTitle(hub.locale)} />
       <PageGuide hub={hub} />
       <PageQuestions hub={hub} />
       <SoftClose hub={hub} />

@@ -39,7 +39,11 @@ export default function KitchenShowcase({
           <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={hub.locale} level={3} />
         ))}
       </div>
-      <HouseLine houses={further} title={hub.locale === "en" ? "More kitchens" : "Weitere Küchen"} sub />
+      <HouseLine
+        houses={further}
+        title={hub.moreHousesTitle || (hub.locale === "en" ? "More kitchens" : "Weitere Küchen")}
+        sub
+      />
     </section>
   );
 }

@@ -5,9 +5,11 @@ import { topicPlaces } from "@/lib/topic-places";
 import { topicReading, type TopicReadingCopy } from "@/lib/topic-reading";
 import { cn } from "@/lib/utils";
 
-function fromCms(cms?: { ueberschrift?: string; lesetext?: string; title?: string }) {
+type ReadingCms = { ueberschrift?: string; lesetext?: string; title?: string; readingFromBlocks?: boolean };
+
+function fromCms(cms?: ReadingCms) {
   const body = cms?.lesetext?.trim();
-  if (!body || isSeededReading(body)) {
+  if (!body || (!cms?.readingFromBlocks && isSeededReading(body))) {
     return null;
   }
   const heading = cms?.ueberschrift?.trim() || cms?.title || "";
@@ -20,6 +22,35 @@ function fromCms(cms?: { ueberschrift?: string; lesetext?: string; title?: strin
       .map((part) => part.trim())
       .filter(Boolean),
   } satisfies TopicReadingCopy;
+}
+
+/**
+ * The reading text as the page shows it: heading and paragraphs. The CMS text comes first, then the
+ * text given by the page, then the topic text in code; a text that names no place gets the page's
+ * own paragraph on where BEER builds. A text from the CMS blocks stands as it is.
+ */
+export function readingCopy({
+  slug,
+  locale,
+  copy: given,
+  cms,
+}: {
+  slug?: string;
+  locale: Locale;
+  copy?: TopicReadingCopy | null;
+  cms?: ReadingCms;
+}): TopicReadingCopy | null {
+  const copy = fromCms(cms) ?? given ?? (slug ? topicReading(slug, locale === "en" ? "en" : "de") : null);
+  if (!copy) {
+    return null;
+  }
+  if (cms?.readingFromBlocks && fromCms(cms)) {
+    return copy;
+  }
+  const where = slug ? topicPlaces(slug, locale) : null;
+  return where && !copy.paragraphs.some((paragraph) => namesPlace(paragraph, locale))
+    ? { ...copy, paragraphs: [...copy.paragraphs, where] }
+    : copy;
 }
 
 /**
@@ -39,19 +70,15 @@ export default function TopicReading({
   slug?: string;
   locale: Locale;
   copy?: TopicReadingCopy | null;
-  cms?: { ueberschrift?: string; lesetext?: string; title?: string };
+  cms?: ReadingCms;
   /** The page's own address, so a place page does not link to itself. */
   self?: string;
 }) {
-  const copy = fromCms(cms) ?? given ?? (slug ? topicReading(slug, locale === "en" ? "en" : "de") : null);
+  const copy = readingCopy({ slug, locale, copy: given, cms });
   if (!copy) {
     return null;
   }
-  const where = slug ? topicPlaces(slug, locale) : null;
-  const paragraphs =
-    where && !copy.paragraphs.some((paragraph) => namesPlace(paragraph, locale))
-      ? [...copy.paragraphs, where]
-      : copy.paragraphs;
+  const paragraphs = copy.paragraphs;
   const id = `reading-${slug ?? "seite"}`;
   const seen = new Set<string>();
   const first = paragraphs.findIndex((paragraph) => !paragraph.startsWith("## "));

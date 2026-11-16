@@ -42,6 +42,7 @@ import {
   type StrapiMedia,
 } from "@/lib/strapi";
 import { mapSeo, SEO_POPULATE } from "@/lib/cms-seo";
+import type { PageBlocks } from "@/lib/page-blocks";
 import { PROJECT_CLOSE, type ProjectBlocks, type ProjectSection } from "@/lib/project-blocks";
 import legacyRedirects from "@/lib/legacy-redirects.json";
 
@@ -346,6 +347,257 @@ function mapProjectBlocks(row: Record<string, unknown> | null, locale: "de" | "e
   };
 }
 
+/** A single (non-repeatable) block of an entry, or null. */
+function blockOf(row: Record<string, unknown> | null, key: string): Record<string, unknown> | null {
+  const value = row?.[key];
+  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+}
+
+/** The slug of a relation inside a block ("kueche", "artikel", "item" …). */
+function slugOf(item: Record<string, unknown> | null, key: string) {
+  return text(flattenEntity(item?.[key]), "slug");
+}
+
+/**
+ * The shared page blocks (components seite.*) of an entry; `siblings` names the entry's list of the
+ * other pages of its group and the relation inside each item. Undefined while the entry has none.
+ */
+function mapPageBlocks(
+  row: Record<string, unknown> | null,
+  siblings?: { field: string; target: string },
+): PageBlocks | undefined {
+  if (!row) {
+    return undefined;
+  }
+  const blocks: PageBlocks = {};
+  const kopf = blockOf(row, "kopf");
+  if (kopf && text(kopf, "titel")) {
+    blocks.head = {
+      title: text(kopf, "titel"),
+      emphasis: text(kopf, "betonung"),
+      lede: text(kopf, "einleitung"),
+      photo: mapFrame(kopf.titelfoto),
+      hex: text(kopf, "farbton") || undefined,
+    };
+  }
+  const eckdaten = blockOf(row, "eckdaten");
+  const rows = flattenCollection(eckdaten?.zeilen)
+    .map((item) => ({ value: text(item, "wert"), label: text(item, "zeile") }))
+    .filter((item) => item.value && item.label);
+  if (rows.length) {
+    blocks.facts = { rows, photo: mapFrame(eckdaten?.foto) };
+  }
+  const kern = blockOf(row, "kernaussage");
+  if (kern && text(kern, "satz")) {
+    blocks.statement = {
+      text: text(kern, "satz"),
+      note: text(kern, "hinweis"),
+      points: flattenCollection(kern.punkte)
+        .map((item) => ({ title: text(item, "titel"), text: text(item, "text") }))
+        .filter((item) => item.title && item.text),
+    };
+  }
+  const zwei = blockOf(row, "zweiFotos");
+  if (zwei) {
+    blocks.twoPhotos = { left: mapFrame(zwei.fotoLinks), right: mapFrame(zwei.fotoRechts) };
+  }
+  const lese = blockOf(row, "lesetext");
+  if (lese && text(lese, "text")) {
+    blocks.reading = { heading: text(lese, "ueberschrift"), text: text(lese, "text") };
+  }
+  const portraet = blockOf(row, "kuechenPortraet");
+  if (portraet) {
+    blocks.portraits = {
+      title: text(portraet, "titel"),
+      items: flattenCollection(portraet.kuechen)
+        .map((item) => ({ slug: slugOf(item, "kueche"), photo: mapFrame(item.foto), detail: mapFrame(item.detailfoto) }))
+        .filter((item) => item.slug),
+    };
+  }
+  const weitere = blockOf(row, "weitereKuechen");
+  if (weitere) {
+    blocks.houses = {
+      title: text(weitere, "titel"),
+      slugs: flattenCollection(weitere.kuechen).map((item) => slugOf(item, "kueche")).filter(Boolean),
+    };
+  }
+  if (text(row, "alleKuechenTitel")) {
+    blocks.allHousesTitle = text(row, "alleKuechenTitel");
+  }
+  if (siblings && Array.isArray(row[siblings.field])) {
+    blocks.siblings = flattenCollection(row[siblings.field])
+      .map((item) => ({ slug: slugOf(item, siblings.target), photo: mapFrame(item.foto) }))
+      .filter((item) => item.slug);
+  }
+  const ratgeber = blockOf(row, "ratgeber");
+  if (ratgeber) {
+    blocks.guide = {
+      main: slugOf(ratgeber, "artikel") || undefined,
+      more: flattenCollection(ratgeber.weitere).map((item) => slugOf(item, "artikel")).filter(Boolean),
+    };
+  }
+  const fragen = blockOf(row, "fragen");
+  if (fragen) {
+    blocks.questions = {
+      title: text(fragen, "titel"),
+      theme: slugOf(fragen, "thema") || undefined,
+      slugs: flattenCollection(fragen.fragen).map((item) => slugOf(item, "item")).filter(Boolean),
+    };
+  }
+  const schluss = blockOf(row, "schluss");
+  if (schluss && text(schluss, "titel")) {
+    blocks.close = {
+      title: text(schluss, "titel"),
+      text: text(schluss, "text"),
+      photo: mapFrame(schluss.foto),
+      buttonText: text(schluss, "buttonText"),
+      buttonHref: text(schluss, "buttonZiel"),
+    };
+  }
+  return Object.keys(blocks).length ? blocks : undefined;
+}
+
+/** What to populate for each page block (component seite.*). */
+const BLOCK_POPULATE: Record<string, Record<string, string>> = {
+  kopf: { "populate[kopf][populate]": "*" },
+  eckdaten: { "populate[eckdaten][populate]": "*" },
+  kernaussage: { "populate[kernaussage][populate]": "*" },
+  zweiFotos: { "populate[zweiFotos][populate]": "*" },
+  lesetext: { "populate[lesetext]": "true" },
+  kuechenPortraet: {
+    "populate[kuechenPortraet][populate][kuechen][populate][kueche][fields][0]": "slug",
+    "populate[kuechenPortraet][populate][kuechen][populate][foto]": "true",
+    "populate[kuechenPortraet][populate][kuechen][populate][detailfoto]": "true",
+  },
+  weitereKuechen: { "populate[weitereKuechen][populate][kuechen][populate][kueche][fields][0]": "slug" },
+  ratgeber: {
+    "populate[ratgeber][populate][artikel][fields][0]": "slug",
+    "populate[ratgeber][populate][weitere][populate][artikel][fields][0]": "slug",
+  },
+  fragen: {
+    "populate[fragen][populate][thema][fields][0]": "slug",
+    "populate[fragen][populate][fragen][populate][item][fields][0]": "slug",
+  },
+  schluss: { "populate[schluss][populate]": "*" },
+};
+
+/** The populate query for a page with these blocks and this list of other pages of its group. */
+function blocksQuery(blocks: string[], siblings?: { field: string; target: string; photo: boolean }) {
+  const query: Record<string, string> = {};
+  for (const name of blocks) {
+    Object.assign(query, BLOCK_POPULATE[name]);
+  }
+  if (siblings) {
+    query[`populate[${siblings.field}][populate][${siblings.target}][fields][0]`] = "slug";
+    if (siblings.photo) {
+      query[`populate[${siblings.field}][populate][foto]`] = "true";
+    }
+  }
+  return query;
+}
+
+/** The five Küchen collections (one per group), each with its blocks in page order. */
+const KUECHEN: {
+  path: string;
+  /** The project's picker for this group. */
+  projectField: string;
+  cluster: KitchenClusterSlug;
+  blocks: string[];
+  siblings: { field: string; target: string; photo: boolean };
+}[] = [
+  {
+    path: "/api/kuechen-formen",
+    projectField: "formen",
+    cluster: "formen",
+    blocks: ["kopf", "kernaussage", "lesetext", "kuechenPortraet", "weitereKuechen", "ratgeber", "fragen", "schluss"],
+    siblings: { field: "weitereFormen", target: "form", photo: false },
+  },
+  {
+    path: "/api/kuechen-stile",
+    projectField: "stile",
+    cluster: "stile",
+    blocks: ["kopf", "eckdaten", "kernaussage", "zweiFotos", "lesetext", "kuechenPortraet", "weitereKuechen", "ratgeber", "fragen", "schluss"],
+    siblings: { field: "weitereStile", target: "stil", photo: false },
+  },
+  {
+    path: "/api/kuechen-farben",
+    projectField: "farben",
+    cluster: "farben",
+    blocks: ["kopf", "kuechenPortraet", "kernaussage", "lesetext", "ratgeber", "fragen", "schluss"],
+    siblings: { field: "weitereFarben", target: "farbe", photo: true },
+  },
+  {
+    path: "/api/kuechen-inseln",
+    projectField: "inseln",
+    cluster: "inseln",
+    blocks: ["kopf", "kernaussage", "lesetext", "kuechenPortraet", "weitereKuechen", "ratgeber", "fragen", "schluss"],
+    siblings: { field: "weitereInseln", target: "insel", photo: true },
+  },
+  {
+    path: "/api/kuechen-loesungen",
+    projectField: "loesungen",
+    cluster: "besondere",
+    blocks: ["kopf", "eckdaten", "kernaussage", "kuechenPortraet", "weitereKuechen", "lesetext", "ratgeber", "fragen", "schluss"],
+    siblings: { field: "weitereLoesungen", target: "loesung", photo: true },
+  },
+];
+
+/**
+ * A page of a Küchen collection as a KitchenTopic. The old flat fields are filled from the blocks,
+ * so pages that still read them (group overviews, cards) show the same words.
+ */
+function mapKuechen(entry: unknown, cluster: KitchenClusterSlug, siblings?: { field: string; target: string }): KitchenTopic | null {
+  const row = flattenEntity(entry);
+  const slug = text(row, "slug");
+  const name = text(row, "name");
+  if (!slug || !name) {
+    return null;
+  }
+  const blocks = mapPageBlocks(row, siblings);
+  const image = mediaImage(row, "kachelfoto", stile("stile-modern.jpg"));
+  const seo = blockOf(row, "seo");
+  return {
+    slug,
+    name,
+    cluster,
+    hex: blocks?.head?.hex ?? "",
+    image: image.src,
+    intro: blocks?.head?.lede ?? "",
+    order: Number(row?.reihenfolge ?? 0) || 0,
+    seitentitel: blocks?.head?.title ?? "",
+    betonung: blocks?.head?.emphasis ?? "",
+    aussage: blocks?.statement?.text ?? "",
+    hinweis: blocks?.statement?.note ?? "",
+    punkte: (blocks?.statement?.points ?? []).map((point) => ({ titel: point.title, text: point.text })),
+    stichworte: (blocks?.facts?.rows ?? []).map((fact) => ({ wert: fact.value, zeile: fact.label })),
+    ueberschrift: blocks?.reading?.heading ?? "",
+    lesetext: blocks?.reading?.text ?? "",
+    schlussTitel: blocks?.close?.title ?? "",
+    schlussText: blocks?.close?.text ?? "",
+    seoTitle: seo ? text(seo, "metaTitle") : "",
+    seoDescription: seo ? text(seo, "metaDescription") : "",
+    seo: mapSeo(seo),
+    contentLocale: text(row, "locale"),
+    updatedAt: text(row, "updatedAt") || undefined,
+    blocks,
+  };
+}
+
+/** A project's topics from its five pickers (Form, Stil, Farbe, Insel, Besonderes); empty if none set. */
+function projectKuechen(row: Record<string, unknown> | null): KitchenTopic[] {
+  return KUECHEN.flatMap((spec) =>
+    related(row, spec.projectField).flatMap((item) => {
+      const slug = text(item, "slug");
+      const name = text(item, "name");
+      if (!slug || !name) {
+        return [];
+      }
+      const image = mediaImage(item, "kachelfoto", stile("stile-modern.jpg"));
+      return [{ slug, name, cluster: spec.cluster, hex: "", image: image.src, intro: "", order: Number(item.reihenfolge ?? 0) || 0 }];
+    }),
+  );
+}
+
 function mapSpecs(row: Record<string, unknown> | null): CatalogSpec[] {
   return flattenCollection(row?.specs)
     .map((item) => ({
@@ -375,9 +627,12 @@ function mapProject(entry: unknown): Project | null {
     ...copy,
     image: image.src,
     srcSet: image.srcSet,
-    topics: related(row, "topics")
-      .map(mapTopic)
-      .filter((item): item is KitchenTopic => Boolean(item)),
+    // The five pickers once they are set; the old topic list until then.
+    topics: projectKuechen(row).length
+      ? projectKuechen(row)
+      : related(row, "topics")
+          .map(mapTopic)
+          .filter((item): item is KitchenTopic => Boolean(item)),
     brands: related(row, "brands")
       .map(mapBrand)
       .filter((item): item is Brand => Boolean(item)),
@@ -543,6 +798,11 @@ const PROJECT_POPULATE = {
   "populate[gallery]": "true",
   "populate[specs]": "true",
   "populate[topics][populate]": "image",
+  "populate[formen][populate]": "kachelfoto",
+  "populate[stile][populate]": "kachelfoto",
+  "populate[farben][populate]": "kachelfoto",
+  "populate[inseln][populate]": "kachelfoto",
+  "populate[loesungen][populate]": "kachelfoto",
   "populate[brands][populate]": "image",
   "populate[materials][populate]": "image",
   "populate[appliances][populate]": "image",
@@ -564,7 +824,35 @@ const SEO_QUERY = {
   "populate[punkte]": "true",
 };
 
+const CLUSTER_RANK: KitchenClusterSlug[] = ["formen", "stile", "farben", "inseln", "besondere"];
+
+/**
+ * Every Küchen page: from the five Küchen collections once they hold pages, from the old
+ * Küchenthemen collection until then.
+ */
 export async function fetchKitchenTopics() {
+  const lists = await Promise.all(
+    KUECHEN.map((spec) =>
+      loadMapped(
+        spec.path,
+        {
+          "pagination[pageSize]": "100",
+          sort: "reihenfolge:asc",
+          "populate[kachelfoto]": "true",
+          ...SEO_POPULATE,
+          ...blocksQuery(spec.blocks, spec.siblings),
+        },
+        (entry) => mapKuechen(entry, spec.cluster, spec.siblings),
+        [] as KitchenTopic[],
+      ),
+    ),
+  );
+  const topics = lists.flat();
+  if (topics.length) {
+    return topics.sort(
+      (a, b) => a.order - b.order || CLUSTER_RANK.indexOf(a.cluster) - CLUSTER_RANK.indexOf(b.cluster),
+    );
+  }
   return loadMapped(
     "/api/kitchen-topics",
     {

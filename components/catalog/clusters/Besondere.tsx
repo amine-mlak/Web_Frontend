@@ -21,7 +21,7 @@ export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: strin
       </div>
 
       <PointsSection hub={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={hub.showcaseTitle || housesTitle(hub.locale)} />
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <PageGuide hub={hub} />
       <PageQuestions hub={hub} />

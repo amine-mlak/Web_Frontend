@@ -31,6 +31,7 @@ export default async function Questions({
   locale,
   limit = 5,
   narrow = false,
+  fillUp = true,
 }: {
   theme?: string;
   /** Questions picked for this page, in the order they are shown. */
@@ -41,6 +42,8 @@ export default async function Questions({
   locale: Locale;
   limit?: number;
   narrow?: boolean;
+  /** Fill up to `limit` from the theme (pages without their own pick of questions). */
+  fillUp?: boolean;
 }) {
   if (!theme && !slugs?.length) {
     return null;
@@ -50,7 +53,7 @@ export default async function Questions({
   const bySlug = new Map(faq.items.map((item) => [item.slug, item]));
   const picked = (slugs ?? []).flatMap((slug) => bySlug.get(slug) ?? []);
   const taken = new Set(picked.map((item) => item.slug));
-  const fill = theme ? filterFaqItems(faq.items, theme).filter((item) => !taken.has(item.slug)) : [];
+  const fill = theme && fillUp ? filterFaqItems(faq.items, theme).filter((item) => !taken.has(item.slug)) : [];
   const questions = [...picked, ...fill].slice(0, limit);
   if (questions.length === 0) {
     return null;

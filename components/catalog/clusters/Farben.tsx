@@ -110,7 +110,9 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
   const rest = houses.slice(12);
   // "Weiße Küchen" → "Weitere weiße Küchen" after the kitchens shown one by one above.
   const name = hub.heroAlt.charAt(0).toLowerCase() + hub.heroAlt.slice(1);
-  const heading = more
+  const heading = hub.allHousesTitle
+    ? hub.allHousesTitle
+    : more
     ? en
       ? `More ${name}`
       : `Weitere ${name}`

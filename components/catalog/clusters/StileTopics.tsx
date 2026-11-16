@@ -44,10 +44,13 @@ const PLATES: Record<string, readonly [string, string, string]> = {
   ],
 };
 
-/** Photos of a kitchen tagged with this style when there is one; the fixed plates only without. */
-function platesFor(slug: string, hub: PresentedTopic) {
+/**
+ * The title photo and the two photos after the statement: the ones chosen in the CMS blocks; before
+ * that, photos of a kitchen tagged with this style, and the fixed plates only without one.
+ */
+export function platesFor(slug: string, hub: PresentedTopic) {
   const kitchen = [hub.heroImage, hub.statementImage, hub.statementImageB] as const;
-  return (hub.taggedKitchens ?? 0) > 0 ? kitchen : (PLATES[slug] ?? kitchen);
+  return hub.fromBlocks || (hub.taggedKitchens ?? 0) > 0 ? kitchen : (PLATES[slug] ?? kitchen);
 }
 
 function OtherStances({ hub }: { hub: PresentedTopic }) {
@@ -152,7 +155,7 @@ function Stile({
         />
       </div>
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
+      <KitchenShowcase hub={hub} title={hub.showcaseTitle || housesTitle(hub.locale)} />
       <PageGuide hub={hub} />
       <PageQuestions hub={hub} />
       <OtherStances hub={hub} />
