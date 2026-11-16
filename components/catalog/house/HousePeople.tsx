@@ -66,7 +66,7 @@ export default function HousePeople({
                   </div>
                   {voice.quote ? (
                     <blockquote className="col-span-2 mt-4 border-l border-messing pl-4 font-sans text-[15px] leading-[1.7] font-light text-ink/85">
-                      {voice.quote}
+                      {voice.locale === "en" ? `“${voice.quote}”` : `„${voice.quote}“`}
                     </blockquote>
                   ) : null}
                 </article>

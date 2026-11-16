@@ -18,6 +18,8 @@ export type TeamVoice = {
   role: string;
   quote: string;
   photo?: string;
+  /** Sets the quotation marks; German unless said otherwise. */
+  locale?: "de" | "en";
 };
 
 function key(name: string) {
@@ -48,7 +50,7 @@ export function parseTeamVoices(body: string, portraits: HousePerson[]): TeamVoi
       const rest = lines.slice(1).filter(Boolean);
       // A role is a short line that is not the quote itself.
       const role = rest[0] && !/^["„“‚']/.test(rest[0]) && rest[0].length < 60 ? rest[0] : "";
-      const quote = rest.slice(role ? 1 : 0).join(" ").trim();
+      const quote = rest.slice(role ? 1 : 0).join(" ").trim().replace(/^["„“”‚']+|["„“”‚']+$/g, "");
       const portrait = portraits.find((person) => !used.has(person.src) && matches(name, person.name));
       if (portrait) used.add(portrait.src);
       return { name, role, quote, photo: portrait?.src };
