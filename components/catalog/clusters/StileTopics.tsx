@@ -1,7 +1,7 @@
 import LocaleLink from "@/components/LocaleLink";
 import KitchenShowcase from "@/components/catalog/KitchenShowcase";
 import { Frame } from "@/components/catalog/collections/parts";
-import { Crumbs, QuoteLine, SoftClose } from "@/components/catalog/clusters/parts";
+import { Crumbs, SoftClose } from "@/components/catalog/clusters/parts";
 import { cmsSrc } from "@/lib/beer-photos";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
@@ -78,25 +78,25 @@ function housesTitle(locale: PresentedTopic["locale"]) {
   return locale === "en" ? "More kitchens in this style" : "Weitere Küchen in diesem Stil";
 }
 
-function Facts({ hub, invert }: { hub: PresentedTopic; invert?: boolean }) {
+function Facts({ hub }: { hub: PresentedTopic }) {
   return (
-    <ul className={`grid grid-cols-2 lg:grid-cols-4 ${invert ? "" : "border-y border-line"}`}>
+    <ul className="grid grid-cols-2 border-y border-line lg:grid-cols-4">
       {hub.facts.map((fact) => (
-        <li
-          key={`${fact.value}-${fact.label}`}
-          className={invert ? "px-1 py-4" : "border-line px-5 py-8 sm:px-8 lg:border-l lg:px-8 lg:first:border-l-0"}
-        >
-          <p className={`font-serif text-[24px] md:text-[28px] xl:text-[32px] leading-none font-medium ${invert ? "text-paper" : "text-ink"}`}>
-            {fact.value}
-          </p>
-          <p className={`type-eyebrow mt-3 ${invert ? "text-messing" : "text-muted"}`}>{fact.label}</p>
+        <li key={`${fact.value}-${fact.label}`} className="border-line px-5 py-8 sm:px-8 lg:border-l lg:px-8 lg:first:border-l-0">
+          <p className="font-serif text-[24px] leading-none font-medium text-ink md:text-[28px] xl:text-[32px]">{fact.value}</p>
+          <p className="type-eyebrow mt-3 text-muted">{fact.label}</p>
         </li>
       ))}
     </ul>
   );
 }
 
-function Modern({
+/**
+ * One layout for every style page (Modern, Landhaus, Design, Holz, Puristisch, Luxus), in the order of
+ * the CMS blocks: title with photo, facts, core statement with numbered points, two photos, reading
+ * text, kitchens, guide, questions, other styles, closing band.
+ */
+function Stile({
   hub,
   photos,
   slug,
@@ -112,11 +112,9 @@ function Modern({
           <Crumbs hub={hub} tone="ink" />
           <h1 className="t-title mt-10 text-ink">
             {hub.title}
-            <em className="mt-2 block font-medium italic">{hub.emphasis}</em>
+            {hub.emphasis ? <em className="mt-2 block font-medium italic">{hub.emphasis}</em> : null}
           </h1>
-          <p className="t-lede mt-8 max-w-sm text-muted">
-            {hub.lede}
-          </p>
+          <p className="t-lede mt-8 max-w-sm text-muted">{hub.lede}</p>
         </div>
         <Frame
           src={photos[0]}
@@ -127,357 +125,16 @@ function Modern({
         />
       </section>
       <Facts hub={hub} />
-      <p className="t-lead max-w-4xl px-5 py-16 text-ink sm:px-8 lg:px-gutter lg:py-24">
-        {hub.statement}
-      </p>
-      <ol className="border-t border-line">
-        {hub.branches.map((branch, index) => (
-          <li
-            key={branch.title}
-            className="grid items-center gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-gutter"
-          >
-            <p className="font-serif text-[24px] md:text-[32px] xl:text-[42px] text-gold lg:col-span-2">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <h2 className="t-section text-ink lg:col-span-4">
-              {branch.title}
-            </h2>
-            <p className="max-w-md font-sans text-[16px] leading-relaxed text-muted lg:col-span-6">
-              {branch.text}
-            </p>
-          </li>
-        ))}
-      </ol>
-      <div className="grid lg:grid-cols-12">
-        <Frame
-          src={photos[1]}
-          alt=""
-          className="aspect-[16/10] lg:col-span-7"
-          sizes="(max-width: 1024px) 100vw, 58vw"
-        />
-        <Frame
-          src={photos[2]}
-          alt=""
-          className="aspect-[16/10] lg:col-span-5 lg:aspect-auto"
-          sizes="(max-width: 1024px) 100vw, 42vw"
-        />
-      </div>
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
-      <PageGuide hub={hub} />
-      <PageQuestions hub={hub} />
-      <OtherStances hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-function Landhaus({
-  hub,
-  photos,
-  slug,
-}: {
-  hub: PresentedTopic;
-  photos: readonly string[];
-  slug: string;
-}) {
-  return (
-    <main className="bg-karte">
-      <section className="px-4 pt-8 sm:px-6 lg:px-10">
-        <div className="px-2 lg:px-4">
-          <Crumbs hub={hub} tone="ink" />
-        </div>
-        <div className="relative mt-6">
-          <Frame
-            src={photos[0]}
-            alt={hub.heroAlt}
-            className="h-[calc(100svh-8.5rem)] min-h-[28rem]"
-            imgClassName="object-[center_40%]"
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute bottom-4 left-4 z-10 max-w-xl bg-paper px-6 py-7 shadow-[0_24px_60px_rgba(20,20,20,0.08)] sm:bottom-8 sm:left-8 sm:px-10 sm:py-10">
-            <h1 className="t-title text-ink">
-              {hub.title}
-              <em className="mt-1 block italic">{hub.emphasis}</em>
-            </h1>
-            <p className="t-lede mt-5 max-w-md text-muted">{hub.lede}</p>
-          </div>
-        </div>
-      </section>
-      <div className="mt-16 bg-paper">
-        <Facts hub={hub} />
-      </div>
-      <section className="grid items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24">
-        <p className="t-lead text-ink lg:col-span-5">
-          {hub.statement}
-        </p>
-        <div className="lg:col-span-6 lg:col-start-7">
-          {hub.branches.map((branch) => (
-            <article key={branch.title} className="border-t border-line py-6 last:border-b">
-              <h2 className="t-item text-ink">{branch.title}</h2>
-              <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-      <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2 sm:px-6 lg:px-10">
-        <Frame src={photos[1]} alt="" className="aspect-[4/5]" sizes="(max-width: 640px) 100vw, 50vw" />
-        <Frame src={photos[2]} alt="" className="aspect-[4/5]" sizes="(max-width: 640px) 100vw, 50vw" />
-      </div>
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
-      <PageGuide hub={hub} />
-      <PageQuestions hub={hub} />
-      <OtherStances hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-function Design({
-  hub,
-  photos,
-  slug,
-}: {
-  hub: PresentedTopic;
-  photos: readonly string[];
-  slug: string;
-}) {
-  return (
-    <main className="bg-paper">
-      <header className="px-5 pt-12 sm:px-8 lg:px-gutter">
-        <Crumbs hub={hub} tone="ink" />
-        <h1 className="t-title mt-8 max-w-5xl text-ink">
-          {hub.title}
-          <em className="block italic">{hub.emphasis}</em>
-        </h1>
-      </header>
-      <div className="mt-8 grid items-end lg:grid-cols-12">
-        <p className="t-lede px-5 pb-8 text-muted sm:px-8 lg:col-span-4 lg:px-gutter">
-          {hub.lede}
-        </p>
-        <Frame
-          src={photos[0]}
-          alt={hub.heroAlt}
-          className="aspect-[4/5] lg:col-span-8 lg:-mr-0"
-          priority
-          sizes="(max-width: 1024px) 100vw, 66vw"
-        />
-      </div>
-      <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-gutter lg:py-24">
-        <p className="t-lead max-w-3xl">
-          {hub.statement}
-        </p>
-        <ol className="mt-14 grid gap-12 lg:grid-cols-3">
-          {hub.branches.map((branch, index) => (
-            <li key={branch.title}>
-              <p className="font-sans text-[11px] tracking-[0.22em] text-messing uppercase">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-              <h2 className="t-feature mt-4">{branch.title}</h2>
-              <p className="mt-3 font-sans text-[16px] leading-relaxed font-light text-paper/75">
-                {branch.text}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
-      <div className="grid sm:grid-cols-5">
-        <Frame src={photos[1]} alt="" className="aspect-[4/5] sm:col-span-3" sizes="60vw" />
-        <Frame src={photos[2]} alt="" className="aspect-[4/5] sm:col-span-2" sizes="40vw" />
-      </div>
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
-      <PageGuide hub={hub} />
-      <PageQuestions hub={hub} />
-      <OtherStances hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-function Holz({
-  hub,
-  photos,
-  slug,
-}: {
-  hub: PresentedTopic;
-  photos: readonly string[];
-  slug: string;
-}) {
-  return (
-    <main className="bg-paper">
-      <header className="px-5 pt-10 sm:px-8 lg:px-gutter lg:pt-16">
-        <Crumbs hub={hub} tone="ink" />
-        <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
-          <h1 className="t-title text-ink">
-            {hub.title}
-            <em className="mt-1 block italic">{hub.emphasis}</em>
-          </h1>
-          <p className="t-lede max-w-xs text-muted">{hub.lede}</p>
-        </div>
-      </header>
-      <Frame
-        src={photos[0]}
-        alt={hub.heroAlt}
-        className="mt-10 aspect-[16/9] w-full"
-        imgClassName="object-[center_45%]"
-        priority
-        sizes="100vw"
-      />
-      <section className="grid lg:grid-cols-12">
-        <Frame
-          src={photos[1]}
-          alt=""
-          className="min-h-[24rem] lg:col-span-5 lg:min-h-[40rem]"
-          sizes="(max-width: 1024px) 100vw, 42vw"
-        />
-        <div className="flex flex-col justify-center px-5 py-14 sm:px-8 lg:col-span-7 lg:pr-edge lg:pl-16">
-          <p className="t-lead text-ink">
-            {hub.statement}
-          </p>
-          {hub.statementNote ? (
-            <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed text-muted">
-              {hub.statementNote}
-            </p>
-          ) : null}
-          <ul className="mt-10 border-t border-line">
-            {hub.branches.map((branch, index) => (
-              <li key={branch.title} className="grid grid-cols-[3rem_minmax(0,1fr)] gap-4 border-b border-line py-5">
-                <span className="type-eyebrow pt-1 text-gold">{String(index + 1).padStart(2, "0")}</span>
-                <span>
-                  <span className="t-item block text-ink">{branch.title}</span>
-                  <span className="mt-1 block font-sans text-[16px] leading-relaxed text-muted">{branch.text}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-      <Facts hub={hub} />
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
-      <PageGuide hub={hub} />
-      <PageQuestions hub={hub} />
-      <OtherStances hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-function Purist({
-  hub,
-  photos,
-  slug,
-}: {
-  hub: PresentedTopic;
-  photos: readonly string[];
-  slug: string;
-}) {
-  return (
-    <main className="bg-paper">
-      <header className="mx-auto max-w-3xl px-5 pt-20 text-center sm:pt-28">
-        <div className="flex justify-center">
-          <Crumbs hub={hub} tone="ink" />
-        </div>
-        <h1 className="t-title mt-10 text-ink">
-          {hub.title}
-          <em className="mt-2 block italic">{hub.emphasis}</em>
-        </h1>
-        <p className="t-lede mx-auto mt-8 max-w-md text-muted">
-          {hub.lede}
-        </p>
-      </header>
-      <Frame
-        src={photos[0]}
-        alt={hub.heroAlt}
-        className="mx-auto mt-16 aspect-[16/10] max-w-5xl"
-        priority
-        sizes="(max-width: 1024px) 100vw, 64rem"
-      />
-      <p className="t-lead mx-auto mt-16 max-w-2xl px-5 text-center text-ink">
-        {hub.statement}
-      </p>
-      <ol className="mx-auto mt-16 max-w-xl px-5">
-        {hub.branches.map((branch, index) => (
-          <li key={branch.title} className="border-t border-line py-8 text-center last:border-b">
-            <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
-            <h2 className="t-feature mt-3 text-ink">{branch.title}</h2>
-            <p className="mt-2 font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
-          </li>
-        ))}
-      </ol>
-      <div className="mx-auto mt-16 grid max-w-5xl gap-4 px-5 sm:grid-cols-2">
-        <Frame src={photos[1]} alt="" className="aspect-[4/5]" sizes="50vw" />
-        <Frame src={photos[2]} alt="" className="aspect-[4/5]" sizes="50vw" />
-      </div>
-      <QuoteLine quote={hub.quote} source={hub.quoteSource} />
-      <TopicReading slug={slug} locale={hub.locale} cms={hub} />
-      <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
-      <PageGuide hub={hub} />
-      <PageQuestions hub={hub} />
-      <OtherStances hub={hub} />
-      <SoftClose hub={hub} />
-    </main>
-  );
-}
-
-function Luxus({
-  hub,
-  photos,
-  slug,
-}: {
-  hub: PresentedTopic;
-  photos: readonly string[];
-  slug: string;
-}) {
-  return (
-    <main className="bg-paper">
-      <header className="px-5 pt-12 sm:px-8 lg:px-gutter lg:pt-20">
-        <Crumbs hub={hub} tone="ink" />
-        <h1 className="t-title mt-8 max-w-4xl text-ink">
-          {hub.title}
-          <em className="mt-2 block italic">{hub.emphasis}</em>
-        </h1>
-        <p className="t-lede mt-6 max-w-lg text-muted">{hub.lede}</p>
-      </header>
-      <section className="mt-12 bg-nacht px-5 py-14 sm:px-8 lg:px-gutter lg:py-20">
-        <Frame
-          src={photos[0]}
-          alt={hub.heroAlt}
-          className="mx-auto aspect-[16/9] max-w-6xl"
-          priority
-          sizes="(max-width: 1024px) 100vw, 72rem"
-        />
-        {hub.quote ? (
-          <>
-            <p className="t-lead mx-auto mt-12 max-w-3xl text-center text-paper">
-              {hub.quote}
-            </p>
-            <p className="mt-5 text-center font-sans text-[11px] tracking-[0.2em] text-messing uppercase">
-              {hub.quoteSource}
-            </p>
-          </>
-        ) : null}
-        <div className="mx-auto mt-12 max-w-6xl border-t border-paper/15">
-          <Facts hub={hub} invert />
-        </div>
-      </section>
       <section className="grid gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24">
         <div className="lg:col-span-5">
           <p className="t-lead text-ink">{hub.statement}</p>
           {hub.statementNote ? (
-            <p className="mt-6 font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
+            <p className="mt-6 max-w-md font-sans text-[16px] leading-relaxed text-muted">{hub.statementNote}</p>
           ) : null}
         </div>
         <ol className="lg:col-span-6 lg:col-start-7">
           {hub.branches.map((branch, index) => (
-            <li key={branch.title} className="border-t border-line py-6">
+            <li key={branch.title} className="border-t border-line py-6 last:border-b">
               <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
               <h2 className="t-feature mt-2 text-ink">{branch.title}</h2>
               <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
@@ -485,9 +142,14 @@ function Luxus({
           ))}
         </ol>
       </section>
-      <div className="grid sm:grid-cols-2">
-        <Frame src={photos[1]} alt="" className="aspect-[4/5]" sizes="50vw" />
-        <Frame src={photos[2]} alt="" className="aspect-[4/5]" sizes="50vw" />
+      <div className="grid lg:grid-cols-12">
+        <Frame src={photos[1]} alt="" className="aspect-[16/10] lg:col-span-7" sizes="(max-width: 1024px) 100vw, 58vw" />
+        <Frame
+          src={photos[2]}
+          alt=""
+          className="aspect-[16/10] lg:col-span-5 lg:aspect-auto"
+          sizes="(max-width: 1024px) 100vw, 42vw"
+        />
       </div>
       <TopicReading slug={slug} locale={hub.locale} cms={hub} />
       <KitchenShowcase hub={hub} title={housesTitle(hub.locale)} />
@@ -499,17 +161,6 @@ function Luxus({
   );
 }
 
-const ESSAY = {
-  modern: Modern,
-  landhaus: Landhaus,
-  design: Design,
-  holz: Holz,
-  purist: Purist,
-  luxus: Luxus,
-} as const;
-
 export function StileTopic({ hub, slug }: { hub: PresentedTopic; slug: string }) {
-  const photos = platesFor(slug, hub);
-  const Essay = ESSAY[slug as keyof typeof ESSAY] ?? Modern;
-  return <Essay hub={hub} photos={photos} slug={slug} />;
+  return <Stile hub={hub} photos={platesFor(slug, hub)} slug={slug} />;
 }
