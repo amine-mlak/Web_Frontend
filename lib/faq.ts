@@ -1,3 +1,4 @@
+import type { CmsSeo } from "@/lib/cms-seo";
 import catalog from "@/lib/faq-data.json";
 
 export type FaqTheme = {
@@ -6,6 +7,9 @@ export type FaqTheme = {
   description: string;
   seoTitle: string;
   seoDescription: string;
+  /** The theme's CMS SEO block; wins over the two older fields above. */
+  seo?: CmsSeo;
+  contentLocale?: string;
   order: number;
 };
 

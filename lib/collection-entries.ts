@@ -39,6 +39,7 @@ import {
 } from "@/lib/photo-match";
 import type { Locale } from "@/lib/i18n";
 import { cmsPageText } from "@/lib/page-text";
+import type { CmsSeo } from "@/lib/cms-seo";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
 export type MaterialKindRoute = "fronten" | "arbeitsplatten" | "innenleben" | "spuele";
@@ -2041,12 +2042,15 @@ export function entryMetadata(
   description: string,
   path: string,
   image?: string,
+  /** The CMS SEO block; its title and description win over the two above. */
+  cms?: CmsSeo,
 ): Promise<Metadata> {
   return pageMetadata({
     title: brandedTitle(title),
     description,
     path,
     image,
+    cms,
   });
 }
 
@@ -2062,6 +2066,7 @@ export async function materialKindMetadata(
     cms.description || voice.statement,
     `/material/${slug}`,
     cms.image,
+    cms.seo,
   );
 }
 
@@ -2071,6 +2076,6 @@ export async function applianceKindMetadata(
 ): Promise<Metadata> {
   const voice = voiceFor(slug, locale)!;
   const cms = await cmsPageText(slug, locale);
-  return entryMetadata(cms.title || cms.fullHeading || voice.title, cms.description || voice.statement, `/geraete/${slug}`, cms.image);
+  return entryMetadata(cms.title || cms.fullHeading || voice.title, cms.description || voice.statement, `/geraete/${slug}`, cms.image, cms.seo);
 }
 

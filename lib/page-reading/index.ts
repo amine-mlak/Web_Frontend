@@ -1,3 +1,4 @@
+import type { CmsSeo } from "@/lib/cms-seo";
 import type { Locale } from "@/lib/i18n";
 import type { TopicReadingCopy } from "@/lib/topic-reading";
 import { APPLIANCES } from "./appliances";
@@ -53,6 +54,21 @@ export function isSeededDescription(text: string | undefined | null): boolean {
 /** True when a CMS page title is empty or still the seeded "Name · Wolfersdorf". */
 export function isSeededTitle(text: string | undefined | null): boolean {
   return !text?.trim() || /· Wolfersdorf\s*$/.test(text);
+}
+
+/**
+ * The CMS SEO block without the seeded placeholder title and description ("Bora · Wolfersdorf"),
+ * so the page's own text stands in for them; share photo, noindex and canonical are kept.
+ */
+export function withoutSeeds(seo: CmsSeo | undefined): CmsSeo | undefined {
+  if (!seo) {
+    return undefined;
+  }
+  return {
+    ...seo,
+    title: isSeededTitle(seo.title) ? "" : seo.title,
+    description: isSeededDescription(seo.description) ? "" : seo.description,
+  };
 }
 
 /** The search title written in code: the place with what BEER does there, or the heading of the page text. */

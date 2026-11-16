@@ -923,5 +923,6 @@ export async function clusterMetadata(
     title: cms.title ? brandedTitle(cms.title) : copy.seoTitle,
     description: cms.description || copy.seoDescription,
     path: `/kuechen/${slug}`,
+    cms: cms.seo,
   });
 }

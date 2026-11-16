@@ -9,7 +9,7 @@ import type { Locale } from "@/lib/i18n";
 export async function cmsPageText(slug: string, locale: Locale) {
   const page = await fetchSitePage(slug);
   if (!page || (page.contentLocale && page.contentLocale !== locale)) {
-    return { title: "", heading: "", fullHeading: "", description: "", image: undefined };
+    return { title: "", heading: "", fullHeading: "", description: "", image: undefined, seo: undefined };
   }
   return {
     title: page.seoTitle || "",
@@ -18,5 +18,7 @@ export async function cmsPageText(slug: string, locale: Locale) {
     fullHeading: [page.seitentitel, page.betonung].filter(Boolean).join(" "),
     description: page.seoDescription || page.intro?.trim() || "",
     image: page.image || undefined,
+    /** The whole SEO block (share photo, noindex, canonical) for pageMetadata. */
+    seo: page.seo,
   };
 }

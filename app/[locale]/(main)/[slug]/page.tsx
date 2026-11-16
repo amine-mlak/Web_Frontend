@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
@@ -9,6 +9,10 @@ import HouseScreen from "@/components/catalog/house/HouseScreen";
 import BookletPage from "@/components/booklet/BookletPage";
 import type { Metadata } from "next";
 import { houseMetadata } from "@/lib/house-pages";
+import { seoFor } from "@/lib/cms-seo";
+import { HELPER_PAGES } from "@/lib/helper-pages";
+import { withLocale } from "@/lib/i18n";
+import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { fetchLandingBySlug } from "@/lib/strapi";
 import { fetchBooklet } from "@/lib/booklet";
@@ -38,6 +42,7 @@ export async function generateMetadata({
       description: landing.heroPanel?.text,
       path: `/${slug}`,
       image: landing.heroSlides[0]?.src,
+      cms: seoFor(await getRequestLocale(), landing),
     });
   }
 
@@ -65,6 +70,10 @@ export default async function LandingSlugPage({
 
   if (slug === "home") {
     redirect("/");
+  }
+  // /stile, /fronten … only hold the texts of /kuechen/stile, /material/fronten …: send visitors there.
+  if (HELPER_PAGES[slug]) {
+    permanentRedirect(withLocale(HELPER_PAGES[slug], await getRequestLocale()));
   }
 
   const landing = await fetchLandingBySlug(slug);

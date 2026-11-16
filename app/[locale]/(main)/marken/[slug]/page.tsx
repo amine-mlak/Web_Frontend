@@ -5,7 +5,8 @@ import { cmsValue, findBySlug, projectsForBrand } from "@/lib/catalog";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
-import { isSeededDescription, isSeededTitle, pageReading, pageTitle } from "@/lib/page-reading";
+import { seoFor } from "@/lib/cms-seo";
+import { isSeededDescription, isSeededTitle, pageReading, pageTitle, withoutSeeds } from "@/lib/page-reading";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -36,6 +37,7 @@ export async function generateMetadata({
       : cmsValue(locale, brand, brand.seoDescription),
     `/marken/${brand.slug}`,
     brand.image,
+    withoutSeeds(seoFor(locale, brand)),
   );
 }
 

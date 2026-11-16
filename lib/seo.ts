@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CmsSeo } from "@/lib/cms-seo";
 import { DEFAULT_LOCALE, withLocale, type Locale } from "@/lib/i18n";
 import { HOUSE_MEDIA, houseSrc } from "@/lib/house-photos";
 import { getRequestLocale } from "@/lib/locale";
@@ -67,26 +68,54 @@ export function absoluteAsset(src?: string) {
 }
 
 export type PageSeo = {
+  /** Fallback title when the CMS SEO block has none (may already carry the brand ending). */
   title: string;
+  /** Fallback description, shortened to whole sentences. */
   description?: string;
   path: string;
+  /** The page's first hero photo: the share photo unless the SEO block names another. */
   image?: string;
+  /** The page's CMS block "SEO · Google und Teilen"; its values win over the fallbacks. */
+  cms?: CmsSeo;
   /** Ratgeber and Presse posts: Open Graph "article" with its dates. */
   article?: { publishedTime?: string; modifiedTime?: string; section?: string };
 };
 
+/**
+ * A CMS meta title as Google sees it: with " | BEER Küchenmanufaktur", or " | BEER", only while the
+ * whole title stays within TITLE_MAX; a title that already names BEER is left as written.
+ */
+export function cmsTitle(title: string) {
+  if (/\bBEER\b/.test(title)) {
+    return title;
+  }
+  for (const ending of [` | ${SITE_NAME}`, " | BEER"]) {
+    if (title.length + ending.length <= TITLE_MAX) {
+      return `${title}${ending}`;
+    }
+  }
+  return title;
+}
+
 export async function pageMetadata(seo: PageSeo): Promise<Metadata> {
   const locale = await getRequestLocale();
-  const canonical = absoluteUrl(seo.path, locale);
+  const cms = seo.cms;
+  const canonical = absoluteUrl(cms?.canonicalPath || seo.path, locale);
   const de = absoluteUrl(seo.path, "de");
   const en = absoluteUrl(seo.path, "en");
-  // A page without its own photo is shared with the CMS default, else the showroom hall.
+  // Share photo: the one chosen in the SEO block, else the page's hero, else the CMS default,
+  // else the showroom hall.
   const image = absoluteAsset(
-    seo.image || (await getSiteSettings()).shareImage || houseSrc(HOUSE_MEDIA.ausstellung.hero, 1200),
+    cms?.image ||
+      seo.image ||
+      (await getSiteSettings()).shareImage ||
+      houseSrc(HOUSE_MEDIA.ausstellung.hero, 1200),
   );
   const indexing = allowSearchIndexing();
-  const title = fitTitle(seo.title);
-  const description = fitDescription(seo.description);
+  // CMS texts are used as written (the CMS limits their length); fallbacks are fitted.
+  const title = cms?.title ? cmsTitle(cms.title) : fitTitle(seo.title);
+  const description = cms?.description || fitDescription(seo.description);
+  const hidden = cms?.noindex || (indexing && locale === "en");
 
   return {
     title,
@@ -114,9 +143,7 @@ export async function pageMetadata(seo: PageSeo): Promise<Metadata> {
       description,
       images: image ? [image] : undefined,
     },
-    ...(indexing && locale === "en"
-      ? { robots: { index: false, follow: true } }
-      : {}),
+    ...(hidden ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

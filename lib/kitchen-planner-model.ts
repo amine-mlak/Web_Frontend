@@ -1,3 +1,4 @@
+import type { CmsSeo } from "@/lib/cms-seo";
 import type { Locale } from "@/lib/i18n";
 
 /**
@@ -45,6 +46,8 @@ export type PlannerStep = { step: PlannerStepKey; title: string; subtitle: strin
 
 export type PlannerContent = {
   locale: Locale;
+  /** The planner's CMS SEO block (only for the /beratung page's metadata). */
+  seo?: CmsSeo;
   eyebrow: string;
   title: string;
   titleEmphasis: string;

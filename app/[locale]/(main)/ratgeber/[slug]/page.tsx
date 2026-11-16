@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import ArticlePage from "@/components/catalog/entries/ArticlePage";
 import { findBySlug, isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
+import { seoFor } from "@/lib/cms-seo";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 
@@ -30,6 +31,7 @@ export async function generateMetadata({
     description: item.description,
     path: `/ratgeber/${item.slug}`,
     image: item.image,
+    cms: seoFor(await getRequestLocale(), item),
     article: { publishedTime: item.publishedAt, modifiedTime: item.updatedAt, section: item.category?.name },
   });
 }

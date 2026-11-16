@@ -17,6 +17,7 @@ import {
 import type { Locale } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import { photoKey } from "@/lib/utils";
+import { seoFor } from "@/lib/cms-seo";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import type { FaqContent } from "@/lib/strapi";
 
@@ -846,6 +847,7 @@ export async function houseMetadata(slug: string): Promise<Metadata> {
     description: house.lede,
     path: `/${slug}`,
     image: house.heroImage,
+    cms: seoFor(locale, await fetchSitePage(slug)),
   });
 }
 

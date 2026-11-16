@@ -1099,5 +1099,6 @@ export async function collectionHubMetadata(
     description: cms.description || content.lede,
     path: HUB_PATH[id],
     image: cms.image || content.heroImage,
+    cms: cms.seo,
   });
 }
