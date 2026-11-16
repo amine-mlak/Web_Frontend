@@ -14,6 +14,7 @@ import HouseBanner from "@/components/catalog/house/HouseBanner";
 import HouseBody from "@/components/catalog/house/HouseBody";
 import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
+import { parseTeamVoices } from "@/lib/team-voices";
 import LegalPage from "@/components/catalog/house/LegalPage";
 import { PointSections } from "@/components/catalog/entries/InteriorPage";
 import {
@@ -51,6 +52,8 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
   const house = withUniquePhotos(presented);
   const copy = COPY[house.locale === "en" ? "en" : "de"];
   const paragraphs = houseParagraphs(house.body);
+  // Team: the CMS text is one block per person; it shows inside the people cards, not as a list.
+  const voices = house.layout === "people" ? parseTeamVoices(house.body, house.people) : [];
 
   if (house.kind === "legal" || house.layout === "legal") {
     return <LegalPage house={house} />;
@@ -70,7 +73,7 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
       />
     ),
     price: <PriceStance line={house.priceLine} />,
-    body: (
+    body: voices.length ? null : (
       <HouseBody
         eyebrow={house.eyebrow}
         title={house.bodyTitle}
@@ -100,6 +103,7 @@ export default function HousePage({ house: presented }: { house: PresentedHouse 
         eyebrow={copy.peopleEyebrow}
         title={copy.peopleTitle}
         people={house.people}
+        voices={voices}
       />
     ),
     chapters: <ChapterRun hub={house} />,

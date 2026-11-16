@@ -102,6 +102,8 @@ const ROOM = {
 
 const CREW = {
   group: u("beer_hebauf_werk2_mitarbeiter_635001d01f.jpg"),
+  // A joiner with a finished front in the workshop: the team page opens on a person, not a crowd.
+  joiner: u("FAP_0959_c8ac1e8672.jpg"),
   table: u("beer_hebauf_werk2_mitarbeiter_essen_44852ab4f9.jpg"),
 };
 
@@ -178,7 +180,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
   },
   team: {
     layout: "people",
-    hero: CREW.group,
+    hero: CREW.joiner,
     statement: CREW.table,
     statementB: WORKSHOP.one,
     close: ROOM.r0003,
