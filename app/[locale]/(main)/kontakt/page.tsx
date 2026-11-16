@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import HouseScreen from "@/components/catalog/house/HouseScreen";
+import BookingPanel from "@/components/BookingPanel";
+import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
 import { houseMetadata } from "@/lib/house-pages";
+import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
 
@@ -8,6 +10,13 @@ export function generateMetadata(): Promise<Metadata> {
   return houseMetadata("kontakt");
 }
 
-export default function KontaktPage() {
-  return <HouseScreen slug="kontakt" />;
+/** Kontakt is the booking itself: one step per screen, like the kitchen planner on /beratung. */
+export default async function KontaktPage() {
+  const locale = await getRequestLocale();
+  return (
+    <main className="bg-paper">
+      <LocalBusinessJsonLd />
+      <BookingPanel locale={locale} />
+    </main>
+  );
 }
