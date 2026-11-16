@@ -637,7 +637,7 @@ export async function fetchSitePage(slug: string) {
 export async function fetchOpenJobs(page?: SitePage | null) {
   const jobs = await loadMapped(
     "/api/jobs",
-    { "sort[0]": "reihenfolge:asc", "sort[1]": "title:asc", "pagination[pageSize]": "100" },
+    { "sort[0]": "reihenfolge:asc", "sort[1]": "title:asc", "pagination[pageSize]": "100", ...SEO_POPULATE },
     (entry) => jobFromEntry(entry as Parameters<typeof jobFromEntry>[0]),
     [],
   );
