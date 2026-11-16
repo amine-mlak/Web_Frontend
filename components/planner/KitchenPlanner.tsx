@@ -599,8 +599,9 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
             </div>
           ) : (
             <>
-              {/* Back + thin progress bar across the full width, as at SieMatic. */}
-              <div className="flex min-h-11 shrink-0 items-center justify-between px-5 pt-1 sm:px-10 sm:pt-2">
+              {/* Back + thin progress bar, as wide as the answers below (not the whole window). */}
+              <div className="mx-auto w-full max-w-[64rem] shrink-0 px-5 pt-1 sm:px-10 sm:pt-3">
+              <div className="flex min-h-11 items-center justify-between">
                 {index > 0 ? (
                   <button type="button" onClick={() => goTo(index - 1)} className="inline-flex min-h-10 items-center gap-2 font-sans text-[14px] text-ink hover:opacity-70">
                     <span aria-hidden="true">←</span> {ui.back}
@@ -613,14 +614,15 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                 </p>
               </div>
               <div
-                className="mt-1 h-1 shrink-0 bg-line"
+                className="mt-1 h-0.5 overflow-hidden rounded-full bg-line"
                 role="progressbar"
                 aria-valuemin={1}
                 aria-valuemax={screens.length}
                 aria-valuenow={index + 1}
                 aria-label={ui.progress.replace("{n}", String(index + 1)).replace("{total}", String(screens.length))}
               >
-                <div className="h-1 bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
+                <div className="h-full bg-messing transition-[width] duration-500" style={{ width: `${((index + 1) / screens.length) * 100}%` }} />
+              </div>
               </div>
 
               <div ref={stageRef} className="flex min-h-0 flex-1 flex-col">
