@@ -2,6 +2,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { PreviewBanner } from "@/components/PreviewBanner";
+import ScrollReset from "@/components/ScrollReset";
 import SiteHeader from "@/components/SiteHeader";
 import { getAnnouncement } from "@/lib/announcement";
 import { getRequestLocale } from "@/lib/locale";
@@ -16,6 +17,7 @@ export default async function MainLayout({
   return (
     <>
       <PreviewBanner />
+      <ScrollReset />
       <SiteHeader top={announcement ? <AnnouncementBar announcement={announcement} /> : undefined}>
         <Header />
       </SiteHeader>

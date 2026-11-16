@@ -1,6 +1,7 @@
 "use client";
 
 import { MAIN_ACTIONS, ctaHref } from "@/lib/cta";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import BrandLogo from "@/components/BrandLogo";
@@ -51,7 +52,21 @@ export default function MegaMenu({
   const closeDropdownTimer = useRef<number>(0);
   const closeMobileTimer = useRef<number>(0);
   const menuValueRef = useRef(menuValue);
+  const pathname = usePathname();
+  const [shownPath, setShownPath] = useState(pathname);
   const solid = true;
+
+  // A new page closes every menu at once (desktop dropdown and phone sheet), without the close animation.
+  if (pathname !== shownPath) {
+    setShownPath(pathname);
+    setHovered(false);
+    setMenuOpen(false);
+    setDropdownOpen(false);
+    setMenuValue("");
+    setMobileOpen(false);
+    setMobileVisible(false);
+    setMobileSection(null);
+  }
   const sheetEase = solid
     ? "ease-[cubic-bezier(0.22,1,0.36,1)]"
     : "ease-[cubic-bezier(0.64,0,0.78,0)]";
@@ -95,6 +110,16 @@ export default function MegaMenu({
         setMenuValue("");
       }, 500);
     }, 80);
+  }, []);
+
+  /** A link in the dropdown was clicked: close it now, also when it points at the page already open. */
+  const closeDesktop = useCallback(() => {
+    window.clearTimeout(leaveTimer.current);
+    window.clearTimeout(closeDropdownTimer.current);
+    setHovered(false);
+    setMenuOpen(false);
+    setDropdownOpen(false);
+    setMenuValue("");
   }, []);
 
   const handleMenuValueChange = useCallback((next: string) => {
@@ -231,7 +256,7 @@ export default function MegaMenu({
                     {panel.label}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="w-full md:w-full">
-                    <MegaPanel panel={panel} onNavigate={() => undefined} />
+                    <MegaPanel panel={panel} onNavigate={closeDesktop} />
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               ))}
