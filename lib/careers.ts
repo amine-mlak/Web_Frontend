@@ -1,3 +1,4 @@
+import { mapSeo, type CmsSeo } from "@/lib/cms-seo";
 import type { Locale } from "@/lib/i18n";
 
 /**
@@ -13,6 +14,9 @@ export type Job = {
   body: string;
   kind: JobKind;
   postedAt?: string;
+  /** The job ad's SEO block and the language it was written in. */
+  seo?: CmsSeo;
+  contentLocale?: string;
 };
 
 export type JobKind = "ausbildung" | "praktikum" | "teilzeit" | "vollzeit";
@@ -87,6 +91,8 @@ export function jobFromEntry(entry: {
   teaser?: string;
   text?: string;
   createdAt?: string;
+  locale?: string;
+  seo?: unknown;
 }): Job | null {
   const title = entry.title?.trim();
   const text = entry.text?.trim() ?? "";
@@ -94,7 +100,16 @@ export function jobFromEntry(entry: {
   if (!title || !slug) return null;
   const teaser = entry.teaser?.trim() || teaserOf(text);
   const kind = Object.keys(EMPLOYMENT_TYPE).includes(entry.art ?? "") ? (entry.art as JobKind) : kindOf(title, text);
-  return { slug, title, teaser, body: bodyOf(text, teaser), kind, postedAt: entry.createdAt };
+  return {
+    slug,
+    title,
+    teaser,
+    body: bodyOf(text, teaser),
+    kind,
+    postedAt: entry.createdAt,
+    seo: mapSeo(entry.seo),
+    contentLocale: entry.locale,
+  };
 }
 
 export function jobsFrom(points: { titel: string; text: string }[] | undefined): Job[] {

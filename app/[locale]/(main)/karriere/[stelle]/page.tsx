@@ -5,6 +5,7 @@ import LocaleLink from "@/components/LocaleLink";
 import RichText from "@/components/RichText";
 import { employmentType, jobKindLabel, type Job } from "@/lib/careers";
 import { fetchOpenJobs, fetchSitePage } from "@/lib/catalog-api";
+import { seoFor } from "@/lib/cms-seo";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ stelle: s
     title: brandedTitle(`${job.title} in Wolfersdorf`),
     description: job.teaser || undefined,
     path: `/karriere/${job.slug}`,
+    cms: seoFor(await getRequestLocale(), job),
   });
 }
 
