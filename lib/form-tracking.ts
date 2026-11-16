@@ -80,6 +80,16 @@ export async function trackLead(eventId: string, contact: { email: string; phone
   pushDataLayer(entry);
 }
 
+/**
+ * The named events from the offer (Angebot 21.08., page 4): quiz_complete (planner),
+ * katalog_order (booklet, components/booklet/BookletForm.tsx) and booking_complete
+ * (Bookings calendar). generate_lead stays the one ad conversion; these carry the same
+ * event_id and reach GA4 (and the server container) through GTM.
+ */
+export function trackCompletion(event: "quiz_complete" | "booking_complete", eventId: string, extra?: Record<string, string>) {
+  track(event, { event_id: eventId, ...extra });
+}
+
 export function apiErrorReason(status: number): FormErrorReason {
   if (status === 429) {
     return "rate_limited";

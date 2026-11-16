@@ -14,10 +14,11 @@
  *
  * Site events (lib/analytics.ts, lib/form-tracking.ts, components/LinkTracking.tsx):
  * generate_lead, contact, get_directions, social_click, form_*, menu_open,
- * page_view_spa (client-side navigation).
+ * page_view_spa (client-side navigation), and the offer's named events
+ * quiz_complete, katalog_order, booking_complete.
  */
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -38,6 +39,25 @@ const PLATFORMS = {
   },
 };
 
+// Server-side GTM (docs/gtm-setup.md, phase 2): with a URL here, GA4 hits go to
+// our tagging server instead of straight to Google. Empty = browser only.
+let serverContainerUrl = "";
+
+// Optional: `--ids <file.json>` fills the IDs without editing this script, e.g.
+// { "serverContainerUrl": "https://sgtm.beer.de", "ga4": { "GA4 Measurement ID": "G-…" } }
+const idsArg = process.argv.indexOf("--ids");
+if (idsArg > -1) {
+  const { serverContainerUrl: url, ...groups } = JSON.parse(readFileSync(process.argv[idsArg + 1], "utf8"));
+  if (url) serverContainerUrl = String(url).replace(/\/+$/, "");
+  for (const [platform, values] of Object.entries(groups)) {
+    if (!PLATFORMS[platform]) throw new Error(`Unknown platform in ids file: ${platform}`);
+    for (const [name, value] of Object.entries(values)) {
+      if (!(name in PLATFORMS[platform])) throw new Error(`Unknown ID name in ids file: ${name}`);
+      PLATFORMS[platform][name] = value;
+    }
+  }
+}
+
 const here = dirname(fileURLToPath(import.meta.url));
 const outFile = join(here, "..", "..", "gtm", "web-container.json");
 
@@ -53,7 +73,15 @@ const bool = (key, value) => ({ type: "BOOLEAN", key, value: String(value) });
 const list = (key, items) => ({ type: "LIST", key, list: items });
 const map = (entries) => ({ type: "MAP", map: Object.entries(entries).map(([k, v]) => tpl(k, v)) });
 
-const paused = (platform) => Object.values(PLATFORMS[platform]).some((v) => String(v).startsWith("REPLACE"));
+// A tag is paused while an ID it uses is still a placeholder. A tag that names no
+// ID itself (Conversion Linker, page view on navigation) follows its platform.
+const unset = (value) => String(value).startsWith("REPLACE");
+const ID_VALUES = Object.assign({}, ...Object.values(PLATFORMS));
+function paused(platform, parameter) {
+  const used = [...JSON.stringify(parameter).matchAll(/\{\{([^}]+)\}\}/g)].map((m) => m[1]).filter((name) => name in ID_VALUES);
+  if (used.length) return used.some((name) => unset(ID_VALUES[name]));
+  return Object.values(PLATFORMS[platform]).every(unset);
+}
 const needs = (consentType) => ({
   consentStatus: "NEEDED",
   consentType: { type: "LIST", list: [{ type: "TEMPLATE", value: consentType }] },
@@ -75,7 +103,7 @@ function dataLayer(name, key) {
 for (const group of Object.values(PLATFORMS)) {
   for (const [name, value] of Object.entries(group)) constant(name, value);
 }
-for (const key of ["event_id", "value", "currency", "method", "placement", "network", "form", "source", "step", "reason", "page_path", "user_data",
+for (const key of ["event_id", "value", "currency", "method", "placement", "network", "form", "source", "step", "reason", "page_path", "service", "delivery", "booklet", "user_data",
   "user_data.sha256_email_address", "user_data.sha256_phone_number", "user_data.address.postal_code"]) {
   dataLayer(`DLV - ${key}`, key);
 }
@@ -121,6 +149,10 @@ const T = {
   social: customEvent("CE - social_click", "social_click"),
   funnel: customEvent("CE - form funnel", "^form_(view|start|step|attempt|error|submit)$", true),
   spa: customEvent("CE - page_view_spa", "page_view_spa"),
+  // The named events from the offer; generate_lead fires next to each and stays the ad conversion.
+  quiz: customEvent("CE - quiz_complete", "quiz_complete"),
+  katalog: customEvent("CE - katalog_order", "katalog_order"),
+  booking: customEvent("CE - booking_complete", "booking_complete"),
 };
 
 // ---------- tags ----------
@@ -134,13 +166,18 @@ function tag(platform, name, type, parameter, firingTriggerId, consentType) {
     firingTriggerId,
     tagFiringOption: "ONCE_PER_EVENT",
     consentSettings: needs(consentType),
-    ...(paused(platform) ? { paused: true } : {}),
+    ...(paused(platform, parameter) ? { paused: true } : {}),
   });
 }
 const html = (code) => [tpl("html", code), bool("supportDocumentWrite", false)];
 
 // Google tag + GA4 events (analytics_storage).
-tag("ga4", "GA4 - Google tag", "googtag", [tpl("tagId", "{{GA4 Measurement ID}}")], [ALL_PAGES], "analytics_storage");
+tag("ga4", "GA4 - Google tag", "googtag", [
+  tpl("tagId", "{{GA4 Measurement ID}}"),
+  ...(serverContainerUrl
+    ? [list("configSettingsTable", [map({ parameter: "server_container_url", parameterValue: serverContainerUrl })])]
+    : []),
+], [ALL_PAGES], "analytics_storage");
 const ga4Event = (name, eventName, trigger, params) =>
   tag("ga4", name, "gaawe", [
     tpl("eventName", eventName),
@@ -153,6 +190,9 @@ ga4Event("GA4 - contact", "contact", T.contact, { method: "{{DLV - method}}", pl
 ga4Event("GA4 - get_directions", "get_directions", T.directions, { placement: "{{DLV - placement}}" });
 ga4Event("GA4 - social_click", "social_click", T.social, { network: "{{DLV - network}}" });
 ga4Event("GA4 - form funnel", "{{Event}}", T.funnel, { form: "{{DLV - form}}", source: "{{DLV - source}}", step: "{{DLV - step}}", reason: "{{DLV - reason}}" });
+ga4Event("GA4 - quiz_complete", "quiz_complete", T.quiz, { form: "{{DLV - form}}", event_id: "{{DLV - event_id}}" });
+ga4Event("GA4 - katalog_order", "katalog_order", T.katalog, { form: "{{DLV - form}}", booklet: "{{DLV - booklet}}", delivery: "{{DLV - delivery}}", event_id: "{{DLV - event_id}}" });
+ga4Event("GA4 - booking_complete", "booking_complete", T.booking, { form: "{{DLV - form}}", service: "{{DLV - service}}", event_id: "{{DLV - event_id}}" });
 
 // Google Ads (ad_storage).
 tag("googleAds", "Google Ads - Conversion Linker", "gclidw", [bool("enableCrossDomain", false), bool("enableUrlPassthrough", false), bool("enableCookieOverrides", false)], [ALL_PAGES], "ad_storage");
@@ -204,6 +244,8 @@ if (window.fbq) {
 }
 </script>`), [T.lead], "ad_storage");
 tag("meta", "Meta - Contact", "html", html(`<script>window.fbq && fbq('track', 'Contact', { content_category: {{DLV - method}} });</script>`), [T.contact], "ad_storage");
+// A booked appointment is also Meta's standard "Schedule" (its own event_id suffix, so it never dedups against the Lead).
+tag("meta", "Meta - Schedule", "html", html(`<script>window.fbq && fbq('track', 'Schedule', { content_name: {{DLV - service}} }, { eventID: {{DLV - event_id}} + '-schedule' });</script>`), [T.booking], "ad_storage");
 tag("meta", "Meta - FindLocation", "html", html(`<script>window.fbq && fbq('track', 'FindLocation');</script>`), [T.directions], "ad_storage");
 
 // Pinterest (ad_storage).
