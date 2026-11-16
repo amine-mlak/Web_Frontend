@@ -42,6 +42,7 @@ import {
   type StrapiMedia,
 } from "@/lib/strapi";
 import { mapSeo, SEO_POPULATE } from "@/lib/cms-seo";
+import { PROJECT_CLOSE, type ProjectBlocks, type ProjectSection } from "@/lib/project-blocks";
 import legacyRedirects from "@/lib/legacy-redirects.json";
 
 /** Addresses that redirect elsewhere (next.config.ts); an article living at one is never listed. */
@@ -282,18 +283,67 @@ function mapMaterial(entry: unknown): Material | null {
   };
 }
 
+/** One project photo with its description from the media library; undefined when empty. */
+function mapFrame(item: unknown): ProjectFrame | undefined {
+  if (!item || typeof item !== "object") {
+    return undefined;
+  }
+  const media = item as StrapiMedia & Record<string, unknown>;
+  const image = strapiResponsiveImage(media, { srcWidth: 1600 });
+  if (!image.src) {
+    return undefined;
+  }
+  // Never a file name ("grifflose küchen_küchen kaufen.jpg"): the page then uses the project title.
+  const alt = text(media, "alternativeText") || text(media, "caption");
+  const portrait = Boolean(media.width && media.height && media.height > media.width);
+  return { src: image.src, srcSet: image.srcSet, alt, ...(portrait ? { portrait } : {}) };
+}
+
 function mapGallery(row: Record<string, unknown> | null): ProjectFrame[] {
-  return flattenCollection(row?.gallery).flatMap((item): ProjectFrame[] => {
-    const image = strapiResponsiveImage(item as StrapiMedia, { srcWidth: 1600 });
-    if (!image.src) {
-      return [];
-    }
-    // Never a file name ("grifflose küchen_küchen kaufen.jpg"): the page then uses the project title.
-    const alt = text(item, "alternativeText") || text(item, "caption");
-    const media = item as StrapiMedia;
-    const portrait = Boolean(media.width && media.height && media.height > media.width);
-    return [{ src: image.src, srcSet: image.srcSet, alt, ...(portrait ? { portrait } : {}) }];
-  });
+  return flattenCollection(row?.gallery).flatMap((item) => mapFrame(item) ?? []);
+}
+
+/** A text block of the project page (Einleitung or Abschnitt) with its one or two photos. */
+function mapSection(item: Record<string, unknown>): ProjectSection | null {
+  const photo = mapFrame(item.foto);
+  const body = text(item, "text");
+  if (!photo || !body) {
+    return null;
+  }
+  return { heading: text(item, "zwischenueberschrift") || undefined, text: body, photo, photo2: mapFrame(item.zweitesFoto) };
+}
+
+/** The project's page blocks from the CMS; undefined while the project has none (no title photo). */
+function mapProjectBlocks(row: Record<string, unknown> | null, locale: "de" | "en"): ProjectBlocks | undefined {
+  const kopf = (row?.kopf ?? null) as Record<string, unknown> | null;
+  const titelfoto = mapFrame(kopf?.titelfoto);
+  if (!titelfoto) {
+    return undefined;
+  }
+  const schluss = (row?.schluss ?? null) as Record<string, unknown> | null;
+  const fallback = PROJECT_CLOSE[locale];
+  return {
+    source: "cms",
+    hero: { photo: titelfoto, detailLeft: mapFrame(kopf?.detailfotoLinks), detailRight: mapFrame(kopf?.detailfotoRechts) },
+    facts: flattenCollection(row?.eckdaten)
+      .map((item) => ({ label: text(item, "bezeichnung"), value: text(item, "wert") }))
+      .filter((item) => item.label && item.value),
+    intro: flattenCollection(row?.einleitung).map(mapSection).find(Boolean) ?? undefined,
+    sections: flattenCollection(row?.abschnitte).flatMap((item) => mapSection(item) ?? []),
+    textOnly: [],
+    morePhotos: flattenCollection(row?.weitereFotos).flatMap((item) => mapFrame(item) ?? []),
+    similar: flattenCollection(row?.aehnlicheHaeuser).flatMap((item) => {
+      const slug = text(flattenEntity(item.haus), "slug");
+      return slug ? [slug] : [];
+    }),
+    close: {
+      title: text(schluss, "titel") || fallback.title,
+      text: text(schluss, "text") || fallback.text,
+      photo: mapFrame(schluss?.foto),
+      buttonText: text(schluss, "buttonText") || fallback.buttonText,
+      buttonHref: text(schluss, "buttonZiel") || fallback.buttonHref,
+    },
+  };
 }
 
 function mapSpecs(row: Record<string, unknown> | null): CatalogSpec[] {
@@ -342,6 +392,7 @@ function mapProject(entry: unknown): Project | null {
       .filter((item): item is Region => Boolean(item)),
     specs: mapSpecs(row),
     gallery: projectGalleryFor(slug, mapGallery(row)),
+    blocks: mapProjectBlocks(row, copy.contentLocale === "en" ? "en" : "de"),
   };
 }
 
@@ -497,6 +548,14 @@ const PROJECT_POPULATE = {
   "populate[appliances][populate]": "image",
   "populate[regions][populate]": "image",
   ...SEO_POPULATE,
+  // The page blocks (lib/project-blocks.ts).
+  "populate[kopf][populate]": "*",
+  "populate[eckdaten]": "true",
+  "populate[einleitung][populate]": "*",
+  "populate[abschnitte][populate]": "*",
+  "populate[weitereFotos]": "true",
+  "populate[aehnlicheHaeuser][populate][haus][fields][0]": "slug",
+  "populate[schluss][populate]": "*",
 };
 
 const SEO_QUERY = {
@@ -526,7 +585,8 @@ export async function fetchProjects() {
     PROJECT_POPULATE,
     mapProject,
     FALLBACK_PROJECTS,
-    20,
+    // Old fields and blocks together carry every photo twice: smaller pages stay under 2 MB.
+    10,
   );
 }
 

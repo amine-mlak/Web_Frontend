@@ -119,6 +119,8 @@ export type Project = {
   seoDescription?: string;
   seo?: CmsSeo;
   updatedAt?: string;
+  /** The language of the CMS entry the project was read from. */
+  contentLocale?: string;
   /** The page blocks from the CMS, once the project has been moved into them. */
   blocks?: ProjectBlocks;
   gallery: ProjectFrame[];
