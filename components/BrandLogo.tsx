@@ -4,12 +4,15 @@ import CmsImage from "@/components/CmsImage";
 
 export default function BrandLogo({
   className,
-  src = "/logo.png",
+  src,
   alt = "BEER Küchenmanufaktur",
+  wordmarkSrc,
 }: {
   className?: string;
   src?: string;
   alt?: string;
+  /** The lettering from the CMS header; the copy in public/ stands in when it is empty. */
+  wordmarkSrc?: string;
 }) {
   return (
     <LocaleLink
@@ -18,7 +21,7 @@ export default function BrandLogo({
     >
       <span className="relative block h-8 w-[30px] shrink-0">
         <CmsImage
-          src={src}
+          src={src || "/logo.png"}
           alt={alt}
           fill
           priority
@@ -28,7 +31,7 @@ export default function BrandLogo({
       </span>
       <span className="relative block h-[22px] w-[100px] shrink-0 sm:h-6 sm:w-[110px]">
         <CmsImage
-          src="/beer-wordmark.png"
+          src={wordmarkSrc || "/beer-wordmark.png"}
           alt=""
           fill
           priority

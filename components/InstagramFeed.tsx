@@ -5,8 +5,8 @@ import {
   INSTAGRAM_HANDLE,
   INSTAGRAM_HREF,
   INSTAGRAM_LABEL,
-  INSTAGRAM_POSTS,
 } from "@/lib/instagram";
+import { fetchInstagramPosts } from "@/lib/strapi";
 
 function InstagramMark({ className }: { className?: string }) {
   return (
@@ -35,7 +35,10 @@ function InstagramMark({ className }: { className?: string }) {
 }
 
 export default async function InstagramFeed() {
-  const copy = chromeCopy[await getRequestLocale()];
+  const [copy, posts] = await Promise.all([
+    getRequestLocale().then((locale) => chromeCopy[locale]),
+    fetchInstagramPosts(),
+  ]);
 
   return (
     <section className="bg-paper" aria-labelledby="instagram-heading">
@@ -66,7 +69,7 @@ export default async function InstagramFeed() {
         </div>
 
         <ul className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 md:grid-cols-4 md:gap-4">
-          {INSTAGRAM_POSTS.map((post) => (
+          {posts.map((post) => (
             <li key={post.href}>
               <a
                 href={post.href}

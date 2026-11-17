@@ -3,26 +3,19 @@ import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import CmsImage from "@/components/CmsImage";
 import type { PresentedHub } from "@/lib/collection-present";
-import {
-  APPLIANCE_BRANDS,
-  applianceBrand,
-} from "@/lib/appliance-media";
+import type { ApplianceBrandLogo } from "@/lib/appliance-media";
+import { fetchBrandLogos } from "@/lib/strapi";
 import { Frame, HubEnd } from "@/components/catalog/collections/parts";
 import { QuoteLine } from "@/components/catalog/clusters/parts";
 import { cn } from "@/lib/utils";
 
 function BrandMark({
-  slug,
+  brand,
   className,
 }: {
-  slug: string;
+  brand: ApplianceBrandLogo;
   className?: string;
 }) {
-  const brand = applianceBrand(slug);
-  if (!brand) {
-    return null;
-  }
-
   return (
     <span className={cn("relative block h-6 w-[7.5rem]", className)}>
       <CmsImage
@@ -39,13 +32,14 @@ function BrandMark({
   );
 }
 
-export default function GeraeteCollection({
+export default async function GeraeteCollection({
   hub,
   children,
 }: {
   hub: PresentedHub;
   children?: ReactNode;
 }) {
+  const brands = await fetchBrandLogos();
   const partners = hub.locale === "en" ? "Partners we fit" : "Marken, die wir einbauen";
 
   return (
@@ -86,13 +80,13 @@ export default function GeraeteCollection({
           {partners}
         </h2>
         <ul className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-6">
-          {APPLIANCE_BRANDS.map((brand) => (
+          {brands.map((brand) => (
             <li key={brand.slug}>
               <LocaleLink
                 href={`/marken/${brand.slug}`}
                 className="block opacity-90 transition-opacity hover:opacity-100"
               >
-                <BrandMark slug={brand.slug} className="h-7 w-[8.5rem]" />
+                <BrandMark brand={brand} className="h-7 w-[8.5rem]" />
               </LocaleLink>
             </li>
           ))}

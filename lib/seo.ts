@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { CmsSeo } from "@/lib/cms-seo";
+import { siteImage } from "@/lib/dev-images";
 import { DEFAULT_LOCALE, withLocale, type Locale } from "@/lib/i18n";
 import { HOUSE_MEDIA, houseSrc } from "@/lib/house-photos";
 import { getRequestLocale } from "@/lib/locale";
@@ -60,6 +61,10 @@ export function absoluteUrl(path = "/", locale: Locale = DEFAULT_LOCALE) {
 export function absoluteAsset(src?: string) {
   if (!src) {
     return undefined;
+  }
+  // /kitchens/<name> is a named CMS photo (lib/beer-photos.ts), not a file in public/.
+  if (src.startsWith("/kitchens/")) {
+    src = siteImage(src, 1200);
   }
   if (src.startsWith("http://") || src.startsWith("https://")) {
     return src;

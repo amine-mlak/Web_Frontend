@@ -10,6 +10,7 @@ export default async function Header() {
       <MegaMenu
         panels={header?.panels?.length ? header.panels : menuPanels}
         logoSrc={header?.logo || "/logo.png"}
+        wordmarkSrc={header?.wordmark}
         logoAlt={header?.logoAlt ?? "BEER Küchenmanufaktur"}
       />
     </header>

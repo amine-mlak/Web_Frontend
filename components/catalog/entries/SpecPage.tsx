@@ -14,13 +14,14 @@ import {
   QuoteLine,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
-import { APPLIANCE_BRANDS } from "@/lib/appliance-media";
+import type { ApplianceBrandLogo } from "@/lib/appliance-media";
+import { fetchBrandLogos } from "@/lib/strapi";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cn } from "@/lib/utils";
 
-function markFor(hub: PresentedTopic) {
+function markFor(hub: PresentedTopic, brands: ApplianceBrandLogo[]) {
   const name = hub.heroAlt.trim().toLowerCase();
-  return APPLIANCE_BRANDS.find((brand) => brand.name.toLowerCase() === name);
+  return brands.find((brand) => brand.name.toLowerCase() === name);
 }
 
 /**
@@ -28,8 +29,8 @@ function markFor(hub: PresentedTopic) {
  * points, two more photos, the kitchens, one close-up from edge to edge. Where no gallery photo
  * shows it, the CMS image stands framed on the dark band as before.
  */
-export default function SpecPage({ hub }: { hub: PresentedTopic }) {
-  const mark = markFor(hub);
+export default async function SpecPage({ hub }: { hub: PresentedTopic }) {
+  const mark = markFor(hub, await fetchBrandLogos());
   const houses =
     hub.locale === "en" ? "Kitchens that use it" : "In diesen Küchen verbaut";
   // Photos that show the appliance or the brand in the built kitchens. Without any, the CMS image stands on the dark band.

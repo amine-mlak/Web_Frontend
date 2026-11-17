@@ -15,6 +15,14 @@ export const APPLIANCE_BRANDS = [
   { slug: "siemens", name: "Siemens", logo: "/brands/siemens.svg", invert: false },
 ] as const;
 
+export type ApplianceBrandLogo = {
+  slug: string;
+  name: string;
+  logo: string;
+  /** Show a dark logo white on the dark band. */
+  invert: boolean;
+};
+
 export function applianceBrand(slug: string) {
   return APPLIANCE_BRANDS.find((brand) => brand.slug === slug);
 }

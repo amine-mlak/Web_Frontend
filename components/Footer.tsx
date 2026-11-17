@@ -1,12 +1,12 @@
 import { ctaHref } from "@/lib/cta";
-import Image from "next/image";
+import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
 import FooterRegions from "@/components/FooterRegions";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { NEWSLETTER_CONSENT } from "@/lib/newsletter";
 import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
-import { fetchFooter } from "@/lib/strapi";
+import { fetchFooter, fetchHeader } from "@/lib/strapi";
 import { type SocialIcon } from "@/lib/footer";
 import { CONSENT_SETTINGS_ATTR } from "@/lib/consent-state";
 
@@ -28,7 +28,7 @@ export default async function Footer() {
   const year = new Date().getFullYear();
   const locale = await getRequestLocale();
   const copy = chromeCopy[locale];
-  const footer = await fetchFooter();
+  const [footer, header] = await Promise.all([fetchFooter(), fetchHeader()]);
   const copyright = footer.copyright.replace("{year}", String(year));
 
   return (
@@ -36,8 +36,9 @@ export default async function Footer() {
       <div className="mx-auto max-w-6xl px-6 pt-16 pb-14 md:px-10 md:pt-20 md:pb-16">
         <div className="flex justify-center">
           <LocaleLink href="/" className="inline-flex" aria-label={copy.home}>
-            <Image
-              src="/logo.png"
+            {/* Same logo as the CMS header; the copy in public/ stands in when the CMS is unreachable. */}
+            <CmsImage
+              src={header?.logo || "/logo.png"}
               alt=""
               width={68}
               height={72}

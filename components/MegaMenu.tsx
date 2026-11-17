@@ -28,12 +28,14 @@ import { useLocale } from "@/components/LocaleProvider";
 type MegaMenuProps = {
   panels?: MenuPanel[];
   logoSrc?: string;
+  wordmarkSrc?: string;
   logoAlt?: string;
 };
 
 export default function MegaMenu({
   panels = menuPanels,
   logoSrc,
+  wordmarkSrc,
   logoAlt,
 }: MegaMenuProps) {
   const locale = useLocale();
@@ -246,7 +248,7 @@ export default function MegaMenu({
             onMouseEnter={openMenuHover}
           >
             <div className="justify-self-start">
-              <BrandLogo src={logoSrc} alt={logoAlt} />
+              <BrandLogo src={logoSrc} alt={logoAlt} wordmarkSrc={wordmarkSrc} />
             </div>
 
             <NavigationMenuList className="relative h-full items-stretch justify-center space-x-0">
@@ -382,7 +384,7 @@ export default function MegaMenu({
       </div>
 
       <div className="relative z-10 flex h-14 w-full items-center justify-between gap-2 px-5 md:px-7 xl:hidden">
-        <BrandLogo src={logoSrc} alt={logoAlt} />
+        <BrandLogo src={logoSrc} alt={logoAlt} wordmarkSrc={wordmarkSrc} />
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <HeaderActions compact />

@@ -6,9 +6,11 @@ import {
   type FaqEntry,
   type FaqTheme,
 } from "@/lib/faq";
+import { APPLIANCE_BRANDS, type ApplianceBrandLogo } from "@/lib/appliance-media";
 import { mapSeo, SEO_POPULATE, type CmsSeo } from "@/lib/cms-seo";
 import { footerFallback, type FooterContent, type SocialIcon } from "@/lib/footer";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
+import { INSTAGRAM_POSTS, type InstagramPost } from "@/lib/instagram";
 import { getRequestLocale } from "@/lib/locale";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
@@ -976,6 +978,8 @@ export async function fetchHomeFaqContent(): Promise<FaqContent | null> {
 
 export type HeaderCms = {
   logo: string;
+  /** The BEER lettering next to the logo; empty when the CMS has none. */
+  wordmark: string;
   logoAlt: string;
   ctaLabel: string;
   ctaUrl: string;
@@ -1014,6 +1018,7 @@ type StrapiHeaderMenu = {
 
 type StrapiHeaderEntry = {
   logo?: StrapiMedia;
+  wordmark?: StrapiMedia;
   logoAlt?: string;
   ctaLabel?: string;
   ctaUrl?: string;
@@ -1090,6 +1095,7 @@ export async function fetchHeader(): Promise<HeaderCms | null> {
     "/api/header",
     {
       "populate[logo]": "true",
+      "populate[wordmark]": "true",
       "populate[menus][populate][groups][populate]": "links",
       "populate[menus][populate][teasers][populate]": "image",
     },
@@ -1106,6 +1112,7 @@ export async function fetchHeader(): Promise<HeaderCms | null> {
 
   return {
     logo,
+    wordmark: strapiMediaUrl(header?.wordmark?.url),
     logoAlt: header?.logoAlt?.trim() || "BEER Küchenmanufaktur",
     ctaLabel: header?.ctaLabel?.trim() || "Beratung anfragen",
     ctaUrl: header?.ctaUrl?.trim() || "#beratung",
@@ -1243,4 +1250,71 @@ export async function fetchFooter(): Promise<FooterContent> {
         : fallback.legal,
     social: social.length > 0 ? social : fallback.social,
   };
+}
+
+type StrapiBrandLogoEntry = {
+  slug?: string;
+  name?: string;
+  logoWeiss?: boolean | null;
+  logo?: StrapiMedia | null;
+};
+
+/**
+ * Brand logos from the CMS (Marken: Logo, Logo weiß zeigen), in the CMS order. A brand without a
+ * logo in the CMS keeps the copy in public/brands; with no CMS answer at all, the fixed list is used.
+ * The logo fields are shared between German and English, so the German entries are read.
+ */
+export async function fetchBrandLogos(): Promise<ApplianceBrandLogo[]> {
+  const payload = await strapiGet<{ data?: StrapiBrandLogoEntry[] }>("/api/brands", {
+    locale: DEFAULT_LOCALE,
+    "fields[0]": "slug",
+    "fields[1]": "name",
+    "fields[2]": "logoWeiss",
+    "populate[logo]": "true",
+    sort: "order:asc",
+    "pagination[pageSize]": "50",
+  });
+  const fromCms = (payload?.data ?? [])
+    .map((entry): ApplianceBrandLogo | null => {
+      const slug = entry.slug?.trim() ?? "";
+      const fallback = APPLIANCE_BRANDS.find((brand) => brand.slug === slug);
+      const cmsLogo = strapiMediaUrl(entry.logo?.url);
+      const logo = cmsLogo || fallback?.logo || "";
+      if (!slug || !logo) {
+        return null;
+      }
+      return {
+        slug,
+        name: entry.name?.trim() || fallback?.name || slug,
+        logo,
+        invert: cmsLogo ? Boolean(entry.logoWeiss) : (fallback?.invert ?? false),
+      };
+    })
+    .filter((brand): brand is ApplianceBrandLogo => brand !== null);
+  return fromCms.length > 0 ? fromCms : [...APPLIANCE_BRANDS];
+}
+
+type StrapiInstagramEntry = {
+  link?: string;
+  beschreibung?: string | null;
+  bild?: StrapiMedia | null;
+};
+
+/** The Instagram strip from the CMS collection "Instagram"; the fixed list stands in while it is empty. */
+export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
+  const payload = await strapiGet<{ data?: StrapiInstagramEntry[] }>("/api/instagram-posts", {
+    locale: DEFAULT_LOCALE,
+    "populate[bild]": "true",
+    sort: "reihenfolge:asc",
+    "pagination[pageSize]": "12",
+  });
+  const posts = (payload?.data ?? [])
+    .map((entry) => ({
+      // The medium Strapi size (750 px) is plenty for a quarter-width tile.
+      src: strapiMediaUrl(entry.bild?.formats?.medium?.url || entry.bild?.url),
+      href: entry.link?.trim() ?? "",
+      alt: entry.beschreibung?.trim() || entry.bild?.alternativeText?.trim() || "",
+    }))
+    .filter((post) => post.src && post.href);
+  return posts.length > 0 ? posts : INSTAGRAM_POSTS;
 }
