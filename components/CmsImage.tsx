@@ -42,11 +42,9 @@ export default function CmsImage({
   const remapped = srcString !== raw;
   const proxied =
     srcString.startsWith("/cms-uploads/") || srcString.startsWith("/cms-opt/");
-  const localOriginal =
-    srcString.startsWith("/instagram/") || srcString.startsWith("/brands/");
   const remote = /^https?:\/\//.test(srcString);
   const native =
-    remapped || Boolean(srcSet) || proxied || remote || localOriginal;
+    remapped || Boolean(srcSet) || proxied || remote;
 
   if (native) {
     return (

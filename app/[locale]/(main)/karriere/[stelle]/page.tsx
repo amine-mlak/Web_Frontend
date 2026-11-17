@@ -9,6 +9,7 @@ import { seoFor } from "@/lib/cms-seo";
 import { getRequestLocale } from "@/lib/locale";
 import { brandedTitle, pageMetadata } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
+import { fetchHeader } from "@/lib/strapi";
 
 export const revalidate = 120;
 export const dynamicParams = true;
@@ -71,7 +72,11 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
   const { stelle } = await params;
   const locale = await getRequestLocale();
   const copy = COPY[locale];
-  const [{ jobs, updatedAt }, settings] = await Promise.all([loadJobs(), getSiteSettings()]);
+  const [{ jobs, updatedAt }, settings, header] = await Promise.all([
+    loadJobs(),
+    getSiteSettings(),
+    fetchHeader(),
+  ]);
   const job = jobs.find((item) => item.slug === stelle);
   if (!job) {
     // An ad that was taken down (or renamed) leads back to the open positions.
@@ -90,7 +95,7 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
       "@type": "Organization",
       name: settings.siteName,
       sameAs: settings.siteUrl,
-      logo: `${settings.siteUrl}/beer-wordmark.png`,
+      logo: `${settings.siteUrl}${header?.wordmark || "/logo.png"}`,
     },
     jobLocation: {
       "@type": "Place",

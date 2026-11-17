@@ -6,11 +6,11 @@ import {
   type FaqEntry,
   type FaqTheme,
 } from "@/lib/faq";
-import { APPLIANCE_BRANDS, type ApplianceBrandLogo } from "@/lib/appliance-media";
+import type { ApplianceBrandLogo } from "@/lib/appliance-media";
 import { mapSeo, SEO_POPULATE, type CmsSeo } from "@/lib/cms-seo";
 import { footerFallback, type FooterContent, type SocialIcon } from "@/lib/footer";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
-import { INSTAGRAM_POSTS, type InstagramPost } from "@/lib/instagram";
+import type { InstagramPost } from "@/lib/instagram";
 import { getRequestLocale } from "@/lib/locale";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 
@@ -1260,9 +1260,8 @@ type StrapiBrandLogoEntry = {
 };
 
 /**
- * Brand logos from the CMS (Marken: Logo, Logo weiß zeigen), in the CMS order. A brand without a
- * logo in the CMS keeps the copy in public/brands; with no CMS answer at all, the fixed list is used.
- * The logo fields are shared between German and English, so the German entries are read.
+ * Brand logos from the CMS (Marken: Logo, Logo weiß zeigen), in the CMS order; brands without a
+ * logo are left out. The logo fields are shared between German and English, so the German entries are read.
  */
 export async function fetchBrandLogos(): Promise<ApplianceBrandLogo[]> {
   const payload = await strapiGet<{ data?: StrapiBrandLogoEntry[] }>("/api/brands", {
@@ -1274,24 +1273,21 @@ export async function fetchBrandLogos(): Promise<ApplianceBrandLogo[]> {
     sort: "order:asc",
     "pagination[pageSize]": "50",
   });
-  const fromCms = (payload?.data ?? [])
+  return (payload?.data ?? [])
     .map((entry): ApplianceBrandLogo | null => {
       const slug = entry.slug?.trim() ?? "";
-      const fallback = APPLIANCE_BRANDS.find((brand) => brand.slug === slug);
-      const cmsLogo = strapiMediaUrl(entry.logo?.url);
-      const logo = cmsLogo || fallback?.logo || "";
+      const logo = strapiMediaUrl(entry.logo?.url);
       if (!slug || !logo) {
         return null;
       }
       return {
         slug,
-        name: entry.name?.trim() || fallback?.name || slug,
+        name: entry.name?.trim() || slug,
         logo,
-        invert: cmsLogo ? Boolean(entry.logoWeiss) : (fallback?.invert ?? false),
+        invert: Boolean(entry.logoWeiss),
       };
     })
     .filter((brand): brand is ApplianceBrandLogo => brand !== null);
-  return fromCms.length > 0 ? fromCms : [...APPLIANCE_BRANDS];
 }
 
 type StrapiInstagramEntry = {
@@ -1300,7 +1296,7 @@ type StrapiInstagramEntry = {
   bild?: StrapiMedia | null;
 };
 
-/** The Instagram strip from the CMS collection "Instagram"; the fixed list stands in while it is empty. */
+/** The Instagram strip from the CMS collection "Instagram"; empty when nothing is published. */
 export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
   const payload = await strapiGet<{ data?: StrapiInstagramEntry[] }>("/api/instagram-posts", {
     locale: DEFAULT_LOCALE,
@@ -1308,7 +1304,7 @@ export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
     sort: "reihenfolge:asc",
     "pagination[pageSize]": "12",
   });
-  const posts = (payload?.data ?? [])
+  return (payload?.data ?? [])
     .map((entry) => ({
       // The medium Strapi size (750 px) is plenty for a quarter-width tile.
       src: strapiMediaUrl(entry.bild?.formats?.medium?.url || entry.bild?.url),
@@ -1316,5 +1312,4 @@ export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
       alt: entry.beschreibung?.trim() || entry.bild?.alternativeText?.trim() || "",
     }))
     .filter((post) => post.src && post.href);
-  return posts.length > 0 ? posts : INSTAGRAM_POSTS;
 }

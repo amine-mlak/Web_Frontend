@@ -1,9 +1,11 @@
 import { fetchRegions } from "@/lib/catalog-api";
 import { getSiteSettings } from "@/lib/site-settings";
+import { fetchHeader } from "@/lib/strapi";
 
 export default async function LocalBusinessJsonLd() {
-  const [settings, regions] = await Promise.all([getSiteSettings(), fetchRegions()]);
+  const [settings, regions, header] = await Promise.all([getSiteSettings(), fetchRegions(), fetchHeader()]);
   const url = settings.siteUrl;
+  const logo = `${url}${header?.wordmark || "/logo.png"}`;
   const address = {
     "@type": "PostalAddress",
     streetAddress: settings.street,
@@ -34,8 +36,8 @@ export default async function LocalBusinessJsonLd() {
         name: settings.siteName,
         description: settings.description,
         url,
-        image: settings.shareImage ?? `${url}/beer-wordmark.png`,
-        logo: `${url}/beer-wordmark.png`,
+        image: settings.shareImage ?? logo,
+        logo,
         telephone,
         email: settings.email,
         address,

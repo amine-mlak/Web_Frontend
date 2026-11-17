@@ -7,14 +7,6 @@ export const APPLIANCE_PHOTOS = {
   extra: "/kitchens/stile-landhaus.jpg",
 } as const;
 
-export const APPLIANCE_BRANDS = [
-  { slug: "bora", name: "Bora", logo: "/brands/bora.svg", invert: true },
-  { slug: "miele", name: "Miele", logo: "/brands/miele.svg", invert: false },
-  { slug: "gaggenau", name: "Gaggenau", logo: "/brands/gaggenau.svg", invert: true },
-  { slug: "quooker", name: "Quooker", logo: "/brands/quooker.svg", invert: false },
-  { slug: "siemens", name: "Siemens", logo: "/brands/siemens.svg", invert: false },
-] as const;
-
 export type ApplianceBrandLogo = {
   slug: string;
   name: string;
@@ -22,7 +14,3 @@ export type ApplianceBrandLogo = {
   /** Show a dark logo white on the dark band. */
   invert: boolean;
 };
-
-export function applianceBrand(slug: string) {
-  return APPLIANCE_BRANDS.find((brand) => brand.slug === slug);
-}

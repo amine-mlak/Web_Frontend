@@ -11,7 +11,7 @@ export default function BrandLogo({
   className?: string;
   src?: string;
   alt?: string;
-  /** The lettering from the CMS header; the copy in public/ stands in when it is empty. */
+  /** The lettering from the CMS header; left out when the CMS has none. */
   wordmarkSrc?: string;
 }) {
   return (
@@ -29,16 +29,18 @@ export default function BrandLogo({
           className="object-contain object-center"
         />
       </span>
-      <span className="relative block h-[22px] w-[100px] shrink-0 sm:h-6 sm:w-[110px]">
-        <CmsImage
-          src={wordmarkSrc || "/beer-wordmark.png"}
-          alt=""
-          fill
-          priority
-          sizes="110px"
-          className="object-contain object-left brightness-0"
-        />
-      </span>
+      {wordmarkSrc ? (
+        <span className="relative block h-[22px] w-[100px] shrink-0 sm:h-6 sm:w-[110px]">
+          <CmsImage
+            src={wordmarkSrc}
+            alt=""
+            fill
+            priority
+            sizes="110px"
+            className="object-contain object-left brightness-0"
+          />
+        </span>
+      ) : null}
     </LocaleLink>
   );
 }

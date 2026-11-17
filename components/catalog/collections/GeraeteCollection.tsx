@@ -72,26 +72,28 @@ export default async function GeraeteCollection({
         />
       </section>
 
-      <section
-        className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-gutter"
-        aria-labelledby="geraete-partners"
-      >
-        <h2 id="geraete-partners" className="t-item text-paper">
-          {partners}
-        </h2>
-        <ul className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-6">
-          {brands.map((brand) => (
-            <li key={brand.slug}>
-              <LocaleLink
-                href={`/marken/${brand.slug}`}
-                className="block opacity-90 transition-opacity hover:opacity-100"
-              >
-                <BrandMark brand={brand} className="h-7 w-[8.5rem]" />
-              </LocaleLink>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {brands.length > 0 ? (
+        <section
+          className="border-t border-paper/12 px-5 py-10 sm:px-8 lg:px-gutter"
+          aria-labelledby="geraete-partners"
+        >
+          <h2 id="geraete-partners" className="t-item text-paper">
+            {partners}
+          </h2>
+          <ul className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-6">
+            {brands.map((brand) => (
+              <li key={brand.slug}>
+                <LocaleLink
+                  href={`/marken/${brand.slug}`}
+                  className="block opacity-90 transition-opacity hover:opacity-100"
+                >
+                  <BrandMark brand={brand} className="h-7 w-[8.5rem]" />
+                </LocaleLink>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section aria-label={hub.indexEyebrow}>
         <ul>

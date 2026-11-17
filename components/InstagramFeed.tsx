@@ -39,6 +39,9 @@ export default async function InstagramFeed() {
     getRequestLocale().then((locale) => chromeCopy[locale]),
     fetchInstagramPosts(),
   ]);
+  if (posts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-paper" aria-labelledby="instagram-heading">
