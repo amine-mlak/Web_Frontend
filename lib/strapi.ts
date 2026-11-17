@@ -1290,21 +1290,19 @@ export async function fetchBrandLogos(): Promise<ApplianceBrandLogo[]> {
     .filter((brand): brand is ApplianceBrandLogo => brand !== null);
 }
 
-type StrapiInstagramEntry = {
+type StrapiInstagramPost = {
   link?: string;
   beschreibung?: string | null;
   bild?: StrapiMedia | null;
 };
 
-/** The Instagram strip from the CMS collection "Instagram"; empty when nothing is published. */
+/** The Instagram strip from the CMS single type "Instagram" (list of posts, in its order); empty without one. */
 export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
-  const payload = await strapiGet<{ data?: StrapiInstagramEntry[] }>("/api/instagram-posts", {
+  const payload = await strapiGet<{ data?: { beitraege?: StrapiInstagramPost[] } }>("/api/instagram", {
     locale: DEFAULT_LOCALE,
-    "populate[bild]": "true",
-    sort: "reihenfolge:asc",
-    "pagination[pageSize]": "12",
+    "populate[beitraege][populate]": "bild",
   });
-  return (payload?.data ?? [])
+  return (payload?.data?.beitraege ?? [])
     .map((entry) => ({
       // The medium Strapi size (750 px) is plenty for a quarter-width tile.
       src: strapiMediaUrl(entry.bild?.formats?.medium?.url || entry.bild?.url),
