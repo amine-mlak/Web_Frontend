@@ -1,5 +1,5 @@
 import LocaleLink from "@/components/LocaleLink";
-import ProjectFeature from "@/components/catalog/ProjectFeature";
+import ProjectReel from "@/components/ProjectReel";
 import { fetchProjects } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 import { projectFeature } from "@/lib/project-features";
@@ -10,16 +10,22 @@ const COPY = {
     title: "Aus unseren Projekten",
     text: "Jede Küche ist für ihr Haus geplant und in Wolfersdorf gebaut. Drei davon, ausführlicher.",
     all: "Alle Projekte ansehen",
+    row: "Projekte",
+    previous: "Vorheriges Projekt",
+    next: "Nächstes Projekt",
   },
   en: {
     title: "From our projects",
     text: "Every kitchen is planned for its house and built in Wolfersdorf. Three of them, in more detail.",
     all: "See all projects",
+    row: "Projects",
+    previous: "Previous project",
+    next: "Next project",
   },
 } as const;
 
 /**
- * Start page: three kitchens, each shown like an exposé in its own arrangement. The CMS picks
+ * Start page: kitchens as a row of large photos that moves sideways. The CMS picks
  * them; without picks the three newest with a text and a second photo appear.
  */
 export default async function HomeProjects({ content }: { content?: HomeProjectsContent | null }) {
@@ -48,20 +54,23 @@ export default async function HomeProjects({ content }: { content?: HomeProjects
   }
 
   return (
-    <section aria-labelledby="home-projects" className="bg-paper">
-      <div className="px-5 pt-20 sm:px-8 lg:px-gutter lg:pt-28">
-        <h2 data-rise="" id="home-projects" className="font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
+    <section aria-labelledby="home-projects" className="bg-paper py-20 lg:py-28">
+      <div className="grid gap-5 px-5 sm:px-8 lg:grid-cols-12 lg:items-end lg:gap-16 lg:px-gutter">
+        <h2 data-rise="" id="home-projects" className="t-section text-ink lg:col-span-7">
           {copy.title}
         </h2>
-        <p className="mt-5 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{copy.text}</p>
+        <div className="lg:col-span-5">
+          <p className="max-w-md font-sans text-[16px] leading-relaxed text-muted">{copy.text}</p>
+          <LocaleLink href="/projekte" className="btn-quiet mt-5">
+            {copy.all}
+          </LocaleLink>
+        </div>
       </div>
-      {features.map((feature, index) => (
-        <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={locale} />
-      ))}
-      <div className="px-5 pb-20 sm:px-8 lg:px-gutter">
-        <LocaleLink href="/projekte" className="btn-quiet">
-          {copy.all}
-        </LocaleLink>
+      <div className="mt-10 lg:mt-14">
+        <ProjectReel
+          labels={{ row: COPY[locale].row, previous: COPY[locale].previous, next: COPY[locale].next }}
+          items={features.map(({ href, title, meta, intro, image, srcSet }) => ({ href, title, meta, intro, image, srcSet }))}
+        />
       </div>
     </section>
   );

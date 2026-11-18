@@ -1,3 +1,4 @@
+import FillSentence from "@/components/FillSentence";
 import LocaleLink from "@/components/LocaleLink";
 import { fallbackGutZuWissen } from "@/components/GutZuWissen";
 import { fallback as processFallback } from "@/components/Process";
@@ -66,8 +67,11 @@ export default async function HomeWorkshop({
       />
 
       <blockquote className="mt-16 border-t border-paper/20 pt-14 lg:mt-24 lg:pt-20">
-        <p className="type-quote max-w-4xl text-paper">„{words}“</p>
-        <footer className="mt-6 font-sans text-[15px] text-paper/70">{source}</footer>
+        <FillSentence
+          text={`„${words}“`}
+          className="max-w-[22ch] font-serif text-[30px] leading-[1.14] font-medium tracking-[-0.02em] text-paper md:text-[46px] xl:text-[64px]"
+        />
+        <footer className="mt-8 font-sans text-[15px] text-messing">{source}</footer>
       </blockquote>
     </section>
   );

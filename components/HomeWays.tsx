@@ -1,8 +1,10 @@
+import ColourSwitcher from "@/components/ColourSwitcher";
 import LocaleLink from "@/components/LocaleLink";
 import { fallback as panelFallback } from "@/components/Entdecken";
 import { fallback as colourFallback } from "@/components/Kacheln";
 import { Frame } from "@/components/catalog/Frame";
 import { chromeCopy, type Locale } from "@/lib/i18n";
+import { cmsValue } from "@/lib/catalog";
 import { fetchKitchenTopics } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 import type { EntdeckenContent, EntdeckenPanel, KachelTile, KachelnContent } from "@/lib/strapi";
@@ -13,12 +15,14 @@ const COPY = {
     colours: "Nach Farbe",
     allColours: "Alle Küchenfarben",
     view: "Ansehen",
+    group: "Küchenfarbe wählen",
   },
   en: {
     text: "From the whole room down to the drawer: start wherever your thinking is right now.",
     colours: "By colour",
     allColours: "All kitchen colours",
     view: "View",
+    group: "Choose a kitchen colour",
   },
 } as const;
 
@@ -61,50 +65,17 @@ function WayTile({ panel, large, wide }: { panel: EntdeckenPanel; large: boolean
   );
 }
 
-/** Whether text on this colour should be dark. */
-function isLight(hex: string) {
-  const raw = hex.replace("#", "");
-  const full = raw.length === 3 ? raw.replace(/./g, "$&$&") : raw;
-  const [red, green, blue] = [0, 2, 4].map((at) => parseInt(full.slice(at, at + 2), 16) / 255);
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue > 0.55;
-}
-
-/**
- * One kitchen colour: a kitchen in that colour, and under it a field of the colour itself with
- * the name of the page it opens. On phones photo and field sit side by side as one compact row.
- */
-function ColourTile({ tile, name, view }: { tile: KachelTile; name: string; view: string }) {
-  const light = isLight(tile.color);
-  return (
-    <LocaleLink
-      href={tile.href}
-      className="group flex h-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:flex-col"
-    >
-      <Frame
-        src={tile.image}
-        srcSet={tile.srcSet}
-        alt={tile.alt}
-        className="aspect-square w-2/5 shrink-0 sm:aspect-square sm:w-full lg:aspect-[5/4]"
-        sizes="(max-width: 640px) 40vw, 33vw"
-      />
-      <div
-        className={`flex flex-1 flex-col justify-end p-5 sm:min-h-[9.5rem] sm:flex-none sm:p-6 lg:p-8 ${
-          light ? "text-ink ring-1 ring-ink/10 ring-inset" : "text-paper"
-        }`}
-        style={{ backgroundColor: tile.color }}
-      >
-        <span className="t-item hyphens-auto">{name}</span>
-        <span className="mt-2 font-sans text-[15px] underline decoration-current/40 underline-offset-[5px] group-hover:decoration-current">
-          {view}
-        </span>
-      </div>
-    </LocaleLink>
-  );
+/** The first sentence of a colour page's opening text, for the panel beside its photo. */
+function firstSentence(text: string) {
+  const plain = text.replace(/[#*_>`]/g, "").replace(/\s+/g, " ").trim();
+  const end = plain.search(/[.!?](\s|$)/);
+  const sentence = end > 20 ? plain.slice(0, end + 1) : plain;
+  return sentence.length <= 170 ? sentence : "";
 }
 
 /**
  * Start page: every way into the kitchens in one section. Four photo tiles for the worlds (one
- * large, three smaller), under them the kitchen colours, each with a field of its colour.
+ * large, three smaller), under them the kitchen colours as one switcher.
  */
 export default async function HomeWays({
   panels: panelContent,
@@ -126,6 +97,7 @@ export default async function HomeWays({
     return [
       {
         title: (locale !== "de" && COLOUR_NAME[locale][page.slug]) || page.name,
+        text: firstSentence(cmsValue(locale, page, page.intro) ?? ""),
         href: `/kuechen/farben/${page.slug}`,
         image: page.image,
         alt: page.name,
@@ -169,13 +141,22 @@ export default async function HomeWays({
               {panelContent?.coloursLinkLabel || copy.allColours}
             </LocaleLink>
           </div>
-          <ul className="mt-8 grid gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-10">
-            {colours.map(({ tile, slug }, index) => (
-              <li key={`${tile.href}-${index}`}>
-                <ColourTile tile={tile} name={own ? tile.title : (slug && COLOUR_NAME[locale][slug]) || tile.title} view={copy.view} />
-              </li>
-            ))}
-          </ul>
+          {/* On phones the switcher runs to the screen edges. */}
+          <div className="-mx-5 mt-8 sm:mx-0 lg:mt-10">
+            <ColourSwitcher
+              view={copy.view}
+              groupLabel={copy.group}
+              colours={colours.map(({ tile, slug }) => ({
+                name: own ? tile.title : (slug && COLOUR_NAME[locale][slug]) || tile.title,
+                text: picked.length ? tile.text : undefined,
+                href: tile.href,
+                image: tile.image,
+                srcSet: tile.srcSet,
+                alt: tile.alt,
+                color: tile.color,
+              }))}
+            />
+          </div>
         </div>
       ) : null}
     </section>
