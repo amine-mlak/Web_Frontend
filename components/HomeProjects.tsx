@@ -19,8 +19,8 @@ const COPY = {
 } as const;
 
 /**
- * Start page: three of the newest kitchens, each shown like an exposé in its own arrangement.
- * Only kitchens with a text and a second photo, so each one can be shown properly.
+ * Start page: three kitchens, each shown like an exposé in its own arrangement. The CMS picks
+ * them; without picks the three newest with a text and a second photo appear.
  */
 export default async function HomeProjects({ content }: { content?: HomeProjectsContent | null }) {
   const locale = await getRequestLocale();
@@ -29,10 +29,30 @@ export default async function HomeProjects({ content }: { content?: HomeProjects
     text: content?.text || COPY[locale].text,
     all: content?.linkLabel || COPY[locale].all,
   };
-  const projects = (await fetchProjects())
-    .filter((project) => project.image && project.intro?.trim() && project.gallery.length > 1)
-    .slice(0, 3);
-  if (projects.length === 0) {
+  const all = await fetchProjects();
+  // The kitchens picked in the CMS, in their order, each with the photos chosen for it.
+  const picked = (content?.picks ?? []).flatMap((pick) => {
+    const project = all.find((item) => item.slug === pick.slug);
+    if (!project) return [];
+    const feature = projectFeature(project);
+    const [lead, detail] = pick.photos;
+    return [
+      {
+        ...feature,
+        image: lead?.src ?? feature.image,
+        srcSet: lead ? lead.srcSet : feature.srcSet,
+        detail: detail ? { src: detail.src, srcSet: detail.srcSet, alt: detail.alt || project.title } : feature.detail,
+      },
+    ];
+  });
+  // Nothing picked: three of the newest that have a text and a second photo.
+  const features = picked.length
+    ? picked.slice(0, 3)
+    : all
+        .filter((project) => project.image && project.intro?.trim() && project.gallery.length > 1)
+        .slice(0, 3)
+        .map((project) => projectFeature(project));
+  if (features.length === 0) {
     return null;
   }
 
@@ -44,8 +64,8 @@ export default async function HomeProjects({ content }: { content?: HomeProjects
         </h2>
         <p className="mt-5 max-w-xl font-sans text-[16px] leading-relaxed text-muted">{copy.text}</p>
       </div>
-      {projects.map((project, index) => (
-        <ProjectFeature key={project.slug} feature={projectFeature(project)} variant={index % 4} locale={locale} />
+      {features.map((feature, index) => (
+        <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={locale} />
       ))}
       <div className="px-5 pb-20 sm:px-8 lg:px-gutter">
         <LocaleLink href="/projekte" className="btn-quiet">

@@ -71,7 +71,24 @@ export type EntdeckenContent = {
   /** The kitchen colours under the fields, with their heading and the link beside it. */
   coloursTitle?: string;
   coloursLinkLabel?: string;
+  /** Colours picked from the collection Küchen · Farben, in page order. */
+  colourPicks?: ColourPick[];
+  /** The earlier hand-written colour tiles; used while no colours are picked. */
   colors?: KachelTile[];
+};
+
+/** A colour chosen for the start page: its page in the collection, and a photo of its own if set. */
+export type ColourPick = {
+  slug: string;
+  image?: string;
+  srcSet?: string;
+  alt?: string;
+};
+
+/** A reference kitchen chosen for the start page, with up to two photos of its own. */
+export type ProjectPick = {
+  slug: string;
+  photos: { src: string; srcSet?: string; alt: string }[];
 };
 
 /** Start page: the words around the three newest projects. */
@@ -79,6 +96,8 @@ export type HomeProjectsContent = {
   title?: string;
   text?: string;
   linkLabel?: string;
+  /** The kitchens to show, in this order; without any the three newest appear. */
+  picks?: ProjectPick[];
 };
 
 export type FaqItem = {
@@ -262,9 +281,15 @@ type StrapiLandingEntry = {
     panels?: StrapiDiscoverPanel[];
     coloursTitle?: string;
     coloursLinkLabel?: string;
+    farben?: { farbe?: { slug?: string } | null; foto?: StrapiMedia | null }[];
     colors?: StrapiColorTile[];
   };
-  projekte?: { title?: string; text?: string; linkLabel?: string };
+  projekte?: {
+    title?: string;
+    text?: string;
+    linkLabel?: string;
+    auswahl?: { projekt?: { slug?: string } | null; fotos?: StrapiMedia[] | null }[];
+  };
   faq?: StrapiFaqBlock;
   beratung?: {
     eyebrow?: string;
@@ -622,21 +647,47 @@ function mapEntdeckenContent(
   }
 
   const colors = mapColorTiles(data?.colors);
+  const colourPicks = mapColourPicks(data?.farben);
   return {
     title: data?.title?.trim() || undefined,
     text: data?.text?.trim() || undefined,
     panels: mapped,
     coloursTitle: data?.coloursTitle?.trim() || undefined,
     coloursLinkLabel: data?.coloursLinkLabel?.trim() || undefined,
+    colourPicks: colourPicks.length > 0 ? colourPicks : undefined,
     colors: colors.length > 0 ? colors : undefined,
   };
+}
+
+function mapColourPicks(rows?: NonNullable<StrapiLandingEntry["entdecken"]>["farben"]): ColourPick[] {
+  return (rows ?? []).flatMap((row) => {
+    const slug = row.farbe?.slug?.trim();
+    if (!slug) return [];
+    const image = row.foto ? strapiResponsiveImage(row.foto, { srcWidth: 1600 }) : null;
+    return [{ slug, image: image?.src || undefined, srcSet: image?.srcSet, alt: row.foto?.alternativeText?.trim() || undefined }];
+  });
+}
+
+function mapProjectPicks(rows?: NonNullable<StrapiLandingEntry["projekte"]>["auswahl"]): ProjectPick[] {
+  return (rows ?? []).flatMap((row) => {
+    const slug = row.projekt?.slug?.trim();
+    if (!slug) return [];
+    const photos = (row.fotos ?? []).slice(0, 2).flatMap((file) => {
+      const image = strapiResponsiveImage(file, { srcWidth: 1920 });
+      return image.src ? [{ src: image.src, srcSet: image.srcSet, alt: file.alternativeText?.trim() || "" }] : [];
+    });
+    return [{ slug, photos }];
+  });
 }
 
 function mapProjekteContent(data?: StrapiLandingEntry["projekte"] | null): HomeProjectsContent | null {
   const title = data?.title?.trim();
   const text = data?.text?.trim();
   const linkLabel = data?.linkLabel?.trim();
-  return title || text || linkLabel ? { title, text, linkLabel } : null;
+  const picks = mapProjectPicks(data?.auswahl);
+  return title || text || linkLabel || picks.length
+    ? { title, text, linkLabel, picks: picks.length > 0 ? picks : undefined }
+    : null;
 }
 
 
@@ -704,6 +755,31 @@ function mapBeratungContent(data?: {
   };
 }
 
+const PICKS_POPULATE = {
+  "populate[entdecken][populate][farben][populate][farbe][fields][0]": "slug",
+  "populate[entdecken][populate][farben][populate][foto]": "true",
+  "populate[projekte][populate][auswahl][populate][projekt][fields][0]": "slug",
+  "populate[projekte][populate][auswahl][populate][fotos]": "true",
+};
+
+/**
+ * The colours and kitchens picked on the German landing. A pick points at an entry of a collection
+ * and can only be saved where that entry exists in the same language, so a translation without
+ * its own picks shows the German ones.
+ */
+async function fetchGermanPicks(slug: string) {
+  const payload = await strapiGet<StrapiLandingResponse>("/api/landings", {
+    "filters[slug][$eq]": slug,
+    locale: DEFAULT_LOCALE,
+    ...PICKS_POPULATE,
+  });
+  const entry = Array.isArray(payload?.data) ? payload.data[0] : payload?.data;
+  return {
+    colours: mapColourPicks(entry?.entdecken?.farben),
+    projects: mapProjectPicks(entry?.projekte?.auswahl),
+  };
+}
+
 async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   const payload = await strapiGet<StrapiLandingResponse>("/api/landings", {
     "filters[slug][$eq]": slug,
@@ -711,7 +787,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     "populate[kacheln][populate][colors][populate]": "image",
     "populate[entdecken][populate][panels][populate]": "image",
     "populate[entdecken][populate][colors][populate]": "image",
-    "populate[projekte]": "true",
+    ...PICKS_POPULATE,
     "populate[ablauf][populate][steps][populate]": "image",
     "populate[faq][populate][theme]": "true",
     "populate[faq][populate][questions][populate]": "item",
@@ -728,8 +804,17 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   const heroSlides = mapHeroSlides(entry.hero?.slides);
   const heroPanel = mapHeroPanel(entry.hero);
   const kacheln = mapKachelnContent(entry.kacheln);
-  const entdecken = mapEntdeckenContent(entry.entdecken);
-  const projekte = mapProjekteContent(entry.projekte);
+  let entdecken = mapEntdeckenContent(entry.entdecken);
+  let projekte = mapProjekteContent(entry.projekte);
+  if (entry.locale && entry.locale !== DEFAULT_LOCALE && (!entdecken?.colourPicks || !projekte?.picks)) {
+    const german = await fetchGermanPicks(slug);
+    if (entdecken && !entdecken.colourPicks && german.colours.length) {
+      entdecken = { ...entdecken, colourPicks: german.colours };
+    }
+    if (!projekte?.picks && german.projects.length) {
+      projekte = { ...projekte, picks: german.projects };
+    }
+  }
   const faq = await resolveFaqBlock(entry.faq);
   const ablauf = mapProcessContent(entry.ablauf);
   const beratung = mapBeratungContent(entry.beratung);

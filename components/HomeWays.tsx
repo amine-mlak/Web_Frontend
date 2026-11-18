@@ -3,6 +3,7 @@ import { fallback as panelFallback } from "@/components/Entdecken";
 import { fallback as colourFallback } from "@/components/Kacheln";
 import { Frame } from "@/components/catalog/Frame";
 import { chromeCopy, type Locale } from "@/lib/i18n";
+import { fetchKitchenTopics } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 import type { EntdeckenContent, EntdeckenPanel, KachelTile, KachelnContent } from "@/lib/strapi";
 
@@ -115,9 +116,28 @@ export default async function HomeWays({
   const locale = await getRequestLocale();
   const copy = COPY[locale];
   const panels = (panelContent?.panels.length ? panelContent.panels : panelFallback.panels).slice(0, 4);
-  // The colours belong to this block in the CMS; an entry from before that keeps them in "Kacheln",
-  // where the title was a headline, so those are named after the page they open.
-  const own = panelContent?.colors?.length ? panelContent.colors : null;
+  // The colours are picked from the collection Küchen · Farben: name, colour value, address and
+  // photo come from the colour's own page; a pick can carry a photo of its own.
+  const picks = panelContent?.colourPicks ?? [];
+  const pages = picks.length ? (await fetchKitchenTopics()).filter((topic) => topic.cluster === "farben") : [];
+  const picked: KachelTile[] = picks.flatMap((pick) => {
+    const page = pages.find((topic) => topic.slug === pick.slug);
+    const image = pick.image || page?.image;
+    if (!page || !page.hex || !image) return [];
+    return [
+      {
+        title: (locale !== "de" && COLOUR_NAME[locale][page.slug]) || page.name,
+        href: `/kuechen/farben/${page.slug}`,
+        image,
+        srcSet: pick.image ? pick.srcSet : undefined,
+        alt: pick.alt || page.name,
+        color: page.hex,
+      },
+    ];
+  });
+  // Before colours were picked they were written by hand in this block, and before that in
+  // "Kacheln", where the title was a headline: those are named after the page they open.
+  const own = picked.length ? picked : panelContent?.colors?.length ? panelContent.colors : null;
   const colours = (own ?? (colourContent?.colors.length ? colourContent.colors : colourFallback.colors))
     .map((tile) => ({ tile, slug: colourSlug(tile.href) }))
     .sort((a, b) => (a.slug ? COLOUR_ORDER.indexOf(a.slug) : 99) - (b.slug ? COLOUR_ORDER.indexOf(b.slug) : 99))
