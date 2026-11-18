@@ -30,20 +30,11 @@ export default async function HomeProjects({ content }: { content?: HomeProjects
     all: content?.linkLabel || COPY[locale].all,
   };
   const all = await fetchProjects();
-  // The kitchens picked in the CMS, in their order, each with the photos chosen for it.
-  const picked = (content?.picks ?? []).flatMap((pick) => {
-    const project = all.find((item) => item.slug === pick.slug);
-    if (!project) return [];
-    const feature = projectFeature(project);
-    const [lead, detail] = pick.photos;
-    return [
-      {
-        ...feature,
-        image: lead?.src ?? feature.image,
-        srcSet: lead ? lead.srcSet : feature.srcSet,
-        detail: detail ? { src: detail.src, srcSet: detail.srcSet, alt: detail.alt || project.title } : feature.detail,
-      },
-    ];
+  // The kitchens picked in the CMS, in their order. Photos come from the kitchen itself: its
+  // cover photo, and the first other photo of its gallery as the detail.
+  const picked = (content?.picks ?? []).flatMap((slug) => {
+    const project = all.find((item) => item.slug === slug);
+    return project ? [projectFeature(project)] : [];
   });
   // Nothing picked: three of the newest that have a text and a second photo.
   const features = picked.length

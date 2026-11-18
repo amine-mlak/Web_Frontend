@@ -117,20 +117,18 @@ export default async function HomeWays({
   const copy = COPY[locale];
   const panels = (panelContent?.panels.length ? panelContent.panels : panelFallback.panels).slice(0, 4);
   // The colours are picked from the collection Küchen · Farben: name, colour value, address and
-  // photo come from the colour's own page; a pick can carry a photo of its own.
+  // photo all come from the colour's own page.
   const picks = panelContent?.colourPicks ?? [];
   const pages = picks.length ? (await fetchKitchenTopics()).filter((topic) => topic.cluster === "farben") : [];
-  const picked: KachelTile[] = picks.flatMap((pick) => {
-    const page = pages.find((topic) => topic.slug === pick.slug);
-    const image = pick.image || page?.image;
-    if (!page || !page.hex || !image) return [];
+  const picked: KachelTile[] = picks.flatMap((slug) => {
+    const page = pages.find((topic) => topic.slug === slug);
+    if (!page || !page.hex || !page.image) return [];
     return [
       {
         title: (locale !== "de" && COLOUR_NAME[locale][page.slug]) || page.name,
         href: `/kuechen/farben/${page.slug}`,
-        image,
-        srcSet: pick.image ? pick.srcSet : undefined,
-        alt: pick.alt || page.name,
+        image: page.image,
+        alt: page.name,
         color: page.hex,
       },
     ];

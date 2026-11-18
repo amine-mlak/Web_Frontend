@@ -71,33 +71,21 @@ export type EntdeckenContent = {
   /** The kitchen colours under the fields, with their heading and the link beside it. */
   coloursTitle?: string;
   coloursLinkLabel?: string;
-  /** Colours picked from the collection Küchen · Farben, in page order. */
-  colourPicks?: ColourPick[];
+  /** Addresses of the colours picked from the collection Küchen · Farben, in page order. */
+  colourPicks?: string[];
   /** The earlier hand-written colour tiles; used while no colours are picked. */
   colors?: KachelTile[];
 };
 
-/** A colour chosen for the start page: its page in the collection, and a photo of its own if set. */
-export type ColourPick = {
-  slug: string;
-  image?: string;
-  srcSet?: string;
-  alt?: string;
-};
 
-/** A reference kitchen chosen for the start page, with up to two photos of its own. */
-export type ProjectPick = {
-  slug: string;
-  photos: { src: string; srcSet?: string; alt: string }[];
-};
 
 /** Start page: the words around the three newest projects. */
 export type HomeProjectsContent = {
   title?: string;
   text?: string;
   linkLabel?: string;
-  /** The kitchens to show, in this order; without any the three newest appear. */
-  picks?: ProjectPick[];
+  /** Addresses of the kitchens to show, in this order; without any the three newest appear. */
+  picks?: string[];
 };
 
 export type FaqItem = {
@@ -237,6 +225,9 @@ type StrapiFaqBlock = {
   questions?: StrapiFaqPick[] | unknown;
 };
 
+/** A row that picks an entry of a collection; everything shown comes from that entry. */
+type StrapiPick = { farbe?: { slug?: string } | null; projekt?: { slug?: string } | null };
+
 type StrapiProcess = {
   eyebrow?: string;
   title?: string;
@@ -281,14 +272,14 @@ type StrapiLandingEntry = {
     panels?: StrapiDiscoverPanel[];
     coloursTitle?: string;
     coloursLinkLabel?: string;
-    farben?: { farbe?: { slug?: string } | null; foto?: StrapiMedia | null }[];
+    farben?: StrapiPick[];
     colors?: StrapiColorTile[];
   };
   projekte?: {
     title?: string;
     text?: string;
     linkLabel?: string;
-    auswahl?: { projekt?: { slug?: string } | null; fotos?: StrapiMedia[] | null }[];
+    auswahl?: StrapiPick[];
   };
   faq?: StrapiFaqBlock;
   beratung?: {
@@ -647,7 +638,7 @@ function mapEntdeckenContent(
   }
 
   const colors = mapColorTiles(data?.colors);
-  const colourPicks = mapColourPicks(data?.farben);
+  const colourPicks = mapPicks(data?.farben);
   return {
     title: data?.title?.trim() || undefined,
     text: data?.text?.trim() || undefined,
@@ -659,24 +650,11 @@ function mapEntdeckenContent(
   };
 }
 
-function mapColourPicks(rows?: NonNullable<StrapiLandingEntry["entdecken"]>["farben"]): ColourPick[] {
+/** The addresses of the picked entries, in the order of the rows. */
+function mapPicks(rows?: StrapiPick[]): string[] {
   return (rows ?? []).flatMap((row) => {
-    const slug = row.farbe?.slug?.trim();
-    if (!slug) return [];
-    const image = row.foto ? strapiResponsiveImage(row.foto, { srcWidth: 1600 }) : null;
-    return [{ slug, image: image?.src || undefined, srcSet: image?.srcSet, alt: row.foto?.alternativeText?.trim() || undefined }];
-  });
-}
-
-function mapProjectPicks(rows?: NonNullable<StrapiLandingEntry["projekte"]>["auswahl"]): ProjectPick[] {
-  return (rows ?? []).flatMap((row) => {
-    const slug = row.projekt?.slug?.trim();
-    if (!slug) return [];
-    const photos = (row.fotos ?? []).slice(0, 2).flatMap((file) => {
-      const image = strapiResponsiveImage(file, { srcWidth: 1920 });
-      return image.src ? [{ src: image.src, srcSet: image.srcSet, alt: file.alternativeText?.trim() || "" }] : [];
-    });
-    return [{ slug, photos }];
+    const slug = (row.farbe ?? row.projekt)?.slug?.trim();
+    return slug ? [slug] : [];
   });
 }
 
@@ -684,7 +662,7 @@ function mapProjekteContent(data?: StrapiLandingEntry["projekte"] | null): HomeP
   const title = data?.title?.trim();
   const text = data?.text?.trim();
   const linkLabel = data?.linkLabel?.trim();
-  const picks = mapProjectPicks(data?.auswahl);
+  const picks = mapPicks(data?.auswahl);
   return title || text || linkLabel || picks.length
     ? { title, text, linkLabel, picks: picks.length > 0 ? picks : undefined }
     : null;
@@ -757,9 +735,7 @@ function mapBeratungContent(data?: {
 
 const PICKS_POPULATE = {
   "populate[entdecken][populate][farben][populate][farbe][fields][0]": "slug",
-  "populate[entdecken][populate][farben][populate][foto]": "true",
   "populate[projekte][populate][auswahl][populate][projekt][fields][0]": "slug",
-  "populate[projekte][populate][auswahl][populate][fotos]": "true",
 };
 
 /**
@@ -775,8 +751,8 @@ async function fetchGermanPicks(slug: string) {
   });
   const entry = Array.isArray(payload?.data) ? payload.data[0] : payload?.data;
   return {
-    colours: mapColourPicks(entry?.entdecken?.farben),
-    projects: mapProjectPicks(entry?.projekte?.auswahl),
+    colours: mapPicks(entry?.entdecken?.farben),
+    projects: mapPicks(entry?.projekte?.auswahl),
   };
 }
 
