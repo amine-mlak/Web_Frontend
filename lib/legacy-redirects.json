@@ -1587,19 +1587,19 @@
   },
   {
    "source": "/products/betonarbeitsplatte",
-   "destination": "/material/arbeitsplatten"
+   "destination": "/material/beton"
   },
   {
    "source": "/en/products/betonarbeitsplatte",
-   "destination": "/en/materials/worktops"
+   "destination": "/en/materials/beton"
   },
   {
    "source": "/collections/:collection/products/betonarbeitsplatte",
-   "destination": "/material/arbeitsplatten"
+   "destination": "/material/beton"
   },
   {
    "source": "/en/collections/:collection/products/betonarbeitsplatte",
-   "destination": "/en/materials/worktops"
+   "destination": "/en/materials/beton"
   },
   {
    "source": "/products/schwebeblock-kuche",
@@ -1859,19 +1859,19 @@
   },
   {
    "source": "/products/cottage-landhauskuche",
-   "destination": "/projekte/landhaus-weiss-gruener-herd"
+   "destination": "/kuechen/stile/englisch"
   },
   {
    "source": "/en/products/cottage-landhauskuche",
-   "destination": "/en/projects/landhaus-weiss-gruener-herd"
+   "destination": "/en/kitchens/styles/englisch"
   },
   {
    "source": "/collections/:collection/products/cottage-landhauskuche",
-   "destination": "/projekte/landhaus-weiss-gruener-herd"
+   "destination": "/kuechen/stile/englisch"
   },
   {
    "source": "/en/collections/:collection/products/cottage-landhauskuche",
-   "destination": "/en/projects/landhaus-weiss-gruener-herd"
+   "destination": "/en/kitchens/styles/englisch"
   },
   {
    "source": "/products/die-offene-landhauskuche",
@@ -1891,19 +1891,19 @@
   },
   {
    "source": "/products/feine-englische-landhauskuche",
-   "destination": "/projekte/gruen-rahmenfronten-altholz"
+   "destination": "/kuechen/stile/englisch"
   },
   {
    "source": "/en/products/feine-englische-landhauskuche",
-   "destination": "/en/projects/gruen-rahmenfronten-altholz"
+   "destination": "/en/kitchens/styles/englisch"
   },
   {
    "source": "/collections/:collection/products/feine-englische-landhauskuche",
-   "destination": "/projekte/gruen-rahmenfronten-altholz"
+   "destination": "/kuechen/stile/englisch"
   },
   {
    "source": "/en/collections/:collection/products/feine-englische-landhauskuche",
-   "destination": "/en/projects/gruen-rahmenfronten-altholz"
+   "destination": "/en/kitchens/styles/englisch"
   },
   {
    "source": "/products/mediterrane-landhauskuche",

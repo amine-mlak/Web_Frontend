@@ -1224,6 +1224,32 @@ function furnitureVoice(item: Furniture, locale: Locale): Voice {
   };
 }
 
+/** For a material or appliance page that has no copy in the code: its texts and points come from the CMS. */
+function cmsVoice(item: { name: string; intro: string } & CmsPageFields, locale: Locale): Voice {
+  const en = locale === "en";
+  const punkte = (item.punkte ?? []).filter((punkt) => punkt.titel && punkt.text);
+  return {
+    title: item.name,
+    emphasis: "",
+    statement: item.intro,
+    statementNote: "",
+    quote: "",
+    quoteSource: "",
+    closeTitle: en ? "See it in the showroom" : "In der Ausstellung ansehen",
+    closeText: en
+      ? "Bring your floor plan. We show you samples and built kitchens in Wolfersdorf."
+      : "Bringen Sie Ihren Grundriss mit. Muster und gebaute Küchen zeigen wir in Wolfersdorf.",
+    ledgerLine: item.intro,
+    lookTitle: item.name,
+    indexEyebrow: en ? "In short" : "Kurz erklärt",
+    ctaLabel: en ? "Book an appointment" : "Termin vereinbaren",
+    film: punkte.map((punkt) => punkt.titel),
+    looks: [],
+    facts: [],
+    extras: punkte.map((punkt) => punkt.text.split(/\n/).map((line) => line.trim()).filter(Boolean)),
+  };
+}
+
 function housesFrom(projects: Project[], photo: (n: number, w?: number) => string): ClusterHouse[] {
   return projects.slice(0, 4).map((project, index) => ({
     href: `/projekte/${project.slug}`,
@@ -1743,7 +1769,7 @@ export function presentMaterialItem(
 ): PresentedTopic {
   const parent = PARENT.material[locale];
   const kindRoute = MATERIAL_KIND_ROUTES.find((entry) => entry.kind === item.kind);
-  const voice = voiceFor(item.slug, locale)!;
+  const voice = voiceFor(item.slug, locale) ?? cmsVoice(item, locale);
   const match = photoMatch(item.slug, all);
   const photo = kitchenPhotos(
     all.filter((project) => project.materials.some((material) => material.slug === item.slug)),
@@ -1807,7 +1833,7 @@ export function presentApplianceItem(
 ): PresentedTopic {
   const parent = PARENT.geraete[locale];
   const kindRoute = GERAETE_KIND_ROUTES.find((entry) => entry.slug === item.kind);
-  const voice = voiceFor(item.slug, locale)!;
+  const voice = voiceFor(item.slug, locale) ?? cmsVoice(item, locale);
   const match = photoMatch(item.slug, all);
   const photo = kitchenPhotos(
     all.filter((project) => project.appliances.some((entry) => entry.slug === item.slug)),
