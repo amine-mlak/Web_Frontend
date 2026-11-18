@@ -54,8 +54,10 @@ const BUILDING = {
   outdoorKitchen: u("347_035_5ec83059cc.jpg"),
   /** The BEER letters in weathered steel at the drive. */
   sign: u("347_050_420ff564c3.jpg"),
-  /** Upright: two stone steles in front of the BEER lettering. */
-  steles: u("347_053_e0b39923c9.jpg"),
+  /** Stone steps between rocks, the facade running back (holds an upright crop). */
+  steps: u("347_037_2e8712a277.jpg"),
+  /** Glasses on the outdoor kitchen against the sunset. */
+  toast: u("347_062_6000f879e9.jpg"),
   /** Across a grain field. */
   field: u("347_054_8421f8a1cd.jpg"),
   facadeBeds: u("347_056_1e77a56689.jpg"),
@@ -68,6 +70,8 @@ const BUILDING = {
 const WORKSHOP = {
   one: u("Werkstatt1_1b8b108b52.JPG"),
   two: u("Werkstatt2_563e1191ad.JPG"),
+  /** The production hall: machines, the steel gallery, the wooden ceiling. */
+  hall: u("FAP_1356_1936c7372c.jpg"),
 };
 
 // Werk 2: the showroom building (wood ceilings, lounge, kitchens, sample wall, meeting rooms).
@@ -145,18 +149,22 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     close: ROOM.r0081,
     ledger: WORKSHOP.two,
     visit: ROOM.r0002,
+    // The page takes its photos in this order (lib/house-pages.ts, withUniquePhotos): the first
+    // gallery photo stands upright beside the chapter index; the chapters fill Werkstatt, Wenige
+    // Aufträge and the three of Häuser, nicht Hallen; the rest of the gallery fills Aktuelles and
+    // the two of Regionen. Each photo is picked for the shape of its place.
     gallery: [
-      shot(BUILDING.steles, "Manufaktur in Wolfersdorf"),
-      shot(WORKSHOP.one, "Werkstatt"),
-      shot(ROOM.r0052, "Ausstellung"),
-      shot(BUILDING.wide, "Das Gebäude in Badendorf"),
+      shot(BUILDING.steps, "Manufaktur in Wolfersdorf"),
+      shot(BUILDING.toast, "Aktuelles aus der Manufaktur"),
+      shot(CREW.table, "Team in der Manufaktur"),
+      shot(ROOM.r0047, "Ausstellung Wolfersdorf"),
     ],
     chapters: [
-      shot(WORKSHOP.one, "Werkstatt"),
-      shot(WORKSHOP.two, "Fertigung in einer Hand"),
-      shot(BUILDING.yard, "Das Haus, nicht die Halle"),
-      shot(ROOM.r0003, "Aktuelles aus der Manufaktur"),
-      shot(BUILDING.blossoms, "BEER in Wolfersdorf"),
+      shot(WORKSHOP.hall, "Fertigung in Wolfersdorf"),
+      shot(BUILDING.yard, "Das Gebäude in Badendorf"),
+      shot(ROOM.r0052, "Küche in der Ausstellung"),
+      shot(ROOM.r0068, "Küche in der Ausstellung"),
+      shot(ROOM.r0058, "Küche in der Ausstellung"),
     ],
     people: [],
   },
@@ -333,6 +341,6 @@ export const SIBLING_IMAGES = {
   ueber: houseSrc(BUILDING.street, 1100),
   team: houseSrc(CREW.group, 1100),
   ausstellung: houseSrc(ROOM.r0002, 1100),
-  nachhaltigkeit: houseSrc(WORKSHOP.one, 1100),
+  nachhaltigkeit: houseSrc(BUILDING.facadeBeds, 1100),
   karriere: houseSrc(WORKSHOP.two, 1100),
 };
