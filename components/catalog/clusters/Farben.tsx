@@ -236,7 +236,7 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
         </div>
       </section>
       {reading.length ? (
-        <section className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24" aria-labelledby="farben-lesen">
+        <section className="grid gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24" aria-labelledby="farben-lesen">
           <h2
             id="farben-lesen"
             className="t-section text-ink lg:col-span-4"

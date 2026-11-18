@@ -16,7 +16,7 @@ export default function HouseGallery({
 
   return (
     <section className="scroll-mt-24 bg-paper" aria-labelledby="house-gallery-heading">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
+      <div className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <p className="type-eyebrow text-gold">{eyebrow}</p>
         <h2
           id="house-gallery-heading"

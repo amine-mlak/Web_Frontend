@@ -115,7 +115,7 @@ export function PhotoPair({
 }) {
   const [wide, small] = pair;
   return (
-    <section className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
+    <section className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
       <div className="grid gap-x-10 gap-y-10 lg:grid-cols-12 lg:items-start">
         <div className={flip ? "lg:order-2 lg:col-span-7 lg:col-start-6" : "lg:col-span-7"}>
           <Frame

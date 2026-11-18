@@ -15,7 +15,7 @@ export default function HouseBody({
 
   return (
     <section className="bg-paper" aria-labelledby={title ? "house-body-heading" : undefined}>
-      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-gutter lg:py-28">
+      <div className="grid gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-gutter lg:py-28">
         {/* No heading (the CMS text brings its own): no side column with a lone line. */}
         {title || eyebrow ? (
           <div className="lg:col-span-4">
@@ -32,7 +32,11 @@ export default function HouseBody({
           </div>
         ) : null}
         {/* The CMS text is Markdown: headings, lists and bold, as on the article pages. */}
-        <RichText source={paragraphs.join("\n\n")} className="max-w-xl lg:col-span-7 lg:col-start-6" />
+        {/* Beside a heading the text takes the right columns; alone it is a centred reading column. */}
+        <RichText
+          source={paragraphs.join("\n\n")}
+          className={title || eyebrow ? "max-w-xl lg:col-span-7 lg:col-start-6" : "max-w-2xl lg:col-span-8 lg:col-start-3"}
+        />
 
       </div>
     </section>

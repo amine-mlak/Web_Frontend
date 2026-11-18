@@ -35,7 +35,8 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
             {item.meta ? (
               <p className="type-eyebrow text-muted">{item.meta}</p>
             ) : null}
-            <h2 className="type-h3 mt-2 text-ink group-hover:underline group-hover:decoration-line group-hover:underline-offset-4">
+            {/* A card title, not a section title: long German headlines must fit a third of the page. */}
+            <h2 className="t-item mt-2 text-ink hyphens-auto md:text-[28px] group-hover:underline group-hover:decoration-line group-hover:underline-offset-4">
               {item.title}
             </h2>
             {item.excerpt ? (

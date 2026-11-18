@@ -35,7 +35,7 @@ export function PageCare({ hub, path }: Props) {
 
   return (
     <section className="bg-karte" aria-labelledby="page-care">
-      <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
+      <div className="grid gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
         <div className="lg:col-span-4">
           <p className="type-eyebrow text-gold">{en ? "From our care guide" : "Aus der Pflegeanleitung"}</p>
           <h2 id="page-care" data-rise="" className="t-section mt-3 text-ink">
@@ -133,7 +133,7 @@ export async function PageGuide({ hub, path }: Props) {
   if (!excerpt) {
     return (
       <section className="border-t border-line bg-karte" aria-labelledby="page-guide">
-        <div className="mx-auto grid max-w-[90rem] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
+        <div className="grid gap-8 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-24">
           <div className="lg:col-span-4">
             <p className="type-eyebrow text-gold">Aus Ratgeber und Magazin</p>
             <h2 id="page-guide" data-rise="" className="t-section mt-3 text-ink">
@@ -162,7 +162,7 @@ export async function PageGuide({ hub, path }: Props) {
 
   return (
     <section className="border-t border-line bg-karte" aria-labelledby="page-guide">
-      <div className="mx-auto grid max-w-[90rem] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-14 lg:px-gutter lg:py-24">
+      <div className="grid gap-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-14 lg:px-gutter lg:py-24">
         {image ? (
           <LocaleLink href={href} tabIndex={-1} aria-hidden="true" className="block lg:col-span-5 lg:row-start-1">
             <Frame

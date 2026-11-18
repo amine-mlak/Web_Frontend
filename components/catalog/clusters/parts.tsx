@@ -249,7 +249,7 @@ export function PointsSection({ hub, className = "" }: { hub: PresentedHub; clas
 
   return (
     <section
-      className={`mx-auto grid max-w-[90rem] gap-x-12 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24 ${className}`}
+      className={`grid gap-x-12 gap-y-10 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-24 ${className}`}
       aria-labelledby={hub.statement ? headingId : undefined}
     >
       <div className="lg:col-span-5">

@@ -50,7 +50,7 @@ export default function KuechenCollection({
       <StatementBand statement={hub.statement} note={hub.statementNote} tone="karte" rule={false} />
 
       <section aria-labelledby="kuechen-doors" className="bg-paper">
-        <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter">
+        <div className="px-5 py-16 sm:px-8 lg:px-gutter">
           <h2 id="kuechen-doors" className="t-section text-ink">
             {hub.indexEyebrow}
           </h2>

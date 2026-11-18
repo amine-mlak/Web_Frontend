@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import LocaleLink from "@/components/LocaleLink";
 import NextSteps from "@/components/catalog/NextSteps";
 import { EntryGrid } from "@/components/catalog/EntryCard";
+import MoreGrid from "@/components/catalog/MoreGrid";
 import { articleCards } from "@/lib/catalog-cards";
 import { isPressArticle } from "@/lib/catalog";
 import { fetchArticles } from "@/lib/catalog-api";
@@ -12,8 +13,18 @@ export const revalidate = 120;
 
 // One sentence for the page and for search results.
 const COPY = {
-  de: { title: "Aktuelles", intro: "Termine, Presseberichte und Neues aus der Manufaktur und der Ausstellung in Wolfersdorf." },
-  en: { title: "News", intro: "Dates, press and news from the workshop and the showroom in Wolfersdorf." },
+  de: {
+    title: "Aktuelles",
+    intro: "Termine, Presseberichte und Neues aus der Manufaktur und der Ausstellung in Wolfersdorf.",
+    more: "Ältere Meldungen zeigen",
+    count: "{shown} von {total} Meldungen",
+  },
+  en: {
+    title: "News",
+    intro: "Dates, press and news from the workshop and the showroom in Wolfersdorf.",
+    more: "Show older news",
+    count: "{shown} of {total} items",
+  },
 } as const;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,19 +45,19 @@ export default async function PressePage() {
 
   return (
     <main className="bg-paper">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
+      <div className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <h1 className="font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[0.95] font-medium tracking-[-0.03em] text-ink">
           {copy.title}
         </h1>
         <p className="type-intro mt-8 max-w-2xl">{copy.intro}</p>
         <div className="mt-16">
-          <EntryGrid items={items} />
+          <MoreGrid items={items} moreLabel={copy.more} countLabel={copy.count} />
         </div>
       </div>
 
       {guides.length > 0 ? (
         <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="presse-guides">
-          <div className="mx-auto max-w-[90rem]">
+          <div>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="type-eyebrow text-gold">{locale === "en" ? "Guides" : "Ratgeber"}</p>
@@ -66,7 +77,7 @@ export default async function PressePage() {
       ) : null}
 
       <section className="bg-nacht px-5 py-16 text-paper sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="presse-contact">
-        <div className="mx-auto grid max-w-[90rem] gap-10 lg:grid-cols-12">
+        <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <h2 id="presse-contact" className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-tight font-medium">
               {locale === "en" ? "Press enquiries" : "Presseanfragen"}

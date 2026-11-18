@@ -26,7 +26,7 @@ export default function HousePeople({
 
   return (
     <section className="scroll-mt-24 bg-paper" aria-labelledby="house-people-heading">
-      <div className="mx-auto max-w-[90rem] px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
+      <div className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <p className="type-eyebrow text-gold">{eyebrow}</p>
         <h2
           id="house-people-heading"
@@ -36,7 +36,7 @@ export default function HousePeople({
         </h2>
 
         {voices.length ? (
-          <ul className="mt-14 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12">
+          <ul className="mt-14 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 xl:grid-cols-4">
             {voices.map((voice) => (
               <li key={voice.name}>
                 {/* Phones: small portrait beside name and role, the quote below. Wider: portrait on top. */}
@@ -47,7 +47,7 @@ export default function HousePeople({
                         src={voice.photo}
                         alt={voice.name}
                         fill
-                        sizes="(max-width: 640px) 7rem, (max-width: 1024px) 50vw, 30vw"
+                        sizes="(max-width: 640px) 7rem, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover object-top"
                       />
                     ) : (
