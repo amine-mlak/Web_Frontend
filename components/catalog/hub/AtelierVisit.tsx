@@ -20,7 +20,7 @@ export default async function AtelierVisit({
   title,
   text,
 }: {
-  hub: PresentedHub;
+  hub: Pick<PresentedHub, "locale" | "visitImage" | "visitPlace" | "visitNote">;
   title?: string;
   text?: string;
 }) {

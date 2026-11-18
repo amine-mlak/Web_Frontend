@@ -36,12 +36,33 @@ export type HouseMedia = {
   people: HousePerson[];
 };
 
+// The building and its grounds in Badendorf (media library: Themenfotos › Gebäude › Showroom_Werk2).
 const BUILDING = {
-  snow1: u("Gebaeude_Schnee1_5d88ff6215.JPG"),
-  snow2: u("Gebaeude_Schnee2_1a16897e74.JPG"),
-  snow3: u("Gebaeude_Schnee3_c37d8dadf4.JPG"),
-  facade: u("Gebaeude_83a16ba48b.jpg"),
-  dusk: u("Gebaeude_2013_abends_3a7d0fe7a7.jpg"),
+  /** From the drive: the BEER lettering on the front, the sun behind the wooden facade. */
+  street: u("347_051_cd1a0983ff.jpg"),
+  /** The whole building with the rock garden, by day. */
+  wide: u("beer_kuechen_aussenbereich_5_b95d14ccdb.jpg"),
+  /** The long facade behind the paved yard. */
+  yard: u("347_040_519a81138d.jpg"),
+  /** Seen from the meadow, a fruit tree in front. */
+  orchard: u("347_046_6624be8088.jpg"),
+  /** Allium in bloom in front of the facade. */
+  blossoms: u("347_044_a115ee2e1f.jpg"),
+  /** The terrace with the fire bowl, fields behind. */
+  terrace: u("347_032_d7af619ca9.jpg"),
+  terraceBeds: u("347_038_acdd0158b8.jpg"),
+  outdoorKitchen: u("347_035_5ec83059cc.jpg"),
+  /** The BEER letters in weathered steel at the drive. */
+  sign: u("347_050_420ff564c3.jpg"),
+  /** Upright: two stone steles in front of the BEER lettering. */
+  steles: u("347_053_e0b39923c9.jpg"),
+  /** Across a grain field. */
+  field: u("347_054_8421f8a1cd.jpg"),
+  facadeBeds: u("347_056_1e77a56689.jpg"),
+  forest: u("347_045_ac39bb5c41.jpg"),
+  front: u("347_049_7537d5d889.jpg"),
+  night: u("347_066_c2a0fc6ac5.jpg"),
+  nightWide: u("347_068_053bd29c9b.jpg"),
 };
 
 const WORKSHOP = {
@@ -57,6 +78,10 @@ const WERK2 = {
   samples: u("082_Showroom_fd03396871.jpg"),
   lounge: u("004_Showroom_13654adf97.jpg"),
   meeting: u("117_Showroom_4bcb8435f7.jpg"),
+  /** Two meeting rooms behind glass. */
+  rooms: u("079_Showroom_ec6cba26d3.jpg"),
+  /** A desk for planning talks behind glass. */
+  desk: u("078_Showroom_a0a87f0eff.jpg"),
 };
 
 /** The sample wall in Werk 2: fronts and worktops side by side (material overview). */
@@ -75,7 +100,7 @@ export const HUB_VISIT: Record<string, string> = {
   geraete: u("Ausstellung_0052_eb6f5b30c7.jpg"),
   moebel: WERK2.lounge,
   projekte: WERK2.meeting,
-  regionen: BUILDING.dusk,
+  regionen: BUILDING.forest,
   marken: WERK2.kitchens,
   ratgeber: WERK2.samples,
   planen: WERK2.table,
@@ -84,7 +109,6 @@ export const HUB_VISIT: Record<string, string> = {
 const ROOM = {
   r0002: u("Ausstellung_0002_198946b6fd.jpg"),
   r0003: u("Ausstellung_0003_bcf7bea1a4.jpg"),
-  r0004: u("Ausstellung_0004_206b4b157f.jpg"),
   r0047: u("Ausstellung_0047_854d690ca4.jpg"),
   r0048: u("Ausstellung_0048_644e260bd5.jpg"),
   r0052: u("Ausstellung_0052_eb6f5b30c7.jpg"),
@@ -117,22 +141,22 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     layout: "manufactory",
     hero: WORKSHOP.one,
     statement: WORKSHOP.one,
-    statementB: BUILDING.snow3,
+    statementB: BUILDING.orchard,
     close: ROOM.r0081,
     ledger: WORKSHOP.two,
     visit: ROOM.r0002,
     gallery: [
-      shot(BUILDING.snow2, "Manufaktur in Wolfersdorf im Schnee"),
+      shot(BUILDING.steles, "Manufaktur in Wolfersdorf"),
       shot(WORKSHOP.one, "Werkstatt"),
       shot(ROOM.r0052, "Ausstellung"),
-      shot(BUILDING.facade, "Gebäude Badendorf"),
+      shot(BUILDING.wide, "Das Gebäude in Badendorf"),
     ],
     chapters: [
       shot(WORKSHOP.one, "Werkstatt"),
       shot(WORKSHOP.two, "Fertigung in einer Hand"),
-      shot(BUILDING.snow2, "Das Haus, nicht die Halle"),
+      shot(BUILDING.yard, "Das Haus, nicht die Halle"),
       shot(ROOM.r0003, "Aktuelles aus der Manufaktur"),
-      shot(BUILDING.snow1, "BEER in Wolfersdorf im Winter"),
+      shot(BUILDING.blossoms, "BEER in Wolfersdorf"),
     ],
     people: [],
   },
@@ -146,7 +170,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     visit: WERK2.lounge,
     gallery: [
       shot(ROOM.r0003, "Ausstellung, Blick ins Studio"),
-      shot(ROOM.r0004, "Muster und gebaute Details"),
+      shot(SHOWROOM_SAMPLES.wall, "Muster und gebaute Details"),
       shot(ROOM.r0047, "Ausstellung unter Tageslicht"),
       shot(ROOM.r0052, "Küche in der Ausstellung"),
       shot(ROOM.r0065, "Materialien zum Anfassen"),
@@ -173,14 +197,14 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
   nachhaltigkeit: {
     layout: "lasting",
     hero: WORKSHOP.one,
-    statement: BUILDING.snow2,
+    statement: BUILDING.terraceBeds,
     statementB: WORKSHOP.two,
-    close: BUILDING.snow3,
-    ledger: BUILDING.facade,
+    close: BUILDING.field,
+    ledger: BUILDING.facadeBeds,
     visit: ROOM.r0068,
     gallery: [
       shot(WORKSHOP.one, "Fertigung in Wolfersdorf"),
-      shot(BUILDING.snow1, "Das Haus in Badendorf"),
+      shot(BUILDING.orchard, "Das Haus in Badendorf"),
       shot(WORKSHOP.two, "Werkstatt"),
     ],
     chapters: [],
@@ -191,7 +215,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     hero: WORKSHOP.two,
     statement: CREW.group,
     statementB: WORKSHOP.one,
-    close: BUILDING.snow1,
+    close: BUILDING.street,
     ledger: WORKSHOP.one,
     visit: ROOM.r0002,
     gallery: [shot(WORKSHOP.two, "Werkstatt"), shot(CREW.group, "Team")],
@@ -200,15 +224,15 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
   },
   kontakt: {
     layout: "place",
-    hero: BUILDING.snow1,
-    statement: BUILDING.facade,
-    statementB: BUILDING.snow3,
-    close: BUILDING.dusk,
-    ledger: BUILDING.snow2,
+    hero: BUILDING.street,
+    statement: BUILDING.sign,
+    statementB: BUILDING.front,
+    close: BUILDING.night,
+    ledger: BUILDING.yard,
     visit: ROOM.r0002,
     gallery: [
-      shot(BUILDING.snow1, "Badendorf 6, Wolfersdorf"),
-      shot(BUILDING.facade, "Manufaktur"),
+      shot(BUILDING.wide, "Badendorf 6, Wolfersdorf"),
+      shot(BUILDING.terrace, "Terrasse der Ausstellung"),
     ],
     chapters: [],
     people: [],
@@ -234,7 +258,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     layout: "path",
     hero: ROOM.r0052,
     statement: WORKSHOP.one,
-    statementB: ROOM.r0004,
+    statementB: WERK2.desk,
     close: ROOM.r0081,
     ledger: WORKSHOP.two,
     visit: ROOM.r0047,
@@ -242,11 +266,11 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
       shot(ROOM.r0002, "Erstes Gespräch in der Ausstellung"),
       shot(WORKSHOP.one, "Fertigung nach Aufmaß"),
       shot(ROOM.r0071, "Muster und Entscheidungen"),
-      shot(BUILDING.snow1, "Übergabe, Wolfersdorf"),
+      shot(BUILDING.yard, "Übergabe, Wolfersdorf"),
     ],
     chapters: [
       shot(ROOM.r0002, "Ausstellung Wolfersdorf"),
-      shot(ROOM.r0004, "Beratung in der Ausstellung"),
+      shot(WERK2.rooms, "Beratung in der Ausstellung"),
       shot(ROOM.r0076, "Unterlagen zum Anfassen"),
       shot(ROOM.r0065, "Fragen vor dem Gespräch"),
     ],
@@ -290,9 +314,9 @@ export function sizedMedia(slug: string): HouseMedia | null {
 /** Extra house photos for a page that would otherwise show one twice. */
 export function reserveShots(): HouseShot[] {
   return [
-    shot(BUILDING.facade, "Manufaktur in Wolfersdorf"),
-    shot(BUILDING.dusk, "Manufaktur am Abend"),
-    shot(BUILDING.snow3, "Manufaktur im Winter"),
+    shot(BUILDING.front, "Manufaktur in Wolfersdorf"),
+    shot(BUILDING.nightWide, "Manufaktur bei Nacht"),
+    shot(BUILDING.blossoms, "Zierlauch vor der Manufaktur"),
     shot(WORKSHOP.two, "Werkstatt"),
     shot(CREW.table, "Team in der Manufaktur"),
     shot(ROOM.r0047, "Ausstellung Wolfersdorf"),
@@ -306,7 +330,7 @@ export function reserveShots(): HouseShot[] {
 }
 
 export const SIBLING_IMAGES = {
-  ueber: houseSrc(BUILDING.snow1, 1100),
+  ueber: houseSrc(BUILDING.street, 1100),
   team: houseSrc(CREW.group, 1100),
   ausstellung: houseSrc(ROOM.r0002, 1100),
   nachhaltigkeit: houseSrc(WORKSHOP.one, 1100),
