@@ -1,5 +1,5 @@
 {
- "_about": "Old beer.de (Shopify) addresses → new site: blog articles (import of 2026-10-27), then shop products, collections and pages (2026-10-28; products matched to projects by their photos). Used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls. On 2026-10-29 five posts announcing the same open day redirect to the one kept.",
+ "_about": "Old beer.de (Shopify) addresses → new site: blog articles (import of 2026-10-27), then shop products, collections and pages (2026-10-28; products matched to projects by their photos). Used by redirects() in next.config.ts (permanent, 308). Exact addresses first, then the catch-alls. On 2026-10-29 five posts announcing the same open day redirect to the one kept. On 2026-11-18 exact targets were added for old posts that Search Console still lists, and the team, workshop and customer-kitchen blogs fall back to Presse and Projekte instead of Ratgeber.",
  "redirects": [
   {
    "source": "/presse/tag-der-offenen-tur-bei-beer-kuchenmanufaktur",
@@ -912,6 +912,102 @@
   {
    "source": "/en/blogs/elektrogerate.atom",
    "destination": "/en/guides"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/kaschmirgraue-kuchen-so-gelingt-der-perfekte-mix-aus-zeitloser-eleganz-moderner-klarheit-und-wohnlicher-atmosphare",
+   "destination": "/kuechen/farben/grau"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/kaschmirgraue-kuchen-so-gelingt-der-perfekte-mix-aus-zeitloser-eleganz-moderner-klarheit-und-wohnlicher-atmosphare",
+   "destination": "/en/kitchens/colours/grau"
+  },
+  {
+   "source": "/blogs/einbaugeraete-technik/teppanyaki-kochfeld-mit-kochfeldabzug-naturstein-arbeitsplatte",
+   "destination": "/geraete/kochfeld"
+  },
+  {
+   "source": "/en/blogs/einbaugeraete-technik/teppanyaki-kochfeld-mit-kochfeldabzug-naturstein-arbeitsplatte",
+   "destination": "/en/appliances/kochfeld"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/kuchenfronten-in-jeder-farbe",
+   "destination": "/kuechen/farben"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/kuchenfronten-in-jeder-farbe",
+   "destination": "/en/kitchens/colours"
+  },
+  {
+   "source": "/blogs/team-news/tag-der-offenen-tur-bei-der-beer-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/tag-der-offenen-tur-bei-der-beer-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/team-news/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur-ein-erfolgreiches-wochenende",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur-ein-erfolgreiches-wochenende",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/team-news/tag-der-offenen-tur-2026-einblicke-in-unsere-kuchenmanufaktur",
+   "destination": "/presse/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/tag-der-offenen-tur-2026-einblicke-in-unsere-kuchenmanufaktur",
+   "destination": "/en/press/tag-der-offenen-tur-in-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/team-news/handwerk-trifft-zukunft-unser-azubi-team-wachst",
+   "destination": "/presse/handwerk-trifft-zukunft-unsere-neuen-azubis"
+  },
+  {
+   "source": "/en/blogs/team-news/handwerk-trifft-zukunft-unser-azubi-team-wachst",
+   "destination": "/en/press/handwerk-trifft-zukunft-unsere-neuen-azubis"
+  },
+  {
+   "source": "/blogs/team-news/after-work-abend-bei-der-beer-kuchenmanufaktur-gemeinsam-kochen-gemeinsam-geniessen",
+   "destination": "/presse/after-work-summer-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/en/blogs/team-news/after-work-abend-bei-der-beer-kuchenmanufaktur-gemeinsam-kochen-gemeinsam-geniessen",
+   "destination": "/en/press/after-work-summer-bei-der-beer-kuchenmanufaktur"
+  },
+  {
+   "source": "/blogs/team-news/:handle",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/team-news/:handle",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/manufaktur-einblicke/:handle",
+   "destination": "/presse"
+  },
+  {
+   "source": "/en/blogs/manufaktur-einblicke/:handle",
+   "destination": "/en/press"
+  },
+  {
+   "source": "/blogs/kundenkuechen-referenzen/:handle",
+   "destination": "/projekte"
+  },
+  {
+   "source": "/en/blogs/kundenkuechen-referenzen/:handle",
+   "destination": "/en/projects"
+  },
+  {
+   "source": "/search",
+   "destination": "/"
+  },
+  {
+   "source": "/en/search",
+   "destination": "/en"
   },
   {
    "source": "/blogs/:blog/:handle",
