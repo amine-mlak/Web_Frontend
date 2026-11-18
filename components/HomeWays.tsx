@@ -115,7 +115,10 @@ export default async function HomeWays({
   const locale = await getRequestLocale();
   const copy = COPY[locale];
   const panels = (panelContent?.panels.length ? panelContent.panels : panelFallback.panels).slice(0, 4);
-  const colours = (colourContent?.colors.length ? colourContent.colors : colourFallback.colors)
+  // The colours belong to this block in the CMS; an entry from before that keeps them in "Kacheln",
+  // where the title was a headline, so those are named after the page they open.
+  const own = panelContent?.colors?.length ? panelContent.colors : null;
+  const colours = (own ?? (colourContent?.colors.length ? colourContent.colors : colourFallback.colors))
     .map((tile) => ({ tile, slug: colourSlug(tile.href) }))
     .sort((a, b) => (a.slug ? COLOUR_ORDER.indexOf(a.slug) : 99) - (b.slug ? COLOUR_ORDER.indexOf(b.slug) : 99))
     .slice(0, 3);
@@ -124,9 +127,9 @@ export default async function HomeWays({
     <section id="entdecken" aria-labelledby="home-ways" className="bg-paper px-5 py-20 sm:px-8 lg:px-gutter lg:py-28">
       <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-16">
         <h2 data-rise="" id="home-ways" className="t-section text-ink lg:col-span-7">
-          {chromeCopy[locale].discover}
+          {panelContent?.title || chromeCopy[locale].discover}
         </h2>
-        <p className="max-w-md font-sans text-[16px] leading-relaxed text-muted lg:col-span-5">{copy.text}</p>
+        <p className="max-w-md font-sans text-[16px] leading-relaxed text-muted lg:col-span-5">{panelContent?.text || copy.text}</p>
       </div>
 
       <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-14 lg:h-[46rem] lg:grid-cols-4 lg:grid-rows-2">
@@ -143,15 +146,15 @@ export default async function HomeWays({
       {colours.length ? (
         <div className="mt-16 lg:mt-24">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-            <h3 className="t-feature text-ink">{copy.colours}</h3>
+            <h3 className="t-feature text-ink">{panelContent?.coloursTitle || copy.colours}</h3>
             <LocaleLink href="/kuechen/farben" className="btn-quiet">
-              {copy.allColours}
+              {panelContent?.coloursLinkLabel || copy.allColours}
             </LocaleLink>
           </div>
           <ul className="mt-8 grid gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-10">
             {colours.map(({ tile, slug }, index) => (
               <li key={`${tile.href}-${index}`}>
-                <ColourTile tile={tile} name={(slug && COLOUR_NAME[locale][slug]) || tile.title} view={copy.view} />
+                <ColourTile tile={tile} name={own ? tile.title : (slug && COLOUR_NAME[locale][slug]) || tile.title} view={copy.view} />
               </li>
             ))}
           </ul>

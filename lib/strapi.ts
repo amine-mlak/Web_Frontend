@@ -64,7 +64,21 @@ export type EntdeckenPanel = {
 };
 
 export type EntdeckenContent = {
+  /** Heading and sentence of the section; the start page falls back to its own. */
+  title?: string;
+  text?: string;
   panels: EntdeckenPanel[];
+  /** The kitchen colours under the fields, with their heading and the link beside it. */
+  coloursTitle?: string;
+  coloursLinkLabel?: string;
+  colors?: KachelTile[];
+};
+
+/** Start page: the words around the three newest projects. */
+export type HomeProjectsContent = {
+  title?: string;
+  text?: string;
+  linkLabel?: string;
 };
 
 export type FaqItem = {
@@ -88,6 +102,8 @@ export type ProcessIcon = "consult" | "plan" | "factory" | "handover";
 export type ProcessContent = {
   eyebrow: string;
   title: string;
+  /** The sentence beside the heading. */
+  text?: string;
   buttonLabel: string;
   buttonHref: string;
   steps: {
@@ -95,7 +111,13 @@ export type ProcessContent = {
     title: string;
     description: string;
     icon: ProcessIcon;
+    /** The photo shown beside this step. */
+    image?: string;
+    alt?: string;
   }[];
+  /** The quote that closes the section. */
+  quote?: string;
+  quoteSource?: string;
 };
 
 export type BeratungContent = {
@@ -129,6 +151,7 @@ export type HomeCms = {
   heroPanel: HeroIntroContent | null;
   kacheln: KachelnContent | null;
   entdecken: EntdeckenContent | null;
+  projekte: HomeProjectsContent | null;
   faq: FaqContent | null;
   ablauf: ProcessContent | null;
   beratung: BeratungContent | null;
@@ -195,6 +218,24 @@ type StrapiFaqBlock = {
   questions?: StrapiFaqPick[] | unknown;
 };
 
+type StrapiProcess = {
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  buttonLabel?: string;
+  buttonHref?: string;
+  steps?: {
+    step?: string;
+    title?: string;
+    description?: string;
+    icon?: string;
+    image?: StrapiMedia;
+    alt?: string;
+  }[];
+  quote?: string;
+  quoteSource?: string;
+};
+
 type StrapiLandingEntry = {
   title?: string;
   slug?: string;
@@ -214,19 +255,16 @@ type StrapiLandingEntry = {
     intro?: string;
     colors?: StrapiColorTile[];
   };
-  ablauf?: {
-    eyebrow?: string;
+  ablauf?: StrapiProcess;
+  entdecken?: {
     title?: string;
-    buttonLabel?: string;
-    buttonHref?: string;
-    steps?: {
-      step?: string;
-      title?: string;
-      description?: string;
-      icon?: string;
-    }[];
+    text?: string;
+    panels?: StrapiDiscoverPanel[];
+    coloursTitle?: string;
+    coloursLinkLabel?: string;
+    colors?: StrapiColorTile[];
   };
-  entdecken?: { panels?: StrapiDiscoverPanel[] };
+  projekte?: { title?: string; text?: string; linkLabel?: string };
   faq?: StrapiFaqBlock;
   beratung?: {
     eyebrow?: string;
@@ -528,21 +566,7 @@ function mapKachelnContent(data?: {
     return null;
   }
 
-  const colors = (data.colors ?? [])
-    .map((tile) => {
-      const image = strapiResponsiveImage(tile.image, { srcWidth: 1600 });
-      return {
-        title: tile.title?.trim() || "",
-        text: tile.text?.trim() || "",
-        buttonLabel: tile.buttonLabel?.trim() || "",
-        href: tile.href?.trim() || "#kacheln",
-        image: image.src,
-        srcSet: image.srcSet,
-        alt: tile.alt?.trim() || tile.title?.trim() || "",
-        color: tile.color?.trim() || "",
-      };
-    })
-    .filter((tile) => tile.title && tile.image && isHexColor(tile.color));
+  const colors = mapColorTiles(data.colors);
 
   if (colors.length === 0) {
     return null;
@@ -557,10 +581,28 @@ function mapKachelnContent(data?: {
   };
 }
 
+function mapColorTiles(tiles?: StrapiColorTile[]): KachelTile[] {
+  return (tiles ?? [])
+    .map((tile) => {
+      const image = strapiResponsiveImage(tile.image, { srcWidth: 1600 });
+      return {
+        title: tile.title?.trim() || "",
+        text: tile.text?.trim() || "",
+        buttonLabel: tile.buttonLabel?.trim() || "",
+        href: tile.href?.trim() || "#kacheln",
+        image: image.src,
+        srcSet: image.srcSet,
+        alt: tile.alt?.trim() || tile.title?.trim() || "",
+        color: tile.color?.trim() || "",
+      };
+    })
+    .filter((tile) => tile.title && tile.image && isHexColor(tile.color));
+}
+
 function mapEntdeckenContent(
-  panels?: StrapiDiscoverPanel[],
+  data?: StrapiLandingEntry["entdecken"] | null,
 ): EntdeckenContent | null {
-  const mapped = (panels ?? [])
+  const mapped = (data?.panels ?? [])
     .map((panel) => {
       const image = strapiResponsiveImage(panel.image, { srcWidth: 1600 });
       return {
@@ -573,26 +615,34 @@ function mapEntdeckenContent(
         alt: panel.alt?.trim() || panel.title?.trim() || "",
       };
     })
-    .filter((panel) => panel.title && panel.subtitle);
+    .filter((panel) => panel.title && panel.image);
 
-  return mapped.length > 0 ? { panels: mapped } : null;
+  if (mapped.length === 0) {
+    return null;
+  }
+
+  const colors = mapColorTiles(data?.colors);
+  return {
+    title: data?.title?.trim() || undefined,
+    text: data?.text?.trim() || undefined,
+    panels: mapped,
+    coloursTitle: data?.coloursTitle?.trim() || undefined,
+    coloursLinkLabel: data?.coloursLinkLabel?.trim() || undefined,
+    colors: colors.length > 0 ? colors : undefined,
+  };
+}
+
+function mapProjekteContent(data?: StrapiLandingEntry["projekte"] | null): HomeProjectsContent | null {
+  const title = data?.title?.trim();
+  const text = data?.text?.trim();
+  const linkLabel = data?.linkLabel?.trim();
+  return title || text || linkLabel ? { title, text, linkLabel } : null;
 }
 
 
 const PROCESS_ICONS: ProcessIcon[] = ["consult", "plan", "factory", "handover"];
 
-function mapProcessContent(data?: {
-  eyebrow?: string;
-  title?: string;
-  buttonLabel?: string;
-  buttonHref?: string;
-  steps?: {
-    step?: string;
-    title?: string;
-    description?: string;
-    icon?: string;
-  }[];
-} | null): ProcessContent | null {
+function mapProcessContent(data?: StrapiProcess | null): ProcessContent | null {
   if (!data) {
     return null;
   }
@@ -605,6 +655,8 @@ function mapProcessContent(data?: {
       icon: PROCESS_ICONS.includes(item.icon as ProcessIcon)
         ? (item.icon as ProcessIcon)
         : "consult",
+      image: strapiResponsiveImage(item.image, { srcWidth: 1600 }).src || undefined,
+      alt: item.alt?.trim() || undefined,
     }))
     .filter((item) => item.step && item.title && item.description);
 
@@ -615,9 +667,12 @@ function mapProcessContent(data?: {
   return {
     eyebrow: data.eyebrow?.trim() || "Der Weg zur Küche",
     title: data.title?.trim() || "Von der ersten Idee bis zur Übergabe",
+    text: data.text?.trim() || undefined,
     buttonLabel: data.buttonLabel?.trim() || "Entdecken",
     buttonHref: data.buttonHref?.trim() || "#ablauf",
     steps,
+    quote: data.quote?.trim() || undefined,
+    quoteSource: data.quoteSource?.trim() || undefined,
   };
 }
 
@@ -655,7 +710,9 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     "populate[hero][populate][slides][populate]": "image",
     "populate[kacheln][populate][colors][populate]": "image",
     "populate[entdecken][populate][panels][populate]": "image",
-    "populate[ablauf][populate]": "steps",
+    "populate[entdecken][populate][colors][populate]": "image",
+    "populate[projekte]": "true",
+    "populate[ablauf][populate][steps][populate]": "image",
     "populate[faq][populate][theme]": "true",
     "populate[faq][populate][questions][populate]": "item",
     "populate[faq][populate][items]": "true",
@@ -671,7 +728,8 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
   const heroSlides = mapHeroSlides(entry.hero?.slides);
   const heroPanel = mapHeroPanel(entry.hero);
   const kacheln = mapKachelnContent(entry.kacheln);
-  const entdecken = mapEntdeckenContent(entry.entdecken?.panels);
+  const entdecken = mapEntdeckenContent(entry.entdecken);
+  const projekte = mapProjekteContent(entry.projekte);
   const faq = await resolveFaqBlock(entry.faq);
   const ablauf = mapProcessContent(entry.ablauf);
   const beratung = mapBeratungContent(entry.beratung);
@@ -694,6 +752,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
       heroPanel,
       kacheln: null,
       entdecken: null,
+      projekte: null,
       faq: null,
       ablauf: null,
       beratung: null,
@@ -709,6 +768,7 @@ async function fetchLandingPage(slug = "home"): Promise<HomeCms | null> {
     heroPanel,
     kacheln,
     entdecken,
+    projekte,
     faq,
     ablauf,
     beratung,
@@ -737,6 +797,7 @@ export async function fetchHomeCms(): Promise<HomeCms> {
     heroPanel: null,
     kacheln: null,
     entdecken: null,
+    projekte: null,
     faq: collectionFaq,
     ablauf: null,
     beratung: null,

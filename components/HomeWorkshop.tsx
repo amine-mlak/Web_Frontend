@@ -32,8 +32,14 @@ export default async function HomeWorkshop({
   const copy = COPY[locale];
   const data = content ?? processFallback;
   const steps = data.steps.length > 0 ? data.steps : processFallback.steps;
-  const words = quote?.text?.trim() || fallbackGutZuWissen.quote;
-  const source = quote?.source?.trim() || fallbackGutZuWissen.source;
+  // The quote sits in this block in the CMS; an older entry still has it with the questions.
+  const words = data.quote || quote?.text?.trim() || fallbackGutZuWissen.quote;
+  const source = data.quoteSource || quote?.source?.trim() || fallbackGutZuWissen.source;
+  // Each step's own photo from the CMS; the house photos stand in where a step has none.
+  const shots = steps.map((step, index) => {
+    const standIn = PROCESS_SHOTS[Math.min(index, PROCESS_SHOTS.length - 1)];
+    return step.image ? { src: step.image, alt: step.alt || step.title } : standIn;
+  });
 
   return (
     <section id="ablauf" aria-labelledby="ablauf-heading" className="bg-espresso px-5 py-20 text-paper sm:px-8 lg:px-gutter lg:py-32">
@@ -42,7 +48,7 @@ export default async function HomeWorkshop({
           {data.title}
         </h2>
         <div className="lg:col-span-5">
-          <p className="max-w-md font-sans text-[16px] leading-relaxed text-paper/80 md:text-[17px]">{copy.text}</p>
+          <p className="max-w-md font-sans text-[16px] leading-relaxed text-paper/80 md:text-[17px]">{data.text || copy.text}</p>
           <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
             <LocaleLink href={data.buttonHref} className="pill pill-light">
               {data.buttonLabel}
@@ -56,7 +62,7 @@ export default async function HomeWorkshop({
 
       <WorkshopSteps
         steps={steps.map(({ step, title, description }) => ({ step, title, description }))}
-        shots={PROCESS_SHOTS}
+        shots={shots}
       />
 
       <blockquote className="mt-16 border-t border-paper/20 pt-14 lg:mt-24 lg:pt-20">

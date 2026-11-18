@@ -49,7 +49,7 @@ const fallbackHeroPanel: Record<"de" | "en", HeroIntroContent> = {
 
 export default async function Home() {
   const locale = await getRequestLocale();
-  const { heroSlides, heroPanel, kacheln, entdecken, faq, ablauf } =
+  const { heroSlides, heroPanel, kacheln, entdecken, projekte, faq, ablauf } =
     await fetchHomeCms();
 
   return (
@@ -57,7 +57,7 @@ export default async function Home() {
       <LocalBusinessJsonLd />
       <Hero slides={heroSlides} panel={heroPanel ?? fallbackHeroPanel[locale]} />
       <HomeWays panels={entdecken} colours={kacheln} />
-      <HomeProjects />
+      <HomeProjects content={projekte} />
       <HomeWorkshop content={ablauf} quote={{ text: faq?.quote, source: faq?.quoteSource }} />
       <Faq content={faq} band={false} />
       <PlannerSection />

@@ -3,6 +3,7 @@ import ProjectFeature from "@/components/catalog/ProjectFeature";
 import { fetchProjects } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 import { projectFeature } from "@/lib/project-features";
+import type { HomeProjectsContent } from "@/lib/strapi";
 
 const COPY = {
   de: {
@@ -21,9 +22,13 @@ const COPY = {
  * Start page: three of the newest kitchens, each shown like an exposé in its own arrangement.
  * Only kitchens with a text and a second photo, so each one can be shown properly.
  */
-export default async function HomeProjects() {
+export default async function HomeProjects({ content }: { content?: HomeProjectsContent | null }) {
   const locale = await getRequestLocale();
-  const copy = COPY[locale];
+  const copy = {
+    title: content?.title || COPY[locale].title,
+    text: content?.text || COPY[locale].text,
+    all: content?.linkLabel || COPY[locale].all,
+  };
   const projects = (await fetchProjects())
     .filter((project) => project.image && project.intro?.trim() && project.gallery.length > 1)
     .slice(0, 3);
