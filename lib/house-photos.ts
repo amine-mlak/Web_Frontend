@@ -88,6 +88,15 @@ const WERK2 = {
   desk: u("078_Showroom_a0a87f0eff.jpg"),
 };
 
+/** Start page, the way to a kitchen: one photo of the house per step (talk, plan, build, fit). */
+export const PROCESS_SHOTS: HouseShot[] = [
+  { src: cmsSrc(WERK2.table), alt: "Besprechungstisch in der Ausstellung in Wolfersdorf" },
+  { src: cmsSrc(WERK2.desk), alt: "Planungsplatz hinter Glas in der Ausstellung" },
+  { src: cmsSrc(WORKSHOP.one), alt: "Ein Schreiner trägt eine Platte durch die Werkstatt" },
+  // No photo of a fitting yet: a finished kitchen in the showroom stands in.
+  { src: cmsSrc(WERK2.kitchens), alt: "Fertige Küchen in der Ausstellung" },
+];
+
 /** The sample wall in Werk 2: fronts and worktops side by side (material overview). */
 export const SHOWROOM_SAMPLES = {
   wall: u("084_Showroom_67e66b0449.jpg"),

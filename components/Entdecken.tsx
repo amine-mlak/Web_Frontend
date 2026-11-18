@@ -3,7 +3,7 @@ import { chromeCopy } from "@/lib/i18n";
 import { getRequestLocale } from "@/lib/locale";
 import type { EntdeckenContent } from "@/lib/strapi";
 
-const fallback: EntdeckenContent = {
+export const fallback: EntdeckenContent = {
   panels: [
     {
       title: "BEER Küchen-Designs",
@@ -14,12 +14,12 @@ const fallback: EntdeckenContent = {
       alt: "Schwarze Designküche",
     },
     {
-      title: "Materialien & Farben",
+      title: "Materialien",
       subtitle: "Die Kunst des Kombinierens.",
-      buttonLabel: "Farben entdecken",
-      href: "/kuechen/farben",
+      buttonLabel: "Materialien entdecken",
+      href: "/material",
       image: "/kitchens/stile-landhaus.jpg",
-      alt: "Salbeigrüne Küche",
+      alt: "Küche aus Holz mit Natursteinplatte",
     },
     {
       title: "Arbeitsplatten",

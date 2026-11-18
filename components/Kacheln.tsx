@@ -5,7 +5,7 @@ import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
 import type { KachelTile, KachelnContent } from "@/lib/strapi";
 
-const fallback: KachelnContent = {
+export const fallback: KachelnContent = {
   eyebrow: "Küchenfarben",
   intro: "",
   colors: [

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { chromeCopy } from "@/lib/i18n";
+import { chromeCopy, stripLocalePrefix } from "@/lib/i18n";
 import { menuPanels, type MenuPanel } from "@/lib/navigation";
 import { useLocale } from "@/components/LocaleProvider";
 
@@ -56,7 +56,11 @@ export default function MegaMenu({
   const menuValueRef = useRef(menuValue);
   const pathname = usePathname();
   const [shownPath, setShownPath] = useState(pathname);
-  const solid = true;
+  // On a page whose hero carries the menu (data-hero-overlay), the bar is clear with light text
+  // until the visitor scrolls past the photo, points at the bar or opens a menu.
+  // The start page always opens on its hero, so the bar is clear from the first paint there.
+  const [overHero, setOverHero] = useState(() => stripLocalePrefix(pathname || "/") === "/");
+  const solid = !overHero || hovered || menuOpen || dropdownOpen || mobileOpen;
 
   // A new page closes every menu at once (desktop dropdown and phone sheet), without the close animation.
   if (pathname !== shownPath) {
@@ -141,6 +145,27 @@ export default function MegaMenu({
   }, [menuValue]);
 
   useEffect(() => {
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const hero = document.querySelector("[data-hero-overlay]");
+      const next = hero ? hero.getBoundingClientRect().bottom > 56 : false;
+      setOverHero((current) => (current === next ? current : next));
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     return () => {
       window.clearTimeout(leaveTimer.current);
       window.clearTimeout(closeDropdownTimer.current);
@@ -201,6 +226,7 @@ export default function MegaMenu({
   return (
     <div
       className="relative w-full"
+      data-clear={solid ? undefined : ""}
       data-header-lock={
         mobileOpen || dropdownOpen || menuOpen || hovered ? "true" : "false"
       }

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import Entdecken from "@/components/Entdecken";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
 import InstagramFeed from "@/components/InstagramFeed";
 import HomeProjects from "@/components/HomeProjects";
-import Kacheln from "@/components/Kacheln";
+import HomeWays from "@/components/HomeWays";
+import HomeWorkshop from "@/components/HomeWorkshop";
 import PlannerSection from "@/components/planner/PlannerSection";
 import LocalBusinessJsonLd from "@/components/LocalBusinessJsonLd";
-import Process from "@/components/Process";
 import { getRequestLocale } from "@/lib/locale";
 import { seoFor } from "@/lib/cms-seo";
 import { pageMetadata } from "@/lib/seo";
@@ -57,11 +56,10 @@ export default async function Home() {
     <main className="bg-paper">
       <LocalBusinessJsonLd />
       <Hero slides={heroSlides} panel={heroPanel ?? fallbackHeroPanel[locale]} />
-      <Kacheln content={kacheln} />
-      <Entdecken content={entdecken} />
+      <HomeWays panels={entdecken} colours={kacheln} />
       <HomeProjects />
-      <Process content={ablauf} />
-      <Faq content={faq} />
+      <HomeWorkshop content={ablauf} quote={{ text: faq?.quote, source: faq?.quoteSource }} />
+      <Faq content={faq} band={false} />
       <PlannerSection />
       <InstagramFeed />
     </main>

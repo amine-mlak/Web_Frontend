@@ -3,7 +3,7 @@ import type { ProcessContent } from "@/lib/strapi";
 
 // The steps are numbered text; the icons above them were dropped (an icon per step read as a template).
 
-const fallback: ProcessContent = {
+export const fallback: ProcessContent = {
   eyebrow: "Der Weg zur Küche",
   title: "Von der ersten Idee bis zur Übergabe",
   buttonLabel: "Küche planen",

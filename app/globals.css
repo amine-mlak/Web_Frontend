@@ -496,6 +496,26 @@ body {
   }
 }
 
+/* The menu bar on a hero photo (MegaMenu.tsx sets data-clear): light text and logo, no white
+   sheet. Outside the layers so it wins over the colour utilities in the header parts. */
+[data-clear] :is(a, button, span) {
+  color: var(--color-paper);
+  transition: color 0.3s ease;
+}
+
+[data-clear] img {
+  filter: brightness(0) invert(1);
+}
+
+[data-clear] .pill-primary {
+  background: transparent;
+  border-color: rgb(253 252 250 / 0.7);
+}
+
+[data-clear] button[aria-controls] {
+  border-color: rgb(253 252 250 / 0.5);
+}
+
 /* Height of the space the fixed header takes at the top of a page (SiteHeader.tsx). */
 :root {
   --header-space: 3.5rem;

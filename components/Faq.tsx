@@ -88,7 +88,14 @@ function presentFaq(data: FaqContent, pack: FaqContent): FaqContent {
   };
 }
 
-export default async function Faq({ content }: { content: FaqContent | null }) {
+export default async function Faq({
+  content,
+  band = true,
+}: {
+  content: FaqContent | null;
+  /** The quote band above the questions; the start page shows the quote elsewhere. */
+  band?: boolean;
+}) {
   const locale = await getRequestLocale();
   const pack = locale === "en" ? fallbackEn : fallback;
   const data = presentFaq(content ?? pack, pack);
@@ -106,22 +113,21 @@ export default async function Faq({ content }: { content: FaqContent | null }) {
           themes: [],
         }))}
       />
-      <GutZuWissen
-        content={{
-          eyebrow: data.quoteEyebrow,
-          quote: data.quote,
-          source: data.quoteSource,
-        }}
-      />
-      <div className="mx-auto max-w-3xl px-6 py-20 md:px-8 md:py-28">
-        <h2
-          data-rise=""
-          id="faq-heading"
-          className="font-serif text-[24px] md:text-[32px] xl:text-[42px] leading-[1.15] font-medium tracking-[-0.02em] text-ink"
-        >
+      {band ? (
+        <GutZuWissen
+          content={{
+            eyebrow: data.quoteEyebrow,
+            quote: data.quote,
+            source: data.quoteSource,
+          }}
+        />
+      ) : null}
+      {/* On the page grid: the heading in the left columns, the questions beside it. */}
+      <div className="grid gap-10 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-16 lg:px-gutter lg:py-28">
+        <h2 data-rise="" id="faq-heading" className="t-section text-ink lg:col-span-5">
           {data.title}
         </h2>
-        <div className="mt-10 md:mt-12">
+        <div className="lg:col-span-7">
           <Accordion items={items} />
         </div>
       </div>
