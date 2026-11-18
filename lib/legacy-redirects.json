@@ -1411,19 +1411,19 @@
   },
   {
    "source": "/products/salbei-stein-landhauskuche",
-   "destination": "/projekte/mintgruen-weisser-stein-u-form"
+   "destination": "/kuechen/farben/salbei"
   },
   {
    "source": "/en/products/salbei-stein-landhauskuche",
-   "destination": "/en/projects/mintgruen-weisser-stein-u-form"
+   "destination": "/en/kitchens/colours/salbei"
   },
   {
    "source": "/collections/:collection/products/salbei-stein-landhauskuche",
-   "destination": "/projekte/mintgruen-weisser-stein-u-form"
+   "destination": "/kuechen/farben/salbei"
   },
   {
    "source": "/en/collections/:collection/products/salbei-stein-landhauskuche",
-   "destination": "/en/projects/mintgruen-weisser-stein-u-form"
+   "destination": "/en/kitchens/colours/salbei"
   },
   {
    "source": "/products/industrial-chic-landhauskuche",
