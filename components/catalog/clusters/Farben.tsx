@@ -244,11 +244,18 @@ export function FarbenTopic({ hub, slug }: { hub: PresentedTopic; slug: string }
             {hub.ueberschrift || hub.heroAlt}
           </h2>
           <div className="max-w-2xl space-y-6 lg:col-span-7 lg:col-start-6">
-            {reading.map((paragraph, index) => (
-              <p key={index} className="font-sans text-[16px] leading-[1.7] text-ink/85">
-                {paragraph}
-              </p>
-            ))}
+            {/* A line starting with "## " is a sub-heading, as in TopicReading. */}
+            {reading.map((paragraph, index) =>
+              paragraph.startsWith("## ") ? (
+                <h3 key={index} className="t-item pt-4 text-ink">
+                  {paragraph.slice(3)}
+                </h3>
+              ) : (
+                <p key={index} className="font-sans text-[16px] leading-[1.7] text-ink/85">
+                  {paragraph}
+                </p>
+              ),
+            )}
           </div>
         </section>
       ) : (
