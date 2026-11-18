@@ -116,6 +116,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
+    // `next upgrade --agent` reminds about releases that fix a published security advisory.
+    agentUpgrade: "security",
     // The root layout sits in app/[locale], so unmatched URLs need app/global-not-found.tsx.
     globalNotFound: true,
     // ~300 pages are prerendered from the CMS in parallel; a page occasionally fails under
