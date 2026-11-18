@@ -1875,19 +1875,19 @@
   },
   {
    "source": "/products/die-offene-landhauskuche",
-   "destination": "/projekte/landhaus-creme-eichenplatte"
+   "destination": "/kuechen/stile/landhaus"
   },
   {
    "source": "/en/products/die-offene-landhauskuche",
-   "destination": "/en/projects/landhaus-creme-eichenplatte"
+   "destination": "/en/kitchens/styles/landhaus"
   },
   {
    "source": "/collections/:collection/products/die-offene-landhauskuche",
-   "destination": "/projekte/landhaus-creme-eichenplatte"
+   "destination": "/kuechen/stile/landhaus"
   },
   {
    "source": "/en/collections/:collection/products/die-offene-landhauskuche",
-   "destination": "/en/projects/landhaus-creme-eichenplatte"
+   "destination": "/en/kitchens/styles/landhaus"
   },
   {
    "source": "/products/feine-englische-landhauskuche",
