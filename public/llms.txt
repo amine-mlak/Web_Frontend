@@ -11,6 +11,15 @@ BEER GmbH plant und fertigt Küchen und Möbel nach Maß. Die Website zeigt Küc
 - [/#ablauf](/#ablauf): Ablauf von der Beratung bis zur Montage
 - [/#beratung](/#beratung): Unverbindliche Beratungsanfrage
 
+## Küchen und Themen
+
+- [/kuechen](/kuechen): Küchen nach Form, Stil, Farbe, Insel und besonderen Lösungen
+- [/kuechen/besondere/edelstahl](/kuechen/besondere/edelstahl): Edelstahlküchen für das private Zuhause, mit Arbeitsplatte und eingeschweißter Spüle, Insel oder Fronten aus Edelstahl; Fragen zu Kosten, Kratzern und Pflege
+- [/projekte](/projekte): Gebaute Küchen mit Fotos und Eckdaten
+- [/material](/material): Fronten, Arbeitsplatten, Innenleben und Spülen
+- [/ratgeber](/ratgeber): Ratgeber zu Planung, Kosten, Geräten und Material
+- [/faq](/faq): Häufige Fragen nach Themen
+
 ## Kontakt
 
 - [Telefon +49 8168 909910](tel:+498168909910): Ausstellung und Beratung

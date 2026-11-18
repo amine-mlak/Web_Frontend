@@ -2051,19 +2051,19 @@
   },
   {
    "source": "/products/edelstahlkuche",
-   "destination": "/material/edelstahl"
+   "destination": "/kuechen/besondere/edelstahl"
   },
   {
    "source": "/en/products/edelstahlkuche",
-   "destination": "/en/materials/edelstahl"
+   "destination": "/en/kitchens/special/edelstahl"
   },
   {
    "source": "/collections/:collection/products/edelstahlkuche",
-   "destination": "/material/edelstahl"
+   "destination": "/kuechen/besondere/edelstahl"
   },
   {
    "source": "/en/collections/:collection/products/edelstahlkuche",
-   "destination": "/en/materials/edelstahl"
+   "destination": "/en/kitchens/special/edelstahl"
   },
   {
    "source": "/products/kaschmirgraue-kueche",
