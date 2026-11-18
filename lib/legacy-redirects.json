@@ -1491,19 +1491,19 @@
   },
   {
    "source": "/products/terrassen-kueche",
-   "destination": "/projekte/terrassenkueche-eiche-edelstahl"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/products/terrassen-kueche",
-   "destination": "/en/projects/terrassenkueche-eiche-edelstahl"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/collections/:collection/products/terrassen-kueche",
-   "destination": "/projekte/terrassenkueche-eiche-edelstahl"
+   "destination": "/kuechen/besondere/outdoor"
   },
   {
    "source": "/en/collections/:collection/products/terrassen-kueche",
-   "destination": "/en/projects/terrassenkueche-eiche-edelstahl"
+   "destination": "/en/kitchens/special/outdoor"
   },
   {
    "source": "/products/eventkueche",
@@ -1763,51 +1763,51 @@
   },
   {
    "source": "/products/moderne-naturkuche",
-   "destination": "/projekte/weiss-schwarze-insel-eiche"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/products/moderne-naturkuche",
-   "destination": "/en/projects/weiss-schwarze-insel-eiche"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/collections/:collection/products/moderne-naturkuche",
-   "destination": "/projekte/weiss-schwarze-insel-eiche"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/collections/:collection/products/moderne-naturkuche",
-   "destination": "/en/projects/weiss-schwarze-insel-eiche"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/products/schwarze-designkuche",
-   "destination": "/projekte/schwarz-sichtbeton-eichenlamellen"
+   "destination": "/kuechen/farben/schwarz"
   },
   {
    "source": "/en/products/schwarze-designkuche",
-   "destination": "/en/projects/schwarz-sichtbeton-eichenlamellen"
+   "destination": "/en/kitchens/colours/schwarz"
   },
   {
    "source": "/collections/:collection/products/schwarze-designkuche",
-   "destination": "/projekte/schwarz-sichtbeton-eichenlamellen"
+   "destination": "/kuechen/farben/schwarz"
   },
   {
    "source": "/en/collections/:collection/products/schwarze-designkuche",
-   "destination": "/en/projects/schwarz-sichtbeton-eichenlamellen"
+   "destination": "/en/kitchens/colours/schwarz"
   },
   {
    "source": "/products/raumwunder-mit-massivholz",
-   "destination": "/projekte/astige-eiche-fensterband-u-form"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/products/raumwunder-mit-massivholz",
-   "destination": "/en/projects/astige-eiche-fensterband-u-form"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/collections/:collection/products/raumwunder-mit-massivholz",
-   "destination": "/projekte/astige-eiche-fensterband-u-form"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/collections/:collection/products/raumwunder-mit-massivholz",
-   "destination": "/en/projects/astige-eiche-fensterband-u-form"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/products/holzveredelte-schwarze-kueche",
@@ -1843,19 +1843,19 @@
   },
   {
    "source": "/products/naturkuche",
-   "destination": "/projekte/insel-bruchraue-steinplatte-holz"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/products/naturkuche",
-   "destination": "/en/projects/insel-bruchraue-steinplatte-holz"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/collections/:collection/products/naturkuche",
-   "destination": "/projekte/insel-bruchraue-steinplatte-holz"
+   "destination": "/kuechen/stile/holz"
   },
   {
    "source": "/en/collections/:collection/products/naturkuche",
-   "destination": "/en/projects/insel-bruchraue-steinplatte-holz"
+   "destination": "/en/kitchens/styles/holz"
   },
   {
    "source": "/products/cottage-landhauskuche",
@@ -1987,35 +1987,35 @@
   },
   {
    "source": "/products/schwarz-weiss-komposition",
-   "destination": "/projekte/pfoerring-schwarz-weiss"
+   "destination": "/kuechen/farben/schwarz"
   },
   {
    "source": "/en/products/schwarz-weiss-komposition",
-   "destination": "/en/projects/pfoerring-schwarz-weiss"
+   "destination": "/en/kitchens/colours/schwarz"
   },
   {
    "source": "/collections/:collection/products/schwarz-weiss-komposition",
-   "destination": "/projekte/pfoerring-schwarz-weiss"
+   "destination": "/kuechen/farben/schwarz"
   },
   {
    "source": "/en/collections/:collection/products/schwarz-weiss-komposition",
-   "destination": "/en/projects/pfoerring-schwarz-weiss"
+   "destination": "/en/kitchens/colours/schwarz"
   },
   {
    "source": "/products/designerkuche-in-weiss",
-   "destination": "/projekte/weiss-grifflos-schwarze-griffleiste"
+   "destination": "/kuechen/stile/design"
   },
   {
    "source": "/en/products/designerkuche-in-weiss",
-   "destination": "/en/projects/weiss-grifflos-schwarze-griffleiste"
+   "destination": "/en/kitchens/styles/design"
   },
   {
    "source": "/collections/:collection/products/designerkuche-in-weiss",
-   "destination": "/projekte/weiss-grifflos-schwarze-griffleiste"
+   "destination": "/kuechen/stile/design"
   },
   {
    "source": "/en/collections/:collection/products/designerkuche-in-weiss",
-   "destination": "/en/projects/weiss-grifflos-schwarze-griffleiste"
+   "destination": "/en/kitchens/styles/design"
   },
   {
    "source": "/products/skandinavische-frische",
