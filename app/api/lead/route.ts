@@ -231,7 +231,7 @@ export async function POST(request: Request) {
       locale: typeof parsed.body.locale === "string" && isLocale(parsed.body.locale) ? parsed.body.locale : "de",
       source: "/beratung (Küchenplaner)",
     });
-    console.info(`[lead] newsletter sign-up ${failed ? `failed: ${failed}` : "sent to n8n"}`);
+    console.info(`[lead] newsletter sign-up ${failed ? `failed: ${failed}` : "sent to Mautic"}`);
   }
   return Response.json({ ok: true, event_id: eventId }, { headers: noStoreHeaders() });
 }

@@ -81,7 +81,7 @@ export async function POST(request: Request) {
   if (failed) {
     return reject(502, failed, "unavailable");
   }
-  console.info("[newsletter] sign-up sent to n8n");
+  console.info("[newsletter] sign-up sent to Mautic");
   return Response.json({ ok: true }, { headers: noStoreHeaders() });
 }
 
