@@ -390,11 +390,7 @@ export default function MegaMenu({
                                     <LocaleLink
                                       href={ctaHref(link.href, link.label)}
                                       onClick={closeMobile}
-                                      className={`type-body ${
-                                        link.highlight
-                                          ? "text-ink"
-                                          : "text-ink/80"
-                                      }`}
+                                      className="type-body text-ink/80"
                                     >
                                       {link.label}
                                     </LocaleLink>

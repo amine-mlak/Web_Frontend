@@ -139,12 +139,10 @@ export default function MegaPanel({
           }
         >
           <div className={hasTeasers ? (twoParts ? "lg:col-span-6" : "lg:col-span-5") : undefined}>
-            <p className="type-intro max-w-md text-muted">{panel.intro}</p>
-
             {twoParts ? (
               // Two named parts of one menu (e.g. Küchen and Ausstattung): side by side, each under
               // its name, both in the large menu type.
-              <div className="mt-10 grid grid-cols-2 gap-x-10">
+              <div className="grid grid-cols-2 gap-x-10">
                 {[primary, secondary].map((group) => (
                   <div key={group.title}>
                     <p className="mb-5 border-b border-line pb-3 font-sans text-[14px] text-muted">{group.title}</p>
@@ -161,12 +159,12 @@ export default function MegaPanel({
             ) : null}
 
             {primary && !twoParts ? (
-              <ul className="mt-10 space-y-4">
+              <ul className="space-y-4">
                 {primary.links.map((link) => (
                   <li key={link.label}>
                     <PanelLink
                       link={link}
-                      large={panel.variant !== "about"}
+                      large
                       onNavigate={onNavigate}
                     />
                   </li>
