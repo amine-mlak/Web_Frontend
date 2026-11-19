@@ -125,6 +125,8 @@ export default function MegaPanel({
   const primary = panel.groups[0];
   const secondary = panel.groups[1];
   const hasTeasers = Boolean(panel.teasers?.length);
+  // Both groups carry a name: they are two equal parts, not a main list with a footnote row.
+  const twoParts = Boolean(primary?.title && secondary?.title);
 
   return (
     <div className="bg-transparent">
@@ -136,10 +138,29 @@ export default function MegaPanel({
               : "max-w-xl"
           }
         >
-          <div className={hasTeasers ? "lg:col-span-5" : undefined}>
+          <div className={hasTeasers ? (twoParts ? "lg:col-span-6" : "lg:col-span-5") : undefined}>
             <p className="type-intro max-w-md text-muted">{panel.intro}</p>
 
-            {primary ? (
+            {twoParts ? (
+              // Two named parts of one menu (e.g. Küchen and Ausstattung): side by side, each under
+              // its name, both in the large menu type.
+              <div className="mt-10 grid grid-cols-2 gap-x-10">
+                {[primary, secondary].map((group) => (
+                  <div key={group.title}>
+                    <p className="mb-5 border-b border-line pb-3 font-sans text-[14px] text-muted">{group.title}</p>
+                    <ul className="space-y-4">
+                      {group.links.map((link) => (
+                        <li key={link.label}>
+                          <PanelLink link={link} large onNavigate={onNavigate} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {primary && !twoParts ? (
               <ul className="mt-10 space-y-4">
                 {primary.links.map((link) => (
                   <li key={link.label}>
@@ -153,7 +174,7 @@ export default function MegaPanel({
               </ul>
             ) : null}
 
-            {secondary ? (
+            {secondary && !twoParts ? (
               <div className="mt-12 border-t border-line pt-8">
                 {secondary.title ? (
                   <p className="type-eyebrow mb-4">{secondary.title}</p>
@@ -170,7 +191,7 @@ export default function MegaPanel({
           </div>
 
           {hasTeasers ? (
-            <div className="lg:col-span-7">
+            <div className={twoParts ? "lg:col-span-6" : "lg:col-span-7"}>
               <TeaserStrip panel={panel} onNavigate={onNavigate} />
             </div>
           ) : null}

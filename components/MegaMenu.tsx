@@ -356,17 +356,34 @@ export default function MegaMenu({
                             )}
                           >
                             <ul className="min-h-0 space-y-3 overflow-hidden">
-                              <li className="pt-4">
-                                <LocaleLink
-                                  href={panel.href}
-                                  onClick={closeMobile}
-                                  className="type-body text-ink"
-                                >
-                                  {copy.overview}
-                                </LocaleLink>
-                              </li>
-                              {panel.groups.flatMap((group) =>
-                                group.links.map((link) => (
+                              {/* "Übersicht" opens the menu's own page; left out where the menu
+                                  already lists that page under its own name. */}
+                              {panel.groups.some((group) => group.links.some((link) => link.href === panel.href)) ? (
+                                <li className="pt-1" aria-hidden="true" />
+                              ) : (
+                                <li className="pt-4">
+                                  <LocaleLink
+                                    href={panel.href}
+                                    onClick={closeMobile}
+                                    className="type-body text-ink"
+                                  >
+                                    {copy.overview}
+                                  </LocaleLink>
+                                </li>
+                              )}
+                              {panel.groups.flatMap((group, groupIndex) => [
+                                // Named parts of a menu keep their names on the phone.
+                                ...(group.title && panel.groups.every((item) => item.title)
+                                  ? [
+                                      <li
+                                        key={`title-${group.title}`}
+                                        className={`font-sans text-[14px] text-muted ${groupIndex > 0 ? "border-t border-line/80 pt-4" : "pt-2"}`}
+                                      >
+                                        {group.title}
+                                      </li>,
+                                    ]
+                                  : []),
+                                ...group.links.map((link) => (
                                   <li
                                     key={`${group.title ?? "links"}-${link.label}`}
                                   >
@@ -383,7 +400,7 @@ export default function MegaMenu({
                                     </LocaleLink>
                                   </li>
                                 )),
-                              )}
+                              ])}
                             </ul>
                           </div>
                         </div>
