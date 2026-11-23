@@ -1365,6 +1365,7 @@ function withPunkte(
       text: points[0] || branch.text,
       // The first line is shown as the text; repeating it in the list doubled it on the page.
       points: points.slice(1),
+      link: punkt.linkText && punkt.linkZiel ? { href: punkt.linkZiel, label: punkt.linkText } : branch.link,
     };
   });
 }

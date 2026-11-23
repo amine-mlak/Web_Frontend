@@ -220,6 +220,11 @@ export function RuledPoints({ branches }: { branches: PresentedBranch[] }) {
                 ))}
               </ul>
             ) : null}
+            {branch.link ? (
+              <LocaleLink href={branch.link.href} className="btn-quiet mt-5">
+                {branch.link.label}
+              </LocaleLink>
+            ) : null}
           </div>
         </li>
       ))}

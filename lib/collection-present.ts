@@ -33,6 +33,8 @@ export type PresentedBranch = CollectionBranch & {
   cover?: string;
   count?: number;
   imageSrcSet?: string;
+  /** A link under the point, set on the point in the CMS (link text and target). */
+  link?: { href: string; label: string };
 };
 
 export type HubCrumb = {
