@@ -12,9 +12,12 @@ export default function MoreGrid({
   step = 12,
   moreLabel,
   countLabel,
+  eager = 0,
 }: {
   items: CatalogCardItem[];
   step?: number;
+  /** Cards in the first view, loaded at once. */
+  eager?: number;
   moreLabel: string;
   /** Receives how many are shown and how many there are, e.g. "12 von 86". */
   countLabel: string;
@@ -24,7 +27,7 @@ export default function MoreGrid({
 
   return (
     <>
-      <EntryGrid items={items.slice(0, shown)} />
+      <EntryGrid items={items.slice(0, shown)} eager={eager} />
       {rest > 0 ? (
         <div className="mt-16 flex flex-wrap items-center gap-x-8 gap-y-4">
           <button type="button" className="pill pill-secondary" onClick={() => setShown((current) => current + step)}>

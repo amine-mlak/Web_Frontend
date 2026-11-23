@@ -4,7 +4,7 @@ import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
 import type { PresentedBranch, PresentedHub } from "@/lib/collection-present";
 import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
-import { SHOWROOM_SAMPLES } from "@/lib/house-photos";
+import { houseSrc, SHOWROOM_SAMPLES } from "@/lib/house-photos";
 
 function areaId(branch: PresentedBranch, index: number) {
   return branch.href?.split("/").pop() || `bereich-${index + 1}`;
@@ -131,7 +131,7 @@ export default function MaterialCollection({
       </section>
 
       <Frame
-        src={SHOWROOM_SAMPLES.wall}
+        src={houseSrc(SHOWROOM_SAMPLES.wall, 3840)}
         alt={en ? "Sample wall with fronts and worktops in the Wolfersdorf showroom" : "Musterwand mit Fronten und Arbeitsplatten in der Ausstellung Wolfersdorf"}
         className="mt-10 aspect-[4/3] w-full sm:aspect-[16/9] lg:mt-14 lg:aspect-[21/9]"
         priority

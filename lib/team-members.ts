@@ -27,13 +27,15 @@ export async function fetchTeamMembers(locale: Locale): Promise<TeamVoice[]> {
   return (payload?.data ?? [])
     .map((entry) => {
       const name = entry.name?.trim() ?? "";
-      const photo = entry.foto ? strapiResponsiveImage(entry.foto, { srcWidth: 1200 }).src : "";
+      const portrait = entry.foto ? strapiResponsiveImage(entry.foto, { srcWidth: 640 }) : null;
+      const photo = portrait?.src ?? "";
       return {
         name,
         role: entry.rolle?.trim() ?? "",
         // Quotes are stored without quotation marks; the page sets them.
         quote: (entry.zitat ?? "").trim().replace(/^["„“”‚']+|["„“”‚']+$/g, ""),
         photo: photo || undefined,
+        photoSrcSet: photo ? portrait?.srcSet : undefined,
         locale,
       };
     })

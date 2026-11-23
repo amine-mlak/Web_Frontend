@@ -55,6 +55,7 @@ export default async function SpecPage({ hub }: { hub: PresentedTopic }) {
                 src={mark.logo}
                 alt={mark.name}
                 fill
+                loading="eager"
                 sizes="160px"
                 className={cn(
                   "object-contain object-left",

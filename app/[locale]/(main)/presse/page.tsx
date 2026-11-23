@@ -51,7 +51,7 @@ export default async function PressePage() {
         </h1>
         <p className="type-intro mt-8 max-w-2xl">{copy.intro}</p>
         <div className="mt-16">
-          <MoreGrid items={items} moreLabel={copy.more} countLabel={copy.count} />
+          <MoreGrid items={items} eager={3} moreLabel={copy.more} countLabel={copy.count} />
         </div>
       </div>
 

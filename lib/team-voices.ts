@@ -18,6 +18,8 @@ export type TeamVoice = {
   role: string;
   quote: string;
   photo?: string;
+  /** Smaller sizes of the portrait, so a card loads a file the width of the card. */
+  photoSrcSet?: string;
   /** Sets the quotation marks; German unless said otherwise. */
   locale?: "de" | "en";
 };

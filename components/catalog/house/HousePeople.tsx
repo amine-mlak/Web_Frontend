@@ -45,6 +45,7 @@ export default function HousePeople({
                     {voice.photo ? (
                       <CmsImage
                         src={voice.photo}
+                        srcSet={voice.photoSrcSet}
                         alt={voice.name}
                         fill
                         sizes="(max-width: 640px) 7rem, (max-width: 1024px) 50vw, 25vw"

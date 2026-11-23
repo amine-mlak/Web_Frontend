@@ -14,6 +14,12 @@ export default function BrandLogo({
   /** The lettering from the CMS header; left out when the CMS has none. */
   wordmarkSrc?: string;
 }) {
+  // The lettering is about 1000 px wide in the CMS but shown at 110 px: the 320 px WebP from
+  // /cms-opt is a third of the bytes and cached for a year.
+  const wordmark = wordmarkSrc && /^\/cms-uploads\/[A-Za-z0-9._-]+\.(png|jpe?g)$/i.test(wordmarkSrc)
+    ? wordmarkSrc.replace("/cms-uploads/", "/cms-opt/320/")
+    : wordmarkSrc;
+
   return (
     <LocaleLink
       href="/"
@@ -29,10 +35,10 @@ export default function BrandLogo({
           className="object-contain object-center"
         />
       </span>
-      {wordmarkSrc ? (
+      {wordmark ? (
         <span className="relative block h-[22px] w-[100px] shrink-0 sm:h-6 sm:w-[110px]">
           <CmsImage
-            src={wordmarkSrc}
+            src={wordmark}
             alt=""
             fill
             priority

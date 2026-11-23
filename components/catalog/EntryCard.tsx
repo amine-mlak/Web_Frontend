@@ -12,7 +12,7 @@ export type CatalogCardItem = {
   portrait?: boolean;
 };
 
-export default function EntryCard({ item }: { item: CatalogCardItem }) {
+export default function EntryCard({ item, eager = false }: { item: CatalogCardItem; eager?: boolean }) {
   return (
     <li>
       <LocaleLink href={item.href} className="group block">
@@ -24,6 +24,7 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
                 srcSet={item.srcSet}
                 alt={item.title}
                 fill
+                loading={eager ? "eager" : undefined}
                 sizes="(max-width: 768px) 100vw, (max-width: 1152px) 50vw, 33vw"
                 className={item.portrait ? "object-cover object-top" : "object-cover"}
               />
@@ -49,7 +50,8 @@ export default function EntryCard({ item }: { item: CatalogCardItem }) {
   );
 }
 
-export function EntryGrid({ items }: { items: CatalogCardItem[] }) {
+/** `eager`: how many cards sit in the first view and load at once (one row on a wide screen). */
+export function EntryGrid({ items, eager = 0 }: { items: CatalogCardItem[]; eager?: number }) {
   if (items.length === 0) {
     return (
       <p className="type-body text-muted">Hier liegen noch keine Einträge vor.</p>
@@ -58,8 +60,8 @@ export function EntryGrid({ items }: { items: CatalogCardItem[] }) {
 
   return (
     <ul className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
-        <EntryCard key={item.href} item={item} />
+      {items.map((item, index) => (
+        <EntryCard key={item.href} item={item} eager={index < eager} />
       ))}
     </ul>
   );

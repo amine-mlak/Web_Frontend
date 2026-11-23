@@ -6,8 +6,9 @@ type CmsImageProps = ImageProps & {
   srcSet?: string;
 };
 
-// Widths the /cms-opt route renders (app/cms-opt/[width]/[...path]/route.ts).
-const OPT_WIDTHS = [1280, 1600, 1920, 2560, 3840];
+// Widths the /cms-opt route renders (app/cms-opt/[width]/[...path]/route.ts). 640 and 960 are
+// for photos shown small (cards, portraits, phones); each size is made once and cached a year.
+const OPT_WIDTHS = [640, 960, 1280, 1600, 1920, 2560, 3840];
 
 /**
  * A photo resized by /cms-opt/<width>/<file> also exists in every smaller width, so the

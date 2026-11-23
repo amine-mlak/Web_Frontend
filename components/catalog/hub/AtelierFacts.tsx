@@ -8,6 +8,7 @@ export default function AtelierFacts({
   image,
   imageAlt,
   sentence,
+  priority = false,
 }: {
   facts: CollectionFact[];
   kicker: string;
@@ -16,6 +17,8 @@ export default function AtelierFacts({
   imageAlt?: string;
   /** A plain sentence under the tiles. Without it the tiles fill the height of the photo. */
   sentence?: string;
+  /** The photo is the first one on the page: load it at once. */
+  priority?: boolean;
 }) {
   return (
     <section className="border-b border-line bg-paper" aria-label={kicker}>
@@ -30,6 +33,7 @@ export default function AtelierFacts({
             src={image}
             alt={imageAlt ?? ""}
             fill
+            priority={priority}
             sizes="(max-width: 1024px) 100vw, 42vw"
             className="object-cover"
           />

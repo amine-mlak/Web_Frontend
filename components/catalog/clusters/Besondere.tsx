@@ -17,7 +17,7 @@ export function BesondereTopic({ hub, slug }: { hub: PresentedTopic; slug: strin
       <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
       <div className="mt-10 border-t border-line lg:mt-14">
-        <AtelierFacts facts={hub.facts} kicker={hub.eyebrow} image={hub.heroImage} />
+        <AtelierFacts facts={hub.facts} kicker={hub.eyebrow} image={hub.heroImage} priority />
       </div>
 
       <PointsSection hub={hub} />
