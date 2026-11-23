@@ -76,5 +76,24 @@ export async function getAnnouncement(locale: Locale): Promise<Announcement | nu
   if (payload.data.locale && payload.data.locale !== locale) {
     return null;
   }
-  return activeAnnouncement(payload.data.announcement);
+  if (locale === "de") {
+    return activeAnnouncement(payload.data.announcement);
+  }
+  // One switch for all languages: "Aktiv", start and end of the German header decide whether
+  // the bar shows. The other language only supplies its own texts, tone and movement.
+  const german = await strapiGet<{ data?: { announcement?: StrapiAnnouncement | null } }>("/api/header", {
+    locale: "de",
+    "fields[0]": "locale",
+    "populate[announcement][populate]": "items",
+  });
+  const master = german?.data?.announcement;
+  if (!master || !activeAnnouncement(master)) {
+    return null;
+  }
+  return activeAnnouncement({
+    ...payload.data.announcement,
+    enabled: true,
+    startsAt: master.startsAt,
+    endsAt: master.endsAt,
+  });
 }
