@@ -505,6 +505,7 @@ export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   lasting: ["plate", "ledger", "body", "gallery"],
   place: ["night", "ledger", "body", "visit", "form"],
   papers: ["film", "body", "form"],
+  career: ["film", "body", "gallery", "form"],
   // Küche planen: the online planner follows the explanation (design "Küchenplaner").
   path: ["title", "price", "chapters", "form", "visit"],
   letter: ["title", "body", "form"],

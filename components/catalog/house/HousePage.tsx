@@ -16,7 +16,7 @@ import HouseGallery from "@/components/catalog/house/HouseGallery";
 import HousePeople from "@/components/catalog/house/HousePeople";
 import { parseTeamVoices, type TeamVoice } from "@/lib/team-voices";
 import LegalPage from "@/components/catalog/house/LegalPage";
-import { PointSections } from "@/components/catalog/entries/InteriorPage";
+import { PointSwitcher } from "@/components/catalog/entries/InteriorPage";
 import {
   HOUSE_COMPOSITION,
   houseParagraphs,
@@ -90,11 +90,11 @@ export default function HousePage({ house: presented, team = [] }: { house: Pres
     ),
     // Each CMS point with a photo as its own section; without them the small gallery.
     rooms: house.rooms.length ? (
-      <PointSections
+      <PointSwitcher
         points={house.rooms}
         lang={house.locale === "en" ? "en" : "de"}
         detailLabel={copy.detail}
-        navLabel={copy.roomsNav}
+        label={copy.roomsNav}
       />
     ) : (
       <HouseGallery eyebrow={copy.galleryEyebrow} title={copy.galleryTitle} shots={house.gallery} />

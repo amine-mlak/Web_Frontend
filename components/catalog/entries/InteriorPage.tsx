@@ -1,5 +1,6 @@
 import { ctaHref } from "@/lib/cta";
 import LocaleLink from "@/components/LocaleLink";
+import AreaSwitcher from "@/components/catalog/AreaSwitcher";
 import PageEnd from "@/components/catalog/PageEnd";
 import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
 import { Frame } from "@/components/catalog/collections/parts";
@@ -171,6 +172,59 @@ export function PointSections({
         <PointSection key={point.titel} point={point} index={index} lang={lang} detailLabel={detailLabel} />
       ))}
     </>
+  );
+}
+
+/**
+ * The same points in one section: their names in a list, beside it the photo and the text of the
+ * chosen one (see AreaSwitcher). For pages with many areas, where a section each makes the page
+ * very long. Every text stays in the page.
+ */
+export function PointSwitcher({
+  points,
+  lang,
+  detailLabel,
+  label,
+}: {
+  points: PagePoint[];
+  lang: string;
+  detailLabel: string;
+  label: string;
+}) {
+  const shown = points.filter((point): point is ShownPoint => Boolean(point.bild?.src));
+  if (shown.length === 0) {
+    return null;
+  }
+  return (
+    <AreaSwitcher
+      label={label}
+      areas={shown.map((point, index) => {
+        const id = anchor(point.titel) || String(index);
+        return {
+          id,
+          title: point.titel,
+          image: { src: point.bild.src, srcSet: point.bild.srcSet, alt: point.titel },
+          panel: (
+            <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+              <div className="md:col-span-7">
+                <PointText point={point} id={`innen-${id}`} lang={lang} />
+              </div>
+              {point.detailbild?.src ? (
+                <figure className="md:col-span-5">
+                  <Frame
+                    src={point.detailbild.src}
+                    srcSet={point.detailbild.srcSet}
+                    alt={`${point.titel}: ${detailLabel}`}
+                    className="aspect-[4/3]"
+                    sizes="(max-width: 768px) 100vw, 24rem"
+                  />
+                </figure>
+              ) : null}
+            </div>
+          ),
+        };
+      })}
+    />
   );
 }
 

@@ -9,6 +9,7 @@ export type HouseLayout =
   | "lasting"
   | "place"
   | "papers"
+  | "career"
   | "path"
   | "letter"
   | "legal";
@@ -228,14 +229,14 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     people: [],
   },
   karriere: {
-    layout: "papers",
+    layout: "career",
     hero: WORKSHOP.two,
     statement: CREW.group,
     statementB: WORKSHOP.one,
     close: BUILDING.street,
     ledger: WORKSHOP.one,
     visit: ROOM.r0002,
-    gallery: [shot(WORKSHOP.two, "Werkstatt"), shot(CREW.group, "Team")],
+    gallery: [shot(CREW.group, "Team in der Manufaktur"), shot(WORKSHOP.one, "Fertigung in Wolfersdorf"), shot(CREW.table, "Werkstatt")],
     chapters: [],
     people: [],
   },
