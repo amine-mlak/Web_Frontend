@@ -409,7 +409,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
         alt: "Weg zur Küche",
       },
       {
-        href: "/ratgeber/kochfeldabzug-oder-esse",
+        href: "/ratgeber/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung",
         title: "Geräte & Technik",
         text: "Abzug in der Platte oder Esse. Ehrliche Leistung, offene Räume.",
         image: "/kitchens/stile-design.jpg",
@@ -884,7 +884,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
         alt: "Path to the kitchen",
       },
       {
-        href: "/ratgeber/kochfeldabzug-oder-esse",
+        href: "/ratgeber/kochfeldabzug-in-offenen-kuchen-vorteile-funktionsweise-planung",
         title: "Appliances",
         text: "Downdraft or hood. Honest performance, open rooms.",
         image: "/kitchens/stile-design.jpg",
