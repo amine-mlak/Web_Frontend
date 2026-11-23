@@ -1,6 +1,6 @@
 import type { FaqEntry } from "@/lib/faq";
 
-export default function FaqJsonLd({ items }: { items: FaqEntry[] }) {
+export default function FaqJsonLd({ items }: { items: Pick<FaqEntry, "question" | "answer">[] }) {
   if (items.length === 0) {
     return null;
   }

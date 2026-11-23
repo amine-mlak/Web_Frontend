@@ -32,6 +32,7 @@ export default async function Questions({
   limit = 5,
   narrow = false,
   fillUp = true,
+  also = [],
 }: {
   theme?: string;
   /** Questions picked for this page, in the order they are shown. */
@@ -44,9 +45,12 @@ export default async function Questions({
   narrow?: boolean;
   /** Fill up to `limit` from the theme (pages without their own pick of questions). */
   fillUp?: boolean;
+  /** Questions the page already shows in its own text: they join this block's FAQ data, so the page carries one FAQ list. */
+  also?: { question: string; answer: string }[];
 }) {
+  const alone = also.length > 0 ? <FaqJsonLd items={also} /> : null;
   if (!theme && !slugs?.length) {
-    return null;
+    return alone;
   }
 
   const faq = await fetchFaqHub();
@@ -56,7 +60,7 @@ export default async function Questions({
   const fill = theme && fillUp ? filterFaqItems(faq.items, theme).filter((item) => !taken.has(item.slug)) : [];
   const questions = [...picked, ...fill].slice(0, limit);
   if (questions.length === 0) {
-    return null;
+    return alone;
   }
 
   const copy = COPY[locale === "en" ? "en" : "de"];
@@ -65,7 +69,7 @@ export default async function Questions({
 
   return (
     <section className="border-t border-line bg-paper px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby={headingId}>
-      <FaqJsonLd items={questions} />
+      <FaqJsonLd items={[...also, ...questions]} />
       <div className={`grid gap-10 lg:grid-cols-12 ${narrow ? "mx-auto max-w-6xl" : ""}`}>
         <div className="lg:col-span-4">
           <p className="type-eyebrow text-gold">{copy.eyebrow}</p>

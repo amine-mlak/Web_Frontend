@@ -5,6 +5,7 @@ import RichText from "@/components/RichText";
 import NextSteps from "@/components/catalog/NextSteps";
 import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/collections/parts";
+import { splitArticleFaq, type ArticleFaq } from "@/lib/article-faq";
 import { articleHref, isPressArticle, type Article, type ArticleBlock } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
 import { absoluteAsset, absoluteUrl } from "@/lib/seo";
@@ -156,8 +157,17 @@ export default function ArticlePage({
   const press = isPressArticle(item);
   const hubHref = press ? "/presse" : "/ratgeber";
   const category = item.category?.slug ?? "";
-  const blocks = bodyBlocks(item);
-  const minutes = readingMinutes(blocks, item.description);
+  const written = bodyBlocks(item);
+  const minutes = readingMinutes(written, item.description);
+  // A "Häufige Fragen" section in the text is shown after the body and sent as FAQ data;
+  // taken out here so the article keeps its own heading levels.
+  const faqs: ArticleFaq[] = [];
+  const blocks = written.flatMap((block): ArticleBlock[] => {
+    if (block.kind !== "text") return [block];
+    const { main, faq } = splitArticleFaq(block.body);
+    if (faq) faqs.push(faq);
+    return main ? [{ ...block, body: main }] : [];
+  });
   // Older articles mark their sections with "###" only. Those are the page's sections, so they render as h2.
   const flat = !blocks.some((block) => block.kind === "text" && /^#{1,2} /m.test(block.body));
   const published = formatDate(item.publishedAt, locale);
@@ -271,6 +281,9 @@ export default function ArticlePage({
                 </figure>
               );
             })}
+            {faqs.map((faq) => (
+              <RichText key={faq.heading} source={faq.source} />
+            ))}
           </div>
 
           {topicLinks.length > 0 ? (
@@ -295,7 +308,7 @@ export default function ArticlePage({
         </div>
       </article>
 
-      <Questions theme={theme} title={item.category?.name} locale={locale} limit={4} narrow />
+      <Questions theme={theme} title={item.category?.name} locale={locale} limit={4} narrow also={faqs.flatMap((faq) => faq.items)} />
 
       {related.length > 0 ? (
         <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-20" aria-labelledby="article-more">
