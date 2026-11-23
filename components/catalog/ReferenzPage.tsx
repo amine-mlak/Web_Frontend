@@ -445,7 +445,7 @@ export default function ReferenzPage({
 
       <section className="grid bg-nacht lg:grid-cols-12">
         {closePhoto ? (
-          <figure className="relative min-h-[18rem] overflow-hidden lg:order-2 lg:col-span-5 lg:min-h-[30rem]">
+          <figure className="photo-mood relative min-h-[18rem] overflow-hidden lg:order-2 lg:col-span-5 lg:min-h-[30rem]">
             <CmsImage
               src={closePhoto.src}
               srcSet={closePhoto.srcSet}

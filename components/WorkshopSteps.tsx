@@ -59,7 +59,7 @@ export default function WorkshopSteps({
               return (
                 <div
                   key={step.step}
-                  className="absolute inset-0 transition-opacity duration-700 ease-in-out motion-reduce:transition-none"
+                  className="photo-mood absolute inset-0 transition-opacity duration-700 ease-in-out motion-reduce:transition-none"
                   style={{ opacity: index === active ? 1 : 0 }}
                   aria-hidden={index !== active}
                 >
@@ -86,7 +86,7 @@ export default function WorkshopSteps({
               }`}
             >
               {shot ? (
-                <div className="relative mb-8 aspect-[3/2] overflow-hidden bg-nacht lg:hidden">
+                <div className="photo-mood relative mb-8 aspect-[3/2] overflow-hidden bg-nacht lg:hidden">
                   <CmsImage src={shot.src} alt={shot.alt} fill loading="lazy" sizes="100vw" className="object-cover" />
                 </div>
               ) : null}

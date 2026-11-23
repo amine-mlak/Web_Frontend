@@ -65,7 +65,7 @@ function TeaserStrip({
             href={teaser.href}
             onClick={onNavigate}
             aria-label={teaser.caption}
-            className="group relative block h-full overflow-hidden bg-stone"
+            className="photo-grade group relative block h-full overflow-hidden bg-stone"
           >
             <CmsImage
               src={teaser.image}

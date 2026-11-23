@@ -741,6 +741,25 @@ html #cc-main a:focus-visible {
    --------------------------------------------------------------------------------------------- */
 
 /* The photo's own colours, blurred, under the photo while it loads. */
+/* One mood for every photo. The photos come from many shoots and are not graded alike, so each
+   gets the same mild grade (a little less colour, a little more contrast) and the same soft
+   darkening from the bottom that the start page uses. Photos that already carry a text gradient
+   keep only the grade. Not used on logos or in the full-screen photo viewer. */
+.photo-grade img,
+.photo-mood img {
+  filter: saturate(0.93) contrast(1.05) brightness(0.97);
+}
+.photo-mood::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.12) 36%, rgb(0 0 0 / 0) 66%);
+}
+.photo-mood:has(~ .hero-scrim, ~ .chapter-scrim)::after {
+  content: none;
+}
+
 .photo-stand-in {
   position: absolute;
   inset: -12%;

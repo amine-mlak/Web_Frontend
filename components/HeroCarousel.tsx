@@ -108,7 +108,7 @@ export default function HeroCarousel({
         return (
           <div
             key={`${slide.src}-${slideIndex}`}
-            className="absolute inset-0 bg-espresso transition-opacity ease-in-out motion-reduce:transition-none"
+            className="photo-grade absolute inset-0 bg-espresso transition-opacity ease-in-out motion-reduce:transition-none"
             style={{ opacity: shown ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}
             aria-hidden={!shown}
           >

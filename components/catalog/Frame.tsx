@@ -33,7 +33,7 @@ export function Frame({
   const standIn = photoStandIn(src);
   return (
     <figure
-      className={cn("relative overflow-hidden bg-nacht", drift && "photo-drift", className)}
+      className={cn("photo-mood relative overflow-hidden bg-nacht", drift && "photo-drift", className)}
       style={standIn ? ({ "--stand-in": `url("${standIn}")` } as CSSProperties) : undefined}
     >
       {standIn ? <span className="photo-stand-in" aria-hidden /> : null}

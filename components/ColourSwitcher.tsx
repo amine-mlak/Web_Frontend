@@ -42,7 +42,7 @@ export default function ColourSwitcher({
 
   return (
     <div className="grid lg:min-h-[40rem] lg:grid-cols-12">
-      <div className="relative aspect-[4/3] overflow-hidden bg-nacht sm:aspect-[16/10] lg:col-span-8 lg:aspect-auto">
+      <div className="photo-mood relative aspect-[4/3] overflow-hidden bg-nacht sm:aspect-[16/10] lg:col-span-8 lg:aspect-auto">
         {colours.map((colour, index) => (
           <CmsImage
             key={colour.href}

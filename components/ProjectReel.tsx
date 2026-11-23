@@ -106,7 +106,7 @@ export default function ProjectReel({
               draggable={false}
               className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
             >
-              <span className="relative block aspect-[4/3] overflow-hidden bg-nacht sm:aspect-[16/10]">
+              <span className="photo-mood relative block aspect-[4/3] overflow-hidden bg-nacht sm:aspect-[16/10]">
                 <CmsImage
                   src={item.image}
                   srcSet={item.srcSet}
