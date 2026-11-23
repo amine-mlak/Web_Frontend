@@ -61,6 +61,13 @@ export default function MegaMenu({
   // The start page always opens on its hero, so the bar is clear from the first paint there.
   const [overHero, setOverHero] = useState(() => stripLocalePrefix(pathname || "/") === "/");
   const solid = !overHero || hovered || menuOpen || dropdownOpen || mobileOpen;
+  // The light look of the clear bar comes only once the white sheet has rolled up. Switching at
+  // once turned the logo, the buttons and the menu photos white while the sheet was still under
+  // them, so they vanished before it had closed.
+  const [sheetGone, setSheetGone] = useState(!solid);
+  if (solid && sheetGone) {
+    setSheetGone(false);
+  }
 
   // A new page closes every menu at once (desktop dropdown and phone sheet), without the close animation.
   if (pathname !== shownPath) {
@@ -145,6 +152,15 @@ export default function MegaMenu({
   }, [menuValue]);
 
   useEffect(() => {
+    if (solid) {
+      return;
+    }
+    // A little before the sheet's 500 ms end, so the colour change meets the last of the white.
+    const timer = window.setTimeout(() => setSheetGone(true), 440);
+    return () => window.clearTimeout(timer);
+  }, [solid]);
+
+  useEffect(() => {
     let frame = 0;
     const check = () => {
       frame = 0;
@@ -226,7 +242,7 @@ export default function MegaMenu({
   return (
     <div
       className="relative w-full"
-      data-clear={solid ? undefined : ""}
+      data-clear={!solid && sheetGone ? "" : undefined}
       data-header-lock={
         mobileOpen || dropdownOpen || menuOpen || hovered ? "true" : "false"
       }
