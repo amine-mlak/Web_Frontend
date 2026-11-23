@@ -149,16 +149,7 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      {
-        source: "/cms-uploads/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-          ...robotsHeaders,
-        ],
-      },
+      // /cms-uploads sets its own caching (app/cms-uploads), so a missing file is not kept a year.
       {
         source: "/kitchens/:path*",
         headers: [
@@ -217,6 +208,16 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [...securityHeaders, ...robotsHeaders],
       },
+      // After the general rule so it wins: a CMS SVG opened on its own cannot run scripts.
+      {
+        source: "/cms-uploads/:file([^/]+\\.svg)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox",
+          },
+        ],
+      },
     ];
   },
   // Old beer.de (Shopify) addresses keep their search rankings: permanent (308) redirects to
@@ -228,14 +229,6 @@ const nextConfig: NextConfig = {
       { source: "/kueche-planen", destination: "/beratung", permanent: false },
       { source: "/en/plan-your-kitchen", destination: "/en/consultation", permanent: false },
       { source: "/en/kueche-planen", destination: "/en/consultation", permanent: false },
-    ];
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/cms-uploads/:path*",
-        destination: `${strapiUrl.replace(/\/$/, "")}/uploads/:path*`,
-      },
     ];
   },
 };
