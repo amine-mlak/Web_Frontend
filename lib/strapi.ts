@@ -26,6 +26,8 @@ const STRAPI_HOST = new URL(STRAPI_URL).hostname;
 const CMS_UPLOAD_PREFIX = "/cms-uploads";
 const CMS_OPT_PREFIX = "/cms-opt";
 const OPT_WIDTHS = [1280, 1600, 1920, 2560, 3840];
+/** Widths /cms-opt cuts from a CMS web version (app/cms-opt/[width]/[...path]/route.ts). */
+const SMALL_OPT_WIDTHS = [320, 480, 640, 960];
 
 const FETCH_TIMEOUT_MS = 4000;
 const REVALIDATE_SECONDS = 120;
@@ -377,13 +379,28 @@ export function strapiResponsiveImage(
     candidates.push({ url: mapped, width: resolvedWidth });
   };
 
-  add(strapiMediaUrl(image?.formats?.small?.url), image?.formats?.small?.width, 500);
-  add(strapiMediaUrl(image?.formats?.medium?.url), image?.formats?.medium?.width, 750);
-  add(strapiMediaUrl(image?.formats?.large?.url), image?.formats?.large?.width, 1000);
+  // Small widths are cut by /cms-opt from the CMS's largest web version (about 1000 px), not from
+  // the multi-megabyte original: WebP, cached for a year, and small enough for phones and cards.
+  // The CMS's own JPEG versions are only the fallback when that is not possible.
+  const web = [image?.formats?.large, image?.formats?.medium, image?.formats?.small].find(
+    (format) => format?.url && format.width,
+  );
+  const webUrl = strapiMediaUrl(web?.url);
+  const smallFromWeb = web?.width
+    ? SMALL_OPT_WIDTHS.filter((width) => width <= web.width!).map((width) => ({ url: cmsOptUrl(webUrl, width), width }))
+    : [];
+  if (smallFromWeb.length > 0 && smallFromWeb.every((item) => item.url)) {
+    for (const item of smallFromWeb) add(item.url, item.width);
+  } else {
+    add(strapiMediaUrl(image?.formats?.small?.url), image?.formats?.small?.width, 500);
+    add(strapiMediaUrl(image?.formats?.medium?.url), image?.formats?.medium?.width, 750);
+    add(strapiMediaUrl(image?.formats?.large?.url), image?.formats?.large?.width, 1000);
+  }
 
   if (originalUrl && originalWidth) {
     if (originalWidth <= 1920) {
-      add(originalUrl, originalWidth);
+      // /cms-opt never enlarges, so the 1920 version of a smaller original keeps its own width.
+      add(cmsOptUrl(originalUrl, 1920) || originalUrl, originalWidth);
     } else {
       for (const width of OPT_WIDTHS) {
         if (width <= originalWidth) {
@@ -1426,8 +1443,8 @@ export async function fetchInstagramPosts(): Promise<InstagramPost[]> {
   });
   return (payload?.data?.beitraege ?? [])
     .map((entry) => ({
-      // The medium Strapi size (750 px) is plenty for a quarter-width tile.
-      src: strapiMediaUrl(entry.bild?.formats?.medium?.url || entry.bild?.url),
+      // A quarter-width tile: the responsive set tops out at its own small widths there.
+      ...strapiResponsiveImage(entry.bild, { srcWidth: 640 }),
       href: entry.link?.trim() ?? "",
       alt: entry.beschreibung?.trim() || entry.bild?.alternativeText?.trim() || "",
     }))

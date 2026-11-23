@@ -1,4 +1,5 @@
 import LocaleLink from "@/components/LocaleLink";
+import HouseCard from "@/components/catalog/HouseCard";
 import ProjectFeature from "@/components/catalog/ProjectFeature";
 import { Frame } from "@/components/catalog/collections/parts";
 import { Crumbs, SoftClose } from "@/components/catalog/clusters/parts";
@@ -80,19 +81,15 @@ function SwatchField({
   );
 }
 
-function HouseCard({ house }: { house: ClusterHouse }) {
+function ColourHouse({ house }: { house: ClusterHouse }) {
   return (
     <li>
-      <LocaleLink href={house.href} className="group block">
-        <Frame
-          src={house.image}
-          alt={house.title}
-          className="aspect-[4/3]"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
-        <p className="t-item mt-4 text-ink">{house.title}</p>
-        {house.meta ? <p className="mt-1 font-sans text-[14px] text-muted">{house.meta}</p> : null}
-      </LocaleLink>
+      <HouseCard
+        house={house}
+        frameClassName="aspect-[4/3]"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        meta="tight"
+      />
     </li>
   );
 }
@@ -126,7 +123,7 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
       </h2>
       <ul className={`mt-10 ${GRID}`}>
         {first.map((house) => (
-          <HouseCard key={house.href} house={house} />
+          <ColourHouse key={house.href} house={house} />
         ))}
       </ul>
       {rest.length ? (
@@ -136,7 +133,7 @@ function ColourProjects({ hub, more }: { hub: PresentedTopic; more?: boolean }) 
           </summary>
           <ul className={GRID}>
             {rest.map((house) => (
-              <HouseCard key={house.href} house={house} />
+              <ColourHouse key={house.href} house={house} />
             ))}
           </ul>
         </details>

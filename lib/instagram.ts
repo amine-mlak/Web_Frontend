@@ -4,6 +4,7 @@ export const INSTAGRAM_LABEL = `@${INSTAGRAM_HANDLE}`;
 
 export type InstagramPost = {
   src: string;
+  srcSet?: string;
   href: string;
   alt: string;
 };

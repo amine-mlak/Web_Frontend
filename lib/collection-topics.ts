@@ -18,6 +18,7 @@ import {
 import type { CollectionFact, PresentedBranch } from "@/lib/collection-present";
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { projectHouse } from "@/lib/project-card";
 import { coverOf, freshCover, kitchenPhotos, roomPhoto, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { cmsLarge } from "@/lib/beer-photos";
 import { getRequestLocale } from "@/lib/locale";
@@ -1713,12 +1714,7 @@ export function presentTopic(
       };
     });
 
-  const houses = kitchens.slice(0, 4).map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: [project.place, project.year].filter(Boolean).join(" · "),
-    image: resolveDevImage(project.image, photo(80 + index, 1200)),
-  }));
+  const houses = kitchens.slice(0, 4).map((project, index) => projectHouse(project, { fallback: photo(80 + index, 1200) }));
 
   const swatches = clusterTopics
     .filter((item) => item.hex)
@@ -1743,12 +1739,7 @@ export function presentTopic(
 
   const taggedHouses = tagged
     .filter((project) => !featured.has(`/projekte/${project.slug}`))
-    .map((project, index) => ({
-      href: `/projekte/${project.slug}`,
-      title: project.title,
-      meta: [project.place, project.year].filter(Boolean).join(" · "),
-      image: resolveDevImage(project.image, photo(80 + index, 1200)),
-    }));
+    .map((project, index) => projectHouse(project, { fallback: photo(80 + index, 1200) }));
 
   const page: PresentedTopic = {
     locale,
@@ -1834,12 +1825,7 @@ export function presentTopic(
   return withBlocks(uniquePagePhotos(page, photo), cluster, topic.slug, cms?.blocks, clusterTopics, projects, locale);
 }
 
-const houseOf = (project: Project): ClusterHouse => ({
-  href: `/projekte/${project.slug}`,
-  title: project.title,
-  meta: [project.place, project.year].filter(Boolean).join(" · "),
-  image: project.image,
-});
+const houseOf = (project: Project): ClusterHouse => projectHouse(project);
 
 /** A kitchen of "Küchen im Porträt" with the two photos the editor chose for it. */
 function portraitFeature(project: Project, pick: PortraitPick): TopicFeature {

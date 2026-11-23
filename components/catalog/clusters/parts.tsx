@@ -1,6 +1,7 @@
 import { useId } from "react";
 import EndBand, { type EndBandTile } from "@/components/catalog/EndBand";
 import LocaleLink from "@/components/LocaleLink";
+import HouseCard from "@/components/catalog/HouseCard";
 import { Frame } from "@/components/catalog/collections/parts";
 import { chromeCopy } from "@/lib/i18n";
 import { absoluteUrl } from "@/lib/seo";
@@ -116,6 +117,13 @@ export function QuoteLine({
   );
 }
 
+/** Photo widths of HouseLine by number of cards: one column on phones, two from sm, all from lg. */
+const HOUSE_LINE_SIZES: Record<number, string> = {
+  4: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw",
+  3: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
+  2: "(max-width: 640px) 100vw, 50vw",
+};
+
 /**
  * Up to four kitchens as cards. `sub` sets it under a section that already has its h2;
  * `more` adds one link beside the heading (all projects).
@@ -173,16 +181,12 @@ export function HouseLine({
       >
         {shown.map((house) => (
           <li key={house.href}>
-            <LocaleLink href={house.href} className="group block">
-              <Frame
-                src={house.image}
-                alt={house.title}
-                className={shown.length === 2 ? "aspect-[4/5] sm:aspect-[4/3] lg:aspect-[3/2]" : "aspect-[4/5]"}
-                sizes={shown.length === 2 ? "(max-width: 640px) 100vw, 50vw" : "(max-width: 1024px) 100vw, 33vw"}
-              />
-              <p className="t-item mt-4 text-ink">{house.title}</p>
-              {house.meta ? <p className="type-eyebrow mt-2 text-muted">{house.meta}</p> : null}
-            </LocaleLink>
+            <HouseCard
+              house={house}
+              frameClassName={shown.length === 2 ? "aspect-[4/5] sm:aspect-[4/3] lg:aspect-[3/2]" : "aspect-[4/5]"}
+              sizes={HOUSE_LINE_SIZES[shown.length] ?? "(max-width: 640px) 100vw, 576px"}
+              meta="eyebrow"
+            />
           </li>
         ))}
       </ul>

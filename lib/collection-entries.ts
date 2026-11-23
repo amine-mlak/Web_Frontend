@@ -24,6 +24,7 @@ import { pageReading, regionLede } from "@/lib/page-reading";
 import type { TopicReadingCopy } from "@/lib/topic-reading";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { projectHouse } from "@/lib/project-card";
 import { kitchenImageOf, kitchenPhotos, kitchenPool, placeCover, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { isCodeGallery } from "@/lib/project-photos";
 import { projectFeature } from "@/lib/project-features";
@@ -1251,12 +1252,7 @@ function cmsVoice(item: { name: string; intro: string } & CmsPageFields, locale:
 }
 
 function housesFrom(projects: Project[], photo: (n: number, w?: number) => string): ClusterHouse[] {
-  return projects.slice(0, 4).map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: [project.place, project.year].filter(Boolean).join(" · "),
-    image: resolveDevImage(project.image, photo(80 + index, 1200)),
-  }));
+  return projects.slice(0, 4).map((project, index) => projectHouse(project, { fallback: photo(80 + index, 1200) }));
 }
 
 function pointBranches(voice: Voice | undefined, photo: (n: number, w?: number) => string): PresentedBranch[] {

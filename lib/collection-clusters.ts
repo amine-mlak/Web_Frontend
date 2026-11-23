@@ -15,6 +15,7 @@ import {
 import { TOPIC_NOTES } from "@/lib/kitchen-details";
 import { cmsLarge } from "@/lib/beer-photos";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { projectHouse } from "@/lib/project-card";
 import { freshCover, kitchenPhotos, uniquePagePhotos } from "@/lib/kitchen-photos";
 import { getRequestLocale } from "@/lib/locale";
 import type { Locale } from "@/lib/i18n";
@@ -26,6 +27,7 @@ export type ClusterHouse = {
   title: string;
   meta?: string;
   image: string;
+  srcSet?: string;
 };
 
 export type ClusterSibling = {
@@ -782,12 +784,7 @@ export function presentCluster(
   }
   const rest = kitchens.filter((project) => !picked.includes(project));
   const houseProjects = [...picked, ...rest.filter(free), ...rest.filter((project) => !free(project))].slice(0, 4);
-  const houses = houseProjects.map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: [project.place, project.year].filter(Boolean).join(" · "),
-    image: resolveDevImage(project.image, photo(80 + index, 1200)),
-  }));
+  const houses = houseProjects.map((project, index) => projectHouse(project, { fallback: photo(80 + index, 1200) }));
   for (const project of houseProjects) usedCovers.add(project.slug);
   // The hero is a whole kitchen of this world too, not a topic's detail shot.
   const heroProject = tagged.find((project) => project.image && !usedCovers.has(project.slug));

@@ -13,6 +13,7 @@ export function Frame({
   className,
   imgClassName,
   priority,
+  eager = false,
   sizes,
   drift = false,
   zoom,
@@ -23,6 +24,8 @@ export function Frame({
   className?: string;
   imgClassName?: string;
   priority?: boolean;
+  /** Load at once without jumping the queue: photos beside the priority photo at the top of a page. */
+  eager?: boolean;
   sizes: string;
   /** Let the photo drift slowly inside the frame while the page scrolls. */
   drift?: boolean;
@@ -43,6 +46,7 @@ export function Frame({
         srcSet={srcSet}
         fill
         priority={priority}
+        loading={eager ? "eager" : undefined}
         sizes={sizes}
         className={cn("object-cover", imgClassName)}
       />

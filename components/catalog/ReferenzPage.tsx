@@ -1,13 +1,14 @@
 import LocaleLink from "@/components/LocaleLink";
-import CmsImage from "@/components/CmsImage";
 import NextSteps from "@/components/catalog/NextSteps";
 import { Breadcrumbs } from "@/components/catalog/clusters/parts";
 import { Frame } from "@/components/catalog/Frame";
+import HouseCard from "@/components/catalog/HouseCard";
 import PhotoViewer, { type ViewerPhoto } from "@/components/catalog/PhotoViewer";
 import TriptychHero from "@/components/catalog/TriptychHero";
 import type { KitchenClusterSlug, Project, ProjectFrame } from "@/lib/catalog";
 import type { Locale } from "@/lib/i18n";
 import type { ProjectBlocks } from "@/lib/project-blocks";
+import { projectHouse, projectMeta } from "@/lib/project-card";
 import { cn } from "@/lib/utils";
 
 const COPY = {
@@ -199,7 +200,7 @@ export default function ReferenzPage({
   locale: Locale;
 }) {
   const copy = COPY[locale === "en" ? "en" : "de"];
-  const meta = [project.place, project.year].filter(Boolean).join(" · ");
+  const meta = projectMeta(project);
   const heroPhoto = blocks.hero.photo;
   // Two detail photos beside the title photo make the three-photo opener.
   const opener =
@@ -236,7 +237,8 @@ export default function ReferenzPage({
   }));
   const zoom = (src: string) => {
     const index = photos.findIndex((photo) => photo.src === src);
-    return index < 0 ? undefined : { index, label: copy.zoom };
+    // Each button names its photo, so a list of them does not read "view photo large" twenty times.
+    return index < 0 ? undefined : { index, label: `${copy.zoom}: ${photos[index].alt}` };
   };
 
   return (
@@ -422,21 +424,12 @@ export default function ReferenzPage({
           <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {others.map((item) => (
               <li key={item.slug}>
-                <LocaleLink href={`/projekte/${item.slug}`} className="group block">
-                  <Frame
-                    src={item.image}
-                    alt={item.title}
-                    srcSet={item.srcSet}
-                    className="aspect-[4/5]"
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                  />
-                  <p className="t-item mt-4 text-ink">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 font-sans text-[11px] tracking-[0.18em] text-muted uppercase">
-                    {[item.place, item.year].filter(Boolean).join(" · ")}
-                  </p>
-                </LocaleLink>
+                <HouseCard
+                  house={projectHouse(item)}
+                  frameClassName="aspect-[4/5]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  meta="caps"
+                />
               </li>
             ))}
           </ul>
@@ -445,16 +438,13 @@ export default function ReferenzPage({
 
       <section className="grid bg-nacht lg:grid-cols-12">
         {closePhoto ? (
-          <figure className="photo-mood relative min-h-[18rem] overflow-hidden lg:order-2 lg:col-span-5 lg:min-h-[30rem]">
-            <CmsImage
-              src={closePhoto.src}
-              srcSet={closePhoto.srcSet}
-              alt=""
-              fill
-              sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-cover"
-            />
-          </figure>
+          <Frame
+            src={closePhoto.src}
+            srcSet={closePhoto.srcSet}
+            alt=""
+            className="min-h-[18rem] lg:order-2 lg:col-span-5 lg:min-h-[30rem]"
+            sizes="(max-width: 1024px) 100vw, 42vw"
+          />
         ) : null}
         <div className="flex flex-col justify-center px-6 py-16 sm:px-10 lg:col-span-7 lg:py-24 lg:pr-16 lg:pl-edge">
           <h2 className="t-section text-paper">

@@ -18,6 +18,7 @@ import type { Project } from "@/lib/catalog";
 import type { ClusterHouse } from "@/lib/collection-clusters";
 import { hubPageSlug } from "@/lib/collection-hubs";
 import { devPhoto, resolveDevImage } from "@/lib/dev-images";
+import { projectHouse } from "@/lib/project-card";
 import type { PresentedHub } from "@/lib/collection-present";
 import type { Locale } from "@/lib/i18n";
 import { photoKey } from "@/lib/utils";
@@ -96,12 +97,12 @@ function hubHouses(id: CollectionHubId, projects: Project[], hub: PresentedHub):
         ? tagged.slice(4)
         : tagged;
 
-  return pool.slice(0, 4).map((project, index) => ({
-    href: `/projekte/${project.slug}`,
-    title: project.title,
-    meta: (id === "kuechen" ? [project.place, project.year].filter(Boolean) : tags(project).slice(0, 3)).join(" · "),
-    image: resolveDevImage(project.image, devPhoto(80 + index, 1200)),
-  }));
+  return pool.slice(0, 4).map((project, index) =>
+    projectHouse(project, {
+      fallback: devPhoto(80 + index, 1200),
+      meta: id === "kuechen" ? undefined : tags(project).slice(0, 3).join(" · "),
+    }),
+  );
 }
 
 export default async function CollectionHub({
@@ -162,7 +163,7 @@ export default async function CollectionHub({
       case "moebel":
         return <MoebelCollection hub={hub}>{depth}</MoebelCollection>;
       case "projekte":
-        return <ProjekteCollection {...layout} />;
+        return <ProjekteCollection hub={hub}>{depth}</ProjekteCollection>;
       case "regionen":
         return <RegionenCollection {...layout} />;
       case "marken":

@@ -51,6 +51,7 @@ export function PhotoOpener({ opener, locale }: { opener: NonNullable<PhotoStory
               srcSet={photo.srcSet}
               alt={photo.alt}
               className="aspect-square lg:aspect-auto lg:h-full"
+              eager
               sizes="(max-width: 1024px) 50vw, 33vw"
             />
           ))}

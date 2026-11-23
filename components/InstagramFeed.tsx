@@ -84,6 +84,7 @@ export default async function InstagramFeed() {
               >
                 <CmsImage
                   src={post.src}
+                  srcSet={post.srcSet}
                   alt={post.alt}
                   fill
                   loading="lazy"

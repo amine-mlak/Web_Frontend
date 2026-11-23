@@ -1,8 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-import LocaleLink from "@/components/LocaleLink";
-import { Frame } from "@/components/catalog/Frame";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import HouseCard from "@/components/catalog/HouseCard";
 import type { Locale } from "@/lib/i18n";
 import type { ArchiveGroup, ArchiveHouse } from "@/lib/project-archive";
 import { cn } from "@/lib/utils";
@@ -98,6 +97,20 @@ export default function ProjectArchive({
   const shown = Math.min(limit, matches.length);
 
   const choose = (next: string) => write(`${next}|${STEP}`);
+  // "Show more" can disappear once everything is open, so keyboard focus moves on to the first
+  // house it added instead of falling back to the top of the page.
+  const list = useRef<HTMLUListElement>(null);
+  const focusAt = useRef<number | null>(null);
+  const showMore = () => {
+    focusAt.current = limit;
+    write(`${active?.slug ?? ""}|${limit + STEP}`);
+  };
+  useEffect(() => {
+    if (focusAt.current === null) return;
+    const links = list.current?.querySelectorAll<HTMLAnchorElement>("li:not([hidden]) > a");
+    links?.[focusAt.current]?.focus({ preventScroll: true });
+    focusAt.current = null;
+  }, [limit]);
   const chip = (pressed: boolean) =>
     cn(
       "py-1.5 font-sans text-[16px] underline decoration-1 underline-offset-8 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink",
@@ -149,26 +162,20 @@ export default function ProjectArchive({
       </div>
 
       {/* Every house stays in the page as a link; the ones not shown yet are only hidden. */}
-      <ul className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-12 lg:gap-y-20">
+      <ul ref={list} className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-12 lg:gap-y-20">
         {houses.map((house) => {
           const at = place.get(house.href);
           const visible = at !== undefined && at < limit;
           const slot = RHYTHM[(at ?? 0) % RHYTHM.length];
           return (
             <li key={house.href} hidden={!visible} className={visible ? slot.cell : undefined}>
-              <LocaleLink href={house.href} className="group block">
-                <Frame
-                  src={house.image}
-                  srcSet={house.srcSet}
-                  alt={house.title}
-                  className={cn("aspect-[4/3] sm:aspect-[4/5]", slot.ratio)}
-                  sizes={slot.sizes}
-                />
-                <h3 className="t-item mt-5 text-ink underline decoration-transparent decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-ink/40">
-                  {house.title}
-                </h3>
-                {house.meta ? <p className="mt-2 font-sans text-[14px] text-muted">{house.meta}</p> : null}
-              </LocaleLink>
+              <HouseCard
+                house={house}
+                frameClassName={cn("aspect-[4/3] sm:aspect-[4/5]", slot.ratio)}
+                sizes={slot.sizes}
+                heading
+                titleClassName="mt-5 underline decoration-transparent decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-ink/40"
+              />
             </li>
           );
         })}
@@ -179,7 +186,7 @@ export default function ProjectArchive({
           <p className="font-sans text-[13px] text-muted tabular-nums">
             {shown} {copy.of} {matches.length}
           </p>
-          <button type="button" onClick={() => write(`${active?.slug ?? ""}|${limit + STEP}`)} className="btn-quiet">
+          <button type="button" onClick={showMore} className="btn-quiet">
             {copy.more}
           </button>
         </div>

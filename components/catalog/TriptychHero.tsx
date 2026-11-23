@@ -37,6 +37,7 @@ export default function TriptychHero({
           srcSet={close.srcSet}
           alt={close.alt}
           className="absolute inset-0"
+          eager
           sizes="(max-width: 1024px) 60vw, 25vw"
           drift
         />
@@ -56,6 +57,7 @@ export default function TriptychHero({
         alt={detail.alt}
         className="col-span-2 aspect-[1/2] lg:col-span-2 lg:aspect-auto lg:h-full"
         sizes="(max-width: 1024px) 40vw, 17vw"
+        eager
         drift
         zoom={detail.zoom}
       />
