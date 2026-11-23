@@ -228,7 +228,7 @@ export const HOUSE_MEDIA: Record<string, HouseMedia> = {
     people: [],
   },
   karriere: {
-    layout: "letter",
+    layout: "papers",
     hero: WORKSHOP.two,
     statement: CREW.group,
     statementB: WORKSHOP.one,

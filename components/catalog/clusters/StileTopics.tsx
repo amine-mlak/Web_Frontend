@@ -136,10 +136,9 @@ function Stile({
           ) : null}
         </div>
         <ol className="lg:col-span-6 lg:col-start-7">
-          {hub.branches.map((branch, index) => (
+          {hub.branches.map((branch) => (
             <li key={branch.title} className="border-t border-line py-6 last:border-b">
-              <p className="type-eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
-              <h2 className="t-feature mt-2 text-ink">{branch.title}</h2>
+              <h2 className="t-feature text-ink">{branch.title}</h2>
               <p className="mt-2 max-w-md font-sans text-[16px] leading-relaxed text-muted">{branch.text}</p>
             </li>
           ))}

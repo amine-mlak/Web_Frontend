@@ -123,7 +123,7 @@ export default async function JobPage({ params }: { params: Promise<{ stelle: st
         <p className="mt-12 type-eyebrow text-gold">
           {copy.eyebrow} · {jobKindLabel(job.kind, locale)}
         </p>
-        <h1 className="mt-4 max-w-4xl font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
+        <h1 className="t-title mt-4 max-w-4xl text-ink">
           {job.title}
         </h1>
         {job.teaser ? (

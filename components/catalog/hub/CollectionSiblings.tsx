@@ -26,7 +26,7 @@ export default function CollectionSiblings({
           {title}
         </h2>
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {siblings.map((item, index) => (
+          {siblings.map((item) => (
             <li key={item.href}>
               <LocaleLink href={item.href} className="group block">
                 <figure className="relative aspect-[4/5] overflow-hidden bg-nacht">
@@ -43,10 +43,7 @@ export default function CollectionSiblings({
                   />
                   <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 px-5 py-5">
                     <span>
-                      <span className="block font-sans text-[10px] tracking-[0.18em] text-messing uppercase">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="t-item mt-2 block text-paper">
+                      <span className="t-item block text-paper">
                         {item.title}
                       </span>
                       <span className="mt-1 block font-sans text-[13px] font-light text-paper/75">

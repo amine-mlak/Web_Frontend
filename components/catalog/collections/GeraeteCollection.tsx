@@ -105,10 +105,7 @@ export default async function GeraeteCollection({
                   href={branch.href ?? "/beratung"}
                   className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-10"
                 >
-                  <p className="t-feature text-messing lg:col-span-1">
-                    {branch.kicker}
-                  </p>
-                  <div className="lg:col-span-4">
+                  <div className="lg:col-span-5">
                     <h2 className="t-feature text-paper">
                       {branch.title}
                     </h2>

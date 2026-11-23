@@ -16,6 +16,8 @@ const COPY = {
     empty: "Zu diesem Thema liegen noch keine Fragen vor.",
     topic: "Mehr zum Thema",
     open: "Ansehen",
+    allOf: (n: number, name: string) => `Alle ${n} Fragen zu ${name}`,
+    other: "Weitere Fragen",
     askTitle: "Ihre Frage ist nicht dabei?",
     askText: "Fragen Sie uns direkt – im Gespräch in der Ausstellung, am Telefon oder per E-Mail an",
   },
@@ -27,6 +29,8 @@ const COPY = {
     empty: "There are no questions on this topic yet.",
     topic: "More on this topic",
     open: "Have a look",
+    allOf: (n: number, name: string) => `All ${n} questions on ${name}`,
+    other: "More questions",
     askTitle: "Your question is not here?",
     askText: "Ask us directly – in the showroom, on the phone or by email to",
   },
@@ -75,23 +79,60 @@ export default function FaqHub({
   const title = activeTheme?.name ? copy.themeTitle(activeTheme.name) : copy.hubTitle;
   const intro = activeTheme?.description || copy.hubIntro;
   const page = activeTheme ? THEME_PAGE[activeTheme.slug] : undefined;
+  // The overview shows every theme with its first questions; a question filed under several
+  // themes appears under the first one only. The full list of a theme is on the theme's page.
+  const PER_THEME = 3;
+  const placed = new Set<string>();
+  const groups = activeTheme
+    ? []
+    : [
+        ...themes.map((theme) => {
+          const own = items.filter((item) => item.themes.some((entry) => entry.slug === theme.slug));
+          const fresh = own.filter((item) => !placed.has(item.slug)).slice(0, PER_THEME);
+          fresh.forEach((item) => placed.add(item.slug));
+          return { key: theme.slug, name: theme.name, href: `/faq/${theme.slug}`, total: own.length, shown: fresh };
+        }),
+        (() => {
+          const loose = items.filter((item) => item.themes.length === 0);
+          return { key: "other", name: copy.other, href: "", total: loose.length, shown: loose };
+        })(),
+      ].filter((group) => group.shown.length > 0);
+  const listed = activeTheme ? items : groups.flatMap((group) => group.shown);
 
   return (
     <main className="bg-paper">
-      <FaqJsonLd items={items} />
+      <FaqJsonLd items={listed} />
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-16 md:pt-24" aria-labelledby="faq-hub-heading">
         {activeTheme ? (
           <Breadcrumbs items={[{ href: "/faq", label: "FAQ" }]} current={title} locale={locale} tone="ink" />
         ) : null}
         <p className="type-eyebrow mt-8 mb-3 text-gold">FAQ</p>
-        <h1 id="faq-hub-heading" className="type-h2 text-ink">
+        <h1 id="faq-hub-heading" className="t-title text-ink">
           {title}
         </h1>
         <p className="type-body mt-5 max-w-2xl text-muted">{intro}</p>
         {items.length > 0 ? <p className="mt-3 font-sans text-[13px] text-muted">{copy.count(items.length)}</p> : null}
         <FaqThemeFilters themes={themes} activeSlug={activeTheme?.slug} locale={locale} />
-        <div className="mt-12">
-          {items.length > 0 ? (
+        {groups.map((group) => (
+          <section key={group.key} className="mt-14" aria-labelledby={`faq-${group.key}`}>
+            <h2 id={`faq-${group.key}`} className="t-feature text-ink">
+              {group.name}
+            </h2>
+            <div className="mt-5">
+              <Accordion
+                headingLevel="h3"
+                items={group.shown.map((item) => ({ slug: item.slug, question: item.question, answer: item.answer }))}
+              />
+            </div>
+            {group.href && group.total > group.shown.length ? (
+              <LocaleLink href={group.href} className="btn-quiet mt-6">
+                {copy.allOf(group.total, group.name)}
+              </LocaleLink>
+            ) : null}
+          </section>
+        ))}
+        <div className={activeTheme ? "mt-12" : "hidden"}>
+          {!activeTheme ? null : items.length > 0 ? (
             <Accordion
               headingLevel="h2"
               items={items.map((item) => ({

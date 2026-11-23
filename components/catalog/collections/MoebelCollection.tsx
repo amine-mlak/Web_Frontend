@@ -57,7 +57,7 @@ export default function MoebelCollection({
                 <div
                   className={`flex flex-col justify-center px-5 py-12 sm:px-8 lg:col-span-5 ${reverse ? "lg:order-1 lg:pr-12 lg:pl-edge" : "lg:pr-edge lg:pl-12"}`}
                 >
-                  <h2 className="t-section text-ink">
+                  <h2 className="t-feature text-ink">
                     {branch.title}
                   </h2>
                   <p className="mt-4 font-sans text-[16px] leading-relaxed text-muted">

@@ -67,7 +67,7 @@ export default async function MoebelPage() {
           </div>
           <div className="bg-paper">
             {houses.map((feature, index) => (
-              <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={locale} />
+              <ProjectFeature key={feature.href} feature={feature} variant={index % 4} locale={locale} level={3} />
             ))}
           </div>
         </section>

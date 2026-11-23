@@ -14,7 +14,7 @@ export default function BookletPage({ booklet }: { booklet: Booklet }) {
         <div className="mx-auto grid max-w-[90rem] items-center gap-8 lg:grid-cols-2 lg:gap-16">
           <div>
             {booklet.eyebrow ? <p className="type-eyebrow text-gold">{booklet.eyebrow}</p> : null}
-            <h1 id="booklet-title" className="type-h1 mt-3 text-ink">
+            <h1 id="booklet-title" className="t-title mt-3 text-ink">
               {booklet.title}
               {booklet.titleEmphasis ? (
                 <>

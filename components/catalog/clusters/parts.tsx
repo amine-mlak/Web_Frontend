@@ -200,9 +200,8 @@ export function RuledPoints({ branches }: { branches: PresentedBranch[] }) {
       {branches.map((branch) => (
         <li
           key={`${branch.kicker}-${branch.title}`}
-          className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-4 border-b border-line py-7"
+          className="border-b border-line py-7"
         >
-          <span className="type-eyebrow pt-2 text-gold">{branch.kicker}</span>
           <div>
             <h3 className="t-item text-ink">{branch.title}</h3>
             <p className="mt-3 max-w-xl font-sans text-[16px] leading-relaxed text-muted">

@@ -63,19 +63,14 @@ function Points({
 
   return (
     <ul className="mt-8 space-y-0">
-      {points.map((point, index) => (
+      {points.map((point) => (
         <li
           key={point}
-          className={`flex gap-4 border-t py-3 font-sans text-[15px] leading-relaxed ${
+          className={`border-t py-3 font-sans text-[15px] leading-relaxed ${
             invert ? "border-paper/20 text-paper/80" : "border-line text-muted"
           }`}
         >
-          <span
-            className={`shrink-0 font-serif ${invert ? "text-messing" : "text-gold"}`}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-          <span>{point}</span>
+          {point}
         </li>
       ))}
     </ul>
@@ -110,9 +105,6 @@ export default function ChapterSpread({
             />
           </figure>
           <div className="relative z-10 -mt-16 border border-line bg-paper px-8 py-10 shadow-[0_30px_80px_rgba(20,20,20,0.08)] md:absolute md:top-1/2 md:right-0 md:mt-0 md:w-[min(36rem,44%)] md:-translate-y-1/2 md:px-12 md:py-16">
-            <p className="font-serif text-[72px] leading-none font-medium text-ink/[0.06] md:text-[96px]">
-              {branch.kicker}
-            </p>
             <Swatch hex={branch.hex} />
             <h2 className="t-section mt-4 text-ink">
               {branch.href ? (
@@ -205,9 +197,6 @@ export default function ChapterSpread({
           </figure>
         </div>
         <div className="md:col-span-5 md:pl-4 lg:pl-8">
-          <p className="font-serif text-[80px] leading-none font-medium text-ink/[0.07] md:text-[128px]">
-            {branch.kicker}
-          </p>
           <Swatch hex={branch.hex} />
           <h2 className="t-section mt-4 text-ink">
             {branch.href ? (

@@ -46,7 +46,7 @@ export default async function PressePage() {
   return (
     <main className="bg-paper">
       <div className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
-        <h1 className="font-serif text-[32px] md:text-[42px] xl:text-[60px] leading-[0.95] font-medium tracking-[-0.03em] text-ink">
+        <h1 className="t-display text-ink">
           {copy.title}
         </h1>
         <p className="type-intro mt-8 max-w-2xl">{copy.intro}</p>

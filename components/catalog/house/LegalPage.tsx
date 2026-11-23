@@ -62,7 +62,7 @@ export default async function LegalPage({ house }: { house: PresentedHouse }) {
     <main className="bg-paper">
       <header className="mx-auto max-w-6xl px-5 pt-28 pb-4 sm:px-8 md:pt-32">
         <p className="type-eyebrow text-gold">{house.eyebrow || "BEER"}</p>
-        <h1 className="type-h1 mt-3 text-ink">{house.title}</h1>
+        <h1 className="t-title mt-3 text-ink">{house.title}</h1>
         {house.lede ? <p className="type-intro mt-6 max-w-2xl">{house.lede}</p> : null}
         {updated ? (
           <p className="mt-4 font-sans text-[13px] text-muted">

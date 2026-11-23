@@ -46,7 +46,7 @@ export default function ThankYou({
       <section aria-labelledby="danke-title" className="px-5 py-16 sm:px-8 lg:px-gutter lg:py-24">
         <div className="mx-auto max-w-3xl">
           <p className="type-eyebrow text-gold">{eyebrow}</p>
-          <h1 id="danke-title" className="type-h1 mt-3 text-ink">
+          <h1 id="danke-title" className="t-title mt-3 text-ink">
             {heading}
           </h1>
           {data.lines?.length ? (

@@ -40,22 +40,16 @@ export default function ChapterIndex({
           />
         </figure>
         <div className="px-5 py-12 sm:px-8 lg:col-span-7 lg:px-gutter lg:py-16">
-          <h2
-            id="collection-index-heading"
-            className="t-section text-ink"
-          >
+          <p id="collection-index-heading" className="font-sans text-[14px] text-muted">
             {hint}
-          </h2>
-          <ol className="mt-10">
+          </p>
+          <ul className="mt-5">
             {branches.map((branch, index) => (
               <li key={`${branch.title}-${index}`} className="border-t border-line last:border-b">
                 <a
                   href={hashHref(branch.href, index)}
                   className="group flex items-baseline gap-5 py-5 transition-colors hover:bg-karte sm:gap-8 sm:py-6"
                 >
-                  <span className="w-10 shrink-0 font-serif text-[24px] text-gold">
-                    {branch.kicker}
-                  </span>
                   <span className="min-w-0 flex-1">
                     <span className="t-item block text-ink">
                       {branch.title}
@@ -73,7 +67,7 @@ export default function ChapterIndex({
                 </a>
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </div>
     </section>

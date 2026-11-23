@@ -502,7 +502,7 @@ export const HOUSE_COMPOSITION: Record<HouseLayout, HouseBlock[]> = {
   // Ausstellung: what is there (text, then each area with its photos), facts, how to visit, questions.
   showroom: ["plate", "body", "rooms", "ledger", "visit", "form"],
   people: ["film", "people", "body", "close"],
-  lasting: ["title", "ledger", "body"],
+  lasting: ["plate", "ledger", "body", "gallery"],
   place: ["night", "ledger", "body", "visit", "form"],
   papers: ["film", "body", "form"],
   // Küche planen: the online planner follows the explanation (design "Küchenplaner").

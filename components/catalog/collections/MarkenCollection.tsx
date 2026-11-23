@@ -41,7 +41,7 @@ export default function MarkenCollection({
                 className="group grid items-center gap-6 px-5 py-8 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-10"
               >
                 <div className="lg:col-span-8">
-                  <h2 className="t-section text-ink">
+                  <h2 className="t-feature text-ink">
                     {branch.title}
                   </h2>
                   <p className="mt-4 max-w-xl font-sans text-[16px] leading-relaxed text-muted">
