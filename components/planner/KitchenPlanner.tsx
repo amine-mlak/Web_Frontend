@@ -5,6 +5,8 @@ import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSP
 import LocaleLink from "@/components/LocaleLink";
 import { formatSize } from "@/lib/application-files";
 import { conversionContext } from "@/lib/conversion";
+import { useLocale } from "@/components/LocaleProvider";
+import { fieldHint } from "@/lib/field-hints";
 import {
   apiErrorReason,
   trackFormAttempt,
@@ -667,7 +669,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, [screen.group.group === "form" ? "form" : "style"]: value }));
                             }}
-                            className="w-full border-0 border-b border-line bg-transparent py-2 text-center font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink"
+                            className="form-field text-center"
                           />
                         </div>
                       ) : null}
@@ -686,7 +688,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                               const value = event.target.value;
                               setNotes((current) => ({ ...current, wishes: value }));
                             }}
-                            className="mt-1 max-h-32 w-full resize-y border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none [field-sizing:content] placeholder:text-muted focus:border-ink"
+                            className="form-field max-h-32 resize-y [field-sizing:content]"
                           />
                         </div>
                       ) : null}
@@ -747,7 +749,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                           }}
                         />
                         <span className="font-sans text-[16px] break-all text-ink">{plan ? plan.name : ui.planDrop}</span>
-                        <span className="font-sans text-[13px] text-muted">{plan ? formatSize(plan.size, locale) : ui.planFormats}</span>
+                        <span className="form-label">{plan ? formatSize(plan.size, locale) : ui.planFormats}</span>
                       </label>
                       {plan ? (
                         <button type="button" onClick={() => setPlan(null)} className="mt-3 min-h-10 font-sans text-[14px] text-muted underline underline-offset-4 hover:text-ink">
@@ -793,7 +795,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                           ))}
                         </div>
                         <div className="mt-3">
-                          <label htmlFor={`${baseId}-message`} className="font-sans text-[13px] text-muted">
+                          <label htmlFor={`${baseId}-message`} className="form-label">
                             {ui.message}
                           </label>
                           <textarea
@@ -801,7 +803,7 @@ export default function KitchenPlanner({ content, headingLevel = "h2" }: { conte
                             rows={1}
                             value={contact.message}
                             onChange={(event) => setContact((current) => ({ ...current, message: event.target.value }))}
-                            className="mt-1 max-h-32 w-full resize-y border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none [field-sizing:content] focus:border-ink"
+                            className="form-field max-h-32 resize-y [field-sizing:content]"
                           />
                         </div>
                         <label htmlFor={`${baseId}-newsletter`} className="mt-3 flex gap-3 font-sans text-[13px] leading-5 text-muted">
@@ -1006,7 +1008,7 @@ function PlannerField({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="font-sans text-[13px] text-muted">
+      <label htmlFor={id} className="form-label">
         {label}
         {required ? (
           <>
@@ -1021,9 +1023,10 @@ function PlannerField({
         autoComplete={autoComplete}
         required={required}
         aria-required={required}
+        placeholder={fieldHint(autoComplete, useLocale())}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-0.5 w-full border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none focus:border-ink"
+        className="form-field"
       />
     </div>
   );

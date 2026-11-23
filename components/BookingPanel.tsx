@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
+import { fieldHint } from "@/lib/field-hints";
 import type { BookingDays, BookingService, BookingSetup } from "@/lib/bookings";
 import { conversionContext } from "@/lib/conversion";
 import { BOOKING_URL, MAIN_ACTIONS } from "@/lib/cta";
@@ -445,8 +446,8 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
     }
   }
 
-  const input = "mt-0.5 w-full border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink";
-  const label = "font-sans text-[13px] text-muted";
+  const input = "form-field";
+  const label = "form-label";
   const chip = (on: boolean) =>
     cn(
       "min-h-12 border px-4 py-2 font-sans text-[15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink",
@@ -466,6 +467,7 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
         autoComplete={autoComplete}
         required
         aria-required
+        placeholder={fieldHint(autoComplete, locale)}
         value={fields[name]}
         onChange={(event) => setFields((current) => ({ ...current, [name]: event.target.value }))}
         className={input}
@@ -620,7 +622,7 @@ export default function BookingPanel({ locale }: { locale: Locale }) {
                     </button>
                   ))}
                 </div>
-                <p className="mt-4 font-sans text-[13px] text-muted">{ui.zone}</p>
+                <p className="mt-4 form-label">{ui.zone}</p>
               </>
             )}
             <p role="alert" className="mt-4 font-sans text-[14px] text-destructive empty:hidden">

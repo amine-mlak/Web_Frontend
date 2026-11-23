@@ -741,6 +741,67 @@ html #cc-main a:focus-visible {
    --------------------------------------------------------------------------------------------- */
 
 /* The photo's own colours, blurred, under the photo while it loads. */
+/* Form fields. One look in every form: the label in plain dark type above a boxed field, example
+   text clearly lighter than typed text, a dark frame while typing. */
+.form-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+.form-field {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgb(20 20 20 / 0.3);
+  border-radius: 2px;
+  background: #fff;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--color-ink);
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.form-field::placeholder {
+  color: rgb(20 20 20 / 0.45);
+  opacity: 1;
+}
+.form-field:hover {
+  border-color: rgb(20 20 20 / 0.55);
+}
+.form-field:focus {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 1px var(--color-ink);
+}
+.form-field[aria-invalid="true"] {
+  border-color: var(--color-destructive);
+  box-shadow: 0 0 0 1px var(--color-destructive);
+}
+.form-label-dark {
+  color: #e9e5dd;
+}
+.form-field-dark {
+  background: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.4);
+  color: #fff;
+}
+.form-field-dark::placeholder {
+  color: rgb(255 255 255 / 0.5);
+}
+.form-field-dark:hover {
+  border-color: rgb(255 255 255 / 0.65);
+}
+.form-field-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px #fff;
+}
+
 /* One mood for every photo. The photos come from many shoots and are not graded alike, so each
    gets the same mild grade (a little less colour, a little more contrast) and the same soft
    darkening from the bottom that the start page uses. Photos that already carry a text gradient

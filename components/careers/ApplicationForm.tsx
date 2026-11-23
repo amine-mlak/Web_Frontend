@@ -3,6 +3,7 @@
 import { useId, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { useLocale } from "@/components/LocaleProvider";
+import { fieldHint } from "@/lib/field-hints";
 import {
   extensionOf,
   FILE_ACCEPT,
@@ -81,8 +82,8 @@ const UI = {
   },
 } as const;
 
-const FIELD = "w-full border-0 border-b border-line bg-transparent py-3 font-sans text-[16px] text-ink outline-none placeholder:text-muted focus:border-ink";
-const LABEL = "font-sans text-[13px] text-muted";
+const FIELD = "form-field";
+const LABEL = "form-label";
 
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", { method: "GET", credentials: "same-origin", cache: "no-store" });
@@ -236,7 +237,7 @@ export default function ApplicationForm({
           <label htmlFor={`${baseId}-phone`} className={LABEL}>
             {ui.phone}
           </label>
-          <input id={`${baseId}-phone`} name="phone" type="tel" autoComplete="tel" required maxLength={40} className={FIELD} />
+          <input id={`${baseId}-phone`} name="phone" type="tel" autoComplete="tel" required maxLength={40} placeholder={fieldHint("tel", locale)} className={FIELD} />
         </div>
       </div>
       <div className="grid gap-7 sm:grid-cols-2">
@@ -244,7 +245,7 @@ export default function ApplicationForm({
           <label htmlFor={`${baseId}-email`} className={LABEL}>
             {ui.email}
           </label>
-          <input id={`${baseId}-email`} name="email" type="email" autoComplete="email" required maxLength={120} className={FIELD} />
+          <input id={`${baseId}-email`} name="email" type="email" autoComplete="email" required maxLength={120} placeholder={fieldHint("email", locale)} className={FIELD} />
         </div>
         <div>
           <label htmlFor={`${baseId}-start`} className={LABEL}>

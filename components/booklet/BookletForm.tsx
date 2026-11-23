@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { useLocale } from "@/components/LocaleProvider";
+import { fieldHint } from "@/lib/field-hints";
 import { pushDataLayer, track } from "@/lib/analytics";
 import { validateBooklet, wantsPrint, type BookletDelivery, type BookletField } from "@/lib/booklet-fields";
 import { hasConsent } from "@/lib/consent-state";
@@ -68,7 +69,7 @@ type Fields = {
 const EMPTY: Fields = { salutation: "", firstName: "", lastName: "", email: "", phone: "", plz: "", street: "", city: "" };
 
 const FIELD_INPUT =
-  "mt-0.5 w-full border-0 border-b border-line bg-transparent py-2 font-sans text-[16px] text-ink outline-none focus:border-ink aria-[invalid=true]:border-destructive";
+  "form-field aria-[invalid=true]:border-destructive";
 
 async function fetchChallenge() {
   const response = await fetch("/api/lead/challenge", { method: "GET", credentials: "same-origin", cache: "no-store" });
@@ -272,7 +273,7 @@ export default function BookletForm({ slug, title, printNote }: { slug: string; 
         </legend>
         <div className="mt-4 grid gap-x-7 gap-y-4 sm:grid-cols-2">
           <div className="sm:col-span-2 sm:max-w-[calc(50%-0.875rem)]">
-            <label htmlFor={`${baseId}-salutation`} className="font-sans text-[13px] text-muted">
+            <label htmlFor={`${baseId}-salutation`} className="form-label">
               {UI.salutation}
             </label>
             <select
@@ -381,7 +382,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="font-sans text-[13px] text-muted">
+      <label htmlFor={id} className="form-label">
         {label}
         {required ? (
           <>
@@ -399,6 +400,7 @@ function Field({
         required={required}
         aria-required={required}
         aria-invalid={invalid}
+        placeholder={fieldHint(autoComplete, useLocale())}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className={FIELD_INPUT}

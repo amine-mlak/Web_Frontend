@@ -3,6 +3,7 @@
 import { type FormEvent, useId, useRef, useState } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { useLocale } from "@/components/LocaleProvider";
+import { fieldHint } from "@/lib/field-hints";
 import type { Locale } from "@/lib/i18n";
 
 const UI: Record<Locale, Record<string, string>> = {
@@ -51,7 +52,7 @@ function msSince(timestamp: number) {
 }
 
 const FIELD =
-  "w-full border-0 border-b border-white/30 bg-transparent py-3 font-sans text-[16px] text-white outline-none placeholder:text-[#9c9892] focus:border-white";
+  "form-field form-field-dark";
 
 /**
  * Newsletter sign-up in the footer. Sends to /api/newsletter, which passes it to n8n;
@@ -149,13 +150,13 @@ export default function NewsletterSignup({ consent, headingClass }: { consent: s
           </div>
           <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
             <div>
-              <label htmlFor={`${baseId}-email`} className="text-[13px] text-[#9c9892]">
+              <label htmlFor={`${baseId}-email`} className="form-label form-label-dark">
                 {ui.email}
               </label>
-              <input id={`${baseId}-email`} name="email" type="email" required autoComplete="email" className={FIELD} />
+              <input id={`${baseId}-email`} name="email" type="email" required autoComplete="email" placeholder={fieldHint("email", locale)} className={FIELD} />
             </div>
             <div>
-              <label htmlFor={`${baseId}-name`} className="text-[13px] text-[#9c9892]">
+              <label htmlFor={`${baseId}-name`} className="form-label form-label-dark">
                 {ui.name}
               </label>
               <input id={`${baseId}-name`} name="vorname" type="text" autoComplete="given-name" maxLength={60} className={FIELD} />
