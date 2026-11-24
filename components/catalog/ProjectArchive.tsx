@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 const COPY = {
   de: {
     title: "Weitere Häuser",
+    openAll: "Alle Projekte ansehen",
+    projects: "Projekte",
     filter: "Häuser eingrenzen",
     show: "Zeige",
     all: "Alle Häuser",
@@ -19,6 +21,8 @@ const COPY = {
   },
   en: {
     title: "Further houses",
+    openAll: "See all projects",
+    projects: "projects",
     filter: "Narrow down the houses",
     show: "Show",
     all: "All houses",
@@ -35,8 +39,8 @@ const STEP = 18;
 /** One even grid: every house has the same upright photo, three in a row on wide screens. */
 const SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
-// The chosen filter and how far the list is open, kept for the tab: coming back from a house
-// lands on the same list at the same place.
+// Whether the archive is open, the chosen filter and how far the list is open, kept for the tab:
+// coming back from a house lands on the same list at the same place.
 const KEY = "beer-projekte-archiv";
 const listeners = new Set<() => void>();
 let saved: string | null = null;
@@ -80,7 +84,9 @@ export default function ProjectArchive({
 }) {
   const copy = COPY[locale === "en" ? "en" : "de"];
   const state = useSyncExternalStore(subscribe, read, () => "");
-  const [slug = "", open = ""] = state.split("|");
+  const [slug = "", open = "", archive = ""] = state.split("|");
+  // The page shows a few houses; the filters and every other house appear on request.
+  const opened = archive === "1";
   const active = groups.flatMap((group) => group.filters).find((filter) => filter.slug === slug);
   const limit = Math.max(STEP, Number(open) || STEP);
 
@@ -89,15 +95,27 @@ export default function ProjectArchive({
   const place = new Map(matches.map((house, index) => [house.href, index]));
   const shown = Math.min(limit, matches.length);
 
-  const choose = (next: string) => write(`${next}|${STEP}`);
+  const choose = (next: string) => write(`${next}|${STEP}|1`);
   // "Show more" can disappear once everything is open, so keyboard focus moves on to the first
   // house it added instead of falling back to the top of the page.
   const list = useRef<HTMLUListElement>(null);
   const focusAt = useRef<number | null>(null);
   const showMore = () => {
     focusAt.current = limit;
-    write(`${active?.slug ?? ""}|${limit + STEP}`);
+    write(`${active?.slug ?? ""}|${limit + STEP}|1`);
   };
+  // Opening the archive removes its button, so focus moves to the heading of what appeared.
+  const heading = useRef<HTMLHeadingElement>(null);
+  const justOpened = useRef(false);
+  const openArchive = () => {
+    justOpened.current = true;
+    write(`|${STEP}|1`);
+  };
+  useEffect(() => {
+    if (!opened || !justOpened.current) return;
+    justOpened.current = false;
+    heading.current?.focus({ preventScroll: true });
+  }, [opened]);
   useEffect(() => {
     if (focusAt.current === null) return;
     const links = list.current?.querySelectorAll<HTMLAnchorElement>("li:not([hidden]) > a");
@@ -112,11 +130,22 @@ export default function ProjectArchive({
 
   return (
     <section
-      className="border-b border-line bg-paper px-5 py-16 sm:px-8 lg:px-gutter lg:py-24"
-      aria-labelledby="projekte-archiv"
+      className={cn("bg-paper px-5 sm:px-8 lg:px-gutter", opened ? "border-b border-line py-16 lg:py-24" : "py-12 lg:py-16")}
+      aria-labelledby={opened ? "projekte-archiv" : undefined}
     >
-      <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
-        <h2 id="projekte-archiv" className="t-section text-ink">
+      {opened ? null : (
+        <div className="flex flex-col items-center gap-4">
+          <button type="button" onClick={openArchive} className="pill pill-primary">
+            {copy.openAll}
+          </button>
+          <p className="font-sans text-[13px] text-muted tabular-nums">
+            {houses.length} {copy.projects}
+          </p>
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4" hidden={!opened}>
+        <h2 id="projekte-archiv" ref={heading} tabIndex={-1} className="t-section text-ink focus:outline-none">
           {active ? active.label : copy.title}
         </h2>
         <p className="font-sans text-[14px] text-muted tabular-nums" aria-live="polite">
@@ -124,7 +153,7 @@ export default function ProjectArchive({
         </p>
       </div>
 
-      <div className="mt-10 border-b border-line" role="group" aria-label={copy.filter}>
+      <div className="mt-10 border-b border-line" role="group" aria-label={copy.filter} hidden={!opened}>
         {[{ label: copy.show, filters: [] }, ...groups].map((group, row) => (
           <div key={group.label} className="grid gap-x-8 gap-y-1 border-t border-line py-3 lg:grid-cols-12 lg:py-4">
             <p className="pt-1.5 font-serif text-[18px] leading-[1.4] text-ink lg:col-span-2">{group.label}</p>
@@ -155,10 +184,10 @@ export default function ProjectArchive({
       </div>
 
       {/* Every house stays in the page as a link; the ones not shown yet are only hidden. */}
-      <ul ref={list} className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-16">
+      <ul ref={list} className={cn("grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-16", opened && "mt-12 lg:mt-16")}>
         {houses.map((house) => {
           const at = place.get(house.href);
-          const visible = at !== undefined && at < limit;
+          const visible = opened && at !== undefined && at < limit;
           return (
             <li key={house.href} hidden={!visible}>
               <HouseCard
@@ -173,7 +202,7 @@ export default function ProjectArchive({
         })}
       </ul>
 
-      {shown < matches.length ? (
+      {opened && shown < matches.length ? (
         <div className="mt-16 flex flex-col items-center gap-4 lg:mt-20">
           <p className="font-sans text-[13px] text-muted tabular-nums">
             {shown} {copy.of} {matches.length}
