@@ -1,6 +1,8 @@
 import ClusterPage from "@/components/catalog/clusters/ClusterPage";
+import { FarbenOverview } from "@/components/catalog/clusters/Farben";
 import type { KitchenCluster, KitchenTopic, Project, SitePage } from "@/lib/catalog";
 import { presentCluster } from "@/lib/collection-clusters";
+import { colourEntries } from "@/lib/colour-page";
 import type { Locale } from "@/lib/i18n";
 
 /** Every kitchen world (Farben, Stile, Formen, Inseln, Besondere) shares one overview layout. */
@@ -18,5 +20,10 @@ export default function KitchenClusterView({
   page?: SitePage | null;
 }) {
   const hub = presentCluster(cluster.slug, locale, topics, projects, page);
+  // The colours have their own overview: one page that takes the chosen colour.
+  const colours = cluster.slug === "farben" ? colourEntries(hub, topics, projects) : [];
+  if (colours.length > 1) {
+    return <FarbenOverview hub={hub} colours={colours} path={`/kuechen/${cluster.slug}`} />;
+  }
   return <ClusterPage hub={hub} path={`/kuechen/${cluster.slug}`} />;
 }

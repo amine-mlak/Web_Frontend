@@ -16,6 +16,7 @@ export default function PageEnd({
   tiles = [],
   tilesTitle,
   locale,
+  closing = true,
 }: {
   title: string;
   text?: string;
@@ -23,6 +24,8 @@ export default function PageEnd({
   tiles?: PageEndTile[];
   tilesTitle?: string;
   locale: Locale;
+  /** False where the page brings its own closing and only the tiles follow. */
+  closing?: boolean;
 }) {
   const shown = tiles.filter((tile) => tile.image).slice(0, 4);
   // One tile lies wide, two share the row, three and four stand side by side.
@@ -34,6 +37,7 @@ export default function PageEnd({
   ][Math.max(shown.length, 1) - 1];
   return (
     <>
+      {closing ? (
       <section className="border-t border-line px-5 py-16 sm:px-8 lg:px-gutter lg:py-24" aria-labelledby="page-end">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <div data-rise="" className="lg:col-span-7">
@@ -45,8 +49,9 @@ export default function PageEnd({
           <NextSteps primary={primary} locale={locale} className="lg:col-span-5 lg:justify-end" />
         </div>
       </section>
+      ) : null}
       {shown.length ? (
-        <nav className="px-3 pb-3 sm:px-4 sm:pb-4" aria-label={tilesTitle || (locale === "en" ? "More pages" : "Weitere Seiten")}>
+        <nav className={closing ? "px-3 pb-3 sm:px-4 sm:pb-4" : "px-3 py-3 sm:px-4 sm:py-4"} aria-label={tilesTitle || (locale === "en" ? "More pages" : "Weitere Seiten")}>
           <ul className={`grid gap-3 ${layout.grid}`}>
             {shown.map((tile) => (
               <li key={tile.href}>

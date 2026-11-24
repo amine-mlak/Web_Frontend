@@ -1,4 +1,8 @@
 import LocaleLink from "@/components/LocaleLink";
+import CollectionJsonLd from "@/components/catalog/CollectionJsonLd";
+import PageEnd from "@/components/catalog/PageEnd";
+import ColourPage from "@/components/catalog/clusters/ColourPage";
+import type { ColourEntry } from "@/lib/colour-page";
 import HouseCard from "@/components/catalog/HouseCard";
 import ProjectFeature from "@/components/catalog/ProjectFeature";
 import { Frame } from "@/components/catalog/collections/parts";
@@ -22,96 +26,31 @@ function projectCount(count: number, locale: PresentedCluster["locale"]) {
   return `${count} ${count === 1 ? "Projekt" : "Projekte"}`;
 }
 
-type ColourChapter = PresentedCluster["branches"][number];
-
 /**
- * The colours themselves as the way into the page: a dot of each colour with its name. A click
- * jumps to that colour's band further down.
+ * The overview of the colours: one page that takes the chosen colour (ColourPage), then the ways
+ * to the other kitchen worlds.
  */
-export function ColourNav({ colours, label }: { colours: ColourChapter[]; label: string }) {
+export function FarbenOverview({ hub, colours, path }: { hub: PresentedCluster; colours: ColourEntry[]; path: string }) {
   return (
-    <nav className="px-5 pb-14 sm:px-8 lg:px-gutter lg:pb-20" aria-label={label}>
-      <ul className="flex flex-wrap gap-x-8 gap-y-5">
-        {colours.map((colour, index) => (
-          <li key={colour.href ?? colour.title}>
-            <a href={`#farbe-${index}`} className="group flex items-center gap-3 font-sans text-[16px] text-ink">
-              <span
-                className="size-11 shrink-0 rounded-full border border-ink/20 outline-2 outline-offset-4 outline-transparent transition-[outline-color] duration-300 group-hover:outline-ink/40 group-focus-visible:outline-ink"
-                style={{ backgroundColor: colour.hex }}
-                aria-hidden
-              />
-              <span className="underline decoration-transparent underline-offset-[5px] transition-[text-decoration-color] duration-300 group-hover:decoration-ink/40">
-                {colour.title}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
-/**
- * The overview of the colours: every colour gets a band in its own colour, with a kitchen built
- * in it set into the band, its sentence, how many projects carry it and the way to its page.
- * The photo changes sides from band to band.
- */
-export function ColourBands({
-  colours,
-  locale,
-  linkLabel,
-}: {
-  colours: ColourChapter[];
-  locale: PresentedCluster["locale"];
-  linkLabel: (name: string) => string;
-}) {
-  return (
-    <div>
-      {colours.map((colour, index) => {
-        const hex = colour.hex || "#f4f1ea";
-        const light = isLight(hex);
-        const flip = index % 2 === 1;
-        const href = colour.href ?? "/kuechen/farben";
-        return (
-          <section
-            key={href}
-            id={`farbe-${index}`}
-            lang={locale}
-            aria-labelledby={`farbe-${index}-title`}
-            className={`scroll-mt-14 px-5 py-14 sm:px-8 lg:px-gutter lg:py-24 ${light ? "border-y border-line text-ink" : "text-paper"}`}
-            style={{ backgroundColor: hex }}
-          >
-            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
-              <div className={`lg:col-span-5 ${flip ? "lg:order-2" : ""}`}>
-                {colour.count ? (
-                  <p className="font-sans text-[15px] opacity-75">{projectCount(colour.count, locale)}</p>
-                ) : null}
-                <h2 id={`farbe-${index}-title`} className="t-display mt-3 hyphens-none">
-                  <LocaleLink href={href}>{colour.title}</LocaleLink>
-                </h2>
-                {colour.text ? <p className="t-lede mt-6 max-w-md opacity-90">{colour.text}</p> : null}
-                <LocaleLink href={href} className={light ? "pill pill-primary mt-9" : "pill pill-light mt-9"}>
-                  {linkLabel(colour.title)}
-                </LocaleLink>
-              </div>
-              <LocaleLink
-                href={href}
-                aria-hidden
-                tabIndex={-1}
-                className={`block shadow-[0_30px_80px_rgba(0,0,0,0.18)] lg:col-span-7 ${flip ? "lg:order-1" : ""}`}
-              >
-                <Frame
-                  src={colour.cover || colour.image}
-                  alt=""
-                  className="aspect-[4/3]"
-                  sizes="(max-width: 1024px) 100vw, 56vw"
-                />
-              </LocaleLink>
-            </div>
-          </section>
-        );
-      })}
-    </div>
+    <main className="bg-paper">
+      <CollectionJsonLd path={path} name={hub.title} description={hub.lede} items={hub.branches} locale={hub.locale} />
+      <ColourPage
+        title={hub.emphasis ? `${hub.title} ${hub.emphasis}` : hub.title}
+        lede={hub.lede}
+        statement={hub.statement}
+        note={hub.statementNote}
+        crumbs={<Crumbs hub={hub} tone="ink" />}
+        colours={colours}
+        locale={hub.locale}
+      />
+      <PageEnd
+        closing={false}
+        title={hub.closeTitle}
+        tiles={hub.siblings.map((sibling) => ({ href: sibling.href, title: sibling.title, text: sibling.text, image: sibling.image }))}
+        tilesTitle={hub.locale === "en" ? "More kitchen worlds" : "Weitere Küchenwelten"}
+        locale={hub.locale}
+      />
+    </main>
   );
 }
 

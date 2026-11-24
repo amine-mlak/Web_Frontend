@@ -933,3 +933,21 @@ html #cc-main a:focus-visible {
     transform: translateY(6%);
   }
 }
+
+/* Küchenfarben overview: the picked colour spreads over the page from its dot (ColourPage.tsx).
+   During that move nothing inside fades by itself; the circle alone uncovers the new colour. */
+html.colour-spread::view-transition-old(root),
+html.colour-spread::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.colour-spread::view-transition-old(root) {
+  z-index: 1;
+}
+html.colour-spread::view-transition-new(root) {
+  z-index: 2;
+}
+html.colour-spread [data-colour-page],
+html.colour-spread [data-colour-page] * {
+  transition: none !important;
+}

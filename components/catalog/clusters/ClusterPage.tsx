@@ -4,7 +4,6 @@ import FullChapter from "@/components/catalog/FullChapter";
 import PageEnd from "@/components/catalog/PageEnd";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine, QuoteLine } from "@/components/catalog/clusters/parts";
-import { ColourBands, ColourNav } from "@/components/catalog/clusters/Farben";
 import PlanDrawing, { hasPlanDrawing } from "@/components/catalog/shapes/PlanDrawing";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { photoKey } from "@/lib/utils";
@@ -16,8 +15,6 @@ const COPY = {
     houses: "Küchen aus unseren Projekten",
     allProjects: "Alle Projekte",
     more: "Weitere Küchenwelten",
-    colours: "Farben",
-    open: (name: string) => `${name} ansehen`,
   },
   en: {
     discover: "Discover",
@@ -25,8 +22,6 @@ const COPY = {
     houses: "Kitchens from our projects",
     allProjects: "All projects",
     more: "More kitchen worlds",
-    colours: "Colours",
-    open: (name: string) => `See ${name.charAt(0).toLowerCase()}${name.slice(1)}`,
   },
 } as const;
 
@@ -61,8 +56,6 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
   const firstImage = first ? first.cover || first.image : "";
   const hero = firstImage && photoKey(firstImage) === photoKey(hub.heroImage) ? hub.statementImage : hub.heroImage;
   const rows = chapterRows(hub.branches);
-  // The colours overview shows each colour in its own colour instead of photo chapters.
-  const colours = hub.branches.length > 0 && hub.branches.every((branch) => branch.hex);
   const chapter = (branch: PresentedCluster["branches"][number], index: number, size: "full" | "card", side: number) => {
     // A layout shows its floor plan before its name.
     const form = branch.href?.includes("/formen/") ? branch.href.split("/").pop() : undefined;
@@ -111,14 +104,8 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
 
       <StatementBand statement={hub.statement} note={hub.statementNote} rule={false} />
 
-      {colours ? (
-        <>
-          <ColourNav colours={hub.branches} label={copy.colours} />
-          <ColourBands colours={hub.branches} locale={hub.locale} linkLabel={copy.open} />
-        </>
-      ) : null}
-      <div className={colours ? "hidden" : "space-y-3 px-3 sm:space-y-4 sm:px-4"}>
-        {colours ? null : rows.map((row) =>
+      <div className="space-y-3 px-3 sm:space-y-4 sm:px-4">
+        {rows.map((row) =>
           row.length === 1 ? (
             chapter(row[0].item, row[0].index, "full", row[0].side)
           ) : (
