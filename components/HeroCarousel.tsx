@@ -4,6 +4,8 @@ import { useLocale } from "@/components/LocaleProvider";
 import CtaPair from "@/components/CtaPair";
 import { useEffect, useState } from "react";
 import CmsImage from "@/components/CmsImage";
+import { mainAction } from "@/lib/cta";
+import { stripLocalePrefix } from "@/lib/i18n";
 import type { HeroSlide } from "@/lib/strapi";
 
 export type HeroPanel = {
@@ -30,7 +32,20 @@ function HeroIntro({ panel }: { panel: HeroPanel }) {
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_top_right,rgb(0_0_0/0.55)_0%,rgb(0_0_0/0.2)_38%,rgb(0_0_0/0)_62%)]"
         aria-hidden="true"
       />
-      <div className="max-w-[44rem] text-paper">
+      {/* On a page that carries the planner itself (the start page), the planner button does not
+          leave the page: it glides down to the planner. Elsewhere it opens the planner page. */}
+      <div
+        className="max-w-[44rem] text-paper"
+        onClickCapture={(event) => {
+          const link = (event.target as HTMLElement).closest("a");
+          const planner = document.getElementById("planer");
+          if (!link || !planner || mainAction(stripLocalePrefix(link.getAttribute("href") ?? "")) !== "planner") return;
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          planner.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
+        }}
+      >
         <h1 className="font-serif text-[36px] leading-[1.04] font-medium tracking-[-0.025em] text-balance text-paper [font-size-adjust:cap-height_0.72] md:text-[52px] xl:text-[68px]">
           {panel.title}{panel.emphasis ? ` ${panel.emphasis}` : ""}
         </h1>
