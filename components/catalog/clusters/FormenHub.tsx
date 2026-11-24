@@ -93,7 +93,10 @@ export default function FormenHub({
         return (
           <section
             key={href}
-            className="grid items-center gap-x-12 gap-y-8 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-x-24 lg:px-gutter lg:py-16"
+            // The photo takes the wider column on either side.
+            className={`grid items-center gap-x-12 gap-y-8 px-5 py-10 sm:px-8 lg:gap-x-24 lg:px-gutter lg:py-16 ${
+              flip ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]" : "lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]"
+            }`}
             aria-labelledby={`form-${index}`}
           >
             {photo ? (
