@@ -4,7 +4,6 @@ import FullChapter from "@/components/catalog/FullChapter";
 import PageEnd from "@/components/catalog/PageEnd";
 import { Frame, StatementBand } from "@/components/catalog/collections/parts";
 import { Crumbs, HouseLine, QuoteLine } from "@/components/catalog/clusters/parts";
-import PlanDrawing, { hasPlanDrawing } from "@/components/catalog/shapes/PlanDrawing";
 import type { PresentedCluster } from "@/lib/collection-clusters";
 import { photoKey } from "@/lib/utils";
 
@@ -57,8 +56,6 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
   const hero = firstImage && photoKey(firstImage) === photoKey(hub.heroImage) ? hub.statementImage : hub.heroImage;
   const rows = chapterRows(hub.branches);
   const chapter = (branch: PresentedCluster["branches"][number], index: number, size: "full" | "card", side: number) => {
-    // A layout shows its floor plan before its name.
-    const form = branch.href?.includes("/formen/") ? branch.href.split("/").pop() : undefined;
     return (
       <FullChapter
         key={branch.href ?? branch.title}
@@ -73,7 +70,6 @@ export default function ClusterPage({ hub, path }: { hub: PresentedCluster; path
         linkLabel={copy.discover}
         kicker={branch.count ? copy.projects(branch.count) : undefined}
         hex={branch.hex}
-        mark={hasPlanDrawing(form) ? <PlanDrawing form={form} className="h-11 w-auto md:h-14" /> : undefined}
         lang={hub.locale}
       />
     );
