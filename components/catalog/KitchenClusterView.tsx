@@ -2,6 +2,7 @@ import ClusterPage from "@/components/catalog/clusters/ClusterPage";
 import { FarbenOverview } from "@/components/catalog/clusters/Farben";
 import FormenHub from "@/components/catalog/clusters/FormenHub";
 import InselnHub from "@/components/catalog/clusters/InselnHub";
+import StileHub from "@/components/catalog/clusters/StileHub";
 import type { KitchenCluster, KitchenTopic, Project, SitePage } from "@/lib/catalog";
 import { presentCluster } from "@/lib/collection-clusters";
 import { colourEntries } from "@/lib/colour-page";
@@ -35,6 +36,10 @@ export default function KitchenClusterView({
   // The shapes too: a chapter per shape with BEER's hand sketch beside a built kitchen.
   if (cluster.slug === "formen") {
     return <FormenHub hub={hub} topics={topics} path={path} />;
+  }
+  // The styles: a chapter per style that stays in place while the next one slides over it.
+  if (cluster.slug === "stile") {
+    return <StileHub hub={hub} topics={topics} path={path} />;
   }
   return <ClusterPage hub={hub} path={path} />;
 }

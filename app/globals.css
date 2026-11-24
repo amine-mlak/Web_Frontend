@@ -1143,6 +1143,24 @@ html #cc-main a:focus-visible {
   }
 }
 
+/* Küchenstile overview: chapters that stack (ChapterStack.tsx). On wide screens a chapter stays
+   under the header while the next one slides over it; one taller than the screen stops at its end.
+   While it is being covered (--cover, 0 to 1) it steps back a little and darkens. */
+@media (min-width: 1024px) {
+  .stack-panel {
+    position: sticky;
+    top: min(var(--header-space), calc(100svh - var(--panel-h, 0px)));
+    min-height: min(calc(100svh - var(--header-space)), 50rem);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .stack-panel {
+      transform-origin: center top;
+      transform: scale(calc(1 - var(--cover, 0) * 0.035));
+      filter: brightness(calc(1 - var(--cover, 0) * 0.3));
+    }
+  }
+}
+
 /* Küchenfarben overview: the picked colour spreads over the page from its dot (ColourPage.tsx).
    During that move nothing inside fades by itself; the circle alone uncovers the new colour. */
 html.colour-spread::view-transition-old(root),
