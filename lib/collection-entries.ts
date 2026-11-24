@@ -676,7 +676,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       extras: [
         ["Offene Räume brauchen einen Plan für Luft.", "Ein Schlitz allein ist kein Abzug."],
         ["Motor und Austritt vor dem Feld.", "Nachträglich bleibt ein Kompromiss im Schrank."],
-        ["Bora oder ein anderer — nach Aufgabe, nicht Vertrag.", "Die Küche bleibt BEER."],
+        ["BORA oder ein anderer — nach Aufgabe, nicht Vertrag.", "Die Küche bleibt BEER."],
       ],
     },
     backofen: {
@@ -960,19 +960,19 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       ],
     },
     bora: {
-      title: "Bora",
+      title: "BORA",
       emphasis: "für den Blick.",
       statement:
-        "Kochfeldabzug in der Platte. Blick frei, Technik unter dem Korpus. Wir planen Bora mit Tiefe, Kabelführung und oft anderer Unterschrank-Aufteilung — nicht nachträglich in eine fertige Zeile.",
+        "Kochfeldabzug in der Platte. Blick frei, Technik unter dem Korpus. Wir planen BORA mit Tiefe, Kabelführung und oft anderer Unterschrank-Aufteilung — nicht nachträglich in eine fertige Zeile.",
       statementNote: "Die Küche bleibt BEER. Das Gerät ist die Aufgabe, den Blick zu halten.",
       quote: "Die Esse hätten wir gesehen. Deshalb sitzt der Abzug in der Platte.",
       quoteSource: "Aus einem offenen Neubau in München",
-      closeTitle: "Korpus mit Bora.",
+      closeTitle: "Korpus mit BORA.",
       closeText: "Kanal, Motor, Feld. Dann die Marke, wenn sie zur Luft und zum Blick passt.",
-      ledgerLine: "Bora ist Luft unter der Platte. Kein Logo darauf.",
+      ledgerLine: "BORA ist Luft unter der Platte. Kein Logo darauf.",
       lookTitle: "Schlitz, Kanal, Blick.",
       indexEyebrow: "Drei Punkte",
-      ctaLabel: "Bora klären",
+      ctaLabel: "BORA klären",
       film: ["Blick frei", "Abzug in der Platte", "Korpus geändert", "Keine Esse"],
       looks: ["Mulde, plan", "Feld, bündig", "Kanal, geführt", "Unterschrank, neu", "Licht", "Wohnen daneben"],
       facts: [
@@ -1012,7 +1012,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       extras: [
         ["Wo Zuverlässigkeit den Tag trägt.", "Nicht als Pflichtpaket."],
         ["Ofen, Spüler, Kälte — nach Nische.", "Keine Wand als Showroom."],
-        ["Neben Bora oder Gaggenau, wenn die Aufgabe wechselt.", "Kein Entweder-oder-Vertrag."],
+        ["Neben BORA oder Gaggenau, wenn die Aufgabe wechselt.", "Kein Entweder-oder-Vertrag."],
       ],
     },
     gaggenau: {
@@ -1075,7 +1075,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       title: "Siemens",
       emphasis: "wo es passt.",
       statement:
-        "Solide Einbaugeräte, wenn Budget und Nische das verlangen. Keine Vertragsküche. Siemens wo es zur Aufgabe passt — neben Miele oder Bora, nicht gegen die Planung.",
+        "Solide Einbaugeräte, wenn Budget und Nische das verlangen. Keine Vertragsküche. Siemens wo es zur Aufgabe passt — neben Miele oder BORA, nicht gegen die Planung.",
       statementNote: "Der Preisrahmen im Erstgespräch. Das Gerät folgt der Nische, nicht einem Paket.",
       quote: "Siemens wo die Nische und der Rahmen es tragen. Die Küche bleibt Maß.",
       quoteSource: "Aus einer ehrlichen Geräteplanung",
@@ -1095,7 +1095,7 @@ const VOICE: Record<Locale, Record<string, Voice>> = {
       ],
       extras: [
         ["Wo Budget und Aufgabe sich treffen.", "Ohne die Planung zu ersetzen."],
-        ["Frei neben Miele oder Bora.", "Kein Entweder-oder aus einem Vertrag."],
+        ["Frei neben Miele oder BORA.", "Kein Entweder-oder aus einem Vertrag."],
         ["Erstgespräch nennt den Rahmen.", "Geräte danach."],
       ],
     },
@@ -1136,7 +1136,7 @@ function fillEnglishVoices() {
     ankleide: ["Dressing", "to measure."],
     "tische-baenke": ["Tables", "to the room."],
     wohnmoebel: ["Living", "to the house."],
-    bora: ["Bora", "for the view."],
+    bora: ["BORA", "for the view."],
     miele: ["Miele", "for the day."],
     gaggenau: ["Gaggenau", "as architecture."],
     quooker: ["Quooker", "with the sink."],

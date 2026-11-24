@@ -16,7 +16,6 @@ import {
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import type { ApplianceBrandLogo } from "@/lib/appliance-media";
-import type { BrandPhoto } from "@/lib/brand-photos";
 import { fetchBrandLogos } from "@/lib/strapi";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cn } from "@/lib/utils";
@@ -42,8 +41,8 @@ export default async function SpecPage({
   hub: PresentedTopic;
   /** A band about a maker, shown before the reading text (pages under /geraete). */
   maker?: ReactNode;
-  /** The brand's own photo that opens a brand page (pages under /marken). */
-  opening?: { photo: BrandPhoto; name: string };
+  /** The photo of the brand's CMS entry that opens a brand page, with its credit line. */
+  opening?: { photo: { src: string; srcSet?: string; alt: string }; credit?: string };
 }) {
   const mark = markFor(hub, await fetchBrandLogos());
   const houses =
@@ -59,7 +58,7 @@ export default async function SpecPage({
       {opening ? (
         <section
           className="photo-grow relative mt-8 h-[62svh] min-h-[380px] overflow-hidden bg-nacht lg:mt-12 lg:h-[78svh] lg:max-h-[760px]"
-          aria-label={hub.locale === "en" ? `Photo from ${opening.name}` : `Foto von ${opening.name}`}
+          aria-label={opening.photo.alt}
         >
           <Frame
             src={opening.photo.src}
@@ -69,7 +68,7 @@ export default async function SpecPage({
             priority
             sizes="100vw"
           />
-          <PhotoBy name={opening.name} locale={hub.locale} />
+          {opening.credit ? <PhotoBy credit={opening.credit} locale={hub.locale} /> : null}
         </section>
       ) : story.opener ? (
         <PhotoOpener opener={story.opener} locale={hub.locale} />

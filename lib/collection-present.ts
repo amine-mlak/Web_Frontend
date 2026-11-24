@@ -378,6 +378,8 @@ export function presentHub(
         closeTitle: cms.schlussTitel || raw.closeTitle,
         closeText: cms.schlussText || raw.closeText,
         heroImage: cms.image ? cmsLarge(cms.image, 3840) : raw.heroImage,
+        heroAlt: (cms.image && cms.imageAlt) || raw.heroAlt,
+        heroCredit: cms.image ? cms.imageCredit : undefined,
       }
     : { ...raw, quote: "", quoteSource: "" };
   const source = branches && branches.length > 0 ? branches : copy.branches;

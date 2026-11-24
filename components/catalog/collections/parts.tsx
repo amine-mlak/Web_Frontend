@@ -13,11 +13,14 @@ export type CollectionExtra = {
 
 export { Frame };
 
-/** "Foto: BORA" in the corner of a photo that comes from the brand itself. */
-export function PhotoBy({ name, locale }: { name: string; locale: string }) {
+/**
+ * The credit line of a photo ("Foto: BORA") in its corner. It is the caption of the file in the
+ * CMS media library, written in German.
+ */
+export function PhotoBy({ credit, locale }: { credit: string; locale: string }) {
   return (
     <span className="absolute right-3 bottom-2 z-[1] font-sans text-[12.5px] text-paper/90">
-      {locale === "en" ? "Photo" : "Foto"}: {name}
+      {locale === "en" ? credit.replace(/^Foto:/, "Photo:") : credit}
     </span>
   );
 }

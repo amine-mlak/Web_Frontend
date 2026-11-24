@@ -140,6 +140,9 @@ export type Brand = {
   name: string;
   image: string;
   srcSet?: string;
+  /** The photo's description and its credit line ("Foto: Miele") from the media library. */
+  imageAlt?: string;
+  imageCredit?: string;
   intro: string;
   body: string;
   order: number;
@@ -254,6 +257,9 @@ export type SitePage = {
   body: string;
   image: string;
   srcSet?: string;
+  /** The photo's description and its credit line from the media library. */
+  imageAlt?: string;
+  imageCredit?: string;
   ctaLabel: string;
   ctaUrl: string;
   faq: FaqContent | null;

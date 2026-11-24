@@ -13,6 +13,8 @@ export type CollectionBranch = {
   image: string;
   srcSet?: string;
   alt: string;
+  /** Credit line of the photo ("Foto: Miele"), when the media library has one. */
+  credit?: string;
   meta?: string;
   brands?: string[];
   /** Entries inside this branch (the materials of "Fronten"), listed with a small photo. */
@@ -34,6 +36,8 @@ export type CollectionHubCopy = {
   statementNote: string;
   heroImage: string;
   heroAlt: string;
+  /** Credit line of the hero photo, from the media library. */
+  heroCredit?: string;
   indexEyebrow: string;
   quote: string;
   quoteSource: string;
@@ -171,7 +175,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     lede: "Nicht die ganze Wand voller Geräte. Die, die der Alltag braucht — sauber in Nische und Hochschrank, oft unsichtbar.",
     statement:
       "In unseren Küchen folgt die Technik dem Raum. Kochfeldabzug, wenn die Esse den Blick stört. Geräte auf Griffhöhe, wenn der Rücken das verlangt. Marken frei gewählt, nicht nach Zwang.",
-    statementNote: "Bora, Miele, Gaggenau, Quooker, Siemens — frei gewählt, in der Manufaktur eingebaut.",
+    statementNote: "BORA, Miele, Gaggenau, Quooker, Siemens — frei gewählt, in der Manufaktur eingebaut.",
     heroImage: APPLIANCE_PHOTOS.hero,
     heroAlt: "Küche mit Edelstahlkühlschrank und Kochfeld",
     indexEyebrow: "Fünf Bereiche",
@@ -359,7 +363,7 @@ const de: Record<CollectionHubId, CollectionHubCopy> = {
     emphasis: "nach Aufgabe.",
     lede: "Die Küche fertigen wir selbst. Die Geräte wählen wir mit Ihnen — frei, ohne Vertragsküche, ohne Zwang zur Wand voller Logos.",
     statement:
-      "Bora, wenn der Blick frei bleiben soll. Gaggenau, wenn Technik Architektur sein darf. Miele, wo der Alltag trägt. Der Korpus bleibt BEER.",
+      "BORA, wenn der Blick frei bleiben soll. Gaggenau, wenn Technik Architektur sein darf. Miele, wo der Alltag trägt. Der Korpus bleibt BEER.",
     statementNote: "Keine Hausmarke. Kein Paketpreis, der die Planung ersetzt.",
     heroImage: "/kitchens/stile-insel.jpg",
     heroAlt: "Kochfeldabzug in der Platte",
@@ -646,7 +650,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     lede: "Not a wall of machines. The ones everyday life needs — built into recess and tall housing, often unseen.",
     statement:
       "In our kitchens the kit follows the room. Downdraft when a hood blocks the view. Appliances at hand height when the back asks for it. Brands chosen freely, not by contract.",
-    statementNote: "Bora, Miele, Gaggenau, Quooker, Siemens — chosen freely, built in by the workshop.",
+    statementNote: "BORA, Miele, Gaggenau, Quooker, Siemens — chosen freely, built in by the workshop.",
     heroImage: APPLIANCE_PHOTOS.hero,
     heroAlt: "Kitchen with stainless refrigerator and hob",
     indexEyebrow: "Five areas",
@@ -834,7 +838,7 @@ const en: Record<CollectionHubId, CollectionHubCopy> = {
     emphasis: "by task.",
     lede: "We make the kitchen ourselves. We choose the appliances with you — freely, with no contract kitchen, no wall of logos.",
     statement:
-      "Bora when the view should stay clear. Gaggenau when the kit may be architecture. Miele where everyday life has to hold. The carcass stays BEER.",
+      "BORA when the view should stay clear. Gaggenau when the kit may be architecture. Miele where everyday life has to hold. The carcass stays BEER.",
     statementNote: "No house brand. No package price that replaces planning.",
     heroImage: "/kitchens/stile-insel.jpg",
     heroAlt: "Downdraft in the worktop",

@@ -5,14 +5,14 @@ import LocaleLink from "@/components/LocaleLink";
 import type { PresentedHub } from "@/lib/collection-present";
 import { Frame, HubEnd, PhotoBy, type CollectionExtra } from "@/components/catalog/collections/parts";
 import { QuoteLine } from "@/components/catalog/clusters/parts";
-import { MARKEN_OPENER_BRAND, brandPhoto } from "@/lib/brand-photos";
 import { fetchBrandLogos } from "@/lib/strapi";
 import { cn } from "@/lib/utils";
 
 /**
- * The brands overview: the title, one photo from a brand that grows to the full width while it
- * scrolls in, then the brands as large photo tiles (two in the first row, three in the second),
- * each with name, logo and text. The photos are the brands' own.
+ * The brands overview: the title, one photo that grows to the full width while it scrolls in,
+ * then the brands as large photo tiles (two in the first row, three in the second), each with
+ * name, logo and text. The opening photo is the photo of the CMS page "Marken", each tile shows
+ * the photo of its brand entry; the credit line is the caption of the file in the media library.
  */
 export default async function MarkenCollection({
   hub,
@@ -28,22 +28,10 @@ export default async function MarkenCollection({
   const logos = await fetchBrandLogos();
   const en = hub.locale === "en";
   const view = en ? "View" : "ansehen";
-  const opener = brandPhoto(MARKEN_OPENER_BRAND, hub.locale);
-  const openerName = logos.find((brand) => brand.slug === MARKEN_OPENER_BRAND)?.name ?? "";
-
-  const tiles = hub.branches.map((branch) => {
-    const slug = branch.href?.split("/").pop() ?? "";
-    // The opening photo is not shown a second time in the tile of its brand.
-    const maker = brandPhoto(slug, hub.locale, opener?.file);
-    return {
-      ...branch,
-      maker: Boolean(maker),
-      image: maker?.src ?? branch.image,
-      srcSet: maker ? maker.srcSet : branch.srcSet,
-      alt: maker?.alt ?? branch.alt,
-      logo: logos.find((brand) => brand.slug === slug),
-    };
-  });
+  const tiles = hub.branches.map((branch) => ({
+    ...branch,
+    logo: logos.find((brand) => brand.slug === branch.href?.split("/").pop()),
+  }));
 
   return (
     <main className="bg-paper">
@@ -62,15 +50,14 @@ export default async function MarkenCollection({
         </div>
       </section>
 
-      {opener ? (
+      {hub.heroImage ? (
         <section
           className="photo-grow relative h-[72svh] min-h-[420px] overflow-hidden bg-nacht lg:h-[80svh] lg:max-h-[760px]"
           aria-label={hub.statementNote || hub.title}
         >
           <Frame
-            src={opener.src}
-            srcSet={opener.srcSet}
-            alt={opener.alt}
+            src={hub.heroImage}
+            alt={hub.heroAlt}
             className="absolute inset-0"
             priority
             sizes="100vw"
@@ -90,7 +77,7 @@ export default async function MarkenCollection({
               </p>
             </>
           ) : null}
-          {openerName ? <PhotoBy name={openerName} locale={hub.locale} /> : null}
+          {hub.heroCredit ? <PhotoBy credit={hub.heroCredit} locale={hub.locale} /> : null}
         </section>
       ) : null}
 
@@ -115,7 +102,7 @@ export default async function MarkenCollection({
                     )}
                     sizes={index < 2 ? "(max-width: 1024px) 100vw, 58vw" : "(max-width: 1024px) 100vw, 33vw"}
                   />
-                  {tile.maker ? <PhotoBy name={tile.title} locale={hub.locale} /> : null}
+                  {tile.credit ? <PhotoBy credit={tile.credit} locale={hub.locale} /> : null}
                 </div>
                 <div className="mt-5 flex items-center justify-between gap-4">
                   <h2 className="t-feature text-ink">{tile.title}</h2>

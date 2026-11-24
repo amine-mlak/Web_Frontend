@@ -184,6 +184,8 @@ function mapBrand(entry: unknown): Brand | null {
     order: Number(row?.order ?? 0) || 0,
     image: image.src,
     srcSet: image.srcSet,
+    imageAlt: text(flattenEntity(row?.image), "alternativeText"),
+    imageCredit: text(flattenEntity(row?.image), "caption"),
     ...pageFields(row),
   };
 }
@@ -741,6 +743,8 @@ async function mapPage(entry: unknown): Promise<SitePage | null> {
     body: text(row, "body"),
     image: image.src,
     srcSet: image.srcSet,
+    imageAlt: text(flattenEntity(row.image), "alternativeText"),
+    imageCredit: text(flattenEntity(row.image), "caption"),
     ctaLabel: text(row, "ctaLabel"),
     ctaUrl: text(row, "ctaUrl"),
     ...pageFields(row),

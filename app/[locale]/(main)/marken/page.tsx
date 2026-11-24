@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import CollectionHub from "@/components/catalog/CollectionHub";
 import { collectionHubMetadata } from "@/lib/collection-hubs";
-import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
-import { brandCover } from "@/lib/photo-match";
-import { photoKey } from "@/lib/utils";
+import { fetchBrands } from "@/lib/catalog-api";
 import { getRequestLocale } from "@/lib/locale";
 
 export const revalidate = 120;
@@ -14,22 +12,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function MarkenPage() {
   const locale = await getRequestLocale();
-  const [brands, projects] = await Promise.all([fetchBrands(), fetchProjects()]);
-  // A brand's tile shows the brand's own photo (lib/brand-photos.ts). A brand without one shows a
-  // kitchen BEER built with it, when a photo in the projects names the brand, or the CMS photo.
-  const shown = new Set<string>();
-  const featured = brands.slice(0, 5).map((brand) => {
-    const built = brandCover(brand.name, projects, shown);
-    if (built) shown.add(photoKey(built.src));
-    return {
-      href: `/marken/${brand.slug}`,
-      title: brand.name,
-      text: [brand.intro, brand.body].filter(Boolean).join(" "),
-      image: built?.src ?? brand.image,
-      srcSet: built ? built.srcSet : brand.srcSet,
-      alt: built?.alt || brand.name,
-    };
-  });
+  const brands = await fetchBrands();
+  // A brand's tile shows the photo of its CMS entry, with the photo's description and credit line
+  // from the media library.
+  const featured = brands.slice(0, 5).map((brand) => ({
+    href: `/marken/${brand.slug}`,
+    title: brand.name,
+    text: [brand.intro, brand.body].filter(Boolean).join(" "),
+    image: brand.image,
+    srcSet: brand.srcSet,
+    alt: brand.imageAlt || brand.name,
+    credit: brand.imageCredit,
+  }));
   const extras = brands.slice(5).map((brand) => ({
     href: `/marken/${brand.slug}`,
     title: brand.name,
