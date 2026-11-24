@@ -76,13 +76,22 @@ const MAKER_PHOTOS: Record<
       en: "Open Gaggenau fridge with a lit interior in a wood front, beside a window looking onto a lake",
     },
   },
-  extra: {
+  spuelen: {
     file: "marke_quooker_armatur_edelstahl_spuele_kuecheninsel_heller_holzplatte_17f8118711.jpg",
     width: 1680,
     brand: "quooker",
     alt: {
       de: "Quooker-Armatur aus Edelstahl an der Spüle einer Kücheninsel mit heller Holzplatte",
       en: "Stainless steel Quooker tap at the sink of a kitchen island with a pale wooden top",
+    },
+  },
+  extra: {
+    file: "marke_gaggenau_einbau_kaffeevollautomat_edelstahl_latte_macchiato_dunkler_wand_c8290afeaa.jpg",
+    width: 2835,
+    brand: "gaggenau",
+    alt: {
+      de: "Einbau-Kaffeevollautomat von Gaggenau aus Edelstahl mit einem Glas Latte macchiato in einer dunklen Wand",
+      en: "Built-in Gaggenau coffee machine in stainless steel with a glass of latte macchiato in a dark wall",
     },
   },
 };
@@ -196,11 +205,14 @@ export default async function GeraeteCollection({
 
   return (
     <main className="bg-paper text-ink">
+      {/* The photos come first and leave room for the title in the first screen. */}
+      <OpeningPhotos photos={photos} label={hub.indexEyebrow} />
+
       <section
-        className="px-5 pt-12 pb-10 sm:px-8 lg:px-gutter lg:pt-20 lg:pb-14"
+        className="px-5 pt-8 pb-10 sm:px-8 lg:px-gutter lg:pt-10 lg:pb-14"
         aria-labelledby="geraete-hero"
       >
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-start lg:gap-8">
           <h1 id="geraete-hero" className="t-display lg:col-span-6">
             {hub.title}
           </h1>
@@ -218,8 +230,6 @@ export default async function GeraeteCollection({
           </div>
         </div>
       </section>
-
-      <OpeningPhotos photos={photos} label={hub.indexEyebrow} />
 
       {sorted.length > 0 ? (
         <section

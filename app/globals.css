@@ -622,7 +622,8 @@ body {
 /* Photos as strips, the chosen one opens wide (components/catalog/OpeningPhotos.tsx).
    The photo keeps the size of the open strip, so opening uncovers it and never rescales it. */
 .slats {
-  --slat-open: min(128vw, 520px);
+  /* Never taller than the screen allows: the title under the photos stays in the first screen. */
+  --slat-open: min(128vw, 520px, max(250px, 100svh - 440px));
   container-type: inline-size;
   display: flex;
   flex-direction: column;
@@ -736,7 +737,7 @@ body {
 @media (min-width: 1024px) {
   .slats {
     flex-direction: row;
-    height: clamp(460px, 52vw, 680px);
+    height: max(360px, min(52vw, 680px, 100svh - 360px));
   }
 
   .slat {
