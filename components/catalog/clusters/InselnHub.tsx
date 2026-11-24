@@ -11,7 +11,6 @@ import { photoKey } from "@/lib/utils";
 
 const COPY = {
   de: {
-    projects: (count: number) => `${count} ${count === 1 ? "Projekt" : "Projekte"}`,
     open: (name: string) => `${name} ansehen`,
     more: (name: string) => `Mehr zur ${name}`,
     reading: "Eine Kücheninsel planen",
@@ -20,7 +19,6 @@ const COPY = {
     worlds: "Weitere Küchenwelten",
   },
   en: {
-    projects: (count: number) => `${count} ${count === 1 ? "project" : "projects"}`,
     open: (name: string) => `See ${name.charAt(0).toLowerCase()}${name.slice(1)}`,
     more: (name: string) => `More on the ${name.charAt(0).toLowerCase()}${name.slice(1)}`,
     reading: "Planning a kitchen island",
@@ -129,8 +127,7 @@ export default function InselnHub({
               ) : null}
             </div>
             <div>
-              {branch.count ? <p className="font-sans text-[14px] text-gold">{copy.projects(branch.count)}</p> : null}
-              <h2 id={`insel-${index}`} className="t-section mt-2 text-ink">
+              <h2 id={`insel-${index}`} className="t-section text-ink">
                 {branch.title}
               </h2>
               {branch.text ? <p className="t-lede mt-4 max-w-lg text-ink/85">{branch.text}</p> : null}
