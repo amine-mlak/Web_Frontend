@@ -1,5 +1,6 @@
 import ClusterPage from "@/components/catalog/clusters/ClusterPage";
 import { FarbenOverview } from "@/components/catalog/clusters/Farben";
+import FormenHub from "@/components/catalog/clusters/FormenHub";
 import InselnHub from "@/components/catalog/clusters/InselnHub";
 import type { KitchenCluster, KitchenTopic, Project, SitePage } from "@/lib/catalog";
 import { presentCluster } from "@/lib/collection-clusters";
@@ -30,6 +31,10 @@ export default function KitchenClusterView({
   // The islands have an overview of their own: three chapters instead of three photo tiles.
   if (cluster.slug === "inseln") {
     return <InselnHub hub={hub} topics={topics} path={path} />;
+  }
+  // The shapes too: a chapter per shape with BEER's hand sketch beside a built kitchen.
+  if (cluster.slug === "formen") {
+    return <FormenHub hub={hub} topics={topics} path={path} />;
   }
   return <ClusterPage hub={hub} path={path} />;
 }
