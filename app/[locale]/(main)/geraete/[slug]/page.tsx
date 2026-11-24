@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPage from "@/components/catalog/entries/CategoryPage";
 import SpecPage from "@/components/catalog/entries/SpecPage";
+import MakerBand from "@/components/catalog/MakerBand";
 import { cmsValue, findBySlug, projectsForAppliance } from "@/lib/catalog";
 import { fetchAppliances, fetchProjects, fetchSitePage } from "@/lib/catalog-api";
 import {
@@ -76,6 +77,7 @@ export default async function AppliancePage({
         hub={{ ...presentApplianceKind(slug, locale, items, projects, page), depth: { path: `/geraete/${slug}` } }}
         faqTheme="geraete"
         path={`/geraete/${slug}`}
+        maker={<MakerBand slug={slug} locale={locale} />}
       />
     );
   }
@@ -93,6 +95,7 @@ export default async function AppliancePage({
         ...presentApplianceItem(item, locale, items, houses, projects),
         depth: { path: `/geraete/${item.slug}`, name: item.name },
       }}
+      maker={<MakerBand slug={item.slug} locale={locale} />}
     />
   );
 }

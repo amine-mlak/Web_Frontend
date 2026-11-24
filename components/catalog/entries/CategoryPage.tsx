@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import CollectionJsonLd from "@/components/catalog/CollectionJsonLd";
 import EndBand from "@/components/catalog/EndBand";
@@ -44,12 +45,15 @@ export default function CategoryPage({
   hub,
   faqTheme,
   path,
+  maker,
 }: {
   hub: PresentedTopic;
   /** FAQ theme slug in the CMS whose questions belong here. */
   faqTheme?: string;
   /** The page's own path ("/material/arbeitsplatten"), for the structured data. */
   path?: string;
+  /** A band about a maker, shown after the options (pages under /geraete). */
+  maker?: ReactNode;
 }) {
   const copy = COPY[hub.locale === "en" ? "en" : "de"];
   const options = hub.branches.filter(
@@ -167,6 +171,8 @@ export default function CategoryPage({
           </ul>
         </section>
       ) : null}
+
+      {maker}
 
       <StatementBand statement={hub.statement} note={hub.statementNote} />
 

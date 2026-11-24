@@ -797,6 +797,12 @@ body {
   }
 }
 
+/* Maker photo on the pages under /geraete (components/catalog/MakerBand.tsx): the frame may crop
+   the photo, so each one says where its subject sits. */
+.maker-photo img {
+  object-position: var(--maker-position, center);
+}
+
 /* Brand logos running across the page (Geräte overview): four identical rows, moved by half. */
 .brand-track {
   animation: announce-scroll 44s linear infinite;

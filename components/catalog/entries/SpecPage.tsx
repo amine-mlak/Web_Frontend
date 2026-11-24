@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import CmsImage from "@/components/CmsImage";
 import EntryHeader from "@/components/catalog/EntryHeader";
 import { PageGuide, PageQuestions } from "@/components/catalog/PageDepth";
@@ -29,7 +30,14 @@ function markFor(hub: PresentedTopic, brands: ApplianceBrandLogo[]) {
  * points, two more photos, the kitchens, one close-up from edge to edge. Where no gallery photo
  * shows it, the CMS image stands framed on the dark band as before.
  */
-export default async function SpecPage({ hub }: { hub: PresentedTopic }) {
+export default async function SpecPage({
+  hub,
+  maker,
+}: {
+  hub: PresentedTopic;
+  /** A band about a maker, shown before the reading text (pages under /geraete). */
+  maker?: ReactNode;
+}) {
   const mark = markFor(hub, await fetchBrandLogos());
   const houses =
     hub.locale === "en" ? "Kitchens that use it" : "In diesen Küchen verbaut";
@@ -97,6 +105,7 @@ export default async function SpecPage({ hub }: { hub: PresentedTopic }) {
       {story.pair ? (
         <PhotoPair pair={story.pair} locale={hub.locale} flip />
       ) : null}
+      {maker}
       <TopicReading locale={hub.locale} cms={hub} copy={hub.reading} />
       <KitchenShowcase hub={hub} title={houses} />
       {story.band ? <CloseBand photo={story.band} locale={hub.locale} /> : null}
