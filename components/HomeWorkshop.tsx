@@ -44,24 +44,23 @@ export default async function HomeWorkshop({
 
   return (
     <section id="ablauf" aria-labelledby="ablauf-heading" className="bg-espresso px-5 py-20 text-paper sm:px-8 lg:px-gutter lg:py-32">
-      <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-16">
-        <h2 data-rise="" id="ablauf-heading" className="t-section text-paper lg:col-span-7">
-          {data.title}
-        </h2>
-        <div className="lg:col-span-5">
-          <p className="max-w-md font-sans text-[16px] leading-relaxed text-paper/80 md:text-[17px]">{data.text || copy.text}</p>
-          <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
-            <LocaleLink href={data.buttonHref} className="pill pill-light">
-              {data.buttonLabel}
-            </LocaleLink>
-            <LocaleLink href="/ueber" className="btn-quiet text-paper">
-              {copy.about}
-            </LocaleLink>
-          </div>
-        </div>
-      </div>
-
       <WorkshopSteps
+        head={
+          <>
+            <h2 data-rise="" id="ablauf-heading" className="t-section text-paper">
+              {data.title}
+            </h2>
+            <p className="mt-5 max-w-md font-sans text-[16px] leading-relaxed text-paper/80 md:text-[17px]">{data.text || copy.text}</p>
+            <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
+              <LocaleLink href={data.buttonHref} className="pill pill-light">
+                {data.buttonLabel}
+              </LocaleLink>
+              <LocaleLink href="/ueber" className="btn-quiet text-paper">
+                {copy.about}
+              </LocaleLink>
+            </div>
+          </>
+        }
         steps={steps.map(({ step, title, description }) => ({ step, title, description }))}
         shots={shots}
       />

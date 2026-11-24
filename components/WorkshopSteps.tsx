@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import CmsImage from "@/components/CmsImage";
 
 export type WorkshopStep = {
@@ -15,14 +15,18 @@ export type WorkshopShot = {
 };
 
 /**
- * The steps to a kitchen beside photos of the house. From laptop size the photo stays in place
- * while the steps scroll past, and changes to the photo of the step being read. Below that each
- * step carries its own photo.
+ * The steps to a kitchen beside photos of the house. From laptop size the section's heading and
+ * the photo stay in place together while the steps scroll past, so the heading is never cut off
+ * above a pinned photo; the photo changes to the step being read. Below that size the heading
+ * comes first and each step carries its own photo.
  */
 export default function WorkshopSteps({
+  head,
   steps,
   shots,
 }: {
+  /** The section's heading, text and buttons. */
+  head: ReactNode;
   steps: WorkshopStep[];
   shots: WorkshopShot[];
 }) {
@@ -50,10 +54,12 @@ export default function WorkshopSteps({
   }, [steps.length]);
 
   return (
-    <div className="mt-14 grid gap-10 lg:mt-20 lg:grid-cols-12 lg:gap-16">
-      {shots.length ? (
-        <div className="hidden lg:col-span-6 lg:block">
-          <div className="sticky top-24 h-[min(calc(100svh-9rem),44rem)] overflow-hidden bg-nacht">
+    <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+      <div className="lg:col-span-6">
+        <div className="lg:sticky lg:top-[calc(var(--header-space)+2rem)] lg:flex lg:h-[min(calc(100svh-var(--header-space)-4rem),52rem)] lg:flex-col lg:gap-10">
+          <div className="shrink-0">{head}</div>
+          {shots.length ? (
+          <div className="relative hidden min-h-0 flex-1 overflow-hidden bg-nacht lg:block">
             {steps.map((step, index) => {
               const shot = shotFor(index);
               return (
@@ -68,10 +74,11 @@ export default function WorkshopSteps({
               );
             })}
           </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
 
-      <ol className={shots.length ? "lg:col-span-5 lg:col-start-8" : "lg:col-span-7"}>
+      <ol className="lg:col-span-5 lg:col-start-8">
         {steps.map((step, index) => {
           const shot = shots.length ? shotFor(index) : null;
           return (
@@ -81,7 +88,7 @@ export default function WorkshopSteps({
                 items.current[index] = element;
               }}
               data-step={index}
-              className={`border-t border-paper/20 py-10 transition-opacity duration-500 motion-reduce:transition-none lg:py-[13vh] ${
+              className={`border-t border-paper/20 py-10 transition-opacity duration-500 motion-reduce:transition-none first:border-t-0 first:pt-0 lg:py-[13vh] lg:first:border-t lg:first:pt-[13vh] ${
                 index === active ? "" : "lg:opacity-45"
               }`}
             >

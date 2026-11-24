@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CmsImage from "@/components/CmsImage";
 import LocaleLink from "@/components/LocaleLink";
 
@@ -13,6 +13,9 @@ export type SwitcherColour = {
   alt: string;
   color: string;
 };
+
+/** How long each colour stays before the next one comes by itself. */
+const AUTO_MS = 4500;
 
 /** Whether text on this colour should be dark. */
 function isLight(hex: string) {
@@ -39,9 +42,42 @@ export default function ColourSwitcher({
   const [active, setActive] = useState(0);
   const current = colours[active] ?? colours[0];
   const light = isLight(current.color);
+  // The colours follow one another by themselves, as if a dot were clicked every few seconds.
+  // Only while the switcher is on screen; it waits while the pointer or the keyboard is on it,
+  // and stops for good once the visitor picks a colour. Not where motion is turned off.
+  const box = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(false);
+  const [held, setHeld] = useState(false);
+  const [picked, setPicked] = useState(false);
+
+  useEffect(() => {
+    const element = box.current;
+    if (!element || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting), { threshold: 0.45 });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!onScreen || held || picked || colours.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setActive((at) => (at + 1) % colours.length);
+    }, AUTO_MS);
+    return () => window.clearInterval(timer);
+  }, [onScreen, held, picked, colours.length]);
 
   return (
-    <div className="grid lg:min-h-[40rem] lg:grid-cols-12">
+    <div
+      ref={box}
+      className="grid lg:min-h-[40rem] lg:grid-cols-12"
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") setHeld(true);
+      }}
+      onPointerLeave={() => setHeld(false)}
+      onFocus={() => setHeld(true)}
+      onBlur={() => setHeld(false)}
+    >
       <div className="photo-mood relative aspect-[4/3] overflow-hidden bg-nacht sm:aspect-[16/10] lg:col-span-8 lg:aspect-auto">
         {colours.map((colour, index) => (
           <CmsImage
@@ -98,7 +134,10 @@ export default function ColourSwitcher({
               type="button"
               aria-pressed={index === active}
               aria-label={colour.name}
-              onClick={() => setActive(index)}
+              onClick={() => {
+                setPicked(true);
+                setActive(index);
+              }}
               className={`size-12 cursor-pointer rounded-full border border-current/30 outline-2 outline-offset-4 transition-[outline-color] duration-300 focus-visible:outline-current ${
                 index === active ? "outline-current" : "outline-transparent hover:outline-current/40"
               }`}
