@@ -4,10 +4,16 @@ import type { PresentedHub } from "@/lib/collection-present";
 import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
 import { QuoteLine } from "@/components/catalog/clusters/parts";
 
+const COPY = {
+  de: { open: "Projekt ansehen" },
+  en: { open: "See the project" },
+} as const;
+
 /**
  * The projects overview, kept short. The newest house opens the page as a full photo that drifts
- * while the page scrolls, with its name on it. Four more houses stand in a row below. Every
- * other house waits in the archive, which opens on request.
+ * while the page scrolls, with its name on it. Four more houses follow as chapters, a large
+ * photo beside the house's name and what was built. Every other house waits in the archive,
+ * which opens on request.
  */
 export default function ProjekteCollection({
   hub,
@@ -16,6 +22,7 @@ export default function ProjekteCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
+  const copy = COPY[hub.locale === "en" ? "en" : "de"];
   const [lead, ...rest] = hub.branches;
 
   return (
@@ -55,29 +62,43 @@ export default function ProjekteCollection({
         </div>
       </section>
 
-      {rest.length > 0 ? (
-        <section className="px-5 pt-12 pb-4 sm:px-8 lg:px-gutter lg:pt-20" aria-label={hub.indexEyebrow}>
-          <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {rest.map((branch) => (
-              <li key={branch.title}>
-                <LocaleLink href={branch.href ?? "/beratung"} className="group block">
-                  <Frame
-                    src={branch.image}
-                    alt={branch.alt}
-                    srcSet={branch.srcSet}
-                    className="aspect-[4/3] sm:aspect-[4/5]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <h2 className="t-item mt-5 text-ink underline decoration-transparent decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-ink/40">
-                    {branch.title}
-                  </h2>
-                  {branch.meta ? <p className="mt-2 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
+      <div className="pt-6 lg:pt-10">
+        {rest.map((branch, index) => {
+          const flip = index % 2 === 1;
+          const href = branch.href ?? "/beratung";
+          return (
+            <section
+              key={branch.title}
+              // The photo takes the wider column on either side.
+              className={`grid items-center gap-x-12 gap-y-7 px-5 py-9 sm:px-8 lg:gap-x-24 lg:px-gutter lg:py-12 ${
+                flip ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]" : "lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]"
+              }`}
+              aria-labelledby={`projekt-${index}`}
+            >
+              <LocaleLink href={href} tabIndex={-1} aria-hidden className={`block ${flip ? "lg:order-2" : ""}`}>
+                <Frame
+                  src={branch.image}
+                  alt=""
+                  srcSet={branch.srcSet}
+                  className="aspect-[4/3] lg:aspect-[3/2]"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  drift
+                />
+              </LocaleLink>
+              <div>
+                {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
+                <h2 id={`projekt-${index}`} className="t-section text-ink">
+                  {branch.title}
+                </h2>
+                {branch.text ? <p className="t-lede mt-4 max-w-lg text-ink/85">{branch.text}</p> : null}
+                <LocaleLink href={href} className="btn-quiet mt-7">
+                  {copy.open} <span aria-hidden="true">→</span>
                 </LocaleLink>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
       {/* Every other house: closed at first, opened by one button (ProjectArchive). */}
       {children}
