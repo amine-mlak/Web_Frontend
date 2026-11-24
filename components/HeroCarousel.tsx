@@ -4,8 +4,7 @@ import { useLocale } from "@/components/LocaleProvider";
 import CtaPair from "@/components/CtaPair";
 import { useEffect, useState } from "react";
 import CmsImage from "@/components/CmsImage";
-import { mainAction } from "@/lib/cta";
-import { stripLocalePrefix } from "@/lib/i18n";
+import { MAIN_ACTIONS } from "@/lib/cta";
 import type { HeroSlide } from "@/lib/strapi";
 
 export type HeroPanel = {
@@ -39,7 +38,8 @@ function HeroIntro({ panel }: { panel: HeroPanel }) {
         onClickCapture={(event) => {
           const link = (event.target as HTMLElement).closest("a");
           const planner = document.getElementById("planer");
-          if (!link || !planner || mainAction(stripLocalePrefix(link.getAttribute("href") ?? "")) !== "planner") return;
+          // The planner button is marked by its tracking name; its address differs by language.
+          if (!link || !planner || link.dataset.umamiEvent !== MAIN_ACTIONS.planner.event) return;
           if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
           event.preventDefault();
           const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
