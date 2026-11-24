@@ -136,6 +136,16 @@ const DEPTH: Record<string, PageDepth> = {
   },
 
   // Küchen: Inseln
+  "/kuechen/inseln": {
+    questions: [
+      "lohnt-sich-eine-kuecheninsel",
+      "wie-viel-platz-braucht-eine-insel",
+      "groesse-der-kuecheninsel",
+      "kochinsel-mit-abzug",
+      "kuecheninsel-mit-sitzplaetzen",
+    ],
+    theme: "inseln",
+  },
   "/kuechen/inseln/kochinsel": {
     questions: [
       "passt-eine-kochinsel",
