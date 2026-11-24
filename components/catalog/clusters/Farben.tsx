@@ -86,7 +86,7 @@ export function ColourBands({
                 {colour.count ? (
                   <p className="font-sans text-[15px] opacity-75">{projectCount(colour.count, locale)}</p>
                 ) : null}
-                <h2 id={`farbe-${index}-title`} className="t-display mt-3 hyphens-auto">
+                <h2 id={`farbe-${index}-title`} className="t-display mt-3 hyphens-none">
                   <LocaleLink href={href}>{colour.title}</LocaleLink>
                 </h2>
                 {colour.text ? <p className="t-lede mt-6 max-w-md opacity-90">{colour.text}</p> : null}

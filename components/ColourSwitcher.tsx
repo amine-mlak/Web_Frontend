@@ -110,7 +110,7 @@ export default function ColourSwitcher({
                 index === active ? "opacity-100 delay-150" : "opacity-0"
               }`}
             >
-              <h4 className="t-feature hyphens-auto">
+              <h4 className="t-feature hyphens-none">
                 <LocaleLink href={colour.href} className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current">
                   {colour.name}
                 </LocaleLink>
