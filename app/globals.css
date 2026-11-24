@@ -619,6 +619,214 @@ body {
   }
 }
 
+/* Photos as strips, the chosen one opens wide (components/catalog/OpeningPhotos.tsx).
+   The photo keeps the size of the open strip, so opening uncovers it and never rescales it. */
+.slats {
+  --slat-open: min(128vw, 520px);
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-nacht);
+  color: var(--color-paper);
+}
+
+.slat {
+  position: relative;
+  height: 62px;
+  overflow: hidden;
+  transition: height 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slat + .slat {
+  border-top: 1px solid var(--color-paper);
+}
+
+.slat-open {
+  height: var(--slat-open);
+}
+
+.slat-photo {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--slat-open);
+  translate: 0 -50%;
+}
+
+.slat-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.25) 60%, rgb(0 0 0 / 0.15));
+  pointer-events: none;
+}
+
+.slat-button {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  cursor: pointer;
+  outline-offset: -5px;
+}
+
+.slat-open .slat-button {
+  cursor: default;
+}
+
+.slat-name {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.slat-plus {
+  order: 1;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.2);
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 31px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+.slat-name,
+.slat-plus {
+  transition: opacity 0.4s;
+}
+
+.slat-open .slat-name,
+.slat-open .slat-plus {
+  opacity: 0;
+}
+
+.slat-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  padding: 22px 20px;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    visibility 0s 0.3s;
+}
+
+.slat-open .slat-panel {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 0.7s 0.4s,
+    visibility 0s;
+}
+
+@media (min-width: 1024px) {
+  .slats {
+    flex-direction: row;
+    height: clamp(460px, 52vw, 680px);
+  }
+
+  .slat {
+    flex: 1 1 0;
+    min-width: 0;
+    height: auto;
+    transition: flex-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .slat + .slat {
+    border-top: 0;
+    border-left: 1px solid var(--color-paper);
+  }
+
+  .slat-open {
+    flex-grow: 7;
+    height: auto;
+  }
+
+  .slat-photo {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    width: calc(100cqw * 7 / 11 + 2px);
+    height: auto;
+    translate: -50% 0;
+  }
+
+  .slat-shade {
+    inset: 35% 0 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0));
+  }
+
+  .slat-button {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 0 26px;
+  }
+
+  .slat-name {
+    font-size: clamp(22px, 2.2vw, 30px);
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+  }
+
+  .slat-plus {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  .slat-panel {
+    width: calc(100cqw * 7 / 11);
+    padding: clamp(22px, 3vw, 44px);
+  }
+}
+
+/* Brand logos running across the page (Geräte overview): four identical rows, moved by half. */
+.brand-track {
+  animation: announce-scroll 44s linear infinite;
+}
+
+.brand-band:hover .brand-track,
+.brand-band:focus-within .brand-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slat,
+  .slat-panel,
+  .slat-name,
+  .slat-plus {
+    transition: none;
+  }
+
+  .brand-track {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    row-gap: 1.5rem;
+    padding-inline: 1.25rem;
+  }
+
+  .brand-track > [aria-hidden="true"] {
+    display: none;
+  }
+}
+
 /* Announcement bar: seamless loop of two identical tracks (components/AnnouncementBar.tsx). */
 @keyframes announce-scroll {
   to {
