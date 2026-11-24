@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import LocaleLink from "@/components/LocaleLink";
 import NextSteps from "@/components/catalog/NextSteps";
+import { MAIN_ACTIONS } from "@/lib/cta";
 import { Frame } from "@/components/catalog/Frame";
 import type { ColourEntry } from "@/lib/colour-page";
 import type { Locale } from "@/lib/i18n";
@@ -102,69 +103,84 @@ export default function ColourPage({
       className={`relative transition-colors duration-700 motion-reduce:transition-none ${current.light ? "text-ink" : "text-paper"}`}
       style={{ backgroundColor: current.hex }}
     >
-      <section className="px-5 pt-10 pb-14 sm:px-8 lg:px-gutter lg:pt-14 lg:pb-20" aria-labelledby="farben-hero">
-        {crumbs ? <div className="opacity-80 [&_a:hover]:!text-current [&_nav]:!text-current">{crumbs}</div> : null}
-        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-16">
-          <h1 id="farben-hero" className="t-display hyphens-none lg:col-span-6">
-            {title}
-          </h1>
-          <div className="lg:col-span-6">
-            {lede ? <p className="t-lede max-w-lg opacity-90">{lede}</p> : null}
-            <div ref={dots} role="group" aria-label={copy.pick} className="mt-7 flex flex-wrap gap-x-5 gap-y-4">
+      {/* The first screen: page title and colours, the chosen colour's own text and the photo beside them. */}
+      <section className="px-5 pt-6 pb-12 sm:px-8 lg:px-gutter lg:pt-6 lg:pb-12" aria-labelledby="farben-hero">
+        <div className="grid gap-7 lg:min-h-[min(calc(100svh-var(--header-space)-4.5rem),41rem)] lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-10 lg:gap-y-8 xl:gap-x-14">
+          <div className="lg:col-span-6 xl:col-span-5">
+            {crumbs ? <div className="opacity-80 [&_a:hover]:!text-current [&_nav]:!text-current">{crumbs}</div> : null}
+            <h1 id="farben-hero" className="t-display mt-5 hyphens-none lg:mt-6">
+              {title}
+            </h1>
+            {lede ? <p className="t-lede mt-4 max-w-md opacity-90">{lede}</p> : null}
+            <div ref={dots} role="group" aria-label={copy.pick} className="mt-6 flex flex-wrap gap-x-3 gap-y-4 lg:mt-7">
               {colours.map((colour, index) => (
                 <button
                   key={colour.slug}
                   type="button"
                   aria-pressed={index === active}
                   onClick={(event) => pick(index, event.currentTarget.firstElementChild as HTMLElement)}
-                  className="group grid w-[5.25rem] cursor-pointer justify-items-center gap-2.5 text-center font-sans text-[13.5px] leading-tight hyphens-none"
+                  className="group grid cursor-pointer justify-items-center gap-2 p-1.5 text-center font-sans text-[13px] leading-tight hyphens-none sm:w-[4.75rem] sm:p-0 sm:pt-1.5"
                 >
                   <span
                     aria-hidden
-                    className={`block size-14 rounded-full border border-current/30 outline-2 outline-offset-[5px] transition-[outline-color] duration-300 group-focus-visible:outline-current ${
+                    className={`block size-11 rounded-full border border-current/30 outline-2 outline-offset-[4px] transition-[outline-color] duration-300 group-focus-visible:outline-current sm:size-12 ${
                       index === active ? "outline-current" : "outline-transparent group-hover:outline-current/40"
                     }`}
                     style={{ backgroundColor: colour.hex }}
                   />
-                  {colour.name}
+                  {/* On a phone the name of the chosen colour stands below the photo; the dots stay in one row. */}
+                  <span className="sr-only sm:not-sr-only">{colour.name}</span>
                 </button>
               ))}
             </div>
           </div>
-        </div>
 
-        <div className="relative mt-10 aspect-[4/3] shadow-[0_30px_80px_rgba(0,0,0,0.2)] sm:aspect-[16/9] lg:mt-14 lg:aspect-[21/9]">
-          {colours.map((colour, index) => (
-            <Frame
-              key={colour.slug}
-              src={colour.image}
-              alt={index === active ? colour.name : ""}
-              className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${
-                index === active ? "opacity-100" : "opacity-0"
-              }`}
-              priority={index === 0}
-              drift
-              sizes="(max-width: 1024px) 100vw, 92vw"
-            />
-          ))}
-        </div>
+          <div className="relative aspect-[3/2] shadow-[0_30px_80px_rgba(0,0,0,0.2)] sm:aspect-[16/9] lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1 lg:aspect-auto lg:min-h-[28rem] xl:col-span-7 xl:col-start-6">
+            {colours.map((colour, index) => (
+              <Frame
+                key={colour.slug}
+                src={colour.image}
+                alt={index === active ? colour.name : ""}
+                className={`absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none ${
+                  index === active ? "opacity-100" : "opacity-0"
+                }`}
+                priority={index === 0}
+                drift
+                sizes="(max-width: 1024px) 100vw, 56vw"
+              />
+            ))}
+          </div>
 
-        <div className="mt-8 grid lg:mt-12">
-          {colours.map((colour, index) => (
-            <div key={colour.slug} inert={index !== active} className={`${panel(index)} grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-16`}>
-              <h2 className="t-display hyphens-none lg:col-span-7">
-                <LocaleLink href={colour.href}>{colour.name}</LocaleLink>
-              </h2>
-              <div className="lg:col-span-5">
-                {colour.intro ? <p className="t-lede max-w-md opacity-90">{colour.intro}</p> : null}
-                <LocaleLink href={colour.href} aria-label={copy.view(colour.name)} className={`${LINK} mt-5`}>
-                  {copy.view(colour.name)}
-                </LocaleLink>
+          <div className={`grid lg:col-span-6 lg:self-end lg:border-t lg:pt-6 xl:col-span-5 ${RULE}`}>
+            {colours.map((colour, index) => (
+              <div key={colour.slug} inert={index !== active} className={panel(index)}>
+                <h2 className="t-feature hyphens-none">
+                  <LocaleLink href={colour.href}>{colour.name}</LocaleLink>
+                </h2>
+                {colour.intro ? <p className="mt-3 max-w-md font-sans text-[17px] leading-[1.6] font-light opacity-90">{colour.intro}</p> : null}
+                <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-4">
+                  <LocaleLink
+                    href={colour.href}
+                    aria-label={copy.view(colour.name)}
+                    className={colour.light ? "pill pill-primary" : "pill pill-light"}
+                  >
+                    {copy.view(colour.name)}
+                  </LocaleLink>
+                  <LocaleLink
+                    href={MAIN_ACTIONS.termin.href}
+                    className={LINK}
+                    data-umami-event={MAIN_ACTIONS.termin.event}
+                    data-umami-event-placement="hero"
+                  >
+                    {MAIN_ACTIONS.termin.label[locale === "en" ? "en" : "de"]}
+                  </LocaleLink>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
+
 
       {/* What BEER says about this colour. */}
       <section className={`grid border-t px-5 py-14 sm:px-8 lg:px-gutter lg:py-24 ${RULE}`}>
