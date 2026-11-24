@@ -1,4 +1,5 @@
 import ClusterPage from "@/components/catalog/clusters/ClusterPage";
+import InselnHub from "@/components/catalog/clusters/InselnHub";
 import type { KitchenCluster, KitchenTopic, Project, SitePage } from "@/lib/catalog";
 import { presentCluster } from "@/lib/collection-clusters";
 import type { Locale } from "@/lib/i18n";
@@ -18,5 +19,10 @@ export default function KitchenClusterView({
   page?: SitePage | null;
 }) {
   const hub = presentCluster(cluster.slug, locale, topics, projects, page);
-  return <ClusterPage hub={hub} path={`/kuechen/${cluster.slug}`} />;
+  const path = `/kuechen/${cluster.slug}`;
+  // The islands have an overview of their own: three chapters instead of three photo tiles.
+  if (cluster.slug === "inseln") {
+    return <InselnHub hub={hub} topics={topics} path={path} />;
+  }
+  return <ClusterPage hub={hub} path={path} />;
 }
