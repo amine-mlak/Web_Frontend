@@ -9,13 +9,14 @@ import {
   PhotoPair,
 } from "@/components/catalog/PhotoStory";
 import TopicReading from "@/components/catalog/clusters/TopicReading";
-import { Frame } from "@/components/catalog/collections/parts";
+import { Frame, PhotoBy } from "@/components/catalog/collections/parts";
 import {
   PointsSection,
   QuoteLine,
   SoftClose,
 } from "@/components/catalog/clusters/parts";
 import type { ApplianceBrandLogo } from "@/lib/appliance-media";
+import type { BrandPhoto } from "@/lib/brand-photos";
 import { fetchBrandLogos } from "@/lib/strapi";
 import type { PresentedTopic } from "@/lib/collection-topics";
 import { cn } from "@/lib/utils";
@@ -29,32 +30,54 @@ function markFor(hub: PresentedTopic, brands: ApplianceBrandLogo[]) {
  * An appliance or a brand: the name, three photos of it in one kitchen, its facts on dark, the
  * points, two more photos, the kitchens, one close-up from edge to edge. Where no gallery photo
  * shows it, the CMS image stands framed on the dark band as before.
+ *
+ * A brand page opens on the brand's own photo instead (`opening`): it stands framed and grows to the
+ * full width while it scrolls in. The photos of the built kitchen then follow the points.
  */
 export default async function SpecPage({
   hub,
   maker,
+  opening,
 }: {
   hub: PresentedTopic;
   /** A band about a maker, shown before the reading text (pages under /geraete). */
   maker?: ReactNode;
+  /** The brand's own photo that opens a brand page (pages under /marken). */
+  opening?: { photo: BrandPhoto; name: string };
 }) {
   const mark = markFor(hub, await fetchBrandLogos());
   const houses =
     hub.locale === "en" ? "Kitchens that use it" : "In diesen Küchen verbaut";
   // Photos that show the appliance or the brand in the built kitchens. Without any, the CMS image stands on the dark band.
   const story = hub.story ?? {};
+  const opened = Boolean(opening || story.opener);
 
   return (
     <main className="bg-paper">
       <EntryHeader hub={hub} emphasis={hub.emphasis} />
 
-      {story.opener ? (
+      {opening ? (
+        <section
+          className="photo-grow relative mt-8 h-[62svh] min-h-[380px] overflow-hidden bg-nacht lg:mt-12 lg:h-[78svh] lg:max-h-[760px]"
+          aria-label={hub.locale === "en" ? `Photo from ${opening.name}` : `Foto von ${opening.name}`}
+        >
+          <Frame
+            src={opening.photo.src}
+            srcSet={opening.photo.srcSet}
+            alt={opening.photo.alt}
+            className="absolute inset-0"
+            priority
+            sizes="100vw"
+          />
+          <PhotoBy name={opening.name} locale={hub.locale} />
+        </section>
+      ) : story.opener ? (
         <PhotoOpener opener={story.opener} locale={hub.locale} />
       ) : null}
 
-      {mark || !story.opener || hub.facts.length ? (
+      {mark || !opened || hub.facts.length ? (
         <section
-          className="mt-10 bg-nacht px-5 py-14 sm:px-8 lg:mt-14 lg:px-gutter lg:py-20"
+          className={cn("bg-nacht px-5 py-14 sm:px-8 lg:px-gutter lg:py-20", !opening && "mt-10 lg:mt-14")}
           aria-label={hub.locale === "en" ? "At a glance" : "Auf einen Blick"}
         >
           {mark ? (
@@ -72,7 +95,7 @@ export default async function SpecPage({
               />
             </span>
           ) : null}
-          {story.opener ? null : (
+          {opened ? null : (
             <Frame
               src={hub.heroImage}
               alt={hub.heroAlt}
@@ -102,6 +125,7 @@ export default async function SpecPage({
       ) : null}
 
       <PointsSection hub={hub} />
+      {opening && story.opener ? <PhotoOpener opener={story.opener} locale={hub.locale} /> : null}
       {story.pair ? (
         <PhotoPair pair={story.pair} locale={hub.locale} flip />
       ) : null}

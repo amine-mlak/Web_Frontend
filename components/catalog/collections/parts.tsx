@@ -13,6 +13,15 @@ export type CollectionExtra = {
 
 export { Frame };
 
+/** "Foto: BORA" in the corner of a photo that comes from the brand itself. */
+export function PhotoBy({ name, locale }: { name: string; locale: string }) {
+  return (
+    <span className="absolute right-3 bottom-2 z-[1] font-sans text-[12.5px] text-paper/90">
+      {locale === "en" ? "Photo" : "Foto"}: {name}
+    </span>
+  );
+}
+
 /**
  * The one sentence a page stands for, with a short note beside it. Every hub, kitchen world
  * and category page carries it in this form. It is a paragraph, never a heading.

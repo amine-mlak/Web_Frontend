@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SpecPage from "@/components/catalog/entries/SpecPage";
 import { cmsValue, findBySlug, projectsForBrand } from "@/lib/catalog";
+import { brandPhoto } from "@/lib/brand-photos";
 import { fetchBrands, fetchProjects } from "@/lib/catalog-api";
 import { entryMetadata, presentBrandItem } from "@/lib/collection-entries";
 import { entryReading } from "@/lib/entry-reading";
@@ -58,6 +59,7 @@ export default async function BrandPage({
   }
   const related = projectsForBrand(projects, brand.slug);
   const houses = related.length > 0 ? related : projects.slice(0, 4);
+  const photo = brandPhoto(brand.slug, locale);
 
   return (
     <SpecPage
@@ -65,6 +67,7 @@ export default async function BrandPage({
         ...presentBrandItem(brand, locale, brands, houses, projects),
         depth: { path: `/marken/${brand.slug}`, name: brand.name },
       }}
+      opening={photo ? { photo, name: brand.name } : undefined}
     />
   );
 }

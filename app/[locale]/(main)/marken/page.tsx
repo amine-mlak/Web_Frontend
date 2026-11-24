@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MarkenPage() {
   const locale = await getRequestLocale();
   const [brands, projects] = await Promise.all([fetchBrands(), fetchProjects()]);
-  // A brand's row shows a kitchen BEER built with it, when a photo in the projects names the brand.
-  // Without one, the row keeps the photo from the CMS.
+  // A brand's tile shows the brand's own photo (lib/brand-photos.ts). A brand without one shows a
+  // kitchen BEER built with it, when a photo in the projects names the brand, or the CMS photo.
   const shown = new Set<string>();
   const featured = brands.slice(0, 5).map((brand) => {
     const built = brandCover(brand.name, projects, shown);
@@ -24,7 +24,7 @@ export default async function MarkenPage() {
     return {
       href: `/marken/${brand.slug}`,
       title: brand.name,
-      text: brand.intro,
+      text: [brand.intro, brand.body].filter(Boolean).join(" "),
       image: built?.src ?? brand.image,
       srcSet: built ? built.srcSet : brand.srcSet,
       alt: built?.alt || brand.name,
