@@ -29,18 +29,11 @@ const COPY = {
   },
 } as const;
 
-/** Houses shown at first and added with each "show more". Two full turns of the rhythm below. */
-const STEP = 20;
+/** Houses shown at first and added with each "show more": full rows of three and of two. */
+const STEP = 18;
 
-/**
- * The rhythm of the archive on wide screens, ten houses per turn: a wide photo beside a tall
- * one, three in a row, then tall beside wide, three in a row. The wide photo shows the room
- * as it was taken; the others stand upright.
- */
-const WIDE = { cell: "lg:col-span-7", ratio: "lg:aspect-[7/5]", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 58vw" };
-const TALL = { cell: "lg:col-span-5", ratio: "", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 42vw" };
-const THIRD = { cell: "lg:col-span-4", ratio: "", sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" };
-const RHYTHM = [WIDE, TALL, THIRD, THIRD, THIRD, TALL, WIDE, THIRD, THIRD, THIRD];
+/** One even grid: every house has the same upright photo, three in a row on wide screens. */
+const SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw";
 
 // The chosen filter and how far the list is open, kept for the tab: coming back from a house
 // lands on the same list at the same place.
@@ -134,7 +127,7 @@ export default function ProjectArchive({
       <div className="mt-10 border-b border-line" role="group" aria-label={copy.filter}>
         {[{ label: copy.show, filters: [] }, ...groups].map((group, row) => (
           <div key={group.label} className="grid gap-x-8 gap-y-1 border-t border-line py-3 lg:grid-cols-12 lg:py-4">
-            <p className="type-eyebrow pt-2 text-muted lg:col-span-2">{group.label}</p>
+            <p className="pt-1.5 font-serif text-[18px] leading-[1.4] text-ink lg:col-span-2">{group.label}</p>
             <ul className="flex flex-wrap gap-x-7 gap-y-1 lg:col-span-10">
               {row === 0 ? (
                 <li>
@@ -162,17 +155,16 @@ export default function ProjectArchive({
       </div>
 
       {/* Every house stays in the page as a link; the ones not shown yet are only hidden. */}
-      <ul ref={list} className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-12 lg:gap-y-20">
+      <ul ref={list} className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-16">
         {houses.map((house) => {
           const at = place.get(house.href);
           const visible = at !== undefined && at < limit;
-          const slot = RHYTHM[(at ?? 0) % RHYTHM.length];
           return (
-            <li key={house.href} hidden={!visible} className={visible ? slot.cell : undefined}>
+            <li key={house.href} hidden={!visible}>
               <HouseCard
                 house={house}
-                frameClassName={cn("aspect-[4/3] sm:aspect-[4/5]", slot.ratio)}
-                sizes={slot.sizes}
+                frameClassName="aspect-[4/3] sm:aspect-[4/5]"
+                sizes={SIZES}
                 heading
                 titleClassName="mt-5 underline decoration-transparent decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-ink/40"
               />

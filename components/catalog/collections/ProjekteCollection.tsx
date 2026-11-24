@@ -4,6 +4,16 @@ import type { PresentedHub } from "@/lib/collection-present";
 import { Frame, HubEnd, StatementBand } from "@/components/catalog/collections/parts";
 import { QuoteLine } from "@/components/catalog/clusters/parts";
 
+const COPY = {
+  de: { open: "Projekt ansehen" },
+  en: { open: "See the project" },
+} as const;
+
+/**
+ * The projects overview. The newest house opens the page as a full photo that drifts while the
+ * page scrolls, with its name on it. The next houses follow as chapters, photo and text side by
+ * side, then the archive of every house.
+ */
 export default function ProjekteCollection({
   hub,
   children,
@@ -11,96 +21,86 @@ export default function ProjekteCollection({
   hub: PresentedHub;
   children?: ReactNode;
 }) {
+  const copy = COPY[hub.locale === "en" ? "en" : "de"];
   const [lead, ...rest] = hub.branches;
 
   return (
     <main className="bg-paper">
-      <section className="px-5 pt-12 pb-10 sm:px-8 lg:px-gutter lg:pt-16" aria-labelledby="projekte-hero">
-        <div className="grid items-end gap-10 lg:grid-cols-12">
-          <h1
-            id="projekte-hero"
-            className="t-display text-ink lg:col-span-7"
-          >
-            {hub.title}
-          </h1>
-          <p className="t-lede max-w-md text-muted lg:col-span-5 lg:pb-5">
-            {hub.lede}
-          </p>
+      <section data-site-hero="" className="relative isolate -mt-14 min-h-[88svh] bg-nacht" aria-labelledby="projekte-hero">
+        <Frame
+          src={lead?.image || hub.heroImage}
+          alt={lead?.alt || hub.heroAlt}
+          srcSet={lead?.srcSet}
+          className="absolute inset-0"
+          priority
+          sizes="100vw"
+          drift
+        />
+        <div className="hero-scrim absolute inset-0" aria-hidden />
+        <div className="relative z-10 flex min-h-[88svh] items-end px-5 pb-12 sm:px-8 lg:px-gutter lg:pb-16">
+          <div className="grid w-full items-end gap-x-12 gap-y-8 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <h1 id="projekte-hero" className="t-display text-paper">
+                {hub.title}
+              </h1>
+              {hub.lede ? <p className="t-lede mt-5 max-w-lg text-paper/90">{hub.lede}</p> : null}
+            </div>
+            {/* The house on the photo, and the way to it. */}
+            {lead?.href ? (
+              <LocaleLink
+                href={lead.href}
+                className="group block text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper lg:col-span-5 lg:justify-self-end lg:text-right"
+              >
+                {lead.meta ? <span className="block font-sans text-[14px] text-paper/80">{lead.meta}</span> : null}
+                <span className="mt-1 block font-serif text-[22px] leading-[1.25] underline decoration-paper/0 decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-paper/60 lg:text-[24px]">
+                  {lead.title} <span aria-hidden="true">→</span>
+                </span>
+              </LocaleLink>
+            ) : null}
+          </div>
         </div>
       </section>
 
-      {lead ? (
-        <section aria-labelledby="projekte-lead">
-          <LocaleLink href={lead.href ?? "/beratung"} className="group block">
-            <Frame
-              src={lead.image}
-              alt={lead.alt}
-              srcSet={lead.srcSet}
-              className="aspect-[16/9] w-full lg:aspect-[21/9]"
-              priority
-              sizes="100vw"
-            />
-            <div className="grid gap-8 border-b border-line px-5 py-10 sm:px-8 lg:grid-cols-12 lg:px-gutter lg:py-14">
-              {lead.meta ? (
-                <p className="font-sans text-[14px] text-muted lg:col-span-3">{lead.meta}</p>
+      <StatementBand statement={hub.statement} note={hub.statementNote} rule={false} />
+
+      {rest.map((branch, index) => {
+        const flip = index % 2 === 1;
+        const href = branch.href ?? "/beratung";
+        return (
+          <section
+            key={branch.title}
+            // The photo takes the wider column on either side.
+            className={`grid items-center gap-x-12 gap-y-8 px-5 py-10 sm:px-8 lg:gap-x-24 lg:px-gutter lg:py-16 ${
+              flip ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]" : "lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]"
+            }`}
+            aria-labelledby={`projekt-${index}`}
+          >
+            <LocaleLink href={href} tabIndex={-1} aria-hidden className={`block ${flip ? "lg:order-2" : ""}`}>
+              <Frame
+                src={branch.image}
+                alt=""
+                srcSet={branch.srcSet}
+                className="aspect-[4/3]"
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                drift
+              />
+            </LocaleLink>
+            <div>
+              {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
+              <h2 id={`projekt-${index}`} className="t-section text-ink">
+                {branch.title}
+              </h2>
+              {branch.text ? (
+                <p className="t-lede mt-4 max-w-lg text-ink/85">{branch.text}</p>
               ) : null}
-              <div className="lg:col-span-9">
-                <h2
-                  id="projekte-lead"
-                  className="t-section text-ink"
-                >
-                  {lead.title}
-                </h2>
-                <p className="mt-5 max-w-xl font-sans text-[16px] leading-relaxed text-muted">
-                  {lead.text}
-                </p>
-              </div>
+              <LocaleLink href={href} className="btn-quiet mt-7">
+                {copy.open} <span aria-hidden="true">→</span>
+              </LocaleLink>
             </div>
-          </LocaleLink>
-        </section>
-      ) : (
-        <Frame
-          src={hub.heroImage}
-          alt={hub.heroAlt}
-          className="aspect-[16/9] w-full lg:aspect-[21/9]"
-          priority
-          sizes="100vw"
-        />
-      )}
+          </section>
+        );
+      })}
 
-      {rest.length > 0 ? (
-        <section aria-label={hub.indexEyebrow}>
-          <ul>
-            {rest.map((branch) => (
-              <li key={branch.title} className="border-b border-line">
-                <LocaleLink
-                  href={branch.href ?? "/beratung"}
-                  className="group grid lg:grid-cols-12"
-                >
-                  <Frame
-                    src={branch.image}
-                    alt={branch.alt}
-                    srcSet={branch.srcSet}
-                    className="aspect-[16/10] lg:col-span-6 lg:aspect-[16/9]"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                  <div className="flex flex-col justify-center px-5 py-10 sm:px-8 lg:col-span-6 lg:pr-edge lg:pl-14">
-                    {branch.meta ? <p className="mb-3 font-sans text-[14px] text-muted">{branch.meta}</p> : null}
-                    <h2 className="t-feature text-ink">
-                      {branch.title}
-                    </h2>
-                    <p className="mt-4 max-w-md font-sans text-[16px] leading-relaxed text-muted">
-                      {branch.text}
-                    </p>
-                  </div>
-                </LocaleLink>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <StatementBand statement={hub.statement} note={hub.statementNote} tone="karte" rule={false} />
       <QuoteLine quote={hub.quote} source={hub.quoteSource} tone="nacht" />
 
       {/* The archive of every house comes in as children, before the showroom. */}
