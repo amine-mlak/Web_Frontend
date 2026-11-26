@@ -35,13 +35,37 @@ const h2 = "font-serif font-medium text-ink";
 const body = "font-sans text-[16px] font-light leading-[1.7] text-[#4A4A46]";
 const blackPill = "inline-block rounded-full bg-ink px-[30px] py-[13px] font-sans text-[14px] !text-[#FBF9F5] transition-colors hover:bg-black";
 
-/** The four Küchenwelten of the draft with their panel colours, each matched to a CMS topic. */
+/**
+ * The four Küchenwelten of the draft with their panel colours. The link goes to the CMS topic of
+ * that name; the photo is a project picked by hand to sit well beside the panel colour
+ * (greige beside the light panel, dark blue beside the blue one, matt black, warm brown wood).
+ */
 const WELTEN = [
-  { name: "Moderne Küchen", match: /modern/i, panel: "#F7F5F1", text: "#141414" },
-  { name: "Landhausküchen", match: /landhaus/i, panel: "#2E3A45", text: "#F6F3EC" },
-  { name: "Grifflose Küchen", match: /grifflos/i, panel: "#131311", text: "#F6F3EC" },
-  { name: "Holzküchen", match: /holz/i, panel: "#3B322A", text: "#C8A87E" },
+  { name: "Moderne Küchen", match: /modern/i, panel: "#F7F5F1", text: "#141414", foto: "simple-elegance-taupe-rillen-eiche" },
+  { name: "Landhausküchen", match: /landhaus/i, panel: "#2E3A45", text: "#F6F3EC", foto: "vintage-love-dunkelblau-regalwand" },
+  { name: "Grifflose Küchen", match: /grifflos/i, panel: "#131311", text: "#F6F3EC", foto: "schwarz-matt-graue-platte-insel" },
+  { name: "Holzküchen", match: /holz/i, panel: "#3B322A", text: "#C8A87E", foto: "massivholz-schwarzer-stein" },
 ];
+
+/** Projects picked by hand for the example: hero, the photo beside the bronze panel, the row. */
+const HERO_PROJEKT = "eichenlamellen-ziegelgewoelbe";
+const TAFEL_PROJEKT = "taubenblau-messinggriffe-insel";
+const REFERENZEN = [
+  "pure-nature-eichenwand-lange-insel",
+  "salbei-schrankwand-lange-insel",
+  "schwarz-gas-eichenstufen-insel",
+  "runde-insel-eichenstaebe-stein",
+  "koenigsblau-landhaus-leder",
+  "schwarz-sichtbeton-eichenlamellen",
+  "muenchen-loft-grau",
+  "kobaltblau-eichennische",
+  "landhaus-weiss-gruener-herd",
+];
+
+/** A project photo in the width a full-screen hero needs (project photos come at card width). */
+function wide(src: string) {
+  return src.replace(/^\/cms-opt\/\d+\//, "/cms-opt/2560/");
+}
 
 /**
  * BEER's Google profile as read on 26 Nov 2026. The site has no connection to Google yet, so
@@ -96,17 +120,22 @@ export default async function BeispielStartseite() {
   );
 
   const withPhoto = projects.filter((project) => project.image);
-  const hero = home.heroSlides[0] ?? (withPhoto[0] ? { src: withPhoto[0].image, alt: withPhoto[0].title } : null);
+  const bySlug = (slug: string) => withPhoto.find((project) => project.slug === slug);
+  const heroProjekt = bySlug(HERO_PROJEKT);
+  const hero = heroProjekt
+    ? { src: wide(heroProjekt.image), alt: heroProjekt.title }
+    : (home.heroSlides[0] ?? (withPhoto[0] ? { src: withPhoto[0].image, alt: withPhoto[0].title } : null));
   const welten = WELTEN.map((welt, index) => {
     const topic = topics.find((item) => welt.match.test(item.name) || welt.match.test(item.slug));
     return {
       ...welt,
       href: topic ? `/kuechen/${topic.cluster}/${topic.slug}` : "/kuechen",
-      image: topic?.image || withPhoto[index]?.image || "",
+      image: bySlug(welt.foto)?.image || topic?.image || withPhoto[index]?.image || "",
     };
   });
-  const referenzen = withPhoto.slice(0, 9);
-  const tafelFoto = withPhoto[3] ?? withPhoto[0];
+  const picked = REFERENZEN.map(bySlug).filter((project): project is Project => Boolean(project));
+  const referenzen = [...picked, ...withPhoto.filter((project) => !picked.includes(project))].slice(0, 9);
+  const tafelFoto = bySlug(TAFEL_PROJEKT) ?? withPhoto[3] ?? withPhoto[0];
   const steps = (home.ablauf?.steps ?? []).slice(0, 4);
   const zitate = [
     home.faq?.quote ? { text: home.faq.quote, source: home.faq.quoteSource } : null,
@@ -276,8 +305,10 @@ export default async function BeispielStartseite() {
                   <div className="relative h-[360px]">
                     <CmsImage src={project.image} alt={project.title} fill sizes="(min-width:861px) 360px, 82vw" className="object-cover" />
                   </div>
-                  <p className="mt-4 font-sans text-[15px] text-ink">{project.place || project.title}</p>
-                  <p className="mt-[3px] font-sans text-[13px] text-[#8A867E]">{stilLine(project)}</p>
+                  <p className="mt-4 font-sans text-[15px] text-ink">{project.title}</p>
+                  <p className="mt-[3px] font-sans text-[13px] text-[#8A867E]">
+                    {[project.place, stilLine(project)].filter((part) => part && part !== project.title).join(" · ")}
+                  </p>
                 </LocaleLink>
               ))}
             </SlideRow>
