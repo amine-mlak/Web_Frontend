@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import ClickMenu from "@/components/beispiel/ClickMenu";
+import SlideRow from "@/components/beispiel/SlideRow";
 import { FloatingCta, HeroDrift } from "@/components/beispiel/StartseiteMotion";
 import CmsImage from "@/components/CmsImage";
 import FooterRegions from "@/components/FooterRegions";
@@ -40,6 +41,25 @@ const WELTEN = [
   { name: "Landhausküchen", match: /landhaus/i, panel: "#2E3A45", text: "#F6F3EC" },
   { name: "Grifflose Küchen", match: /grifflos/i, panel: "#131311", text: "#F6F3EC" },
   { name: "Holzküchen", match: /holz/i, panel: "#3B322A", text: "#C8A87E" },
+];
+
+/**
+ * BEER's Google profile as read on 26 Nov 2026. The site has no connection to Google yet, so
+ * these two figures are typed in and the cards below them are stand-ins, not real reviews.
+ */
+const GOOGLE = {
+  rating: "5,0",
+  count: 175,
+  href: "https://www.google.com/maps?cid=14286197608992594529",
+};
+
+const BEWERTUNG_PLATZHALTER = [
+  "Platzhalter für eine kurze Bewertung: ein, zwei Sätze zur Beratung.",
+  "Platzhalter für eine längere Bewertung. Hier steht später der Text, den eine Kundin oder ein Kunde bei Google über Planung, Fertigung und Montage geschrieben hat – so lang, wie er dort steht.",
+  "Platzhalter für eine mittlere Bewertung: zwei bis drei Sätze, zum Beispiel zum Ablauf vom ersten Gespräch bis zur fertigen Küche.",
+  "Platzhalter für eine kurze Bewertung zur Montage.",
+  "Platzhalter für eine Bewertung zur Ausstellung und zu den Materialien, die man dort anfassen kann.",
+  "Platzhalter für eine Bewertung zum Team und zur Abstimmung während der Planung.",
 ];
 
 function plain(html: string) {
@@ -85,7 +105,7 @@ export default async function BeispielStartseite() {
       image: topic?.image || withPhoto[index]?.image || "",
     };
   });
-  const referenzen = withPhoto.slice(0, 3);
+  const referenzen = withPhoto.slice(0, 9);
   const tafelFoto = withPhoto[3] ?? withPhoto[0];
   const steps = (home.ablauf?.steps ?? []).slice(0, 4);
   const zitate = [
@@ -112,6 +132,7 @@ export default async function BeispielStartseite() {
         <header>
           <ClickMenu
             panels={menu}
+            dropdown={menu.find((panel) => /^küchen$/i.test(panel.label))?.id ?? menu[0]?.id ?? ""}
             logoSrc={header?.logo || "/logo.png"}
             wordmarkSrc={header?.wordmark}
             logoAlt={header?.logoAlt ?? "BEER Küchenmanufaktur"}
@@ -156,7 +177,7 @@ export default async function BeispielStartseite() {
               <span>Quooker</span>
             </div>
             <span className="w-full text-[#4A4A46] md:w-auto">
-              <span className="tracking-[2px] text-messing">★★★★★</span>&nbsp; 4,9 bei Google
+              <span className="tracking-[2px] text-messing">★★★★★</span>&nbsp; {GOOGLE.rating} bei Google
             </span>
           </div>
         </section>
@@ -264,17 +285,17 @@ export default async function BeispielStartseite() {
             <h2 className={`${h2} mb-14 text-[42px]`}>
               Zuletzt <em style={kursiv}>gebaut</em>
             </h2>
-            <div className="grid gap-7 min-[861px]:grid-cols-3">
+            <SlideRow label="Zuletzt gebaute Küchen" arrowClass="top-[180px]">
               {referenzen.map((project) => (
                 <LocaleLink key={project.slug} href={projectHref(project.slug)} className="block">
                   <div className="relative h-[360px]">
-                    <CmsImage src={project.image} alt={project.title} fill sizes="(min-width:861px) 360px, 100vw" className="object-cover" />
+                    <CmsImage src={project.image} alt={project.title} fill sizes="(min-width:861px) 360px, 82vw" className="object-cover" />
                   </div>
                   <p className="mt-4 font-sans text-[15px] text-ink">{project.place || project.title}</p>
                   <p className="mt-[3px] font-sans text-[13px] text-[#8A867E]">{stilLine(project)}</p>
                 </LocaleLink>
               ))}
-            </div>
+            </SlideRow>
             <div className="mt-14 text-center">
               <LocaleLink href="/projekte" className={blackPill}>Alle Referenzen</LocaleLink>
             </div>
@@ -312,6 +333,37 @@ export default async function BeispielStartseite() {
               Originalgröße – mit Geräten von Bora, Miele, Gaggenau und Quooker. Wir beraten Sie persönlich, messen bei Ihnen auf
               und begleiten Ihr Projekt von Erding bis Dachau, von Pfaffenhofen bis München.
             </p>
+          </div>
+        </section>
+
+        {/* Google-Bewertungen: Karten, die von selbst weiterziehen */}
+        <section className="px-5 pt-[120px] md:px-12">
+          <div className={wrap}>
+            <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <p className={`${eyebrow} mb-4`}>Google-Bewertungen</p>
+                <h2 className={`${h2} text-[42px] leading-[1.15]`}>
+                  Was unsere Kunden <em style={kursiv}>sagen</em>
+                </h2>
+              </div>
+              <a href={GOOGLE.href} target="_blank" rel="noreferrer" className="font-sans text-[15px] text-[#4A4A46]">
+                <span className="font-serif text-[30px] text-ink">{GOOGLE.rating}</span>
+                <span className="mx-2.5 tracking-[2px] text-messing">★★★★★</span>
+                {GOOGLE.count} Rezensionen bei Google&nbsp;→
+              </a>
+            </div>
+            <SlideRow label="Google-Bewertungen" auto={5000}>
+              {BEWERTUNG_PLATZHALTER.map((text, index) => (
+                <figure key={text} className="flex h-full min-h-[260px] flex-col bg-karte p-8">
+                  <div className="flex items-center justify-between">
+                    <span className="tracking-[2px] text-messing" aria-label="5 von 5 Sternen">★★★★★</span>
+                    <span className="font-sans text-[12px] text-[#8A867E]">Google</span>
+                  </div>
+                  <blockquote className="mt-5 font-sans text-[15px] font-light leading-[1.7] text-[#4A4A46]">{text}</blockquote>
+                  <figcaption className="mt-auto pt-6 font-sans text-[13px] text-[#8A867E]">Beispielkarte {index + 1} · Name folgt</figcaption>
+                </figure>
+              ))}
+            </SlideRow>
           </div>
         </section>
 
