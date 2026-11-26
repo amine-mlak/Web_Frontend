@@ -68,8 +68,9 @@ function wide(src: string) {
 }
 
 /**
- * BEER's Google profile as read on 26 Nov 2026. The site has no connection to Google yet, so
- * these two figures are typed in and the cards below them are stand-ins, not real reviews.
+ * BEER's Google profile as read on 26 Nov 2026. The site has no connection to Google yet, so the
+ * two figures are typed in, and the reviews are four from the profile, word for word as their
+ * authors wrote them.
  */
 const GOOGLE = {
   rating: "5,0",
@@ -77,13 +78,32 @@ const GOOGLE = {
   href: "https://www.google.com/maps?cid=14286197608992594529",
 };
 
-const BEWERTUNG_PLATZHALTER = [
-  "Platzhalter für eine kurze Bewertung: ein, zwei Sätze zur Beratung.",
-  "Platzhalter für eine längere Bewertung. Hier steht später der Text, den eine Kundin oder ein Kunde bei Google über Planung, Fertigung und Montage geschrieben hat – so lang, wie er dort steht.",
-  "Platzhalter für eine mittlere Bewertung: zwei bis drei Sätze, zum Beispiel zum Ablauf vom ersten Gespräch bis zur fertigen Küche.",
-  "Platzhalter für eine kurze Bewertung zur Montage.",
-  "Platzhalter für eine Bewertung zur Ausstellung und zu den Materialien, die man dort anfassen kann.",
-  "Platzhalter für eine Bewertung zum Team und zur Abstimmung während der Planung.",
+const BEWERTUNGEN = [
+  {
+    name: "Sabrina Gath",
+    text: [
+      "Wir haben uns bewusst für Beer-Küchen entschieden. Eine individuell gestaltete Küche, genau nach unserem Geschmack! Ein absolutes Raumwunder, da jeder Zentimeter verplant wurde!",
+      "Vielen Dank an das Team und vor allem an Herrn Pecho, der all seine Erfahrung einbrachte und uns somit unsere Traumküche umgesetzt hat! Kann man nur weiter empfehlen! Herzlichsten Dank",
+    ],
+  },
+  {
+    name: "Rudolf Huber",
+    text: [
+      "Wir sind echt begeistert von der gelieferten Küche von Beer. Die ganze Lieferkette, von der Planung, der Fertigung und von der exakten Montage haben wir so noch nirgends bekommen. Die ganze Darbietung ist außergewöhnlich. Wir haben unsere individuell gefertigte Küche in kürzester Lieferzeit erhalten. Die Qualität jedes Details ist hervorragend und wir wissen nach mehreren gekauften Küchen bei sogennannten Küchenspezialisten von was wir sprechen. Wir sind froh bei Ihnen gekauft zu haben, solche Arbeit ist es Wert. Danke.",
+    ],
+  },
+  {
+    name: "Michael Neubauer",
+    text: [
+      "Die Beer Küchenmanufaktur ist eine wunderbare Adresse für individuelle Küchen. Sehr gute Beratung, transparente Angebote mit übersichtlichen und aussagekräftigen Entwurfszeichnungen. Termintreu und absolut zuverlässig mit 1a-Arbeit. Uneingeschränkte Weiterempfehlung!",
+    ],
+  },
+  {
+    name: "Ingrid Vocht",
+    text: [
+      "Sehr gute Beratung, individuelle Küchen, versiertes Einbaupersonal, insgesamt problemlose Kommunikation.Sehr zu empfehlen.Perfektes Ergebnis, ich würde auch 10 Sterne vergeben.",
+    ],
+  },
 ];
 
 function plain(html: string) {
@@ -369,14 +389,18 @@ export default async function BeispielStartseite() {
               </a>
             </div>
             <SlideRow label="Google-Bewertungen" auto={5000}>
-              {BEWERTUNG_PLATZHALTER.map((text, index) => (
-                <figure key={text} className="flex h-full min-h-[260px] flex-col bg-karte p-8">
+              {BEWERTUNGEN.map((review) => (
+                <figure key={review.name} className="flex h-full min-h-[260px] flex-col bg-karte p-8">
                   <div className="flex items-center justify-between">
                     <span className="tracking-[2px] text-messing" aria-label="5 von 5 Sternen">★★★★★</span>
                     <span className="font-sans text-[12px] text-[#8A867E]">Google</span>
                   </div>
-                  <blockquote className="mt-5 font-sans text-[15px] font-light leading-[1.7] text-[#4A4A46]">{text}</blockquote>
-                  <figcaption className="mt-auto pt-6 font-sans text-[13px] text-[#8A867E]">Beispielkarte {index + 1} · Name folgt</figcaption>
+                  <blockquote className="mt-5 space-y-3 font-sans text-[15px] font-light leading-[1.7] text-[#4A4A46]">
+                    {review.text.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </blockquote>
+                  <figcaption className="mt-auto pt-6 font-sans text-[14px] text-ink">{review.name}</figcaption>
                 </figure>
               ))}
             </SlideRow>
