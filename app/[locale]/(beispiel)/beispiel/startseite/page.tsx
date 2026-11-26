@@ -142,19 +142,19 @@ export default async function BeispielStartseite() {
 
       <main>
         {/* Hero */}
-        <section data-hero-overlay data-site-hero className="relative -mt-14 h-[70vh] min-h-[560px] overflow-hidden md:h-[82vh]">
+        <section data-hero-overlay data-site-hero className="relative -mt-14 h-[70vh] min-h-[560px] overflow-hidden md:h-[90vh]">
           <HeroDrift>
             {hero ? <CmsImage src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="object-cover" /> : null}
           </HeroDrift>
           <div className="relative flex h-full flex-col justify-end px-5 pb-7 md:px-12 md:pb-[84px]">
-            <div className="beispiel-hero-card max-w-[700px] self-start bg-[rgba(18,17,15,0.08)] px-[18px] py-4 backdrop-blur-[8px] backdrop-saturate-[1.05] md:px-7 md:py-6">
+            <div className="beispiel-hero-card max-w-[520px] self-start bg-[rgba(18,17,15,0.08)] px-[18px] py-4 backdrop-blur-[8px] backdrop-saturate-[1.05] md:px-7 md:py-6">
               <p className="mb-2.5 font-sans text-[10px] uppercase tracking-[3px] text-[#F6F3EC] md:mb-[18px] md:text-[11px]">
                 Küchenmanufaktur Wolfersdorf bei Freising
               </p>
-              <h1 className="mb-2.5 max-w-[640px] font-serif text-[34px] font-medium leading-[1.12] text-paper md:mb-4 md:text-[56px]">
+              <h1 className="mb-2.5 font-serif text-[26px] font-medium leading-[1.15] text-paper md:mb-3 md:text-[38px]">
                 Wir bauen, <em style={kursiv}>was bleibt.</em>
               </h1>
-              <p className="mb-[18px] max-w-[480px] font-sans text-[14px] font-light leading-[1.7] text-[#F1EEE7] md:mb-[30px] md:text-[17px]">
+              <p className="mb-[18px] max-w-[440px] font-sans text-[14px] font-light leading-[1.7] text-[#F1EEE7] md:mb-6 md:text-[16px]">
                 Küchen aus eigener Werkstatt – geplant, gefertigt und montiert von einem Team, für München und Umgebung.
               </p>
               <LocaleLink
@@ -164,21 +164,6 @@ export default async function BeispielStartseite() {
                 Beratung anfragen
               </LocaleLink>
             </div>
-          </div>
-        </section>
-
-        {/* Vertrauensleiste */}
-        <section className="border-b border-[#E5E1DA] bg-paper">
-          <div className={`${wrap} flex flex-wrap items-center justify-center gap-x-10 gap-y-5 px-5 py-[26px] text-center font-sans text-[13px] md:justify-between md:px-12 md:text-left`}>
-            <div className="flex w-full flex-wrap items-center justify-center gap-x-[18px] gap-y-3.5 text-[12px] tracking-[1px] text-[#4A4A46] md:w-auto md:flex-nowrap md:justify-start md:gap-x-[clamp(56px,7vw,110px)] md:text-[13px]">
-              <span>BORA</span>
-              <span>Miele</span>
-              <span>GAGGENAU</span>
-              <span>Quooker</span>
-            </div>
-            <span className="w-full text-[#4A4A46] md:w-auto">
-              <span className="tracking-[2px] text-messing">★★★★★</span>&nbsp; {GOOGLE.rating} bei Google
-            </span>
           </div>
         </section>
 

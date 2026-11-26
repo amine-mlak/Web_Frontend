@@ -4,7 +4,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import LocaleLink from "@/components/LocaleLink";
 import { cn } from "@/lib/utils";
 
-/** The hero photo moves a little slower than the page (the design's parallax, factor 0.35). */
+/**
+ * The hero photo moves a little slower than the page. It fills the hero exactly: the part it
+ * leaves free while moving is already scrolled out of view, so no oversize (and no extra crop).
+ */
 export function HeroDrift({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -15,7 +18,7 @@ export function HeroDrift({ children }: { children: ReactNode }) {
       frame = 0;
       const y = window.scrollY;
       if (ref.current && y < window.innerHeight * 1.2) {
-        ref.current.style.transform = `translate3d(0, ${y * 0.35}px, 0)`;
+        ref.current.style.transform = `translate3d(0, ${y * 0.25}px, 0)`;
       }
     };
     const onScroll = () => {
@@ -30,7 +33,7 @@ export function HeroDrift({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div ref={ref} className="beispiel-hero-photo absolute inset-x-0 -inset-y-[12%] will-change-transform">
+    <div ref={ref} className="beispiel-hero-photo absolute inset-0 will-change-transform">
       {children}
     </div>
   );
